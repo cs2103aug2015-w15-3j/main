@@ -12,13 +12,14 @@ public class IDManagerTest {
   private IDManager idManager;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp()throws Exception{
     this.idManager = IDManager.getInstance();
   }
 
   @Test
-  public void test() {
-    fail("Not yet implemented");
+  public void uniqueIDTest() {
+    assertNotEquals(idManager.getId(), idManager.getId());
   }
+
 
 }
