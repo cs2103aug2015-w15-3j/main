@@ -2,7 +2,7 @@ package raijin.component.parser;
 
 import java.util.Arrays;
 
-import raijin.util.UserInput;
+import raijin.util.Task.UserInput;
 
 public class SimpleParser implements ParserInterface{
 
@@ -22,7 +22,7 @@ public class SimpleParser implements ParserInterface{
   public UserInput getParsedInput(String userInput) {
     String[] tokens = getTokens(userInput);
     return new UserInput(tokens[0], Arrays.copyOfRange(
-        tokens, 1, tokens.length));
+        tokens, 1, tokens.length), userInput);
   }
   
 

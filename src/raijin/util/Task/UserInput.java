@@ -1,13 +1,16 @@
-package raijin.util;
+package raijin.util.Task;
 
 public class UserInput {
   
   private String command;
   private String[] keywords;
+  private String rawInput;
   
-  public UserInput(String command, String[] keywords) {
+  public UserInput(String command, String[] keywords, 
+      String rawInput) {
     this.command = command;
     this.keywords = keywords;
+    this.rawInput = rawInput;
   }
 
   public String getCommand() {
@@ -16,6 +19,10 @@ public class UserInput {
 
   public String[] getKeywords() {
     return this.keywords;
+  }
+
+  public String getRawInput() {
+    return rawInput;
   }
 
 }
