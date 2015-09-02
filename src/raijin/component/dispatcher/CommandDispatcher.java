@@ -2,19 +2,29 @@ package raijin.component.dispatcher;
 
 import java.util.HashMap;
 
+import raijin.util.Status;
 import raijin.util.Task.UserInput;
 
 public class CommandDispatcher {
-  private HashMap<String, CommandUnit> lib = new HashMap<String, CommandUnit>();
-  private CommandDispatcher instance = new CommandDispatcher();
+  private HashMap<String, CommandUnitInterface> lib = new HashMap<String, CommandUnitInterface>();
+  private static CommandDispatcher instance = new CommandDispatcher();
   
-  private CommandDispatcher(){}
+  private CommandDispatcher(){
+    setupCommandUnit();
+  }
   
-  public CommandDispatcher getDispatcher(){
+  public static CommandDispatcher getDispatcher(){
     return instance;
   }
   
-  public void handleCommand(UserInput in){
+  public String handleCommand(UserInput in){
+    String command = in.getCommand();
+    if (lib.containsKey(command)){
+      CommandUnitInterface commandUnit = lib.get(command);
+      return commandUnit.executeCommand(in);
+    } else {
+      return Status.ERROR_UNKNOWN_COMMAND;
+    }
   }
   
   public void setupCommandUnit(){

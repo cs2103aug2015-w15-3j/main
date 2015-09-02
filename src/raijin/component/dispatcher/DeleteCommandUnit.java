@@ -1,11 +1,13 @@
 package raijin.component.dispatcher;
 
-public class DeleteCommandUnit implements CommandUnit {
+import raijin.util.Status;
+import raijin.util.Task.UserInput;
+
+public class DeleteCommandUnit implements CommandUnitInterface {
 
   @Override
-  public void executeCommand() {
-    // TODO Auto-generated method stub
-
+  public String executeCommand(UserInput input) {
+    return String.format(Status.INFO_DELETED_SUCCESS, input.getRawInput());
   }
 
 }

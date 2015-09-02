@@ -1,11 +1,13 @@
 package raijin.component.dispatcher;
 
-public class AddCommandUnit implements CommandUnit {
+import raijin.util.Status;
+import raijin.util.Task.UserInput;
+
+public class AddCommandUnit implements CommandUnitInterface {
 
   @Override
-  public void executeCommand() {
-    // TODO Auto-generated method stub
-
+  public String executeCommand(UserInput input) {
+    return String.format(Status.INFO_ADDED_SUCCESS, input.getRawInput());
   }
 
 }

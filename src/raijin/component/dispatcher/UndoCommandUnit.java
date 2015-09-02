@@ -1,11 +1,13 @@
 package raijin.component.dispatcher;
 
-public class UndoCommandUnit implements CommandUnit {
+import raijin.util.Status;
+import raijin.util.Task.UserInput;
+
+public class UndoCommandUnit implements CommandUnitInterface {
 
   @Override
-  public void executeCommand() {
-    // TODO Auto-generated method stub
-
+  public String executeCommand(UserInput input) {
+    return Status.INFO_SUCCESS;
   }
 
 }
