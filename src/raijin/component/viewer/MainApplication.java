@@ -14,6 +14,8 @@ public class MainApplication extends Application {
 
   @Override
   public void start(Stage stage) throws Exception {
+    /*Adding fxml */
+    FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("view/Scene.fxml"));
     Button btn = new Button();
     btn.setText("Say 'Hello, World!");
     btn.setOnAction(new EventHandler<ActionEvent>() {
