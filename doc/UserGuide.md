@@ -1,5 +1,6 @@
 #User Guide 
 
+#Table of Contents
 - [Getting Started](#getting-started)
 - [Feature Details](#feature-details)
   - [Creating a task](#creating-a-task)
@@ -11,3 +12,25 @@
   - [Undo](#undo)
   - [Help](#help)
 - [Setting Storage Location](#setting-storage-location)
+
+#Getting Started
+
+#Feature Details
+
+##Creating a task 
+
+##Updating a task
+
+##Deleting a task
+
+##Marking task as done 
+
+##Displaying a list of tasks
+
+##Search
+
+##Undo
+
+##Help
+
+#Setting Storage Location 
