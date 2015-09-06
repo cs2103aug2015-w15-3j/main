@@ -17,20 +17,20 @@
 
 #Feature Details
 
-##Creating a task 
+##1. Creating a task 
 
-##Updating a task
+##2. Updating a task
 
-##Deleting a task
+##3. Deleting a task
 
-##Marking task as done 
+##4. Marking task as done 
 
-##Displaying a list of tasks
+##5. Displaying a list of tasks
 
-##Search
+##6. Search
 
-##Undo
+##7. Undo
 
-##Help
+##8. Help
 
 #Setting Storage Location 
