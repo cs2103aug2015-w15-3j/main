@@ -18,6 +18,9 @@ public class Manager {
     while (status.isRunning()) {
       viewer.showUser(Status.INFO_PROMPT);
       String userInput = br.readLine();
+      if ("exit".equals(userInput.trim().toLowerCase())) {
+        status.setRunning(false);
+      }
     }
   }
 
