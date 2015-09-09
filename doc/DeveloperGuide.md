@@ -26,11 +26,6 @@ We aim to be the most widely used todo manager in National University of Singapo
   - [`Memory` Class](#memory-class)
   - [`History` Class](#history-class)
   - [`StorageHandler` Class](#storagehandler-class)
-- [Data Component](#data-component)
-  - [`Data Class Diagram`](#data-class-diagram)
-  - [`DataHandler` Class](#datahandler-class)
-  - [`UserConfig` Class](#userconfig-class)
-  - [`UserData` Class](#userdata-class)
 - [Common Component](#common-componenet)
   - [`Common Class Diagram`](#common-class-diagram)
   - [`Task` Class](#task-class)
@@ -115,10 +110,29 @@ Task and Status.`Logic` class will communicate via this api to access informatio
 This class helps to store the snapshots of the program's internal state. It allows user to redo and 
 undo certain actions. 
 
-##Data Component
-<img src="Images/data-class-diagram.png">
->Figure5: Data Class Diagram 
+###`StorageHandler` class
+Consists various utility function that helps to read and write `Memory` to JSON file. Besides that, 
+the class also performs basic data integrity check on the JSON file as well as retrieving user's
+config file.
 
 ##Common Component
+This component consists of universally used data types across the program such as `Task`, `DateTime` and 
+`Feedback`. It also contains useful utility functions that is reusable by other component such as `Logger`. 
+
 <img src="Images/common-class-diagram.png">
 >Figure6: Common Class Diagram 
+
+###`Task` class
+When a user creates a task, this class will stores all the relevant data such as name, deadline, tag , 
+or priority. 
+
+###`DateTime` class
+Due to various formats of `DateTime` that may be inserted by the user. This class helps to standardise the 
+format used by the program regardless of user input. 
+
+###`Feedback` class
+It is utilized to provide users with immediate feedback about the result of a command as well as whether a 
+command is executed successfully. 
+
+###`Logger` class
+Provides individual class with a logger 
