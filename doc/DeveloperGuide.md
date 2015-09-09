@@ -107,6 +107,14 @@ This component acts like a warehouse where any class that desire to access progr
 <img src="Images/storage-class-diagram.png">
 >Figure4: Storage Class Diagram 
 
+###`Memory` class
+This class stores the internal state of the program which consists of objects such as 
+Task and Status.`Logic` class will communicate via this api to access information about the tasks.
+
+###`History` class 
+This class helps to store the snapshots of the program's internal state. It allows user to redo and 
+undo certain actions. 
+
 ##Data Component
 <img src="Images/data-class-diagram.png">
 >Figure5: Data Class Diagram 
