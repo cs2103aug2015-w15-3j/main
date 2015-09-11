@@ -1,5 +1,7 @@
 package raijin.common.datatypes;
 
+import java.util.TreeSet;
+
 
 /**
  * 
@@ -14,6 +16,7 @@ public class Task {
   private DateTime dateTime;
   private IDManager idManager = IDManager.getIdManager();          //To generate unique id 
   private Constants.Priority priority = Constants.Priority.MID;    //Default priority level to medium
+  private TreeSet<String> tags = new TreeSet<String>();            //Empty tag set when initialized
 
 
   /*Constructor for flexible task*/
@@ -40,6 +43,35 @@ public class Task {
 
   public DateTime getDateTime() {
     return dateTime;
+  }
+
+
+  public Constants.Priority getPriority() {
+    return priority;
+  }
+
+
+  public void setPriority(Constants.Priority priority) {
+    this.priority = priority;
+  }
+
+
+  public TreeSet<String> getTags() {
+    return tags;
+  }
+
+
+  public void addTags(String tag) {
+    tags.add(tag.toLowerCase().trim()); //Sanitize string before adding 
+  }
+
+  public void removeTags(String tag) {
+    tags.remove(tag);
+  }
+
+  /*Returns keywords from task description*/
+  public String[] getKeywords() {
+    return name.split(" ");
   }
 
 }

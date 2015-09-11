@@ -34,4 +34,16 @@ public class TaskTest {
     flexibleTask = new Task("submit op2");
     assertNotEquals(flexibleTask.getId(), task.getId());
   }
+
+  @Test
+  public void testAddTag(){
+    task.addTags("CS2101");
+    assertTrue(task.getTags().contains("cs2101"));
+  }
+  
+  @Test
+  public void testKeyWords() {
+    assertArrayEquals(task.getKeywords(), new String[] {"submit", "op1"});
+  }
+
 }
