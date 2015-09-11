@@ -1,39 +1,45 @@
 package raijin.common.datatypes;
 
 
-public class SimpleTask extends BaseTask {
+/**
+ * 
+ * @author papa
+ * This is a basic unit of todo that is used to describe details of a todo
+ *
+ */
+public class Task {
   
-  private int id;
-  private String name;
-  private SimpleDateTime time;
-  private String tag = "";              //Set empty tag 
-  private String priority = "medium";   //Set default priority 
+  private int id;                                                  //Unique id that describes a task
+  private String name;                                             //Description of a task
+  private DateTime dateTime;
+  private IDManager idManager = IDManager.getIdManager();          //To generate unique id 
+  private Constants.Priority priority = Constants.Priority.MID;    //Default priority level to medium
 
-  public SimpleTask(int id, String name, SimpleDateTime time){
-    this.id = id;
+
+  /*Constructor for flexible task*/
+  public Task(String name) {
+    this.id = idManager.getId();
     this.name = name;
-    this.time = time;
   }
 
-  @Override
-  public int getId() {
-    return this.id;
+  
+  /*Constructor for task or event*/
+  public Task(String name, DateTime dateTime) {
+    this.id = idManager.getId();
+    this.name = name;
+    this.dateTime = dateTime;
   }
-  @Override
+
   public String getName() {
-    return this.name;
+    return name;
   }
-  @Override
-  public BaseDateTime getTime() {
-    return this.time;
+
+  public int getId() {
+    return id;
   }
-  @Override
-  public String getTag() {
-    return this.tag;
-  }
-  @Override
-  public String getPriority() {
-    return this.priority;
+
+  public DateTime getDateTime() {
+    return dateTime;
   }
 
 }

@@ -21,15 +21,15 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
-import raijin.common.datatypes.SimpleTask;
+import raijin.common.datatypes.Task;
 
-public class SimpleStorage extends BaseStorage {
+public class StorageHandler {
 
-  private Vector<SimpleTask> memory;
+  private Vector<Task> memory;
   private static final String fileName = "/data.json"; // Default file name
   private File jsonFile;
 
-  public SimpleStorage(String filePath) throws IOException {
+  public StorageHandler(String filePath) throws IOException {
     jsonFile = getJSONFile(filePath);
     memory = getJSONFromFile(filePath);
   }
@@ -40,8 +40,7 @@ public class SimpleStorage extends BaseStorage {
     return file;
   }
 
-  @Override
-  public Vector<SimpleTask> getJSONFromFile(String filePath) {
+  public Vector<Task> getJSONFromFile(String filePath) {
     JsonReader jsonReader = null;
     try {
       jsonReader = new JsonReader((new FileReader(filePath + fileName)));
@@ -55,14 +54,13 @@ public class SimpleStorage extends BaseStorage {
     return readJSONToVector(jsonReader);
   }
 
-  public Vector<SimpleTask> readJSONToVector(JsonReader jsonReader) {
-    Type type = new TypeToken<Vector<SimpleTask>>(){}.getType();
-    Vector<SimpleTask> memoryFromFile = new Gson().fromJson(jsonReader, type);
+  public Vector<Task> readJSONToVector(JsonReader jsonReader) {
+    Type type = new TypeToken<Vector<Task>>(){}.getType();
+    Vector<Task> memoryFromFile = new Gson().fromJson(jsonReader, type);
     return memoryFromFile;
   }
 
-  @Override
-  public void writeTasksToFile(Vector<SimpleTask> memory) {
+  public void writeTasksToFile(Vector<Task> memory) {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     String jsonString = memoryToJSON(gson, memory);
 
@@ -78,7 +76,7 @@ public class SimpleStorage extends BaseStorage {
     }
   }
 
-  private String memoryToJSON(Gson gson, Vector<SimpleTask> memory) {
+  private String memoryToJSON(Gson gson, Vector<Task> memory) {
     return gson.toJson(memory);
   }
 
