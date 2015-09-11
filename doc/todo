@@ -1,0 +1,5 @@
+Storage
+1. JSON registerTypeAdapter 
+2. Implements JSONDeserializer and serializer 
+
+
