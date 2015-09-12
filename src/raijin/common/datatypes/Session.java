@@ -13,7 +13,7 @@ import raijin.storage.handler.StorageHandler;
 public class Session {
 
   private static Session session = null;
-  private static Path dataPath;         //Location to store user's information
+  private Path dataPath;         //Location to store user's information
   
   public HashMap<String, String> config;
   
