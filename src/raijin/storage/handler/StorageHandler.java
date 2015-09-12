@@ -25,25 +25,13 @@ import raijin.common.datatypes.Task;
 
 public class StorageHandler {
 
-  private Vector<Task> memory;
-  private static final String fileName = "/data.json"; // Default file name
-  private File jsonFile;
 
-  public StorageHandler(String filePath) throws IOException {
-    jsonFile = getJSONFile(filePath);
-    memory = getJSONFromFile(filePath);
-  }
+  private StorageHandler() {}
 
-  private File getJSONFile(String filePath) throws IOException { // Retrieves json file
-    File file = new File(filePath + fileName);
-    file.createNewFile(); // Create data file if not exists
-    return file;
-  }
-
-  public Vector<Task> getJSONFromFile(String filePath) {
+  public static JsonReader getJsonReaderFromFile(String filePath) {
     JsonReader jsonReader = null;
     try {
-      jsonReader = new JsonReader((new FileReader(filePath + fileName)));
+      jsonReader = new JsonReader((new FileReader(filePath)));
     } catch (JsonIOException e) {
       e.printStackTrace();
     } catch (JsonSyntaxException e) {
@@ -51,21 +39,19 @@ public class StorageHandler {
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-    return readJSONToVector(jsonReader);
+    return jsonReader;
   }
 
-  public Vector<Task> readJSONToVector(JsonReader jsonReader) {
-    Type type = new TypeToken<Vector<Task>>(){}.getType();
-    Vector<Task> memoryFromFile = new Gson().fromJson(jsonReader, type);
-    return memoryFromFile;
+  /*Deserializes object from JSON*/
+  public static <T> T readFromJson(JsonReader jsonReader, Type typeOfSrc) {
+    T deserializedObject = new Gson().fromJson(jsonReader, typeOfSrc);
+    return deserializedObject;
   }
 
-  public void writeTasksToFile(Vector<Task> memory) {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    String jsonString = memoryToJSON(gson, memory);
-
+  /*Writes JSON to file*/
+  public static void writeJsonToFile(String jsonString, File file) {
     try {
-      FileOutputStream os = new FileOutputStream(jsonFile); // Overwrite whole file
+      FileOutputStream os = new FileOutputStream(file); // Overwrite whole file
       BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
       bw.append(jsonString);
       bw.close();
@@ -76,8 +62,10 @@ public class StorageHandler {
     }
   }
 
-  private String memoryToJSON(Gson gson, Vector<Task> memory) {
-    return gson.toJson(memory);
+  /*Returns JSON String given an object*/
+  private static <T> String convertToJson(T targetObject) {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(targetObject);
   }
 
 }
