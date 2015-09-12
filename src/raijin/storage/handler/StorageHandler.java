@@ -9,7 +9,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLDecoder;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Vector;
 
 import com.google.gson.Gson;
@@ -26,7 +32,37 @@ import raijin.common.datatypes.Task;
 public class StorageHandler {
 
 
-  private StorageHandler() {}
+  private StorageHandler() {}   //Prevent developer from instantiating the class
+
+  //===========================================================================
+  //Regular File Operations
+  //===========================================================================
+
+  /*Retrieves directory where the program is being executed by user*/
+  public static String getJarPath() throws UnsupportedEncodingException {
+    String path = StorageHandler.class.getProtectionDomain().
+        getCodeSource().getLocation().getPath();
+    return URLDecoder.decode(path, "UTF-8");
+  }
+
+  public static boolean createDirectory(String dirPath){
+    File directory = new File(dirPath);
+    return directory.mkdir();  //If directory does not exist, create one
+  }
+  
+  /*Will replace file if it exists in target*/
+  public static void copyFiles(Path src, Path target) throws IOException {
+    /*Copy attribute such as last-modified-time from source*/
+    CopyOption[] options = new CopyOption[] {
+        StandardCopyOption.COPY_ATTRIBUTES,
+        StandardCopyOption.REPLACE_EXISTING
+    };
+    Files.copy(src, target, options);
+  }
+
+  //===========================================================================
+  //JSON Functions
+  //===========================================================================
 
   public static JsonReader getJsonReaderFromFile(String filePath) {
     JsonReader jsonReader = null;
