@@ -15,6 +15,7 @@ import java.net.URLDecoder;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Vector;
 
@@ -27,6 +28,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 
 public class StorageHandler {
@@ -60,6 +62,20 @@ public class StorageHandler {
     Files.copy(src, target, options);
   }
 
+  public static boolean isDirectory(String dirPath) {
+    return new File(dirPath).isDirectory();
+  }
+
+  public static void setupDataFolder(Path dataPath) throws IOException {
+    String dirPath = dataPath.toString()+Constants.NAME_USER_FOLDER;
+    if (isDirectory(dirPath)) {
+      return;
+    } else {    //Create user config and user data 
+       createDirectory(dirPath);
+       new File(dirPath+Constants.NAME_USER_DATA).createNewFile();  //Create data.json
+       new File(dirPath+Constants.NAME_USER_CONFIG).createNewFile();  //Create config.json
+    }
+  }
   //===========================================================================
   //JSON Functions
   //===========================================================================
@@ -99,7 +115,7 @@ public class StorageHandler {
   }
 
   /*Returns JSON String given an object*/
-  private static <T> String convertToJson(T targetObject) {
+  public static <T> String convertToJson(T targetObject) {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     return gson.toJson(targetObject);
   }
