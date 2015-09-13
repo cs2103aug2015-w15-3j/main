@@ -1,6 +1,7 @@
 package raijin.logic.parser;
 
 import raijin.common.datatypes.DateTime;
+import raijin.common.datatypes.Status;
 
 /**
  * 
@@ -9,6 +10,7 @@ import raijin.common.datatypes.DateTime;
  */
 public final class Command {
   
+  private Status status;
   private int id;
   private String name;
   private DateTime dateTime;
@@ -71,6 +73,14 @@ public final class Command {
 
   void setDisplayOption(char displayOption) {
     this.displayOption = displayOption;
+  }
+
+  public Status getStatus() {
+    return status;
+  }
+
+  public void setStatus(Status status) {
+    this.status = status;
   }
   
   
