@@ -1,30 +1,27 @@
 package raijin.common.datatypes;
 
 public class Status {
-  public static final String ERROR_UNKNOWN_COMMAND = "Unknown Command\n";
-  public static final String ERROR_EMPTY_COMMAND = "Empty Command\n";
-  public static final String INFO_SUCCESS = "sucessful\n";         //When no feedback for user
-  public static final String INFO_ADDED_SUCCESS = "added %s sucessfully\n";
-  public static final String INFO_DELETED_SUCCESS = "deleted %s sucessfully\n";
-  public static final String INFO_EDITED_SUCCESS = "edited from %s to %s sucessfully\n";
-  public static final String INFO_WELCOME = "Welcome to Raijin.\n";
-  public static final String INFO_PROMPT = "Command: ";
   
-  public static Status instance = new Status();
-  
-  private boolean isRunning = true; //Determines when to quit program
-  
-  private Status(){}
-  
-  public static Status getStatus(){
-    return instance;
+  private String result;
+  private String feedback;
+
+  /*Feedback is compulsory for any commands*/
+  public Status(String feedback){
+    this.feedback = feedback;
   }
 
-  public boolean isRunning() {
-    return isRunning;
+  /*Alternative for those commands that require display*/
+  public Status(String feedback, String result){
+    this.feedback = feedback;
+    this.result = result;
   }
 
-  public void setRunning(boolean isRunning) {
-    this.isRunning = isRunning;
+  public String getResult() {
+    return result;
   }
+
+  public String getFeedback() {
+    return feedback;
+  }
+
 }

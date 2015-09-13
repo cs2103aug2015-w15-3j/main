@@ -2,41 +2,31 @@ package raijin.logic.api;
 
 import java.util.HashMap;
 
+import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
-import raijin.common.datatypes.UserInput;
-import raijin.logic.command.AddCommandUnit;
-import raijin.logic.command.DeleteCommandUnit;
-import raijin.logic.command.DisplayCommandUnit;
-import raijin.logic.command.EditCommandUnit;
-import raijin.logic.command.UndoCommandUnit;
+import raijin.logic.parser.Command;
 
 public class CommandDispatcher {
-  private HashMap<String, CommandUnitInterface> lib = new HashMap<String, CommandUnitInterface>();
-  private static CommandDispatcher instance = new CommandDispatcher();
+  private HashMap<Constants.Command, CommandRunner> lib = new HashMap<Constants.Command, CommandRunner>();
+  private static CommandDispatcher commandDispatcher = new CommandDispatcher();
   
   private CommandDispatcher(){
-    setupCommandUnit();
+    setupCommandUnit();     //Setup all supported commands
   }
   
   public static CommandDispatcher getDispatcher(){
-    return instance;
+    return commandDispatcher;
   }
   
-  public String handleCommand(UserInput in){
-    String command = in.getCommand();
-    if (lib.containsKey(command)){
-      CommandUnitInterface commandUnit = lib.get(command);
-      return commandUnit.executeCommand(in);
-    } else {
-      return Status.ERROR_UNKNOWN_COMMAND;
-    }
+  public Status handleCommand(Command command){
+      CommandRunner commandRunner = lib.get(command);
+      return commandRunner.execute(command);
   }
   
   public void setupCommandUnit(){
-    lib.put("add", new AddCommandUnit());
-    lib.put("edit", new EditCommandUnit());
-    lib.put("delete", new DeleteCommandUnit());
-    lib.put("display", new DisplayCommandUnit());
-    lib.put("undo", new UndoCommandUnit());
+    /*Setup each command runner based on commands*/
+    for (Constants.Command cmd : Constants.Command.values()) {
+      lib.put(cmd, CommandRunnerFactory.getCommandRunner(cmd));
+    }
   }
 }
