@@ -1,24 +1,47 @@
 package raijin.storage.api;
 
-import java.util.HashMap;
-
-import com.google.common.collect.TreeMultimap;
+import java.util.ArrayList;
+import java.util.List;
 
 import raijin.common.datatypes.Task;
-import raijin.storage.handler.StorageHandler;
 
+/**
+ * 
+ * @author papa
+ */
 public class Memory {
 
   private static Memory memory = new Memory();
-  private HashMap<Integer, Task> taskMap;
-  private TreeMultimap<String, Integer> searchMap;
+  private TasksMap tasksMap;                    //Stores current tasks
 
   private Memory() {
-    taskMap = new HashMap<Integer, Task>();
+    tasksMap = new TasksMap();
   }
   
   public static Memory getMemory() {
     return memory;
   }
 
+  public void addTask(Task task) {
+    tasksMap.addTask(task);
+  }
+
+  public Task getTask(int id) {
+    return tasksMap.getTask(id);
+  }
+
+  public void deleteTask(int id) {
+    tasksMap.deleteTask(id);
+  }
+  
+  public String printTasksMap() {
+    return tasksMap.toString();
+  }
+
+  //===========================================================================
+  // Undo/Redo related methods
+  //===========================================================================
+
+
+  
 }
