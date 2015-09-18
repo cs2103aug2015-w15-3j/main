@@ -34,5 +34,21 @@ public class History {
     undoStack.clear();
     redoStack.clear();
   }
+
+  public void addCommand(CommandRunner commandRunner) {
+    undoStack.push(commandRunner);
+  }
+
+  /*Calling class must catch EmptyStackException*/
+  public void undo() {
+    CommandRunner undoCommand = undoStack.pop();
+    redoStack.add(undoCommand);     //Add removed command to redo stack
+  }
+
+  /*Calling class must catch EmptyStackException*/
+  public void redo() {
+    CommandRunner redoCommand = redoStack.pop();
+    undoStack.add(redoCommand);     //Add command to redo stack
+  }
   
 }
