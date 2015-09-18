@@ -7,10 +7,11 @@ import raijin.common.datatypes.Status;
 import raijin.logic.parser.Command;
 
 public class CommandDispatcher {
-  private HashMap<Constants.Command, CommandRunner> lib = new HashMap<Constants.Command, CommandRunner>();
+  private HashMap<Constants.Command, CommandRunner> commandRunners;     //Collection of command runners
   private static CommandDispatcher commandDispatcher = new CommandDispatcher();
   
   private CommandDispatcher(){
+    commandRunners = new HashMap<Constants.Command, CommandRunner>();
     setupCommandUnit();     //Setup all supported commands
   }
   
@@ -19,14 +20,19 @@ public class CommandDispatcher {
   }
   
   public Status handleCommand(Command command){
-      CommandRunner commandRunner = lib.get(command);
+      CommandRunner commandRunner = commandRunners.get(command);
       return commandRunner.execute(command);
   }
   
   public void setupCommandUnit(){
     /*Setup each command runner based on commands*/
     for (Constants.Command cmd : Constants.Command.values()) {
-      lib.put(cmd, CommandRunnerFactory.getCommandRunner(cmd));
+      commandRunners.put(cmd, CommandRunnerFactory.getCommandRunner(cmd));
     }
   }
+  
+  public int getSizeOfCommandRunners() {
+    return commandRunners.size();
+  }
+
 }
