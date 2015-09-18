@@ -20,10 +20,12 @@ public class Logic {
   private Memory memory;
   private History history;
   private CommandDispatcher commandDispatcher;
-  private String currentDirectory;              //Records down current directory
+  private String programDirectory;      //Directory where program is running from
+  private String storageDirectory;      //Directory where user wish to store data on
   
   public Logic() {
     setupEnvironment();
+    setupStorage();
   }
   public Status handleInput(String userInput) {
     return null;
@@ -32,9 +34,13 @@ public class Logic {
   private void setupEnvironment() {
     memory = Memory.getMemory();
     history = History.getHistory();
-    //commandDispatcher = CommandDispatcher.getDispatcher();
+    commandDispatcher = CommandDispatcher.getDispatcher();
+  }
+
+  public void setupStorage() {
     try {
-      currentDirectory = StorageHandler.getJarPath();
+      programDirectory = StorageHandler.getJarPath();
+      storageDirectory = programDirectory;      //defaults to current directory
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
     }
@@ -43,13 +49,13 @@ public class Logic {
   /*Checks if this is the first time a user use the program*/
   public boolean isFirstTime() {
     //@TODO ensures that the directory path works with Windows
-    String dataPath = currentDirectory+Constants.NAME_USER_FOLDER;
+    String dataPath = storageDirectory+Constants.NAME_USER_FOLDER;
     return !StorageHandler.isDirectory(dataPath);
   }
 
   /*Used for testing purpose or in case when user wants to change location of storage*/
   public void setCurrentPath(String path) {
-    currentDirectory = path;
+    storageDirectory = path;
   }
 
 }
