@@ -18,13 +18,11 @@ public class IDManagerTest {
   }
 
   @Test
-  @Ignore
   public void testUniqueIds() {
     assertNotEquals(idManager.getId(), idManager.getId());
   }
 
   @Test
-  @Ignore
   public void testReturnId() {
     int id = idManager.getId();
     TreeSet<Integer> idPool = idManager.getIdPool();

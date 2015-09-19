@@ -11,7 +11,7 @@ public class DateTimeTest {
 
   @Before
   public void setUp() throws Exception {
-    date = new DateTime("19/9/2015");
+    date = new DateTime("19/09/2015");
   }
 
   @Test
@@ -22,14 +22,14 @@ public class DateTimeTest {
 
   @Test
   public void testSpecificDateAndTime() {
-    DateTime date = new DateTime("19/9/2013", "1900");
+    DateTime date = new DateTime("19/09/2013", "1900");
     assertEquals(date.getStartDate().toString(), "2013-09-19");
     assertEquals("19:00", date.getStartTime().toString());
   }
 
   @Test
   public void testSpecificEvent() {
-    DateTime date = new DateTime("19/9/2013", "1900", "2100");
+    DateTime date = new DateTime("19/09/2013", "1900", "2100");
     assertEquals(date.getStartDate().toString(), "2013-09-19");
     assertEquals("19:00", date.getStartTime().toString());
     assertEquals("21:00", date.getEndTime().toString());
@@ -37,7 +37,7 @@ public class DateTimeTest {
 
   @Test
   public void testSpanEvent() {
-    DateTime date = new DateTime("19/9/2013", "1900", "21/9/2013", "2100");
+    DateTime date = new DateTime("19/09/2013", "1900", "21/09/2013", "2100");
     assertEquals( "2013-09-19", date.getStartDate().toString());
     assertEquals( "2013-09-21", date.getEndDate().toString());
     assertEquals("19:00", date.getStartTime().toString());

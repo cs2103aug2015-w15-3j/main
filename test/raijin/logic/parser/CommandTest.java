@@ -23,7 +23,7 @@ public class CommandTest {
 
   @Test
   public void testSetValues() {
-    Command command = Command.buildUndoable(0, "submit op1", new DateTime("19/9/2015"));
+    Command command = Command.buildUndoable(0, "submit op1", new DateTime("19/09/2015"));
     assertEquals(0, command.getId());
     assertEquals("submit op1", command.getName());
   }
