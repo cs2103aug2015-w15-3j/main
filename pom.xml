@@ -6,6 +6,11 @@
 	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<description>A desktop todo manager application </description>
+	<properties>
+    	<skipTests>false</skipTests>
+    	<skipITs>${skipTests}</skipITs>
+    	<skipUTs>${skipTests}</skipUTs>
+  	</properties>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
@@ -57,6 +62,23 @@
 								</transformer>
 							</transformers>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.18.1</version>
+				<configuration>
+					<skipTests>${skipTests}</skipTests>
+					<skipITs>${skipITs}</skipITs>
+        		</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

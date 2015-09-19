@@ -22,7 +22,7 @@ import raijin.storage.api.Memory;
 import raijin.storage.api.TasksMap;
 import static raijin.storage.handler.StorageHandler.*;
 
-public class LogicStorageIntegrationTest {
+public class LogicStorageIT {
 
   private static Logic logic;
   private String programPath;

@@ -55,7 +55,28 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.18.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skipTests>${skipTests}</skipTests>
+          <skipITs>${skipITs}</skipITs>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+  <properties>
+    <skipTests>false</skipTests>
+    <skipUTs>${skipTests}</skipUTs>
+    <skipITs>${skipTests}</skipITs>
+  </properties>
 </project>
 

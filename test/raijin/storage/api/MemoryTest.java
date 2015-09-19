@@ -24,12 +24,5 @@ public class MemoryTest {
     assertEquals(mem2, memory);
   }
 
-  @Test
-  public void testAddGetTask() {
-    Task task1 = new Task("add flexible task");
-    memory.addTask(task1);
-    assertEquals("add flexible task", memory.getTask(1).getName());
-  }
-
 
 }
