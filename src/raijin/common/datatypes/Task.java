@@ -74,4 +74,9 @@ public class Task {
     return name.split(" ");
   }
 
+  @Override
+  public boolean equals(Object ob2) {
+    return ob2 instanceof Task && ((Task) ob2).getId() == getId() 
+        && ((Task) ob2).getName().equals(getName());
+  }
 }

@@ -18,7 +18,7 @@ public class TasksMap {
     idManager = IDManager.getIdManager();   //Stores available idPool
   }
   
-  void addTask(Task task) {
+  public void addTask(Task task) {
     tasks.put(task.getId(), task);
   }
 
@@ -41,7 +41,8 @@ public class TasksMap {
     Iterator iter = tasks.entrySet().iterator();
     while (iter.hasNext()) {
       Map.Entry pair = (Entry) iter.next();
-      sb.append(((Task) pair.getValue()).getName()+"\n");
+      sb.append(((Task) pair.getValue()).getId() + " "
+          + ((Task) pair.getValue()).getName()+"\n");
     }
     return sb.toString();
   }

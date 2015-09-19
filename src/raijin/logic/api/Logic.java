@@ -11,6 +11,7 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.storage.api.History;
 import raijin.storage.api.Memory;
+import raijin.storage.api.TasksMap;
 import raijin.storage.handler.StorageHandler;
 
 
@@ -51,6 +52,7 @@ public class Logic {
 
   /*Set up paths and retrieves information from external file*/
   public void setupEnvironment() {
+    setupDataFolder();
   }
 
   public Status handleInput(String userInput) {
@@ -71,14 +73,21 @@ public class Logic {
     StorageHandler.writeToFile(storageDirectory, baseConfigPath);               //Write changes to base config
   }
 
+  /*Used for testing purposes*/
+  public void setProgramPath(String path) {
+    programDirectory = path;
+    storageDirectory = programDirectory + Constants.NAME_USER_FOLDER;
+  }
+  
+  /*Initialize list of tasks*/
+  public void initializeData(TasksMap tasksMap) {
+    memory.setTasksMap(tasksMap);
+  }
+
   //===========================================================================
   // Package methods 
   //===========================================================================
   
-  /*Used for testing purposes*/
-  void setProgramPath(String path) {
-    programDirectory = path;
-  }
 
   /* Base config independent of user's choice will be created */
   void setupBaseConfig() throws FileNotFoundException {
@@ -104,6 +113,7 @@ public class Logic {
       StorageHandler.createFile(userConfigPath);                                //Creates user config
       StorageHandler.createFile(dataPath);                                      //Creates data file
     }
+    
   }
 
 }

@@ -14,6 +14,10 @@ public class Memory {
   private Memory() {
     tasksMap = new TasksMap();
   }
+
+  public void setTasksMap(TasksMap tasksMap) {
+    this.tasksMap = tasksMap;
+  }
   
   public static Memory getMemory() {
     return memory;
