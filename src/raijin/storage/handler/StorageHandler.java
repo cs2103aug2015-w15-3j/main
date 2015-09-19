@@ -68,13 +68,15 @@ public class StorageHandler {
     return new File(dirPath).isDirectory();
   }
 
-  public static void createFile(String filePath) {
+  public static boolean createFile(String filePath) {
     File file = new File(filePath);
+    boolean isCreated = false;
     try {
-      file.createNewFile();
+      isCreated = file.createNewFile();
     } catch (IOException e) {
       e.printStackTrace();
     }
+    return isCreated;
   }
 
   /*Writes content to file*/

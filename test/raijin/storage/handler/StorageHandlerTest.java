@@ -54,7 +54,7 @@ public class StorageHandlerTest {
     config.put("undo", "Ctrl+Z");
     config.put("exit", "Alt+F4");
     StorageHandler.writeToFile(
-        StorageHandler.convertToJson(config), testFile);
+        StorageHandler.convertToJson(config), testFile.getAbsolutePath());
     HashMap<String, String> config2 = StorageHandler.readFromJson(
         StorageHandler.getJsonReaderFromFile(testFile.getAbsolutePath()), 
         new TypeToken<HashMap<String, String>>(){}.getType());

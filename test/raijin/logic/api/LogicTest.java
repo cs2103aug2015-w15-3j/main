@@ -3,6 +3,7 @@ package raijin.logic.api;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -25,17 +26,25 @@ public class LogicTest {
     logic = new Logic();
   }
 
-  @Test
-  public void isFirstTime_FirstTime_ReturnTrue() {
-    assertTrue(logic.isFirstTime());
-  }
   
   @Test
-  public void  setupBaseStorage_CreatesBaseConfig() {
+  public void  setupBaseConfig_CreatesBaseConfig() throws FileNotFoundException {
     logic.setProgramPath(tmpFolder.getRoot().getAbsolutePath());
-    logic.setupBaseStorage();
+    logic.setupBaseConfig();
     String expectedFilePath = tmpFolder.getRoot().getAbsolutePath()
         + Constants.NAME_USER_FOLDER + Constants.NAME_BASE_CONFIG;
+    assertTrue(new File(expectedFilePath).exists());
+  }
+
+  @Test
+  public void setupDataFolder_DefaultFolder_CreateFiles() {
+    //Set storage path to default location
+    logic.setStoragePath(tmpFolder.getRoot().getAbsolutePath() 
+        + Constants.NAME_USER_FOLDER);
+
+    String expectedFilePath = tmpFolder.getRoot().getAbsolutePath() 
+        + Constants.NAME_USER_FOLDER + Constants.NAME_USER_CONFIG;
+    logic.setupDataFolder();
     assertTrue(new File(expectedFilePath).exists());
   }
 
