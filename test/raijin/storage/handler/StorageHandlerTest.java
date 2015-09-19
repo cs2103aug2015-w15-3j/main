@@ -72,7 +72,7 @@ public class StorageHandlerTest {
   public void testGetStorageDirectory() throws IOException {
     File baseConfig = tmpFolder.newFile("base.cfg");
     String expectedStorageLocation = tmpFolder2.getRoot().getAbsolutePath();
-    StorageHandler.writeToFile(expectedStorageLocation, baseConfig);
+    StorageHandler.writeToFile(expectedStorageLocation, baseConfig.getAbsolutePath());
     String storageLocation = StorageHandler.getStorageDirectory(baseConfig.getAbsolutePath());
     assertEquals(expectedStorageLocation, storageLocation);
   }
