@@ -12,5 +12,6 @@ public class Constants {
   public static final String NAME_USER_DATA = "/data.json";      //Default name used to store data 
   public static final String NAME_USER_CONFIG = "/config.json";  //Default name used to store user config
   public static final String NAME_USER_FOLDER = "/data";         //Default folder name for storage
+  public static final String NAME_BASE_CONFIG = "/base.cfg";     //Base config which stores location of storage
 
 }

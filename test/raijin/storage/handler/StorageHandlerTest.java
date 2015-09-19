@@ -13,6 +13,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import raijin.common.datatypes.Constants;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
@@ -51,11 +53,28 @@ public class StorageHandlerTest {
     config.put("status", "running");
     config.put("undo", "Ctrl+Z");
     config.put("exit", "Alt+F4");
-    StorageHandler.writeJsonToFile(
+    StorageHandler.writeToFile(
         StorageHandler.convertToJson(config), testFile);
     HashMap<String, String> config2 = StorageHandler.readFromJson(
         StorageHandler.getJsonReaderFromFile(testFile.getAbsolutePath()), 
         new TypeToken<HashMap<String, String>>(){}.getType());
     assertEquals(config, config2);
   }
+  
+  @Test
+  public void testCreateFile() {
+    String expectedPath = tmpFolder.getRoot().getAbsolutePath() + Constants.NAME_BASE_CONFIG;
+    StorageHandler.createFile(expectedPath);
+    assertTrue(new File(expectedPath).exists());
+  }
+
+  @Test
+  public void testGetStorageDirectory() throws IOException {
+    File baseConfig = tmpFolder.newFile("base.cfg");
+    String expectedStorageLocation = tmpFolder2.getRoot().getAbsolutePath();
+    StorageHandler.writeToFile(expectedStorageLocation, baseConfig);
+    String storageLocation = StorageHandler.getStorageDirectory(baseConfig.getAbsolutePath());
+    assertEquals(expectedStorageLocation, storageLocation);
+  }
+
 }

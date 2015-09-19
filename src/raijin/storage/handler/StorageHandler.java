@@ -1,5 +1,6 @@
 package raijin.storage.handler;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,7 +45,8 @@ public class StorageHandler {
   public static String getJarPath() throws UnsupportedEncodingException {
     String path = StorageHandler.class.getProtectionDomain().
         getCodeSource().getLocation().getPath();
-    return URLDecoder.decode(path, "UTF-8");
+    String decodedPath = URLDecoder.decode(path, "UTF-8");
+    return decodedPath.substring(0, decodedPath.length()-1);    //Trim last backslash for standardisation
   }
 
   public static boolean createDirectory(String dirPath){
@@ -66,16 +68,43 @@ public class StorageHandler {
     return new File(dirPath).isDirectory();
   }
 
-  public static void setupDataFolder(Path dataPath) throws IOException {
-    String dirPath = dataPath.toString()+Constants.NAME_USER_FOLDER;
-    if (isDirectory(dirPath)) {
-      return;
-    } else {    //Create user config and user data 
-       createDirectory(dirPath);
-       new File(dirPath+Constants.NAME_USER_DATA).createNewFile();  //Create data.json
-       new File(dirPath+Constants.NAME_USER_CONFIG).createNewFile();  //Create config.json
+  public static void createFile(String filePath) {
+    File file = new File(filePath);
+    try {
+      file.createNewFile();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
+
+  /*Writes content to file*/
+  public static void writeToFile(String output, String filePath) {
+    try {
+      FileOutputStream os = new FileOutputStream(filePath); // Overwrite whole file
+      BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+      bw.append(output);
+      bw.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /*Retrieves storage location from base config file*/
+  public static String getStorageDirectory(String absolutePath) throws FileNotFoundException {
+    String storageLocation = null;
+    BufferedReader br = new BufferedReader(new FileReader(absolutePath));
+    try {
+      storageLocation = br.readLine();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    //@TODO prevent from returning null
+    return storageLocation;
+  }
+
+
   //===========================================================================
   //JSON Functions
   //===========================================================================
@@ -100,19 +129,6 @@ public class StorageHandler {
     return deserializedObject;
   }
 
-  /*Writes JSON to file*/
-  public static void writeJsonToFile(String jsonString, File file) {
-    try {
-      FileOutputStream os = new FileOutputStream(file); // Overwrite whole file
-      BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
-      bw.append(jsonString);
-      bw.close();
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
 
   /*Returns JSON String given an object*/
   public static <T> String convertToJson(T targetObject) {
