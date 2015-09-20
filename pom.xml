@@ -7,6 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<description>A desktop todo manager application </description>
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     	<skipTests>false</skipTests>
     	<skipITs>${skipTests}</skipITs>
     	<skipUTs>${skipTests}</skipUTs>
