@@ -9,4 +9,4 @@ notifications:
     email:
     - jinified@gmail.com 
 after_success:
-    - mvn clean coveralls:report
+    - mvn clean jacoco:report coveralls:report
