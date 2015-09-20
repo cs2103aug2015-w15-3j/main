@@ -32,8 +32,11 @@ public class IDManagerTest {
   }
 
   @Test
-  public void testIdSequence() {
+  public void testFlushIdPool() {
+    //Get a few ids 
     int a = idManager.getId();
-    System.out.println(a);
+    
+    idManager.flushIdPool();
+    assertEquals(1, idManager.getId());
   }
 }

@@ -28,8 +28,10 @@ public class IDManager {
     return idManager;
   }
 
+  /*Used with care because refreshes all id pools*/
   public void flushIdPool(){
     idPool.clear();
+    initIdPool();
   }
 
   //@TODO catch no ids error
@@ -49,6 +51,10 @@ public class IDManager {
 
   public TreeSet<Integer> getIdPool(){
     return idPool;
+  }
+  
+  public void setIdPool(TreeSet<Integer> idPool) {
+    this.idPool = idPool;
   }
 
 }

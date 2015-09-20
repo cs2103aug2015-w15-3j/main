@@ -1,5 +1,6 @@
 package raijin.storage.api;
 
+import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Task;
 import raijin.logic.api.UndoableRedoable;
 
@@ -28,6 +29,9 @@ public class Memory {
     this.tasksMap = tasksMap;
   }
   
+  public TasksMap getTasksMap() {
+    return tasksMap;
+  }
 
   //===========================================================================
   // Command related functions

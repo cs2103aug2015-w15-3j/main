@@ -35,6 +35,10 @@ public class TasksMap {
     tasks.remove(id);
   }
   
+  public IDManager getIdManager() {
+    return idManager;
+  }
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

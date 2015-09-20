@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Status;
 import raijin.storage.api.History;
 import raijin.storage.api.Memory;
@@ -80,6 +81,7 @@ public class Logic {
   /*Initialize list of tasks*/
   public void initializeData(TasksMap tasksMap) {
     memory.setTasksMap(tasksMap);
+    IDManager.getIdManager().setIdPool(tasksMap.getIdManager().getIdPool());
   }
   
 

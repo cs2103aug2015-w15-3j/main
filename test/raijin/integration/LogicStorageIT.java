@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -25,6 +26,7 @@ import static raijin.storage.handler.StorageHandler.*;
 
 public class LogicStorageIT {
 
+  private static String[] sampleTasks;
   private Logic logic;
   private String programPath;
   private String dataPath;
@@ -45,6 +47,12 @@ public class LogicStorageIT {
     logic.setProgramPath(programPath);
   }
 
+  @BeforeClass
+  public static void setUpClass() {
+    sampleTasks = new String[] {"submit op1", "kick people", "test cat or dog", 
+       "knock knock", "say hello to the monster", "leave Mordor"};
+  }
+
   //===========================================================================
   // Helper methods
   //===========================================================================
@@ -56,14 +64,41 @@ public class LogicStorageIT {
     JsonReader jsonReader = getJsonReaderFromFile(dataPath);
     return readFromJson(jsonReader, Constants.tasksType);
   }
+  
+  /*Add random tasks to current tasksMap*/
+  public void addRandomTasks() {
+    Memory memory = Memory.getMemory();
+    for (int i = 0; i < sampleTasks.length; i++) {
+      memory.addTask(new Task(sampleTasks[i]));
+    }
+  }
+
+  /*Reset states of memory*/
+  public void resetState() {
+    IDManager.getIdManager().flushIdPool();
+    Memory.getMemory().setTasksMap(new TasksMap());
+  }
 
   //===========================================================================
   // Test cases
   //===========================================================================
 
   @Test
-  public void ValidateStoredDataTest() {
-    //Using default folder
+  public void ValidateStateOfIdManager() {
+    //Setup 
     logic.setupEnvironment();
+    
+    
+    //Make some changes to program internal memory
+    addRandomTasks();
+    writeDataToFile(dataPath, Memory.getMemory().getTasksMap());
+    System.out.println(IDManager.getIdManager().getIdPool().toString());
+    
+    //Reset & read from file
+    resetState();
+    TasksMap deserialized = readDataFromFile(dataPath);
+    logic.initializeData(deserialized);
+    assertEquals(50 - sampleTasks.length, IDManager.getIdManager().getIdPool().size());
+
   }
 }
