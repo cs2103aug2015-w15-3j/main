@@ -1,4 +1,4 @@
-package raijin.ui.java;
+package raijin.ui;
 
 import java.io.IOException;
 
