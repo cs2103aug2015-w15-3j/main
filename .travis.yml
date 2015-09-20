@@ -8,5 +8,5 @@ branches:
 notifications:
     email:
     - jinified@gmail.com 
-after-success:
+after_success:
     - mvn clean coveralls:report
