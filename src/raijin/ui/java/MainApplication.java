@@ -25,6 +25,10 @@ public class MainApplication extends Application {
     /*Adding fxml */
     initRootLayout();
     initPrimaryStage(stage);
+    
+    addDisplayBar(this);
+    addFeedbackBar(this);
+    addCommandInputBar(this);
   }
 
   private void initPrimaryStage(Stage stage) {
