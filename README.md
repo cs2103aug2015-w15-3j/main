@@ -1,4 +1,4 @@
-# main
+# main [![Build Status](https://travis-ci.org/cs2103aug2015-w15-3j/main.svg?branch=master)](https://travis-ci.org/cs2103aug2015-w15-3j/main)
 CS2103 project of team w15-3j
 
 ##Setting up 
