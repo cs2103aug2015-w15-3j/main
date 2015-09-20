@@ -23,7 +23,6 @@ import raijin.storage.handler.StorageHandler;
 public class Logic {
 
   private Memory memory;
-  private History history;
   private CommandDispatcher commandDispatcher;
   private String programDirectory;      //Directory where program is running from
   private String storageDirectory;      //Directory where user wish to store data on
@@ -38,7 +37,6 @@ public class Logic {
   
   private void initAssets() {
     memory = Memory.getMemory();
-    history = History.getHistory();
     commandDispatcher = CommandDispatcher.getDispatcher();
 
     try {
@@ -83,6 +81,7 @@ public class Logic {
   public void initializeData(TasksMap tasksMap) {
     memory.setTasksMap(tasksMap);
   }
+  
 
   //===========================================================================
   // Package methods 

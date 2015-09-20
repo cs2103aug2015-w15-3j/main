@@ -10,15 +10,15 @@ import raijin.common.datatypes.Task;
 
 public class TasksMap {
 
-  protected HashMap<Integer, Task> tasks;
-  protected IDManager idManager;
+  private HashMap<Integer, Task> tasks;
+  private IDManager idManager;
   
   public TasksMap() {
     tasks = new HashMap<Integer, Task>();   //Stores current tasks
     idManager = IDManager.getIdManager();   //Stores available idPool
   }
   
-  public void addTask(Task task) {
+  void addTask(Task task) {
     tasks.put(task.getId(), task);
   }
 
@@ -38,8 +38,10 @@ public class TasksMap {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
+    @SuppressWarnings("rawtypes")
     Iterator iter = tasks.entrySet().iterator();
     while (iter.hasNext()) {
+      @SuppressWarnings("rawtypes")
       Map.Entry pair = (Entry) iter.next();
       sb.append(((Task) pair.getValue()).getId() + " "
           + ((Task) pair.getValue()).getName()+"\n");

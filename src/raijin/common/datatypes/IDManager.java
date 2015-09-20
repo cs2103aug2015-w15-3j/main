@@ -8,7 +8,7 @@ public class IDManager {
   private static final int MAX_ID = 50;     //Set maximum number of todos
   private TreeSet<Integer> idPool = new TreeSet<Integer>();
   
-  private IDManager() {
+  public IDManager() {
     initIdPool();
   }
   
