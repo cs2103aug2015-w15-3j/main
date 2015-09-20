@@ -1,1 +1,0 @@
-INDEX VERSION 1.127+C:\Users\Woodblock\Documents\CS2103\Raijin\src\raijin\ui\.metadata\.plugins\org.eclipse.jdt.core
