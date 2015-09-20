@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeSet;
 
 import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Task;
@@ -35,8 +36,8 @@ public class TasksMap {
     tasks.remove(id);
   }
   
-  public IDManager getIdManager() {
-    return idManager;
+  public TreeSet<Integer> getIdPool() {
+    return idManager.getIdPool();
   }
 
   @Override

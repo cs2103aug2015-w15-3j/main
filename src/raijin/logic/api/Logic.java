@@ -81,7 +81,7 @@ public class Logic {
   /*Initialize list of tasks*/
   public void initializeData(TasksMap tasksMap) {
     memory.setTasksMap(tasksMap);
-    IDManager.getIdManager().setIdPool(tasksMap.getIdManager().getIdPool());
+    IDManager.getIdManager().setIdPool(tasksMap.getIdPool());
   }
   
 
