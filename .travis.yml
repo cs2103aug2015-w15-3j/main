@@ -1,5 +1,5 @@
 language: java
-script: mvn clean install 
+script: mvn install 
 jdk:
 - oraclejdk8
 branches:
@@ -8,3 +8,5 @@ branches:
 notifications:
     email:
     - jinified@gmail.com 
+after-success:
+    - mvn clean coveralls:report
