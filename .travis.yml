@@ -1,0 +1,10 @@
+language: java
+script: mvn clean install 
+jdk:
+- oraclejdk8
+branches:
+    only:
+    - master 
+notifications:
+    email:
+    - jinified@gmail.com 
