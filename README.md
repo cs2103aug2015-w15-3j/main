@@ -1,4 +1,4 @@
-# main [![Build Status](https://travis-ci.org/cs2103aug2015-w15-3j/main.svg?branch=master)](https://travis-ci.org/cs2103aug2015-w15-3j/main)
+# main [![Build Status](https://travis-ci.org/cs2103aug2015-w15-3j/main.svg?branch=master)](https://travis-ci.org/cs2103aug2015-w15-3j/main) [![Coverage Status](https://coveralls.io/repos/cs2103aug2015-w15-3j/main/badge.svg?branch=master&service=github)](https://coveralls.io/github/cs2103aug2015-w15-3j/main?branch=master)
 CS2103 project of team w15-3j
 
 ##Setting up 
