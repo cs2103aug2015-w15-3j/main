@@ -28,9 +28,9 @@ public class MainApplication extends Application {
     initRootLayout();
     initPrimaryStage(stage);
     
-    addDisplayBar(this);
-    addFeedbackBar(this);
-    addCommandInputBar(this);
+    addDisplayController(this);
+    addFeedbackController(this);
+    addInputController(this);
   }
 
   private void initPrimaryStage(Stage stage) {
@@ -49,15 +49,35 @@ public class MainApplication extends Application {
 	}
   }
  
-  private void addDisplayBar(MainApplication mainApp) {
-	  rootLayout.setCenter(new DisplayBar());
+  /**
+   * method to put the DisplayController class that is another FXML
+   * file containing information about the display bar ONLY.
+   * 
+   * @param mainApp
+   */
+  private void addDisplayController(MainApplication mainApp) {
+	  rootLayout.setCenter(new DisplayController());
   }
   
-  private void addFeedbackBar(MainApplication mainApp) {
-	  rootLayout.setBottom(new FeedbackBar());
+  /**
+   * method to put the feedback bar into the main layout.
+   * FeedbackController is also another FXML file with
+   * its own information.
+   * 
+   * @param mainApp
+   */
+  private void addFeedbackController(MainApplication mainApp) {
+	  rootLayout.setBottom(new FeedbackController());
   }
   
-  private void addCommandInputBar(MainApplication mainApp) {
-	  rootLayout.setBottom(new CommandInputBar());
+  /**
+   * method to put only the command bar into the main layout.
+   * InputController is also another FXML file with its own
+   * information.
+   * 
+   * @param mainApp
+   */
+  private void addInputController(MainApplication mainApp) {
+	  rootLayout.setBottom(new InputController());
   }
 }
