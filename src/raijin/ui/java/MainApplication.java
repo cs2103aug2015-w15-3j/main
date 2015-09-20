@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
 public class MainApplication extends Application {
+	private static final String ROOT_LAYOUT_FXML_LOCATION = "main/resources/layouts/RootLayout.fxml";
+	
 	private BorderPane rootLayout;
 	private Stage stage;
 	
@@ -39,7 +41,7 @@ public class MainApplication extends Application {
   }
 
   private void initRootLayout() {
-	FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("view/Scene.fxml"));
+	FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(ROOT_LAYOUT_FXML_LOCATION));
 	try {
 		rootLayout = loader.load();
 	} catch (IOException e) {
