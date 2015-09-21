@@ -30,5 +30,9 @@ public class CommandDispatcher {
       commandRunners.put(cmd, CommandRunnerFactory.getCommandRunner(cmd));
     }
   }
+
+  int getSizeOfCommandRunners() {
+    return commandRunners.size();
+  }
   
 }

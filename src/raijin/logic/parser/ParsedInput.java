@@ -104,6 +104,12 @@ public class ParsedInput {
       this.displayOptions = displayOptions;
       return this;
     }
+    
+    /*Generate parsedinput when client is done building the object*/
+    public ParsedInput createParsedInput() {
+      return new ParsedInput(command, id, name, dateTime, displayOptions);
+    }
+
   }
 
 }
