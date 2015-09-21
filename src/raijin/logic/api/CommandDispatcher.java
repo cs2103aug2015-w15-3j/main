@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
-import raijin.logic.parser.Command;
+import raijin.logic.parser.ParsedInput;
 
 public class CommandDispatcher {
   private HashMap<Constants.Command, CommandRunner> commandRunners;     //Collection of command runners
@@ -19,9 +19,9 @@ public class CommandDispatcher {
     return commandDispatcher;
   }
   
-  public Status handleCommand(Command command){
-      CommandRunner commandRunner = commandRunners.get(command);
-      return commandRunner.execute(command);
+  public Status delegateCommand(ParsedInput input){
+      CommandRunner commandRunner = commandRunners.get(input.getCommand());
+      return commandRunner.execute(input);
   }
   
   public void setupCommandUnit(){
@@ -31,8 +31,4 @@ public class CommandDispatcher {
     }
   }
   
-  public int getSizeOfCommandRunners() {
-    return commandRunners.size();
-  }
-
 }
