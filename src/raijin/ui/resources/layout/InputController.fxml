@@ -9,4 +9,7 @@
   <center>
     <TextField fx:id="inputCommandBar" prefWidth="-1.0" promptText="What would you like to do?" onKeyPressed="#onKeyPress"/>
   </center>
+  <top>
+  	<Label fx:id="feedbackBar" focusTraversable="false" BorderPane.alignment="CENTER"/>
+  </top>
 </fx:root>
