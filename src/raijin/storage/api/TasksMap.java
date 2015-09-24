@@ -12,6 +12,8 @@ import raijin.common.datatypes.Task;
 public class TasksMap {
 
   private HashMap<Integer, Task> tasks;
+  //@TODO add a limiter to completed tasks
+  private HashMap<Integer, Task> completed; //List of completed tasks
   private IDManager idManager;
   
   public TasksMap() {
@@ -23,6 +25,10 @@ public class TasksMap {
     tasks.put(task.getId(), task);
   }
 
+  void addCompletedTask(Task task) {
+    completed.put(task.getId(), task);
+  }
+
   //@TODO implements more specific exception so that commandRunner can catch
   Task getTask(int id) {
     if (tasks.containsKey(id)) {
@@ -30,6 +36,10 @@ public class TasksMap {
     } else {
       throw new IllegalArgumentException();
     }
+  }
+
+  HashMap<Integer, Task> getCompletedTasks() {
+    return completed;
   }
 
   void deleteTask(int id) {

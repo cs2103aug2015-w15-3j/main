@@ -1,5 +1,7 @@
 package raijin.storage.api;
 
+import java.util.HashMap;
+
 import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Task;
 import raijin.logic.api.UndoableRedoable;
@@ -45,6 +47,10 @@ public class Memory {
     tasksMap.addTask(task);
   }
 
+  public void addCompletedTask(Task task) {
+    tasksMap.addCompletedTask(task);
+  }
+
   /*used for editing of tasks*/
   public Task getTask(int id) {
     return tasksMap.getTask(id);
@@ -60,6 +66,10 @@ public class Memory {
   
   public void redo() {
     history.redo();
+  }
+
+  public HashMap<Integer, Task> getCompletedTasks() {
+    return tasksMap.getCompletedTasks();
   }
 
   //===========================================================================
