@@ -1,5 +1,7 @@
 package raijin.ui;
 
-public class FeedbackController {
+import javafx.scene.layout.BorderPane;
+
+public class FeedbackController extends BorderPane {
 
 }

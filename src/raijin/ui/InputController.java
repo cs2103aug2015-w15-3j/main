@@ -1,5 +1,7 @@
 package raijin.ui;
 
-public class InputController {
+import javafx.scene.layout.BorderPane;
+
+public class InputController extends BorderPane {
 
 }
