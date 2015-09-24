@@ -10,6 +10,9 @@ import java.nio.file.Paths;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Status;
+import raijin.logic.parser.ParsedInput;
+import raijin.logic.parser.ParserInterface;
+import raijin.logic.parser.SimpleParser;
 import raijin.storage.api.History;
 import raijin.storage.api.Memory;
 import raijin.storage.api.TasksMap;
@@ -25,6 +28,7 @@ public class Logic {
 
   private Memory memory;
   private CommandDispatcher commandDispatcher;
+  private ParserInterface parser;
   private String programDirectory;      //Directory where program is running from
   private String storageDirectory;      //Directory where user wish to store data on
   private String baseConfigPath;        //Directory where base config is stored
@@ -39,6 +43,7 @@ public class Logic {
   private void initAssets() {
     memory = Memory.getMemory();
     commandDispatcher = CommandDispatcher.getDispatcher();
+    parser = new SimpleParser();
 
     try {
       programDirectory = StorageHandler.getJarPath();
@@ -84,6 +89,18 @@ public class Logic {
     IDManager.getIdManager().setIdPool(tasksMap.getIdPool());
   }
   
+
+  /*Used by UI controller to execute command and get a Status message*/
+  public Status executeCommand(String userInput) {
+    try {
+      ParsedInput parsed = parser.parse(userInput);
+      return commandDispatcher.delegateCommand(parsed);
+
+    } catch (IllegalArgumentException e) {
+      e.printStackTrace();
+      return new Status(Constants.FEEDBACK_ERROR_ILLEGALCOMMAND);
+    }
+  }
 
   //===========================================================================
   // Package methods 

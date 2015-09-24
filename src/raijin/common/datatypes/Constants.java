@@ -20,6 +20,8 @@ public class Constants {
   public static final String NAME_USER_CONFIG = "/config.json";  //Default name used to store user config
   public static final String NAME_USER_FOLDER = "/data";         //Default folder name for storage
   public static final String NAME_BASE_CONFIG = "/base.cfg";     //Base config which stores location of storage
+  public static final String FEEDBACK_INFO_SUCCESS = "operation is successful";
+  public static final String FEEDBACK_ERROR_ILLEGALCOMMAND = "Illegal command";
 
   public static final Type tasksType = new TypeToken<TasksMap>(){}.getType();
 }
