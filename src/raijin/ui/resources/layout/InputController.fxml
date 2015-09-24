@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <center>
+    <TextField fx:id="inputCommandBar" prefWidth="-1.0" promptText="What would you like to do?" onKeyPressed="#onKeyPress"/>
+  </center>
+  <top>
+  	<Label fx:id="feedbackBar" focusTraversable="false" BorderPane.alignment="CENTER"/>
+  </top>
+</fx:root>

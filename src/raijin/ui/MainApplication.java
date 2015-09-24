@@ -9,11 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
 public class MainApplication extends Application {
-	private static final String ROOT_LAYOUT_FXML_LOCATION = "main/resources/layouts/RootLayout.fxml";
+	private static final String ROOT_LAYOUT_FXML_LOCATION = "resources/layout/RootLayout.fxml";
 	
 	private BorderPane rootLayout;
 	private Stage stage;
@@ -28,9 +29,8 @@ public class MainApplication extends Application {
     initRootLayout();
     initPrimaryStage(stage);
     
-    addDisplayController(this);
-    addFeedbackController(this);
-    addInputController(this);
+   // addDisplayController(this);
+   addInputController(this);
   }
 
   private void initPrimaryStage(Stage stage) {
@@ -41,7 +41,7 @@ public class MainApplication extends Application {
   }
 
   private void initRootLayout() {
-	FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(ROOT_LAYOUT_FXML_LOCATION));
+	FXMLLoader loader = new FXMLLoader(getClass().getResource(ROOT_LAYOUT_FXML_LOCATION));
 	try {
 		rootLayout = loader.load();
 	} catch (IOException e) {
@@ -60,17 +60,6 @@ public class MainApplication extends Application {
   }
   
   /**
-   * method to put the feedback bar into the main layout.
-   * FeedbackController is also another FXML file with
-   * its own information.
-   * 
-   * @param mainApp
-   */
-  private void addFeedbackController(MainApplication mainApp) {
-	  rootLayout.setBottom(new FeedbackController());
-  }
-  
-  /**
    * method to put only the command bar into the main layout.
    * InputController is also another FXML file with its own
    * information.
@@ -78,6 +67,20 @@ public class MainApplication extends Application {
    * @param mainApp
    */
   private void addInputController(MainApplication mainApp) {
-	  rootLayout.setBottom(new InputController());
+	  rootLayout.setBottom(new InputController(mainApp));
+  }
+  
+  // Methods to transfer to logic
+  
+  public void handleKeyPress(InputController inputController,
+		  KeyCode key,
+		  String userInput) {
+	  if (key==KeyCode.ENTER) {
+		  handleEnterPress(inputController, userInput);
+	  }
+  }
+  
+  private void handleEnterPress(InputController inputController, String userInput) {
+	  inputController.setFeedback(userInput);
   }
 }
