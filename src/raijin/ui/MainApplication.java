@@ -30,7 +30,6 @@ public class MainApplication extends Application {
     initPrimaryStage(stage);
     
    // addDisplayController(this);
-   // addFeedbackController(this);
    addInputController(this);
   }
 
@@ -61,17 +60,6 @@ public class MainApplication extends Application {
   }
   
   /**
-   * method to put the feedback bar into the main layout.
-   * FeedbackController is also another FXML file with
-   * its own information.
-   * 
-   * @param mainApp
-   */
-  private void addFeedbackController(MainApplication mainApp) {
-	  rootLayout.setBottom(new FeedbackController());
-  }
-  
-  /**
    * method to put only the command bar into the main layout.
    * InputController is also another FXML file with its own
    * information.
@@ -93,6 +81,6 @@ public class MainApplication extends Application {
   }
   
   private void handleEnterPress(InputController inputController, String userInput) {
-	  System.out.println(userInput);
+	  inputController.setFeedback(userInput);
   }
 }
