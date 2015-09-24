@@ -3,11 +3,12 @@ package raijin.ui;
 import javafx.application.Application;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import javafx.scene.layout.BorderPane;
 
-public class DisplayController extends Application {
+public class DisplayController extends BorderPane {
 	
 	Label test; //to be removed
-	
+	/*
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -17,5 +18,5 @@ public class DisplayController extends Application {
 		test = new Label("test"); //to be removed
 		stage.show();
 	}
-
+*/
 }
