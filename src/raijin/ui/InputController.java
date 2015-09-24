@@ -6,12 +6,16 @@ import java.io.IOException;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
 public class InputController extends BorderPane {
 	@FXML
 	private TextField inputCommandBar;
+	
+	@FXML
+	private Label feedbackBar;
 	
 	private static final String INPUT_COMMAND_BAR_LAYOUT_FXML = "resources/layout/InputController.fxml";
 	
@@ -35,4 +39,7 @@ public class InputController extends BorderPane {
 		mainApp.handleKeyPress(this, event.getCode(), inputCommandBar.getText());
 	}
 	
+	public void setFeedback(String text) {
+		feedbackBar.setText(text);
+	}
 }	
