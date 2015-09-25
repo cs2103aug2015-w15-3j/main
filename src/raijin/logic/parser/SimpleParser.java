@@ -26,11 +26,7 @@ public class SimpleParser implements ParserInterface {
     
     if (isFirstWord("add")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD);
-      if (containsDateInput()){
-        parseDatedTask();
-      } else {
-        // builder = createBuilder(builder, );
-      }
+      parseAddTask();
     } else if (isFirstWord("edit")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EDIT);
       //TODO
@@ -76,14 +72,32 @@ public class SimpleParser implements ParserInterface {
     return wordsOfInput[0].toLowerCase().equals(word.toLowerCase());
   }
   
-  public boolean containsDateInput() {
-    
-    return false; //TODO    
+  public void parseAddTask() {
+    boolean containsDate = false;
+    boolean containsTime = false;
+    int day, month, time;
+    for (int i = 0; i < wordsOfInput.length - 1; i++) {
+      if (wordsOfInput[i].equalsIgnoreCase("by")) {
+        if (wordsOfInput[i+1].contains("/")) {
+          String[] dayMonth = wordsOfInput[i+1].split("/");
+          try {
+            day = Integer.parseInt(dayMonth[0]);
+            month = Integer.parseInt(dayMonth[1]);
+            containsDate = true;
+          } catch (NumberFormatException e) {
+          } catch (NullPointerException e) {
+          }
+          try {
+            time = Integer.parseInt(wordsOfInput[i+2]);
+            containsTime = true;
+          } catch (NumberFormatException e) {
+          } catch (NullPointerException e) {
+          }
+        } else {
+          //TODO time
+        }
+      }
+    }
   }
   
-  public void parseDatedTask() {
-    
-    //TODO
-  }
-
 }
