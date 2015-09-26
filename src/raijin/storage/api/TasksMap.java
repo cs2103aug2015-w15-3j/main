@@ -53,14 +53,30 @@ public class TasksMap {
   
   // For DisplayController.java
   public ArrayList<Task> getPendingList() {
-	  ArrayList<Task> list = new ArrayList<Task>(tasks.values());
-	  return list;
+	  if (!tasks.isEmpty()) {
+		  ArrayList<Task> list = new ArrayList<Task>(tasks.values());
+		  return list;
+	  } else {
+		  ArrayList<Task> list = new ArrayList<Task>();
+		  return list;
+	  }
   }
   
   // For DisplayController.java
   public ArrayList<Task> getCompletedList() {
-	  ArrayList<Task> list = new ArrayList<Task>(completed.values());
-	  return list;
+	  try {
+	      if (!completed.isEmpty()) {
+	          ArrayList<Task> list = new ArrayList<Task>(completed.values());
+		      return list;
+	      } else {
+		      ArrayList<Task> list = new ArrayList<Task>();
+		      return list;
+	      }
+	  } catch (NullPointerException e) {
+		  ArrayList<Task> list = new ArrayList<Task>();
+		  return list;
+	  }
+	  
   }
   
 
