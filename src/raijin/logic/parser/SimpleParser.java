@@ -7,7 +7,6 @@
 package raijin.logic.parser;
 
 import raijin.common.datatypes.Constants;
-import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.DateTime;
 
 public class SimpleParser implements ParserInterface {
@@ -28,7 +27,6 @@ public class SimpleParser implements ParserInterface {
   
   private String[] wordsOfInput;
   private ParsedInput.ParsedInputBuilder builder;
-  private int taskID;
   
   /**
    * Parses the user's input and creates corresponding ParsedInput object.
@@ -39,7 +37,6 @@ public class SimpleParser implements ParserInterface {
   public ParsedInput parse(String userInput) {
     // TODO Auto-generated method stub
     wordsOfInput = userInput.split(" ");
-    taskID = -1; //TODO
     
     if (isFirstWord("add")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD);
@@ -64,24 +61,7 @@ public class SimpleParser implements ParserInterface {
       //TODO
     }
      
-    builder.id(taskID);
     return builder.createParsedInput();
-  }
-  
-  /**
-   * Method that modifies the attribute values of the ParseInputBuilder.
-   * 
-   * @param taskName            Name of To-do.
-   * @param dateTime            Date and time of task.
-   * @param displayOptions      Display option.
-   * @return                    builder object back after inserting changing its attributes
-   */
-  public ParsedInput.ParsedInputBuilder createBuilder(String taskName, 
-      DateTime dateTime, char displayOptions) {
-    builder.name(taskName);
-    builder.dateTime(dateTime);
-    builder.displayOptions(displayOptions);
-    return builder;
   }
   
   /**
@@ -169,7 +149,7 @@ public class SimpleParser implements ParserInterface {
       dateTime = new DateTime(startDate);
     }
     //TODO TO CONFIRM: DISPLAYOPTION
-    createBuilder(name, dateTime, 'u'); 
+    builder.name(name).dateTime(dateTime);
   }
   
 }
