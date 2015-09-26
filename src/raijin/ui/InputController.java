@@ -19,9 +19,9 @@ public class InputController extends BorderPane {
 	
 	private static final String INPUT_COMMAND_BAR_LAYOUT_FXML = "resources/layout/InputController.fxml";
 	
-	private MainApplication mainApp;
+	private Raijin mainApp;
 	
-	public InputController(MainApplication mainApp) {
+	public InputController(Raijin mainApp) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(INPUT_COMMAND_BAR_LAYOUT_FXML));
 		loader.setController(this);
 		loader.setRoot(this);

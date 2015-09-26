@@ -13,7 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
-public class MainApplication extends Application {
+public class Raijin extends Application {
 	private static final String ROOT_LAYOUT_FXML_LOCATION = "resources/layout/RootLayout.fxml";
 	
 	private BorderPane rootLayout;
@@ -55,7 +55,7 @@ public class MainApplication extends Application {
    * 
    * @param mainApp
    */
-  private void addDisplayController(MainApplication mainApp) {
+  private void addDisplayController(Raijin mainApp) {
 	  rootLayout.setCenter(new DisplayController());
   }
   
@@ -66,7 +66,7 @@ public class MainApplication extends Application {
    * 
    * @param mainApp
    */
-  private void addInputController(MainApplication mainApp) {
+  private void addInputController(Raijin mainApp) {
 	  rootLayout.setBottom(new InputController(mainApp));
   }
   
