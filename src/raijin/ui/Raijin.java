@@ -20,7 +20,7 @@ public class Raijin extends Application {
 	private Stage stage;
 	
 	public static void main(String[] args) {
-		    launch(args);
+	  launch(args);
 	}
 	
   @Override

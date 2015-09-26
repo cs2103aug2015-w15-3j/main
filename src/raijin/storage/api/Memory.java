@@ -72,6 +72,10 @@ public class Memory {
     return tasksMap.getCompletedTasks();
   }
 
+  public HashMap<Integer, Task> getTasks() {
+    return tasksMap.getTasks();
+  }
+
   //===========================================================================
   // Utility functions
   //===========================================================================

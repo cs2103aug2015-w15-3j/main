@@ -43,6 +43,10 @@ public class TasksMap {
     return completed;
   }
 
+  HashMap<Integer, Task> getTasks() {
+    return tasks;
+  }
+
   void deleteTask(int id) {
     tasks.remove(id);
   }
