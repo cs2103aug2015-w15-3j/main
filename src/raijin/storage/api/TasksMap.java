@@ -1,5 +1,6 @@
 package raijin.storage.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -49,6 +50,19 @@ public class TasksMap {
   public TreeSet<Integer> getIdPool() {
     return idManager.getIdPool();
   }
+  
+  // For DisplayController.java
+  public ArrayList<Task> getPendingList() {
+	  ArrayList<Task> list = new ArrayList<Task>(tasks.values());
+	  return list;
+  }
+  
+  // For DisplayController.java
+  public ArrayList<Task> getCompletedList() {
+	  ArrayList<Task> list = new ArrayList<Task>(completed.values());
+	  return list;
+  }
+  
 
   @Override
   public String toString() {
