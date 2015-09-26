@@ -33,8 +33,9 @@ public class SimpleParser implements ParserInterface {
    * 
    * @param userInput   String of user input into the system.
    * @return            ParsedInput object based on user input.
+   * @throws Exception  When invalid input is detected.
    */
-  public ParsedInput parse(String userInput) {
+  public ParsedInput parse(String userInput) throws Exception {
     // TODO Auto-generated method stub
     wordsOfInput = userInput.split(" ");
     
@@ -77,8 +78,10 @@ public class SimpleParser implements ParserInterface {
   /**
    * Method that parses the input for any date or time inputs when task is added.
    * Creates appropriate ParseInputBuilders accordingly.
+   * 
+   * @throws Exception  When invalid input command is detected.
    */
-  public void parseAddTask() {
+  public void parseAddTask() throws Exception{
     boolean containsStartDate = false;
     boolean containsEndDate = false;
     boolean containsStartTime = false;
@@ -104,13 +107,13 @@ public class SimpleParser implements ParserInterface {
               containsEndDate = true;
               endDate = wordsOfInput[i+4].replaceAll(dateOperator, "/");
             } else {
-              // Invalid command/format?
+              throw new Exception("Invalid input! End date expected."); // Invalid command/format
             }
             if (wordsOfInput[i+5].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+5];
             } else {
-              // Invalid command/format?
+              throw new Exception("Invalid input! End time expected."); // Invalid command/format
             } 
           } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && wordsOfInput[i+3].equalsIgnoreCase("to")) {
             // startDate startTime endTime
@@ -118,7 +121,7 @@ public class SimpleParser implements ParserInterface {
               containsEndTime = true;
               endTime = wordsOfInput[i+4];
             } else {
-              // Invalid command/format?
+              throw new Exception("Invalid input! End time expected."); // Invalid command/format
             } 
           }
         } else if (wordsOfInput[i+1].matches(timePattern)) {
@@ -138,6 +141,9 @@ public class SimpleParser implements ParserInterface {
       }
     }
     
+    startDate = formatDate(startDate);
+    endDate = formatDate(endDate);
+    
     DateTime dateTime = null;
     if (containsStartDate && containsStartTime && containsEndDate && containsEndTime) {
       dateTime = new DateTime(startDate, startTime, endDate, endTime);
@@ -150,6 +156,22 @@ public class SimpleParser implements ParserInterface {
     }
     //TODO TO CONFIRM: DISPLAYOPTION
     builder.name(name).dateTime(dateTime);
+  }
+  
+  /**
+   * Method that formats date into the proper dd/mm/yyyy format.
+   * 
+   * @param date    date String that hasn't been formatted.
+   * @return        
+   */
+  public String formatDate(String date) {
+    if (date.length() == 0) {
+      return date;
+    }
+    
+    
+    
+    return date; //TODO
   }
   
 }
