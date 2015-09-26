@@ -12,18 +12,21 @@ import raijin.storage.api.TasksMap;
 
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class DisplayController extends BorderPane {
 	 
-	 final DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM ''yy");
+	 final DateFormat dateFormatSplash = new SimpleDateFormat("EEE, d MMM ''yy");
+	 final DateFormat dateFormatCompare = new SimpleDateFormat("dd/MM/yyyy");
 	 Date date;
+	 Calendar cal = Calendar.getInstance();
 	 
 	 Label headMessage;
 	 
 	 // Main display for tasks
-	 ListView<String> listView = new ListView<String>();
+	 ListView<String> listView;
 	 
 	 // Retrieve memory
 	 Memory memory = Memory.getMemory();
@@ -35,16 +38,17 @@ public class DisplayController extends BorderPane {
 	 
 	 public DisplayController() {
 		 date = new Date();
-		 headMessage = new Label("Tasks pending for " + dateFormat.format(date));
+		 headMessage = new Label("Tasks pending for " + dateFormatSplash.format(date));
 		 headMessage.setStyle("-fx-font-size: 20px; -fx-padding: 5px;");
 		 this.setTop(headMessage);
 		 
+		 listView = new ListView<String>();
 		 this.setCenter(listView);
 		 
-		 displayTodaysTasks(pending, listView);
+		 displayTodaysTasks(pending, listView, cal);
 	 }
 	 
-	 static void displayTodaysTasks(ArrayList<Task> pending, ListView<String> listView) {
+	 static void displayTodaysTasks(ArrayList<Task> pending, ListView<String> listView, Calendar cal) {
 		
 		 if (pending.isEmpty()) {
 			 listView.getItems().add("You have no pending tasks for today!");
@@ -52,7 +56,9 @@ public class DisplayController extends BorderPane {
 			 for (int i=0; i<pending.size(); i++) {
 				 //TODO run a method that checks if
 				 //task startDate <= current dateTime <= task endDate
-				 listView.getItems().add(pending.get(i).getName());
+				 if (isRelevantDate(cal, pending.get(i).getDateTime())) {
+					 listView.getItems().add(pending.get(i).getName());
+				 }
 			 }
 		 }
 		 
@@ -60,5 +66,11 @@ public class DisplayController extends BorderPane {
 	 
 	 static void displayTasks(String specifiedDate) {
 		 // TODO
+	 }
+	 
+	 static boolean isRelevantDate(Calendar cal, DateTime dateTime) {
+		 // TODO
+		 
+		 return false;
 	 }
 }
