@@ -25,7 +25,7 @@ public class SimpleParser implements ParserInterface {
    * @return            ParsedInput object based on user input.
    * @throws Exception  When invalid input is detected.
    */
-  public ParsedInput parse(String userInput) throws Exception {
+  public ParsedInput parse(String userInput) throws IllegalArgumentException {
     // TODO Auto-generated method stub
     wordsOfInput = userInput.split(" ");
     
@@ -71,7 +71,7 @@ public class SimpleParser implements ParserInterface {
    * 
    * @throws Exception  When invalid input command is detected.
    */
-  public void parseAddTask() throws Exception{
+  public void parseAddTask() throws IllegalArgumentException{
     boolean containsStartDate = false;
     boolean containsEndDate = false;
     boolean containsStartTime = false;
@@ -97,13 +97,13 @@ public class SimpleParser implements ParserInterface {
               containsEndDate = true;
               endDate = wordsOfInput[i+4].replaceAll(dateOperator, "/");
             } else {
-              throw new Exception("Invalid input! End date expected."); // Invalid command/format
+              throw new IllegalArgumentException("Invalid input! End date expected."); // Invalid command/format
             }
             if (wordsOfInput[i+5].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+5];
             } else {
-              throw new Exception("Invalid input! End time expected."); // Invalid command/format
+              throw new IllegalArgumentException("Invalid input! End time expected."); // Invalid command/format
             } 
           } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && wordsOfInput[i+3].equalsIgnoreCase("to")) {
             // startDate startTime endTime
@@ -111,7 +111,7 @@ public class SimpleParser implements ParserInterface {
               containsEndTime = true;
               endTime = wordsOfInput[i+4];
             } else {
-              throw new Exception("Invalid input! End time expected."); // Invalid command/format
+              throw new IllegalArgumentException("Invalid input! End time expected."); // Invalid command/format
             } 
           }
         } else if (wordsOfInput[i+1].matches(timePattern)) {
