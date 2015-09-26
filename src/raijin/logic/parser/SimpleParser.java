@@ -12,6 +12,7 @@ import raijin.common.datatypes.DateTime;
 
 public class SimpleParser implements ParserInterface {
   
+  // Move all these final Strings to Constants.java?
   // Very flexible regex for recognizing date patterns. Available test cases at: http://fiddle.re/56t2j6
   private static final String datePattern = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]|(?:jan|mar|may|jul|aug|oct|dec)))"
       + "\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2]|(?:jan|mar|apr|may|jun|jul|aug|sep|oct|nov|dec))\\2))"
@@ -27,6 +28,7 @@ public class SimpleParser implements ParserInterface {
   
   private String[] wordsOfInput;
   private ParsedInput.ParsedInputBuilder builder;
+  private int taskID;
   
   /**
    * Parses the user's input and creates corresponding ParsedInput object.
@@ -37,6 +39,8 @@ public class SimpleParser implements ParserInterface {
   public ParsedInput parse(String userInput) {
     // TODO Auto-generated method stub
     wordsOfInput = userInput.split(" ");
+    taskID = -1; //TODO
+    builder.id(taskID);
     
     if (isFirstWord("add")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD);
@@ -68,16 +72,13 @@ public class SimpleParser implements ParserInterface {
   /**
    * Method that modifies the attribute values of the ParseInputBuilder.
    * 
-   * @param builder             builder to be modified
-   * @param id                  Task ID to be allocated for this task.
    * @param taskName            Name of To-do.
    * @param dateTime            Date and time of task.
    * @param displayOptions      Display option.
    * @return                    builder object back after inserting changing its attributes
    */
-  public ParsedInput.ParsedInputBuilder createBuilder(ParsedInput.ParsedInputBuilder builder, int id, 
-      String taskName, DateTime dateTime, char displayOptions) {
-    builder.id(id);
+  public ParsedInput.ParsedInputBuilder createBuilder(String taskName, 
+      DateTime dateTime, char displayOptions) {
     builder.name(taskName);
     builder.dateTime(dateTime);
     builder.displayOptions(displayOptions);
@@ -103,88 +104,70 @@ public class SimpleParser implements ParserInterface {
     boolean containsEndDate = false;
     boolean containsStartTime = false;
     boolean containsEndTime = false;
-    int day, month, time; // For testing changing of string to integer format.
-    String startDate, startTime, endDate, endTime;
+    String name = "", startDate = "", startTime = "", endDate = "", endTime = "";
+    int index = wordsOfInput.length; // (Last index of task name - 1)
     
     for (int i = 0; i < wordsOfInput.length - 1; i++) {
       if (wordsOfInput[i].equalsIgnoreCase("by") || wordsOfInput[i].equalsIgnoreCase("on")) {
-        if (wordsOfInput[i+1].contains("/")) {
-          // Checks for format of {startDate startTime}. If doesn't exist, ignore.
-          try {
-            String[] dayMonth = wordsOfInput[i+1].split("/");
-            day = Integer.parseInt(dayMonth[0]);
-            month = Integer.parseInt(dayMonth[1]);
-            containsStartDate = true;
-            startDate = wordsOfInput[i+1];
-          } catch (NumberFormatException e) {
-          } catch (NullPointerException e) {
-          }
-          try {
-            time = Integer.parseInt(wordsOfInput[i+2]);
+        if (wordsOfInput[i+1].matches(datePattern)) {
+          // Checks for format of {startDate}. If doesn't exist, ignore.
+          containsStartDate = true;
+          index = i;
+          startDate = wordsOfInput[i+1].replaceAll(dateOperator, "/");
+          if (i < wordsOfInput.length - 2 && wordsOfInput[i+2].matches(timePattern)) {
+            // Checks for format of {startTime}. If doesn't exist, ignore.
             containsStartTime = true;
             startTime = wordsOfInput[i+2];
-          } catch (NumberFormatException e) {
-          } catch (NullPointerException e) {
           }
-          
           if (containsStartDate && containsStartTime && i < wordsOfInput.length-5 && wordsOfInput[i+3].equalsIgnoreCase("to")) {
             // startDate startTime endDate endTime
-            try {
-              String[] dayMonth = wordsOfInput[i+4].split("/");
-              day = Integer.parseInt(dayMonth[0]);
-              month = Integer.parseInt(dayMonth[1]);
+            if (wordsOfInput[i+4].matches(datePattern)) {
               containsEndDate = true;
-              startDate = wordsOfInput[i+4];
-            } catch (NumberFormatException e) {
-              // Invalid command?
-            } catch (NullPointerException e) {
-              // Invalid command?
+              endDate = wordsOfInput[i+4].replaceAll(dateOperator, "/");
+            } else {
+              // Invalid command/format?
             }
-            try {
-              time = Integer.parseInt(wordsOfInput[i+5]);
+            if (wordsOfInput[i+5].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+5];
-            } catch (NumberFormatException e) {
-              // Invalid command?
-            }
+            } else {
+              // Invalid command/format?
+            } 
           } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && wordsOfInput[i+3].equalsIgnoreCase("to")) {
             // startDate startTime endTime
-            try {
-              time = Integer.parseInt(wordsOfInput[i+4]);
+            if (wordsOfInput[i+4].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+4];
-            } catch (NumberFormatException e) {
-              // Invalid command?
-            }
+            } else {
+              // Invalid command/format?
+            } 
           }
-        } else {
+        } else if (wordsOfInput[i+1].matches(timePattern)) {
           // Checks for format of {startTime}. If doesn't exist, ignore.
-          try {
-            time = Integer.parseInt(wordsOfInput[i+1]);
-            containsStartTime = true;
-          } catch (NumberFormatException e) {
-          } catch (NullPointerException e) {
-          }
+          containsStartTime = true;
+          index = i;
+          startTime = wordsOfInput[i+1];
         }
       }
     }
     
-    // Creates relevant DateTime objects and then creates ParseInputBuilders.
-    if (containsStartDate && containsStartTime) {
-      if (containsEndDate && containsEndTime) {
-         
-        //createBuilder();
-      } else if (containsEndTime) {
-        
-        //createBuilder();
-      } else {
-      
-        //createBuilder();
-      } 
+    // Creates objects and then ParseInputBuilders based on info.
+    for (int i = 1; i < index; i++) {
+      name += wordsOfInput[i];
+    }
+    
+    DateTime dateTime = null;
+    if (containsStartDate && containsStartTime && containsEndDate && containsEndTime) {
+      dateTime = new DateTime(startDate, startTime, endDate, endTime);
+    } else if (containsStartDate && containsStartTime && containsEndTime) {
+      dateTime = new DateTime(startDate, startTime, endTime);
+    } else if (containsStartDate && containsStartTime) {
+      dateTime = new DateTime(startDate, startTime);
     } else if (containsStartDate) {
-      
-      //createBuilder();
-    } 
+      dateTime = new DateTime(startDate);
+    }
+    //TODO TO CONFIRM: DISPLAYOPTION
+    createBuilder(name, dateTime, 'u'); 
   }
   
 }
