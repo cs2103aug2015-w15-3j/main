@@ -24,4 +24,15 @@ public class Constants {
   public static final String FEEDBACK_ERROR_ILLEGALCOMMAND = "Illegal command";
 
   public static final Type tasksType = new TypeToken<TasksMap>(){}.getType();
+
+  //Very flexible regex for recognizing date patterns. Available test cases at: http://fiddle.re/56t2j6
+  public static final String DATE_PATTERN = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]|(?:jan|mar|may|jul|aug|oct|dec)))"
+      + "\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2]|(?:jan|mar|apr|may|jun|jul|aug|sep|oct|nov|dec))\\2))"
+      + "(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)(?:0?2|(?:feb))\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]"
+      + "|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)"
+      + "(?:(?:0?[1-9]|(?:jan|feb|mar|apr|may|jun|jul|aug|sep))|(?:1[0-2]|(?:oct|nov|dec)))(\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2}))?$";
+  // Regex for recognizing a date operator. Used for splitting into String array.
+  public static final String DATE_OPERATOR = "(\\/|-|\\.)";
+  // Flexible regex for recognizing 24hr time patterns. Available test cases at: http://fiddle.re/bc9mj6
+  public static final String TIME_PATTERN = "^([01]?[0-9]|2[0-3])[0-5][0-9]$";
 }

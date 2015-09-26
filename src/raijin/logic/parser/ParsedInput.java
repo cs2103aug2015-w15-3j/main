@@ -22,7 +22,7 @@ public class ParsedInput {
   private DateTime dateTime;
   
   /*Display properties*/
-  private char displayOptions;                  //Pending or completed view of tasks
+  private String displayOptions;                  //Pending or completed view of tasks
   
   /*Delete, done and edit properties*/
   private int id;                               //Id associated with a task
@@ -37,7 +37,7 @@ public class ParsedInput {
     final int id,
     final String name,
     final DateTime dateTime, 
-    final char displayOptions) {
+    final String displayOptions) {
 
     this.command = command;
     this.id = id;
@@ -62,7 +62,7 @@ public class ParsedInput {
     return name;
   }
 
-  public char getDisplayOptions() {
+  public String getDisplayOptions() {
     return displayOptions;
   }
 
@@ -79,7 +79,7 @@ public class ParsedInput {
     private int id;
     private String name;
     private DateTime dateTime;
-    private char displayOptions;
+    private String displayOptions;
     
     public ParsedInputBuilder(final Constants.Command command) {
       this.command = command;
@@ -100,7 +100,7 @@ public class ParsedInput {
       return this;
     }
     
-    public ParsedInputBuilder displayOptions(final char displayOptions) {
+    public ParsedInputBuilder displayOptions(final String displayOptions) {
       this.displayOptions = displayOptions;
       return this;
     }

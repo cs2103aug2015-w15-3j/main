@@ -7,40 +7,27 @@
 package raijin.logic.parser;
 
 import raijin.common.datatypes.Constants;
-import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.DateTime;
 
 public class SimpleParser implements ParserInterface {
   
-  // Move all these final Strings to Constants.java?
-  // Very flexible regex for recognizing date patterns. Available test cases at: http://fiddle.re/56t2j6
-  private static final String datePattern = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]|(?:jan|mar|may|jul|aug|oct|dec)))"
-      + "\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2]|(?:jan|mar|apr|may|jun|jul|aug|sep|oct|nov|dec))\\2))"
-      + "(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)(?:0?2|(?:feb))\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]"
-      + "|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)"
-      + "(?:(?:0?[1-9]|(?:jan|feb|mar|apr|may|jun|jul|aug|sep))|(?:1[0-2]|(?:oct|nov|dec)))(\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2}))?$";
-  
-  // Regex for recognizing a date operator. Used for splitting into String array.
-  private static final String dateOperator = "(\\/|-|\\.)";
-  
-  // Flexible regex for recognizing 24hr time patterns. Available test cases at: http://fiddle.re/bc9mj6
-  private static final String timePattern = "^([01]?[0-9]|2[0-3])[0-5][0-9]$";
+  private static final String datePattern = Constants.DATE_PATTERN;
+  private static final String dateOperator = Constants.DATE_OPERATOR;
+  private static final String timePattern = Constants.TIME_PATTERN;
   
   private String[] wordsOfInput;
   private ParsedInput.ParsedInputBuilder builder;
-  private int taskID;
   
   /**
    * Parses the user's input and creates corresponding ParsedInput object.
    * 
    * @param userInput   String of user input into the system.
    * @return            ParsedInput object based on user input.
+   * @throws Exception  When invalid input is detected.
    */
-  public ParsedInput parse(String userInput) {
+  public ParsedInput parse(String userInput) throws IllegalArgumentException {
     // TODO Auto-generated method stub
     wordsOfInput = userInput.split(" ");
-    taskID = -1; //TODO
-    builder.id(taskID);
     
     if (isFirstWord("add")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD);
@@ -65,24 +52,7 @@ public class SimpleParser implements ParserInterface {
       //TODO
     }
      
-    
     return builder.createParsedInput();
-  }
-  
-  /**
-   * Method that modifies the attribute values of the ParseInputBuilder.
-   * 
-   * @param taskName            Name of To-do.
-   * @param dateTime            Date and time of task.
-   * @param displayOptions      Display option.
-   * @return                    builder object back after inserting changing its attributes
-   */
-  public ParsedInput.ParsedInputBuilder createBuilder(String taskName, 
-      DateTime dateTime, char displayOptions) {
-    builder.name(taskName);
-    builder.dateTime(dateTime);
-    builder.displayOptions(displayOptions);
-    return builder;
   }
   
   /**
@@ -98,8 +68,10 @@ public class SimpleParser implements ParserInterface {
   /**
    * Method that parses the input for any date or time inputs when task is added.
    * Creates appropriate ParseInputBuilders accordingly.
+   * 
+   * @throws Exception  When invalid input command is detected.
    */
-  public void parseAddTask() {
+  public void parseAddTask() throws IllegalArgumentException{
     boolean containsStartDate = false;
     boolean containsEndDate = false;
     boolean containsStartTime = false;
@@ -125,13 +97,13 @@ public class SimpleParser implements ParserInterface {
               containsEndDate = true;
               endDate = wordsOfInput[i+4].replaceAll(dateOperator, "/");
             } else {
-              // Invalid command/format?
+              throw new IllegalArgumentException("Invalid input! End date expected."); // Invalid command/format
             }
             if (wordsOfInput[i+5].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+5];
             } else {
-              // Invalid command/format?
+              throw new IllegalArgumentException("Invalid input! End time expected."); // Invalid command/format
             } 
           } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && wordsOfInput[i+3].equalsIgnoreCase("to")) {
             // startDate startTime endTime
@@ -139,7 +111,7 @@ public class SimpleParser implements ParserInterface {
               containsEndTime = true;
               endTime = wordsOfInput[i+4];
             } else {
-              // Invalid command/format?
+              throw new IllegalArgumentException("Invalid input! End time expected."); // Invalid command/format
             } 
           }
         } else if (wordsOfInput[i+1].matches(timePattern)) {
@@ -154,7 +126,13 @@ public class SimpleParser implements ParserInterface {
     // Creates objects and then ParseInputBuilders based on info.
     for (int i = 1; i < index; i++) {
       name += wordsOfInput[i];
+      if (i < index-1) {
+        name += " ";
+      }
     }
+    
+    startDate = formatDate(startDate);
+    endDate = formatDate(endDate);
     
     DateTime dateTime = null;
     if (containsStartDate && containsStartTime && containsEndDate && containsEndTime) {
@@ -166,8 +144,24 @@ public class SimpleParser implements ParserInterface {
     } else if (containsStartDate) {
       dateTime = new DateTime(startDate);
     }
-    //TODO TO CONFIRM: DISPLAYOPTION
-    createBuilder(name, dateTime, 'u'); 
+    
+    builder.name(name).dateTime(dateTime);
+  }
+  
+  /**
+   * Method that formats date into the proper dd/mm/yyyy format.
+   * 
+   * @param date    date String that hasn't been formatted.
+   * @return        
+   */
+  public String formatDate(String date) {
+    if (date.length() == 0) {
+      return date;
+    }
+    
+    
+    
+    return date; //TODO
   }
   
 }

@@ -21,5 +21,21 @@ public class ParsedInputTest {
 
     assertEquals("submit op1", addCommand.getName());
   }
+  
+  @Test
+  public void parseAddCommandInSimpleParser_WithStandardDate() {
+    SimpleParser parser = new SimpleParser();
+    ParsedInput addCommand = parser.parse("add finish parser by 26/09/2015");
+    assertEquals("finish parser", addCommand.getName());
+    assertEquals("2015-09-26", addCommand.getDateTime().getStartDate().toString());
+  }
+  
+  @Test
+  public void parseAddCommandInSimpleParser_WithInformalDate() {
+    SimpleParser parser = new SimpleParser();
+    ParsedInput addCommand = parser.parse("add finish something by 27/09"); // CURRENTLY CAN'T WORK WITH FLEXIBLE DATE FORMATS
+    assertEquals("finish something", addCommand.getName());
+    assertEquals("2015-09-27", addCommand.getDateTime().getStartDate().toString());
+  }
 
 }
