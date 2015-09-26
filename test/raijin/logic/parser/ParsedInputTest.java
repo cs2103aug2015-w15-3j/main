@@ -33,9 +33,21 @@ public class ParsedInputTest {
   @Test
   public void parseAddCommandInSimpleParser_WithInformalDate() {
     SimpleParser parser = new SimpleParser();
-    ParsedInput addCommand = parser.parse("add finish something by 27/09"); // CURRENTLY CAN'T WORK WITH FLEXIBLE DATE FORMATS
+    ParsedInput addCommand = parser.parse("add finish something by 27/9");
     assertEquals("finish something", addCommand.getName());
     assertEquals("2015-09-27", addCommand.getDateTime().getStartDate().toString());
+    
+    addCommand = parser.parse("add finish something by 27/9/15");
+    assertEquals("finish something", addCommand.getName());
+    assertEquals("2015-09-27", addCommand.getDateTime().getStartDate().toString());
+    
+    addCommand = parser.parse("add finish something by 27.sep");
+    assertEquals("finish something", addCommand.getName());
+    assertEquals("2015-09-27", addCommand.getDateTime().getStartDate().toString());
+    
+    addCommand = parser.parse("add finish something by 1-1");
+    assertEquals("finish something", addCommand.getName());
+    assertEquals("2016-01-01", addCommand.getDateTime().getStartDate().toString());
   }
 
 }
