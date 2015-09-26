@@ -4,8 +4,12 @@ package raijin.ui;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
+
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
+import raijin.storage.api.Memory;
+import raijin.storage.api.TasksMap;
+
 import java.util.Date;
 import java.util.ArrayList;
 import java.text.DateFormat;
@@ -20,6 +24,8 @@ public class DisplayController extends BorderPane {
 	 ArrayList<Task> list;
 	 ArrayList<Task> filterList;
 	 ListView<String> listView;
+	 Memory memory = Memory.getMemory();
+	 TasksMap tasksMap = memory.getTasksMap();
 	 
 	 public DisplayController() {
 		 date = new Date();
@@ -36,10 +42,7 @@ public class DisplayController extends BorderPane {
 	 }
 	 
 	 static ArrayList<Task> retrieveTasks(ArrayList<Task> list) {
-		//TODO, places list of tasks from memory into an arraylist
 		 
-		 //list.add(new Task("watch tv", new DateTime("26/09/2015")));
-		 //list.add(new Task("play mahjong", new DateTime("26/09/2015")));
 		 
 		 return list;
 	 }
