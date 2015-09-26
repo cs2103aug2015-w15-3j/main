@@ -4,22 +4,30 @@ import raijin.common.datatypes.Status;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.api.UndoableRedoable;
 import raijin.logic.parser.ParsedInput;
+import raijin.storage.api.Memory;
+import raijin.common.datatypes.Task;
 
 public class DeleteCommandRunner implements CommandRunner, UndoableRedoable {
-
-  public Status execute(ParsedInput input) {
-    // TODO Auto-generated method stub
-    return null;
+	Memory memory = Memory.getMemory();
+	int id;
+	String taskDescription;
+	
+  public Status execute(ParsedInput input) {   
+	this.id = input.getId();
+    Task task = memory.getTask(id);
+    taskDescription = task.getName();
+    
+	memory.deleteTask(id);
+    
+    return new Status("You have just deleted " + taskDescription + "!");
   }
 
   public void undo() {
-    // TODO Auto-generated method stub
-    
+    memory.undo();
   }
 
   public void redo() {
-    // TODO Auto-generated method stub
-    
+    memory.redo();
   }
 
 }
