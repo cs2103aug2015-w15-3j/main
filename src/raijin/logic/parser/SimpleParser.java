@@ -6,6 +6,8 @@
 
 package raijin.logic.parser;
 
+import java.text.DecimalFormat;
+import java.time.LocalDate;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 
@@ -85,7 +87,7 @@ public class SimpleParser implements ParserInterface {
           // Checks for format of {startDate}. If doesn't exist, ignore.
           containsStartDate = true;
           index = i;
-          startDate = wordsOfInput[i+1].replaceAll(dateOperator, "/");
+          startDate = wordsOfInput[i+1];
           if (i < wordsOfInput.length - 2 && wordsOfInput[i+2].matches(timePattern)) {
             // Checks for format of {startTime}. If doesn't exist, ignore.
             containsStartTime = true;
@@ -95,7 +97,7 @@ public class SimpleParser implements ParserInterface {
             // startDate startTime endDate endTime
             if (wordsOfInput[i+4].matches(datePattern)) {
               containsEndDate = true;
-              endDate = wordsOfInput[i+4].replaceAll(dateOperator, "/");
+              endDate = wordsOfInput[i+4];
             } else {
               throw new IllegalArgumentException("Invalid input! End date expected."); // Invalid command/format
             }
@@ -150,6 +152,7 @@ public class SimpleParser implements ParserInterface {
   
   /**
    * Method that formats date into the proper dd/mm/yyyy format.
+   * Date will be assumed to be next year if (year isn't input) & (current date is later).
    * 
    * @param date    date String that hasn't been formatted.
    * @return        
@@ -158,10 +161,40 @@ public class SimpleParser implements ParserInterface {
     if (date.length() == 0) {
       return date;
     }
+    DecimalFormat twoDigits = new DecimalFormat("00");
+    String[] dayMonth = date.split(dateOperator);
+    String[] months = Constants.MONTHS;
     
+    int day = Integer.parseInt(dayMonth[0]);
+    int month = 0;
+    int year;
     
+    // Check for month written in letters
+    for (int i = 0; i < months.length; i++) {
+      if (dayMonth[1].equals(months[i])) {
+        month = i+1;
+      }
+    }
+    if (month == 0) {
+      month = Integer.parseInt(dayMonth[1]);
+    }
     
-    return date; //TODO
+    int dayNow = LocalDate.now().getDayOfMonth();
+    int monthNow = LocalDate.now().getMonthValue();
+    
+    // Check for year input. If no year input, use existing year or the upcoming one.
+    if (dayMonth.length == 3) {
+      year = Integer.parseInt(dayMonth[2]);
+      if (dayMonth[2].length() < 4) {
+        year += 2000; // ASSUMPTION: This app is used within the year of 2000 to 2999.
+      }
+    } else if (month < monthNow || (month == monthNow && day < dayNow)) {
+      year = LocalDate.now().getYear() + 1;
+    } else {
+      year = LocalDate.now().getYear();
+    }
+    
+    return twoDigits.format(day) + "/" + twoDigits.format(month) + "/" + year;
   }
   
 }
