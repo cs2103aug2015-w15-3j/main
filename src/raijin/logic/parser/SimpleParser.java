@@ -40,7 +40,6 @@ public class SimpleParser implements ParserInterface {
     // TODO Auto-generated method stub
     wordsOfInput = userInput.split(" ");
     taskID = -1; //TODO
-    builder.id(taskID);
     
     if (isFirstWord("add")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD);
@@ -65,7 +64,7 @@ public class SimpleParser implements ParserInterface {
       //TODO
     }
      
-    
+    builder.id(taskID);
     return builder.createParsedInput();
   }
   
@@ -154,6 +153,9 @@ public class SimpleParser implements ParserInterface {
     // Creates objects and then ParseInputBuilders based on info.
     for (int i = 1; i < index; i++) {
       name += wordsOfInput[i];
+      if (i < index-1) {
+        name += " ";
+      }
     }
     
     DateTime dateTime = null;
