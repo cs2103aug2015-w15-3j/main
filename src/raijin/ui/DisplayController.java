@@ -18,7 +18,7 @@ public class DisplayController extends BorderPane {
 	 
 	 Label headMessage;
 	 ArrayList<Task> list;
-	 ArrayList<Task> newList;
+	 ArrayList<Task> filterList;
 	 ListView<String> listView;
 	 
 	 public DisplayController() {
@@ -32,11 +32,11 @@ public class DisplayController extends BorderPane {
 		 
 		 list = new ArrayList<Task>();
 		 list = retrieveTasks(list);
-		 newList = displayTodaysTasks(list, listView);
+		 filterList = displayTodaysTasks(list, listView);
 	 }
 	 
 	 static ArrayList<Task> retrieveTasks(ArrayList<Task> list) {
-		//TODO, places list of tasks into an arraylist
+		//TODO, places list of tasks from memory into an arraylist
 		 
 		 //list.add(new Task("watch tv", new DateTime("26/09/2015")));
 		 //list.add(new Task("play mahjong", new DateTime("26/09/2015")));
@@ -54,6 +54,7 @@ public class DisplayController extends BorderPane {
 				 //TODO run a method that checks if
 				 //task startDate <= current dateTime <= task endDate
 				 listView.getItems().add(list.get(i).getName());
+				 list2.add(list.get(i));
 			 }
 		 }
 		 
