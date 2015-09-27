@@ -32,9 +32,9 @@ public class DisplayController extends BorderPane {
 	 Memory memory = Memory.getMemory();
 	 TasksMap tasksMap = memory.getTasksMap();
 	 
-	 // Retrieve list of pending & completed tasks from memory
-	 ArrayList<Task> pending = tasksMap.getPendingList();
-	 ArrayList<Task> completed = tasksMap.getCompletedList();
+	 // Temporary ArrayLists for storing information
+	 ArrayList<Task> pending;
+	 ArrayList<Task> completed;
 	 
 	 public DisplayController() {
 		 date = new Date();
@@ -45,8 +45,12 @@ public class DisplayController extends BorderPane {
 		 listView = new ListView<String>();
 		 this.setCenter(listView);
 		 
+		 pending = new ArrayList<Task>(memory.getTasks().values());
+		 completed = new ArrayList<Task>(memory.getCompletedTasks().values());
+		 
 		 displayTodaysTasks(pending, listView, cal);
 	 }
+	 
 	 
 	 static void displayTodaysTasks(ArrayList<Task> pending, ListView<String> listView, Calendar cal) {
 		
