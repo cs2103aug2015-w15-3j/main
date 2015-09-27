@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="main/|test/|main/resources/|test/resources/" kind="src" output="target/classes" path="src"/>
-	<classpathentry kind="src" output="target/test-classes" path="test">
+	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src/main">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="resources/" kind="src" path="src/main"/>
-	<classpathentry excluding="resources/" kind="src" path="src/test"/>
+	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="src/test">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
