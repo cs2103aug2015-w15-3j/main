@@ -15,6 +15,22 @@
 	<build>
 		<sourceDirectory>src/main/</sourceDirectory>
 		<testSourceDirectory>src/test/</testSourceDirectory>
+		<resources>
+			<resource>
+			<targetPath>raijin/ui/resource/layout</targetPath>
+				<directory>src/main/raijin/ui/resource/layout</directory>
+				<includes>
+					<include>*.fxml</include>
+				</includes>
+			</resource>
+			<resource>
+			<targetPath>raijin/ui/resource/styles</targetPath>
+				<directory>src/main/raijin/ui/resource/styles</directory>
+				<includes>
+					<include>**/*.css</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
