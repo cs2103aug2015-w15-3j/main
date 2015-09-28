@@ -35,6 +35,14 @@ public class Memory {
     return tasksMap;
   }
 
+  public void clearTasks() {
+    tasksMap.clearTasks();
+  }
+
+  public boolean isEmptyTasks() {
+    return tasksMap.isEmptyTasks();
+  }
+
   //===========================================================================
   // Command related functions
   //===========================================================================

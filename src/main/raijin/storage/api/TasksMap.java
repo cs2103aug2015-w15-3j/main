@@ -30,6 +30,11 @@ public class TasksMap {
     completed.put(task.getId(), task);
   }
 
+  void clearTasks() {
+    tasks = new HashMap<Integer, Task>();
+    idManager.flushIdPool();
+  }
+
   //@TODO implements more specific exception so that commandRunner can catch
   Task getTask(int id) {
     if (tasks.containsKey(id)) {
@@ -49,41 +54,17 @@ public class TasksMap {
 
   void deleteTask(int id) {
     tasks.remove(id);
+    idManager.returnId(id);
   }
   
+  boolean isEmptyTasks() {
+    return tasks.isEmpty();
+  }
+
   public TreeSet<Integer> getIdPool() {
     return idManager.getIdPool();
   }
   
-  // For DisplayController.java
-  public ArrayList<Task> getPendingList() {
-	  if (!tasks.isEmpty()) {
-		  ArrayList<Task> list = new ArrayList<Task>(tasks.values());
-		  return list;
-	  } else {
-		  ArrayList<Task> list = new ArrayList<Task>();
-		  return list;
-	  }
-  }
-  
-  // For DisplayController.java
-  public ArrayList<Task> getCompletedList() {
-	  try {
-	      if (!completed.isEmpty()) {
-	          ArrayList<Task> list = new ArrayList<Task>(completed.values());
-		      return list;
-	      } else {
-		      ArrayList<Task> list = new ArrayList<Task>();
-		      return list;
-	      }
-	  } catch (NullPointerException e) {
-		  ArrayList<Task> list = new ArrayList<Task>();
-		  return list;
-	  }
-	  
-  }
-  
-
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

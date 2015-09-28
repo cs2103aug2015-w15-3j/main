@@ -1,25 +1,46 @@
 package raijin.logic.command;
 
+import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
+import raijin.common.datatypes.Task;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.api.UndoableRedoable;
 import raijin.logic.parser.ParsedInput;
+import raijin.storage.api.History;
+import raijin.storage.api.Memory;
 
 public class AddCommandRunner implements CommandRunner, UndoableRedoable {
 
+  private Memory memory;
+  private History history;
+  private Task currentTask;
+
+  public AddCommandRunner() {
+    memory = Memory.getMemory();
+    history = History.getHistory();
+  }
+
+  Task createTask(ParsedInput input) {
+    return new Task(input.getName(), input.getDateTime());
+  }
+
+  Status createSuccessfulStatus() {
+    String taskName = currentTask.getName();
+    return new Status(String.format(Constants.FEEDBACK_ADD_SUCCESS, taskName));
+  }
   public Status execute(ParsedInput input) {
-    // TODO Auto-generated method stub
-    return null;
+    currentTask = createTask(input);
+    memory.addTask(currentTask);
+    memory.addToHistory(this);
+    return createSuccessfulStatus();
   }
 
   public void undo() {
-    // TODO Auto-generated method stub
-    
+    memory.deleteTask(currentTask.getId());
   }
 
   public void redo() {
-    // TODO Auto-generated method stub
-    
+    memory.addTask(currentTask);
   }
 
 }
