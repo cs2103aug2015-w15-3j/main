@@ -2,8 +2,10 @@ package raijin.storage.api;
 
 import java.util.HashMap;
 
+import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Task;
+import raijin.common.exception.NonExistentTaskException;
 import raijin.logic.api.UndoableRedoable;
 
 /**
@@ -12,85 +14,64 @@ import raijin.logic.api.UndoableRedoable;
  */
 public class TasksManager {
 
-  private static TasksManager tasksManager = new TasksManager();
-  private TasksMap tasksMap;                    
+  private static TasksManager tasksManager;
+  private HashMap<Integer, Task> pendingTasks;
+  private HashMap<Integer, Task> completedTasks;
   private History history;
 
-  private TasksManager() {
-    tasksMap = new TasksMap();
-    history = History.getHistory();
-  }
+  private TasksManager() {}
 
-  /*Returns the single instace of Memory*/
-  public static TasksManager getManager() {
+  public static TasksManager getManager(HashMap<Integer, Task> pendingTasks) {
+    if (tasksManager == null) {
+      tasksManager = new TasksManager();
+    }
     return tasksManager;
   }
   
-  /*Set tasksMap from external source*/
-  public void setTasksMap(TasksMap tasksMap) {
-    this.tasksMap = tasksMap;
+  public void setPendingTasks(HashMap<Integer, Task> pendingTasks) {
+    this.pendingTasks = pendingTasks;
   }
   
-  public TasksMap getTasksMap() {
-    return tasksMap;
+  public void setCompletedTasks(HashMap<Integer, Task> completedTasks) {
+    this.completedTasks = completedTasks;
   }
 
-  public void clearTasks() {
-    tasksMap.clearTasks();
+  public boolean isEmptyPendingTasks() {
+    return pendingTasks.isEmpty();
   }
 
-  public boolean isEmptyTasks() {
-    return tasksMap.isEmptyTasks();
+  public boolean isEmptyCompletedTasks() {
+    return completedTasks.isEmpty();
   }
 
   //===========================================================================
   // Command related functions
   //===========================================================================
 
-  public void addToHistory(UndoableRedoable commandRunner) {
-    history.addCommand(commandRunner);
-  }
-
-  public void addTask(Task task) {
-    tasksMap.addTask(task);
+  public void addPendingTask(Task task) {
+    pendingTasks.put(task.getId(), task);
   }
 
   public void addCompletedTask(Task task) {
-    tasksMap.addCompletedTask(task);
+    completedTasks.put(task.getId(), task);
   }
 
-  /*used for editing of tasks*/
-  public Task getTask(int id) {
-    return tasksMap.getTask(id);
+  public Task getPendingTask(int id) throws NonExistentTaskException {
+    try {
+      return pendingTasks.get(id);
+    } catch (NullPointerException e) {
+      throw new NonExistentTaskException(String.format(Constants.EXCEPTION_NONEXISTENTTASK, id));
+    }
   }
 
-  public void deleteTask(int id) {
-    tasksMap.deleteTask(id);
+  public void deletePendingTask(int id) throws NonExistentTaskException {
+    try {
+      pendingTasks.remove(id);
+    } catch (NullPointerException e) {
+      throw new NonExistentTaskException(String.format(Constants.EXCEPTION_NONEXISTENTTASK, id));
+    }
   }
   
-  public void undo() {
-    history.undo();
-  }
-  
-  public void redo() {
-    history.redo();
-  }
-
-  public HashMap<Integer, Task> getCompletedTasks() {
-    return tasksMap.getCompletedTasks();
-  }
-
-  public HashMap<Integer, Task> getTasks() {
-    return tasksMap.getTasks();
-  }
-
-  //===========================================================================
-  // Utility functions
-  //===========================================================================
-
-  public String printTasksMap() {
-    return tasksMap.toString();
-  }
 
   
 }
