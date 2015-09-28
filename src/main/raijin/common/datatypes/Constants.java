@@ -1,12 +1,5 @@
 package raijin.common.datatypes;
 
-import java.lang.reflect.Type;
-import java.util.HashMap;
-
-import raijin.storage.api.TasksMap;
-
-import com.google.gson.reflect.TypeToken;
-
 public class Constants {
   
   public static enum Priority { LOW, MID, HIGH }
@@ -23,8 +16,7 @@ public class Constants {
   public static final String FEEDBACK_INFO_SUCCESS = "operation is successful";
   public static final String FEEDBACK_ERROR_ILLEGALCOMMAND = "Illegal command";
   public static final String FEEDBACK_ADD_SUCCESS = "Added %s successfully";
-
-  public static final Type tasksType = new TypeToken<TasksMap>(){}.getType();
+  public static final String EXCEPTION_NONEXISTENTTASK = "Task ID %d does not exists";
 
   //Very flexible regex for recognizing date patterns. Available test cases at: http://fiddle.re/56t2j6
   public static final String DATE_PATTERN = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]|(?:jan|mar|may|jul|aug|oct|dec)))"
