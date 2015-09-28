@@ -10,20 +10,20 @@ import raijin.logic.api.UndoableRedoable;
  * 
  * @author papa
  */
-public class Memory {
+public class TasksManager {
 
-  private static Memory memory = new Memory();
-  private TasksMap tasksMap;                    //Stores current tasks
+  private static TasksManager tasksManager = new TasksManager();
+  private TasksMap tasksMap;                    
   private History history;
 
-  private Memory() {
+  private TasksManager() {
     tasksMap = new TasksMap();
     history = History.getHistory();
   }
 
   /*Returns the single instace of Memory*/
-  public static Memory getMemory() {
-    return memory;
+  public static TasksManager getManager() {
+    return tasksManager;
   }
   
   /*Set tasksMap from external source*/
