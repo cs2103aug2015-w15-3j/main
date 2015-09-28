@@ -8,7 +8,7 @@ import raijin.common.utils.RaijinLogger;
 public class RaijinException extends Exception {
   
     /*Setup logger for error recording*/
-    private Logger logger = RaijinLogger.getLogger();
+    protected static Logger logger = RaijinLogger.getLogger();
 
     public RaijinException() {
         super();
@@ -16,6 +16,7 @@ public class RaijinException extends Exception {
 
     public RaijinException(String message) {
         super(message);
-        logger.error(message);
+        logger.warn(message);
     }
+    
 }

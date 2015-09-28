@@ -11,14 +11,7 @@ import raijin.storage.api.Memory;
 
 public class AddCommandRunner implements CommandRunner, UndoableRedoable {
 
-  private Memory memory;
-  private History history;
   private Task currentTask;
-
-  public AddCommandRunner() {
-    memory = Memory.getMemory();
-    history = History.getHistory();
-  }
 
   Task createTask(ParsedInput input) {
     return new Task(input.getName(), input.getDateTime());
