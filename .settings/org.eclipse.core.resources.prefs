@@ -1,4 +1,10 @@
 eclipse.preferences.version=1
+encoding//src/main=UTF-8
+encoding//src/main/raijin=UTF-8
+encoding//src/main/raijin/ui/resource/layout=UTF-8
+encoding//src/main/raijin/ui/resource/styles=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/test=UTF-8
+encoding//src/test/resources=UTF-8
 encoding/<project>=UTF-8
 encoding/src=UTF-8
-encoding/test=UTF-8

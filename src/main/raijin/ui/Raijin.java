@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
 public class Raijin extends Application {
-	private static final String ROOT_LAYOUT_FXML_LOCATION = "resources/layout/RootLayout.fxml";
+	private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
 	
 	private BorderPane rootLayout;
 	private Stage stage;

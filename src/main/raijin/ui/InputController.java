@@ -17,7 +17,7 @@ public class InputController extends BorderPane {
 	@FXML
 	private Label feedbackBar;
 	
-	private static final String INPUT_COMMAND_BAR_LAYOUT_FXML = "resources/layout/InputController.fxml";
+	private static final String INPUT_COMMAND_BAR_LAYOUT_FXML = "resource/layout/InputController.fxml";
 	
 	private Raijin mainApp;
 	

@@ -24,7 +24,7 @@ public class RaijinLoggerTest {
   @Test
   public void testLogDebug() {
     ArrayList<String> test = new ArrayList<String>();
-    logger.trace("Size of array list is {}", test.size());
+    logger.debug("Size of array list is {}", test.size());
   }
 
 }
