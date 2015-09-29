@@ -1,5 +1,7 @@
 package raijin.logic.api;
 
+import raijin.common.exception.NonExistentTaskException;
+
 /**
  * 
  * @author papa
@@ -7,7 +9,7 @@ package raijin.logic.api;
  */
 public interface UndoableRedoable {
   
-  public void undo();
+  public void undo() throws NonExistentTaskException;
   public void redo();
 
 }

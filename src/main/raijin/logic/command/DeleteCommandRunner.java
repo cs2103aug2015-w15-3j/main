@@ -4,31 +4,36 @@ import raijin.common.datatypes.Status;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.api.UndoableRedoable;
 import raijin.logic.parser.ParsedInput;
-import raijin.storage.api.Memory;
 import raijin.common.datatypes.Task;
+import raijin.common.exception.NonExistentTaskException;
 
 public class DeleteCommandRunner implements CommandRunner, UndoableRedoable {
-	Memory memory = Memory.getMemory();
-	int id;
-	String taskDescription;
-	Task task;
-	
-  public Status execute(ParsedInput input) {   
-	this.id = input.getId();
-    this.task = memory.getTask(id);
+  int id;
+  String taskDescription;
+  Task task;
+
+  public Status execute(ParsedInput input) throws NonExistentTaskException {
+    this.id = input.getId();
+    this.task = tasksManager.getPendingTask(id);
     taskDescription = task.getName();
-    
-	memory.deleteTask(id);
-    
+
+    tasksManager.deletePendingTask(id);
+    history.pushCommand(this);
+
     return new Status("You have just deleted " + taskDescription + "!");
   }
-  
+
   public void undo() {
-    	memory.addTask(task);
+    tasksManager.addPendingTask(task);
   }
 
   public void redo() {
-    	memory.deleteTask(id);
+    try {
+      tasksManager.deletePendingTask(id);
+    } catch (NonExistentTaskException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
 }

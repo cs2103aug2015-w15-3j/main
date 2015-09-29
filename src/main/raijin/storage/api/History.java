@@ -2,6 +2,7 @@ package raijin.storage.api;
 
 import java.util.Stack;
 
+import raijin.common.exception.NonExistentTaskException;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.api.UndoableRedoable;
 
@@ -36,19 +37,19 @@ public class History {
     redoStack.clear();
   }
 
-  void addCommand(UndoableRedoable commandRunner) {
+  public void pushCommand(UndoableRedoable commandRunner) {
     undoStack.push(commandRunner);
   }
 
   /*Calling class must catch EmptyStackException*/
-  void undo() {
+  public void undo() throws NonExistentTaskException {
     UndoableRedoable undoCommand = undoStack.pop();
     undoCommand.undo();
     redoStack.add(undoCommand);     //Add removed command to redo stack
   }
 
   /*Calling class must catch EmptyStackException*/
-  void redo() {
+  public void redo() {
     UndoableRedoable redoCommand = redoStack.pop();
     redoCommand.redo();
     undoStack.add(redoCommand);     //Add command to redo stack

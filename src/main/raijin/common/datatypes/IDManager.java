@@ -1,5 +1,6 @@
 package raijin.common.datatypes;
 
+import java.util.HashMap;
 import java.util.TreeSet;
 
 public class IDManager {
@@ -12,12 +13,7 @@ public class IDManager {
     initIdPool();
   }
   
-  /**
-   * 
-   * @param MAX_ID 
-   * creates initial pool of ids to be associated with tasks
-   */
-  private void initIdPool() {
+  void initIdPool() {
     /*Id starts from 1 because usually 0 is reserved for root process*/
     for (int i = 1; i <= MAX_ID; i++) {
       idPool.add(i);
@@ -55,6 +51,16 @@ public class IDManager {
   
   public void setIdPool(TreeSet<Integer> idPool) {
     this.idPool = idPool;
+  }
+
+  public void updateIdPool(HashMap<Integer, Task> pendingTasks) {
+    for (int id : pendingTasks.keySet()) {
+      idPool.remove(id);
+    }
+  }
+
+  int getMaxId() {
+    return MAX_ID;
   }
 
 }

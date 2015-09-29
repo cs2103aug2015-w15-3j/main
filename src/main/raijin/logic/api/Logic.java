@@ -1,21 +1,20 @@
 package raijin.logic.api;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Status;
+import raijin.common.datatypes.Task;
+import raijin.common.exception.NonExistentTaskException;
 import raijin.logic.parser.ParsedInput;
 import raijin.logic.parser.ParserInterface;
 import raijin.logic.parser.SimpleParser;
 import raijin.storage.api.History;
-import raijin.storage.api.Memory;
-import raijin.storage.api.TasksMap;
+import raijin.storage.api.TasksManager;
 import raijin.storage.handler.StorageHandler;
 
 
@@ -26,7 +25,7 @@ import raijin.storage.handler.StorageHandler;
  */
 public class Logic {
 
-  private Memory memory;
+  private TasksManager tasksManager;
   private CommandDispatcher commandDispatcher;
   private ParserInterface parser;
   private String programDirectory;      //Directory where program is running from
@@ -41,7 +40,7 @@ public class Logic {
   }
   
   private void initAssets() {
-    memory = Memory.getMemory();
+    tasksManager = TasksManager.getManager();
     commandDispatcher = CommandDispatcher.getDispatcher();
     parser = new SimpleParser();
 
@@ -59,10 +58,6 @@ public class Logic {
     setupDataFolder();
   }
 
-  public Status handleInput(String userInput) {
-    return null;
-  }
-  
   
   /*Checks if this is the first time a user use the program*/
   public boolean isFirstTime() {
@@ -84,9 +79,10 @@ public class Logic {
   }
   
   /*Initialize list of tasks*/
-  public void initializeData(TasksMap tasksMap) {
-    memory.setTasksMap(tasksMap);
-    IDManager.getIdManager().setIdPool(tasksMap.getIdPool());
+  public void initializeData(TasksManager tasksManager) {
+    HashMap<Integer, Task> pendingTasks = tasksManager.getPendingTasks();
+    tasksManager.setPendingTasks(pendingTasks);
+    IDManager.getIdManager().updateIdPool(pendingTasks);
   }
   
 
@@ -97,9 +93,23 @@ public class Logic {
       return commandDispatcher.delegateCommand(parsed);
 
     } catch (IllegalArgumentException e) {
-      e.printStackTrace();
       return new Status(Constants.FEEDBACK_ERROR_ILLEGALCOMMAND);
+    } catch (NonExistentTaskException e) {
+      // TODO Auto-generated catch block
+      return new Status(Constants.EXCEPTION_NONEXISTENTTASK);
     }
+  }
+
+  //===========================================================================
+  // Storage methods
+  //===========================================================================
+  
+  public ArrayList<Task> retrievePendingTasks() {
+    return new ArrayList<Task>(tasksManager.getPendingTasks().values());
+  }
+
+  public ArrayList<Task> retrieveCompletedTasks() {
+    return new ArrayList<Task>(tasksManager.getCompletedTasks().values());
   }
 
   //===========================================================================
