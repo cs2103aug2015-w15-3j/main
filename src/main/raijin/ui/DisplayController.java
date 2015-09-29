@@ -7,8 +7,6 @@ import javafx.scene.layout.BorderPane;
 
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
-import raijin.storage.api.Memory;
-import raijin.storage.api.TasksMap;
 
 import java.util.Date;
 import java.util.ArrayList;
@@ -29,8 +27,8 @@ public class DisplayController extends BorderPane {
 	 ListView<String> listView;
 	 
 	 // Retrieve memory
-	 Memory memory = Memory.getMemory();
-	 TasksMap tasksMap = memory.getTasksMap();
+	 //Memory memory = Memory.getMemory();
+	 //TasksMap tasksMap = memory.getTasksMap();
 	 
 	 // Temporary ArrayLists for storing information
 	 ArrayList<Task> pending;
@@ -45,8 +43,8 @@ public class DisplayController extends BorderPane {
 		 listView = new ListView<String>();
 		 this.setCenter(listView);
 		 
-		 pending = new ArrayList<Task>(memory.getTasks().values());
-		 completed = new ArrayList<Task>(memory.getCompletedTasks().values());
+		 //pending = new ArrayList<Task>(memory.getTasks().values());
+		 //completed = new ArrayList<Task>(memory.getCompletedTasks().values());
 		 
 		 displayTodaysTasks(pending, listView, cal);
 	 }
