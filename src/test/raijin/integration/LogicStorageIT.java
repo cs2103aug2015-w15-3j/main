@@ -62,9 +62,9 @@ public class LogicStorageIT {
   }
 
   @SuppressWarnings("serial")
-  public <T> T readDataFromFile(String dataPath) {
+  public TasksManager readDataFromFile(String dataPath) {
     JsonReader jsonReader = getJsonReaderFromFile(dataPath);
-    return readFromJson(jsonReader, new TypeToken<T>() {}.getType());
+    return readFromJson(jsonReader, new TypeToken<TasksManager>() {}.getType());
   }
   
   /*Add random tasks to current tasksMap*/

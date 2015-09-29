@@ -1,5 +1,6 @@
 package raijin.storage.api;
 
+import java.security.SecurityPermission;
 import java.util.HashMap;
 
 import raijin.common.datatypes.Constants;
@@ -13,8 +14,8 @@ import raijin.common.exception.NonExistentTaskException;
 public class TasksManager {
 
   private static TasksManager tasksManager;
-  private HashMap<Integer, Task> pendingTasks;
-  private HashMap<Integer, Task> completedTasks;
+  private HashMap<Integer, Task> pendingTasks = new HashMap<Integer, Task>();
+  private HashMap<Integer, Task> completedTasks = new HashMap<Integer, Task>();
 
   private TasksManager() {}
 

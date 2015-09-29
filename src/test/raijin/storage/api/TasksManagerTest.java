@@ -9,8 +9,10 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import raijin.common.datatypes.DateTime;
+import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NonExistentTaskException;
+import raijin.common.utils.RaijinLogger;
 
 public class TasksManagerTest {
 
@@ -22,6 +24,7 @@ public class TasksManagerTest {
     /*Reset state of pending tasks*/
     tasksManager.setPendingTasks(new HashMap<Integer, Task>());
     tasksManager.setCompletedTasks(new HashMap<Integer, Task>());
+    IDManager.getIdManager().flushIdPool();
   }
 
   @Test

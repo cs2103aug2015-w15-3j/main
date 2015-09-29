@@ -2,7 +2,10 @@ package raijin.logic.command;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -10,10 +13,13 @@ import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
+import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Status;
+import raijin.common.datatypes.Task;
 import raijin.common.exception.NonExistentTaskException;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
+import raijin.storage.api.History;
 import raijin.storage.api.TasksManager;
 
 public class AddCommandRunnerTest {
@@ -44,6 +50,9 @@ public class AddCommandRunnerTest {
   @Before
   public void setUp() throws Exception {
     addCommandRunner = new AddCommandRunner();
+    tasksManager = TasksManager.getManager();
+    tasksManager.setPendingTasks(new HashMap<Integer, Task>());
+    IDManager.getIdManager().flushIdPool();
   }
 
   @Test
