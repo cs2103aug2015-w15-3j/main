@@ -3,10 +3,8 @@ package raijin.storage.api;
 import java.util.HashMap;
 
 import raijin.common.datatypes.Constants;
-import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NonExistentTaskException;
-import raijin.logic.api.UndoableRedoable;
 
 /**
  * 
@@ -17,21 +15,28 @@ public class TasksManager {
   private static TasksManager tasksManager;
   private HashMap<Integer, Task> pendingTasks;
   private HashMap<Integer, Task> completedTasks;
-  private History history;
 
   private TasksManager() {}
 
-  public static TasksManager getManager(HashMap<Integer, Task> pendingTasks) {
+  public static TasksManager getManager() {
     if (tasksManager == null) {
       tasksManager = new TasksManager();
     }
     return tasksManager;
   }
   
+  public HashMap<Integer, Task> getPendingTasks() {
+    return pendingTasks;
+  }
+
   public void setPendingTasks(HashMap<Integer, Task> pendingTasks) {
     this.pendingTasks = pendingTasks;
   }
   
+  public HashMap<Integer, Task> getCompletedTasks() {
+    return completedTasks;
+  }
+
   public void setCompletedTasks(HashMap<Integer, Task> completedTasks) {
     this.completedTasks = completedTasks;
   }
@@ -57,17 +62,17 @@ public class TasksManager {
   }
 
   public Task getPendingTask(int id) throws NonExistentTaskException {
-    try {
+    if (pendingTasks.containsKey(id)) {
       return pendingTasks.get(id);
-    } catch (NullPointerException e) {
+    } else {
       throw new NonExistentTaskException(String.format(Constants.EXCEPTION_NONEXISTENTTASK, id));
     }
   }
 
   public void deletePendingTask(int id) throws NonExistentTaskException {
-    try {
+    if (pendingTasks.containsKey(id)) {
       pendingTasks.remove(id);
-    } catch (NullPointerException e) {
+    } else {
       throw new NonExistentTaskException(String.format(Constants.EXCEPTION_NONEXISTENTTASK, id));
     }
   }

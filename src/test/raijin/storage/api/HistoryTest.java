@@ -8,6 +8,7 @@ import java.util.EmptyStackException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import raijin.common.exception.NonExistentTaskException;
 import raijin.logic.command.AddCommandRunner;
 
 
@@ -38,31 +39,31 @@ public class HistoryTest {
   public void addCommand_ValidCommand_VerifyAdded() {
     //Ensures start from clean slate
     history.clear();
-    history.addCommand(addCommandRunner);
+    history.pushCommand(addCommandRunner);
     assertFalse(history.isEmptyUndoStack());
   }
   
   @Test
-  public void undo_VerifyAddedToRedoStack() {
+  public void undo_VerifyAddedToRedoStack() throws NonExistentTaskException {
     //Ensures start from clean slate
     history.clear();
-    history.addCommand(addCommandRunner);
+    history.pushCommand(addCommandRunner);
     history.undo();
     assertFalse(history.isEmptyRedoStack());
   }
 
   @Test
-  public void redo_VerifyAddedToUndoStack() {
+  public void redo_VerifyAddedToUndoStack() throws NonExistentTaskException {
     //Ensures start from clean slate
     history.clear();
-    history.addCommand(addCommandRunner);
+    history.pushCommand(addCommandRunner);
     history.undo();
     history.redo();
     assertFalse(history.isEmptyUndoStack());
   }
 
   @Test(expected=EmptyStackException.class)
-  public void undo_NoCommandsInStack_ThrowException() {
+  public void undo_NoCommandsInStack_ThrowException() throws NonExistentTaskException {
     history.clear();
     history.undo();
   }

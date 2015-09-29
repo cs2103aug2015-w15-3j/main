@@ -2,6 +2,7 @@ package raijin.common.datatypes;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.junit.Before;
@@ -38,5 +39,18 @@ public class IDManagerTest {
     
     idManager.flushIdPool();
     assertEquals(1, idManager.getId());
+  }
+  
+  @Test
+  public void initIdPoolFromPendingTasks_ReduceAvaibleIds() {
+    HashMap<Integer, Task> tasks = new HashMap<Integer, Task>();
+    tasks.put(1, new Task("submit op2"));
+    tasks.put(2, new Task("submit op3"));
+    tasks.put(3, new Task("submit op4"));
+    idManager.flushIdPool();
+
+    int expected_size = idManager.getMaxId() - tasks.size();
+    idManager.updateIdPool(tasks);
+    assertEquals(expected_size, idManager.getIdPool().size());
   }
 }

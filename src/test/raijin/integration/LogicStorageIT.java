@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.TreeSet;
 
@@ -13,6 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import raijin.common.datatypes.Constants;
@@ -20,8 +22,7 @@ import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Task;
 import raijin.logic.api.Logic;
-import raijin.storage.api.Memory;
-import raijin.storage.api.TasksMap;
+import raijin.storage.api.TasksManager;
 import static raijin.storage.handler.StorageHandler.*;
 
 public class LogicStorageIT {
@@ -56,27 +57,28 @@ public class LogicStorageIT {
   //===========================================================================
   // Helper methods
   //===========================================================================
-  public void writeDataToFile(String dataPath, TasksMap tasks) {
-    writeToFile(convertToJson(tasks), dataPath);
+  public <T> void writeDataToFile(String dataPath, T data) {
+    writeToFile(convertToJson(data), dataPath);
   }
 
-  public TasksMap readDataFromFile(String dataPath) {
+  @SuppressWarnings("serial")
+  public <T> T readDataFromFile(String dataPath) {
     JsonReader jsonReader = getJsonReaderFromFile(dataPath);
-    return readFromJson(jsonReader, Constants.tasksType);
+    return readFromJson(jsonReader, new TypeToken<T>() {}.getType());
   }
   
   /*Add random tasks to current tasksMap*/
   public void addRandomTasks() {
-    Memory memory = Memory.getMemory();
+    TasksManager tasksManager = TasksManager.getManager();
     for (int i = 0; i < sampleTasks.length; i++) {
-      memory.addTask(new Task(sampleTasks[i]));
+      tasksManager.addPendingTask(new Task(sampleTasks[i]));
     }
   }
 
   /*Reset states of memory*/
   public void resetState() {
     IDManager.getIdManager().flushIdPool();
-    Memory.getMemory().setTasksMap(new TasksMap());
+    TasksManager.getManager().setPendingTasks(new HashMap<Integer, Task>());
   }
 
   //===========================================================================
@@ -91,12 +93,12 @@ public class LogicStorageIT {
     
     //Make some changes to program internal memory
     addRandomTasks();
-    writeDataToFile(dataPath, Memory.getMemory().getTasksMap());
+    writeDataToFile(dataPath, TasksManager.getManager());
     System.out.println(IDManager.getIdManager().getIdPool().toString());
     
     //Reset & read from file
     resetState();
-    TasksMap deserialized = readDataFromFile(dataPath);
+    TasksManager deserialized = readDataFromFile(dataPath);
     logic.initializeData(deserialized);
     assertEquals(50 - sampleTasks.length, IDManager.getIdManager().getIdPool().size());
 
