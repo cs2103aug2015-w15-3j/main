@@ -2,4 +2,5 @@
 /target/
 .recommenders/
 .metadata
+.log
 
