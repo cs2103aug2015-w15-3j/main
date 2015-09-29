@@ -2,6 +2,7 @@ package raijin.logic.api;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import raijin.common.datatypes.Constants;
@@ -57,10 +58,6 @@ public class Logic {
     setupDataFolder();
   }
 
-  public Status handleInput(String userInput) {
-    return null;
-  }
-  
   
   /*Checks if this is the first time a user use the program*/
   public boolean isFirstTime() {
@@ -101,6 +98,18 @@ public class Logic {
       // TODO Auto-generated catch block
       return new Status(Constants.EXCEPTION_NONEXISTENTTASK);
     }
+  }
+
+  //===========================================================================
+  // Storage methods
+  //===========================================================================
+  
+  public ArrayList<Task> retrievePendingTasks() {
+    return new ArrayList<Task>(tasksManager.getPendingTasks().values());
+  }
+
+  public ArrayList<Task> retrieveCompletedTasks() {
+    return new ArrayList<Task>(tasksManager.getCompletedTasks().values());
   }
 
   //===========================================================================
