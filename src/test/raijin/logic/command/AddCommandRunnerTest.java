@@ -11,14 +11,15 @@ import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Status;
+import raijin.common.exception.NonExistentTaskException;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
-import raijin.storage.api.Memory;
+import raijin.storage.api.TasksManager;
 
 public class AddCommandRunnerTest {
 
   private AddCommandRunner addCommandRunner;
-  private Memory memory;
+  private TasksManager tasksManager;
 
   //===========================================================================
   // Helper methods
@@ -43,8 +44,6 @@ public class AddCommandRunnerTest {
   @Before
   public void setUp() throws Exception {
     addCommandRunner = new AddCommandRunner();
-    memory = Memory.getMemory();
-    memory.clearTasks();            //Reset memory after each test
   }
 
   @Test
@@ -58,18 +57,18 @@ public class AddCommandRunnerTest {
   }
   
   @Test
-  public void undo_SpecifiedDeadline() {
+  public void undo_SpecifiedDeadline() throws NonExistentTaskException {
     addTask("submit op2 to ms lee", new DateTime("19/09/2015"));
     addCommandRunner.undo();
-    assertTrue(memory.isEmptyTasks());
+    assertTrue(tasksManager.isEmptyPendingTasks());
   }
 
   @Test
-  public void redo_SpecifiedDeadline() {
+  public void redo_SpecifiedDeadline() throws NonExistentTaskException {
     addTask("submit op2 to ms lee", new DateTime("19/09/2015"));
     addCommandRunner.undo();
     addCommandRunner.redo();
-    assertEquals(memory.getTask(1).getName(), "submit op2 to ms lee");
+    assertEquals(tasksManager.getPendingTask(1).getName(), "submit op2 to ms lee");
   }
 
 }
