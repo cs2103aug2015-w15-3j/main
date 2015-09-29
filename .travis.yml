@@ -8,5 +8,8 @@ branches:
 notifications:
     email:
     - jinified@gmail.com 
+    - zhulingjiee@gmail.com
+    - woanchin.tee@gmail.com
+    - leeyingjie_95@hotmail.com
 after_success:
     - mvn clean test jacoco:report coveralls:report
