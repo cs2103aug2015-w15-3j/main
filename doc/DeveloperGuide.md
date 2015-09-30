@@ -23,11 +23,13 @@ We aim to be the most widely used todo manager in National University of Singapo
   - [`CommandRunner` Class](#commandrunner-class)
   - [`CommandDispatcher` Class](#commanddispatcher-class)
   - [`CommandRunnerFactory` Class](#commandrunnerfactory-class)
+  - [`Notable APIs for Logic` Class](#notable-apis-for-logic-class)
 - [Storage Component](#storage-component)
   - [`Storage Class Diagram`](#storage-class-diagram)
   - [`TasksManager` Class](#tasksmanager-class)
   - [`History` Class](#history-class)
   - [`StorageHandler` Class](#storagehandler-class)
+  - [`Notable APIs for Storage` Class](#notable-apis-for-storage-class)
 - [Common Component](#common-componenet)
   - [`Common Class Diagram`](#common-class-diagram)
   - [`Task` Class](#task-class)
@@ -35,6 +37,8 @@ We aim to be the most widely used todo manager in National University of Singapo
   - [`Status` Class](#status-class)
   - [`RaijinException` Class](#raijinexception-class)
   - [`RaijinLogger` Class](#raijinlogger-class)
+  - [`Notable APIs for Common` Class](#notable-apis-for-common-class)
+
 
 ##Architecture
 
@@ -99,13 +103,16 @@ This serves as an interface for different commands that is expected from the use
 for loose coupling and invert dependency on low level implementation. Class that implement this interface will
 communicate with `Storage` class to write and retrieve relevant informations about the command. 
 
+###`Notable APIs for Logic` class
+<img src="Images/logic-api.png">
+
 ##Storage Component
 This component acts like a warehouse where any class that desire to access program's internal memory or to write any changes is dependent on this component. For now, the componenet stores `Memory` of the program and also `History` stack that allows user to undo/redo any action. Besides that, the `StorageHandler` helps to convert internal representation of tasks to JSON String before being stored to `UserData`. 
 
 <img src="Images/storage-class-diagram.png">
 >Figure4: Storage Class Diagram 
 
-###`Memory` class
+###`TasksManager` class
 This class stores the internal state of the program which consists of objects such as 
 Task and Status.`Logic` class will communicate via this api to access information about the tasks.
 
@@ -117,6 +124,9 @@ undo certain actions.
 Consists various utility function that helps to read and write `Memory` to JSON file. Besides that, 
 the class also performs basic data integrity check on the JSON file as well as retrieving user's
 config file.
+
+###`Notable APIs for Storage` class
+<img src="Images/storage-api.png">
 
 ##Common Component
 This component consists of universally used data types across the program such as `Task`, `DateTime` and 
@@ -139,3 +149,7 @@ command is executed successfully.
 
 ###`Logger` class
 Provides individual class with a logger 
+
+###`Notable APIs for Common` class
+<img src="Images/common-api.png">
+
