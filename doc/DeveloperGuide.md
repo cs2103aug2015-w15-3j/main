@@ -21,17 +21,20 @@ We aim to be the most widely used todo manager in National University of Singapo
   - [`Logic` Class](#logic-class)
   - [`Parser` Class](#parser-class)
   - [`CommandRunner` Class](#commandrunner-class)
+  - [`CommandDispatcher` Class](#commanddispatcher-class)
+  - [`CommandRunnerFactory` Class](#commandrunnerfactory-class)
 - [Storage Component](#storage-component)
   - [`Storage Class Diagram`](#storage-class-diagram)
-  - [`Memory` Class](#memory-class)
+  - [`TasksManager` Class](#tasksmanager-class)
   - [`History` Class](#history-class)
   - [`StorageHandler` Class](#storagehandler-class)
 - [Common Component](#common-componenet)
   - [`Common Class Diagram`](#common-class-diagram)
   - [`Task` Class](#task-class)
   - [`DateTime` Class](#datetime-class)
-  - [`Feedback` Class](#feedback-class)
-  - [`Logger` Class](#logger-class)
+  - [`Status` Class](#status-class)
+  - [`RaijinException` Class](#raijinexception-class)
+  - [`RaijinLogger` Class](#raijinlogger-class)
 
 ##Architecture
 
