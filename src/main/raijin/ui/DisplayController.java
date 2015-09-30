@@ -45,6 +45,7 @@ public class DisplayController extends BorderPane {
 		 
 		 //pending = new ArrayList<Task>(memory.getTasks().values());
 		 //completed = new ArrayList<Task>(memory.getCompletedTasks().values());
+		 pending = new ArrayList<Task>();
 		 
 		 displayTodaysTasks(pending, listView, cal);
 	 }
