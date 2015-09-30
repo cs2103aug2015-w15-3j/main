@@ -13,10 +13,10 @@ import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
-import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NonExistentTaskException;
+import raijin.common.utils.IDManager;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.History;
