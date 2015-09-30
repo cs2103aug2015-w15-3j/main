@@ -28,7 +28,6 @@ public class SimpleParser implements ParserInterface {
    * @throws Exception  When invalid input is detected.
    */
   public ParsedInput parse(String userInput) throws IllegalArgumentException {
-    // TODO Auto-generated method stub
     wordsOfInput = userInput.split(" ");
     
     if (isFirstWord("add")) {
@@ -36,22 +35,22 @@ public class SimpleParser implements ParserInterface {
       parseAddTask();
     } else if (isFirstWord("edit")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EDIT);
-      //TODO
+      parseEditTask();
     } else if (isFirstWord("delete")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DELETE);  
-      //TODO
+      parseDeleteTask();
     } else if (isFirstWord("done")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DONE); 
-      //TODO
+      parseDoneTask();
     } else if (isFirstWord("undo")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.UNDO);
-      //TODO
+      parseUndo();
     } else if (isFirstWord("display")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DISPLAY);
-      //TODO
+      parseDisplay();
     } else if (isFirstWord("exit")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT);
-      //TODO
+      parseExit();
     }
      
     return builder.createParsedInput();
@@ -73,7 +72,7 @@ public class SimpleParser implements ParserInterface {
    * 
    * @throws Exception  When invalid input command is detected.
    */
-  public void parseAddTask() throws IllegalArgumentException{
+  public void parseAddTask() throws IllegalArgumentException {
     boolean containsStartDate = false;
     boolean containsEndDate = false;
     boolean containsStartTime = false;
@@ -148,6 +147,36 @@ public class SimpleParser implements ParserInterface {
     }
     
     builder.name(name).dateTime(dateTime);
+  }
+  
+  /**
+   * Method that parses the input for any modification users want to make for a specific task.
+   * Able to modify name, date, or time.
+   * 
+   * @throws IllegalArgumentException
+   */
+  public void parseEditTask() throws IllegalArgumentException {
+    //TODO
+  }
+  
+  public void parseDeleteTask() throws IllegalArgumentException {
+    //TODO
+  }
+  
+  public void parseDoneTask() throws IllegalArgumentException {
+    //TODO
+  }
+  
+  public void parseUndo() throws IllegalArgumentException {
+    //TODO
+  }
+  
+  public void parseDisplay() throws IllegalArgumentException {
+    //TODO
+  }
+  
+  public void parseExit() throws IllegalArgumentException {
+    //TODO
   }
   
   /**
