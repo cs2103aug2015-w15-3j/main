@@ -44,13 +44,11 @@ public class SimpleParser implements ParserInterface {
       parseDoneTask();
     } else if (isFirstWord("undo")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.UNDO);
-      parseUndo();
     } else if (isFirstWord("display")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DISPLAY);
       parseDisplay();
     } else if (isFirstWord("exit")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT);
-      parseExit();
     }
      
     return builder.createParsedInput();
@@ -167,15 +165,7 @@ public class SimpleParser implements ParserInterface {
     //TODO
   }
   
-  public void parseUndo() throws IllegalArgumentException {
-    //TODO
-  }
-  
   public void parseDisplay() throws IllegalArgumentException {
-    //TODO
-  }
-  
-  public void parseExit() throws IllegalArgumentException {
     //TODO
   }
   
