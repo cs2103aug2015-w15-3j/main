@@ -25,7 +25,7 @@ public class CommandDispatcher {
       return commandRunner.execute(input);
   }
   
-  public void setupCommandUnit(){
+  void setupCommandUnit(){
     /*Setup each command runner based on commands*/
     for (Constants.Command cmd : Constants.Command.values()) {
       commandRunners.put(cmd, CommandRunnerFactory.getCommandRunner(cmd));

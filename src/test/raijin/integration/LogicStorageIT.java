@@ -19,8 +19,8 @@ import com.google.gson.stream.JsonReader;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
-import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Task;
+import raijin.common.utils.IDManager;
 import raijin.logic.api.Logic;
 import raijin.storage.api.TasksManager;
 import static raijin.storage.handler.StorageHandler.*;

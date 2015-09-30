@@ -1,4 +1,4 @@
-package raijin.common.datatypes;
+package raijin.common.utils;
 
 import static org.junit.Assert.*;
 
@@ -8,6 +8,9 @@ import java.util.TreeSet;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import raijin.common.datatypes.Task;
+import raijin.common.utils.IDManager;
 
 public class IDManagerTest {
 

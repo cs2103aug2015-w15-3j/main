@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import raijin.common.datatypes.Constants;
-import raijin.common.datatypes.IDManager;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NonExistentTaskException;
+import raijin.common.utils.IDManager;
 import raijin.logic.parser.ParsedInput;
 import raijin.logic.parser.ParserInterface;
 import raijin.logic.parser.SimpleParser;

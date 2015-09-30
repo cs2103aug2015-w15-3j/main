@@ -1,7 +1,9 @@
-package raijin.common.datatypes;
+package raijin.common.utils;
 
 import java.util.HashMap;
 import java.util.TreeSet;
+
+import raijin.common.datatypes.Task;
 
 public class IDManager {
 
