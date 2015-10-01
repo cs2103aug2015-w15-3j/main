@@ -167,7 +167,7 @@ public class SimpleParser implements ParserInterface {
    * @throws IllegalArgumentException
    */
   public void parseDeleteTask() throws IllegalArgumentException {
-    //TODO
+    builder.id(Integer.parseInt(wordsOfInput[1]));
   }
   
   /**
@@ -176,7 +176,7 @@ public class SimpleParser implements ParserInterface {
    * @throws IllegalArgumentException
    */
   public void parseDoneTask() throws IllegalArgumentException {
-    //TODO
+    builder.id(Integer.parseInt(wordsOfInput[1]));
   }
   
   /**
@@ -185,7 +185,7 @@ public class SimpleParser implements ParserInterface {
    * @throws IllegalArgumentException
    */
   public void parseDisplay() throws IllegalArgumentException {
-    //TODO
+    builder.displayOptions(wordsOfInput[1]);
   }
   
   /**
