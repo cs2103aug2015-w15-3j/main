@@ -78,6 +78,13 @@ public class TasksManager {
     }
   }
   
+  public void deleteCompletedTask(int id) throws NonExistentTaskException {
+	if (completedTasks.containsKey(id)) {
+	  completedTasks.remove(id);
+	} else {
+	  throw new NonExistentTaskException(String.format(Constants.EXCEPTION_NONEXISTENTTASK, id));
+	}
+  }
 
   
 }
