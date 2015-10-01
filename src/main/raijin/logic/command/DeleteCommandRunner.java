@@ -31,7 +31,6 @@ public class DeleteCommandRunner implements CommandRunner, UndoableRedoable {
     try {
       tasksManager.deletePendingTask(id);
     } catch (NonExistentTaskException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
