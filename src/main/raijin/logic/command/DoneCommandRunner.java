@@ -10,10 +10,11 @@ import raijin.logic.parser.ParsedInput;
 public class DoneCommandRunner implements CommandRunner,UndoableRedoable {
 	int id;
 	String taskDescription;
+	Task task;
 	
   public Status execute(ParsedInput input) throws NonExistentTaskException {   
 	this.id = input.getId();
-    Task task = tasksManager.getPendingTask(id);
+    this.task = tasksManager.getPendingTask(id);
     taskDescription = task.getName();
     
 	tasksManager.addCompletedTask(task);
@@ -25,12 +26,10 @@ public class DoneCommandRunner implements CommandRunner,UndoableRedoable {
   }
 
   public void undo() throws NonExistentTaskException {
-    // TODO Auto-generated method stub
-    
+	  tasksManager.deletePendingTask(id);
   }
 
   public void redo() {
-    // TODO Auto-generated method stub
-    
+	  tasksManager.addCompletedTask(task);
   }
 }
