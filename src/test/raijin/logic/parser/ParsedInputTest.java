@@ -45,7 +45,7 @@ public class ParsedInputTest {
     assertEquals("finish something", addCommand.getName());
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
     
-    addCommand = parser.parse("add finish something BY 27.DEc");
+    addCommand = parser.parse("add finish something BY 27-DEc");
     assertEquals("finish something", addCommand.getName());
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
     
@@ -58,6 +58,42 @@ public class ParsedInputTest {
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
     assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
     assertEquals("09:00", addCommand.getDateTime().getEndTime().toString());
+  }
+  
+  //@Test
+  public void parseEditCommandInSimpleParser() {
+    SimpleParser parser = new SimpleParser();
+    ParsedInput editCommand = parser.parse("edit 12 something");
+    assertEquals("something", editCommand.getName());
+  }
+  
+  @Test
+  public void parseDeleteCommandInSimpleParser() {
+    SimpleParser parser = new SimpleParser();
+    ParsedInput deleteCommand = parser.parse("delete 12");
+    assertEquals(12, deleteCommand.getId());
+  }
+  
+  @Test
+  public void parseDoneCommandInSimpleParser() {
+    SimpleParser parser = new SimpleParser();
+    ParsedInput doneCommand = parser.parse("done 28");
+    assertEquals(28, doneCommand.getId());
+  }
+  
+  @Test
+  public void parseDisplayCommandInSimpleParser() {
+    SimpleParser parser = new SimpleParser();
+    ParsedInput displayCommand = parser.parse("display c");
+    assertEquals("c", displayCommand.getDisplayOptions());
+    
+    displayCommand = parser.parse("display c 19/9");
+    assertEquals("c", displayCommand.getDisplayOptions());
+    assertEquals("2015-09-19", displayCommand.getDateTime().getStartDate().toString());
+    
+    displayCommand = parser.parse("display 1.1");
+    assertEquals("p", displayCommand.getDisplayOptions());
+    assertEquals("2015-01-01", displayCommand.getDateTime().getStartDate().toString());
   }
 
 }

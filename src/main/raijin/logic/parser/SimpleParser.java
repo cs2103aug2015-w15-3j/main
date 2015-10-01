@@ -132,8 +132,8 @@ public class SimpleParser implements ParserInterface {
       }
     }
     
-    startDate = formatDate(startDate);
-    endDate = formatDate(endDate);
+    startDate = formatDate(startDate,0);
+    endDate = formatDate(endDate,0);
     startTime = formatTime(startTime);
     endTime = formatTime(endTime);
     
@@ -158,7 +158,11 @@ public class SimpleParser implements ParserInterface {
    * @throws IllegalArgumentException
    */
   public void parseEditTask() throws IllegalArgumentException {
-    //TODO
+    try {
+      builder.id(Integer.parseInt(wordsOfInput[1]));
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Please enter valid task number!");
+    }
   }
   
   /**
@@ -167,7 +171,11 @@ public class SimpleParser implements ParserInterface {
    * @throws IllegalArgumentException
    */
   public void parseDeleteTask() throws IllegalArgumentException {
-    builder.id(Integer.parseInt(wordsOfInput[1]));
+    try {
+      builder.id(Integer.parseInt(wordsOfInput[1]));
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Please enter valid task number!");
+    }
   }
   
   /**
@@ -176,16 +184,29 @@ public class SimpleParser implements ParserInterface {
    * @throws IllegalArgumentException
    */
   public void parseDoneTask() throws IllegalArgumentException {
-    builder.id(Integer.parseInt(wordsOfInput[1]));
+    try {
+      builder.id(Integer.parseInt(wordsOfInput[1]));
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Please enter valid task number!");
+    }
   }
   
   /**
    * Method that parses display type input by user and responds accordingly.
+   * Currently allows for "p", "c" or dates for its options.
    * 
    * @throws IllegalArgumentException
    */
   public void parseDisplay() throws IllegalArgumentException {
-    builder.displayOptions(wordsOfInput[1]);
+    String displayType = "p";
+    for (int i = 1; i < wordsOfInput.length; i++) {
+      if (wordsOfInput[i].matches(datePattern)) {
+        builder.dateTime(new DateTime(formatDate(wordsOfInput[i], 1)));
+      } else if (wordsOfInput[i].matches("p|c")){
+        displayType = wordsOfInput[i];
+      }
+    }
+    builder.displayOptions(displayType);
   }
   
   /**
@@ -193,9 +214,10 @@ public class SimpleParser implements ParserInterface {
    * Date will be assumed to be next year if (year isn't input) & (current date is later).
    * 
    * @param date    date String that hasn't been formatted.
+   * @param type    Type of formatting: 0 for add/edit, 1 for display
    * @return        
    */
-  public String formatDate(String date) {
+  public String formatDate(String date, int type) {
     if (date.length() == 0) {
       return date;
     }
@@ -226,11 +248,12 @@ public class SimpleParser implements ParserInterface {
       if (dayMonth[2].length() < 4) {
         year += 2000; // ASSUMPTION: This app is used within the year of 2000 to 2999.
       }
-    } else if (month < monthNow || (month == monthNow && day < dayNow)) {
+    } else if (type == 0 && (month < monthNow || (month == monthNow && day < dayNow))) {
       year = LocalDate.now().getYear() + 1;
     } else {
       year = LocalDate.now().getYear();
     }
+    
     
     return twoDigits.format(day) + "/" + twoDigits.format(month) + "/" + year;
   }
