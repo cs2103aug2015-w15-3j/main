@@ -80,7 +80,7 @@ public class SimpleParser implements ParserInterface {
     
     for (int i = 0; i < wordsOfInput.length - 1; i++) {
       if (wordsOfInput[i].equalsIgnoreCase("by") || wordsOfInput[i].equalsIgnoreCase("on")) {
-        if (wordsOfInput[i+1].matches(datePattern)) {
+        if (wordsOfInput[i+1].toLowerCase().matches(datePattern)) {
           // Checks for format of {startDate}. If doesn't exist, ignore.
           containsStartDate = true;
           index = i;
@@ -92,7 +92,7 @@ public class SimpleParser implements ParserInterface {
           }
           if (containsStartDate && containsStartTime && i < wordsOfInput.length-5 && wordsOfInput[i+3].equalsIgnoreCase("to")) {
             // startDate startTime endDate endTime
-            if (wordsOfInput[i+4].matches(datePattern)) {
+            if (wordsOfInput[i+4].toLowerCase().matches(datePattern)) {
               containsEndDate = true;
               endDate = wordsOfInput[i+4];
             } else {
@@ -157,14 +157,29 @@ public class SimpleParser implements ParserInterface {
     //TODO
   }
   
+  /**
+   * Method that deletes a task based on the taskID input by user.
+   * 
+   * @throws IllegalArgumentException
+   */
   public void parseDeleteTask() throws IllegalArgumentException {
     //TODO
   }
   
+  /**
+   * Method that marks a task as done based on taskID input by user.
+   * 
+   * @throws IllegalArgumentException
+   */
   public void parseDoneTask() throws IllegalArgumentException {
     //TODO
   }
   
+  /**
+   * Method that parses display type input by user and responds accordingly.
+   * 
+   * @throws IllegalArgumentException
+   */
   public void parseDisplay() throws IllegalArgumentException {
     //TODO
   }
