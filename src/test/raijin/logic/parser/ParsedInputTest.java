@@ -60,11 +60,24 @@ public class ParsedInputTest {
     assertEquals("09:00", addCommand.getDateTime().getEndTime().toString());
   }
   
-  //@Test
+  @Test
   public void parseEditCommandInSimpleParser() {
     SimpleParser parser = new SimpleParser();
     ParsedInput editCommand = parser.parse("edit 12 something");
     assertEquals("something", editCommand.getName());
+    
+    editCommand = parser.parse("edit 12 by 1/1 1800");
+    assertEquals(12, editCommand.getId());
+    assertEquals("2016-01-01", editCommand.getDateTime().getStartDate().toString());
+    assertEquals("18:00", editCommand.getDateTime().getStartTime().toString());
+    
+    editCommand = parser.parse("edit 1 full test from 1/1 800 to 12/5 000");
+    assertEquals(1, editCommand.getId());
+    assertEquals("full test", editCommand.getName());
+    assertEquals("2016-01-01", editCommand.getDateTime().getStartDate().toString());
+    assertEquals("08:00", editCommand.getDateTime().getStartTime().toString());
+    assertEquals("2016-05-12", editCommand.getDateTime().getEndDate().toString());
+    assertEquals("00:00", editCommand.getDateTime().getEndTime().toString());
   }
   
   @Test

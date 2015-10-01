@@ -163,6 +163,15 @@ public class SimpleParser implements ParserInterface {
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Please enter valid task number!");
     }
+    
+    // Deletes taskID from wordsOfInput and makes use of parseAddTask() method.
+    String[] newWordsOfInput = new String[wordsOfInput.length-1];
+    newWordsOfInput[0] = "edit";
+    for (int i = 1; i < newWordsOfInput.length; i++) {
+      newWordsOfInput[i] = wordsOfInput[i+1];
+    }
+    wordsOfInput = newWordsOfInput;
+    parseAddTask();
   }
   
   /**
