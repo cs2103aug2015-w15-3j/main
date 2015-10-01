@@ -26,7 +26,7 @@ public class DoneCommandRunner implements CommandRunner,UndoableRedoable {
   }
 
   public void undo() throws NonExistentTaskException {
-	  tasksManager.deletePendingTask(id);
+	  tasksManager.deleteCompletedTask(id);
   }
 
   public void redo() {
