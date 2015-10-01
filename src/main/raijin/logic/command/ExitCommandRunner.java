@@ -7,7 +7,7 @@ import raijin.logic.parser.ParsedInput;
 public class ExitCommandRunner implements CommandRunner {
 
   public Status execute(ParsedInput cmd) {
-    // TODO Auto-generated method stub
+    System.exit(0);
     return null;
   }
 
