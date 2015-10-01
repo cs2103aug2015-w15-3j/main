@@ -26,7 +26,10 @@ public class Constants {
       + "|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$"
       + "|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9]|(?:jan|feb|mar|apr|may|jun|jul|aug|sep))"
       + "|(?:1[0-2]|(?:oct|nov|dec)))(\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2}))?$";
-
+  
+  public static final String DATE_START_PREPOSITION = "by|at|on|during|from";
+  public static final String DATE_END_PREPOSITION = "to|till|until";
+  
   // Regex for recognizing a date operator. Used for splitting into String array.
   public static final String DATE_OPERATOR = "(\\/|-|\\.)";
 

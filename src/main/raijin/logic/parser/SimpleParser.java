@@ -79,8 +79,7 @@ public class SimpleParser implements ParserInterface {
     int index = wordsOfInput.length; // (Last index of task name - 1)
     
     for (int i = 0; i < wordsOfInput.length - 1; i++) {
-      if (wordsOfInput[i].toLowerCase().equalsIgnoreCase("by") || 
-          wordsOfInput[i].toLowerCase().equalsIgnoreCase("on")) {
+      if (wordsOfInput[i].toLowerCase().matches(Constants.DATE_START_PREPOSITION)) {
         if (wordsOfInput[i+1].toLowerCase().matches(datePattern)) {
           // Checks for format of {startDate}. If doesn't exist, ignore.
           containsStartDate = true;
@@ -98,22 +97,22 @@ public class SimpleParser implements ParserInterface {
               containsEndDate = true;
               endDate = wordsOfInput[i+4];
             } else {
-              throw new IllegalArgumentException("Invalid input! End date expected."); 
+              throw new IllegalArgumentException("Invalid input! Proper end date format expected."); 
             }
             if (wordsOfInput[i+5].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+5];
             } else {
-              throw new IllegalArgumentException("Invalid input! End time expected."); 
+              throw new IllegalArgumentException("Invalid input! Proper end time format expected."); 
             } 
           } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && 
-              wordsOfInput[i+3].equalsIgnoreCase("to")) {
+              wordsOfInput[i+3].toLowerCase().matches(Constants.DATE_END_PREPOSITION)) {
             // startDate startTime endTime
             if (wordsOfInput[i+4].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+4];
             } else {
-              throw new IllegalArgumentException("Invalid input! End time expected."); 
+              throw new IllegalArgumentException("Invalid input! Proper end time format expected."); 
             } 
           }
         } else if (wordsOfInput[i+1].matches(timePattern)) {
@@ -135,6 +134,8 @@ public class SimpleParser implements ParserInterface {
     
     startDate = formatDate(startDate);
     endDate = formatDate(endDate);
+    startTime = formatTime(startTime);
+    endTime = formatTime(endTime);
     
     DateTime dateTime = null;
     if (containsStartDate && containsStartTime && containsEndDate && containsEndTime) {
@@ -234,4 +235,23 @@ public class SimpleParser implements ParserInterface {
     return twoDigits.format(day) + "/" + twoDigits.format(month) + "/" + year;
   }
   
+  /**
+   * Method that formats time to a proper format that will allow LocalTime parsing.
+   * 
+   * @param time    String of time input by user.
+   * @return        The proper time format after formatting the string input.
+   * @throws        IllegalArgumentException      
+   */
+  public static String formatTime(String time) {
+    if (time.length() == 3) {
+      if (time.charAt(0) == '0') {
+        // Assuming the String time starts with "00" as it passed the format matching already.
+        time += "0";
+      } else {
+        time = "0" + time;
+      }
+    }
+
+    return time;
+  }
 }

@@ -41,7 +41,7 @@ public class ParsedInputTest {
     assertEquals("finish something", addCommand.getName());
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
     
-    addCommand = parser.parse("add finish something by 27.dec");
+    addCommand = parser.parse("add finish something on 27.dec");
     assertEquals("finish something", addCommand.getName());
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
     
@@ -52,6 +52,12 @@ public class ParsedInputTest {
     addCommand = parser.parse("add finish something by 1-1");
     assertEquals("finish something", addCommand.getName());
     assertEquals("2016-01-01", addCommand.getDateTime().getStartDate().toString());
+    
+    addCommand = parser.parse("add attend something from 27.dec 0800 till 900");
+    assertEquals("attend something", addCommand.getName());
+    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
+    assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("09:00", addCommand.getDateTime().getEndTime().toString());
   }
 
 }
