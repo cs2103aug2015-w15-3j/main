@@ -79,7 +79,8 @@ public class SimpleParser implements ParserInterface {
     int index = wordsOfInput.length; // (Last index of task name - 1)
     
     for (int i = 0; i < wordsOfInput.length - 1; i++) {
-      if (wordsOfInput[i].equalsIgnoreCase("by") || wordsOfInput[i].equalsIgnoreCase("on")) {
+      if (wordsOfInput[i].toLowerCase().equalsIgnoreCase("by") || 
+          wordsOfInput[i].toLowerCase().equalsIgnoreCase("on")) {
         if (wordsOfInput[i+1].toLowerCase().matches(datePattern)) {
           // Checks for format of {startDate}. If doesn't exist, ignore.
           containsStartDate = true;
@@ -90,27 +91,29 @@ public class SimpleParser implements ParserInterface {
             containsStartTime = true;
             startTime = wordsOfInput[i+2];
           }
-          if (containsStartDate && containsStartTime && i < wordsOfInput.length-5 && wordsOfInput[i+3].equalsIgnoreCase("to")) {
+          if (containsStartDate && containsStartTime && i < wordsOfInput.length-5 && 
+              wordsOfInput[i+3].equalsIgnoreCase("to")) {
             // startDate startTime endDate endTime
             if (wordsOfInput[i+4].toLowerCase().matches(datePattern)) {
               containsEndDate = true;
               endDate = wordsOfInput[i+4];
             } else {
-              throw new IllegalArgumentException("Invalid input! End date expected."); // Invalid command/format
+              throw new IllegalArgumentException("Invalid input! End date expected."); 
             }
             if (wordsOfInput[i+5].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+5];
             } else {
-              throw new IllegalArgumentException("Invalid input! End time expected."); // Invalid command/format
+              throw new IllegalArgumentException("Invalid input! End time expected."); 
             } 
-          } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && wordsOfInput[i+3].equalsIgnoreCase("to")) {
+          } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && 
+              wordsOfInput[i+3].equalsIgnoreCase("to")) {
             // startDate startTime endTime
             if (wordsOfInput[i+4].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+4];
             } else {
-              throw new IllegalArgumentException("Invalid input! End time expected."); // Invalid command/format
+              throw new IllegalArgumentException("Invalid input! End time expected."); 
             } 
           }
         } else if (wordsOfInput[i+1].matches(timePattern)) {
@@ -205,7 +208,7 @@ public class SimpleParser implements ParserInterface {
     
     // Check for month written in letters
     for (int i = 0; i < months.length; i++) {
-      if (dayMonth[1].equals(months[i])) {
+      if (dayMonth[1].toLowerCase().equals(months[i])) {
         month = i+1;
       }
     }

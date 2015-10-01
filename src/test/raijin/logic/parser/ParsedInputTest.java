@@ -45,6 +45,10 @@ public class ParsedInputTest {
     assertEquals("finish something", addCommand.getName());
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
     
+    addCommand = parser.parse("add finish something BY 27.DEc");
+    assertEquals("finish something", addCommand.getName());
+    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
+    
     addCommand = parser.parse("add finish something by 1-1");
     assertEquals("finish something", addCommand.getName());
     assertEquals("2016-01-01", addCommand.getDateTime().getStartDate().toString());
