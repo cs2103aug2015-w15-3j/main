@@ -88,10 +88,6 @@ public class LogicStorageIT {
 
   @Test
   public void ValidateStateOfIdManager() {
-    //Setup 
-    logic.setupEnvironment();
-    
-    
     //Make some changes to program internal memory
     addRandomTasks();
     writeDataToFile(dataPath, TasksManager.getManager());

@@ -32,7 +32,6 @@ public class LogicTest {
   @Test
   public void  setupBaseConfig_CreatesBaseConfig() throws FileNotFoundException {
     logic.setProgramPath(tmpFolder.getRoot().getAbsolutePath());
-    logic.setupBaseConfig();
     String expectedFilePath = tmpFolder.getRoot().getAbsolutePath()
         + Constants.NAME_USER_FOLDER + Constants.NAME_BASE_CONFIG;
     assertTrue(new File(expectedFilePath).exists());
@@ -46,7 +45,6 @@ public class LogicTest {
 
     String expectedFilePath = tmpFolder.getRoot().getAbsolutePath() 
         + Constants.NAME_USER_FOLDER + Constants.NAME_USER_CONFIG;
-    logic.setupDataFolder();
     assertTrue(new File(expectedFilePath).exists());
   }
 
