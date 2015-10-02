@@ -7,7 +7,7 @@ import raijin.logic.parser.ParsedInput;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NonExistentTaskException;
 
-public class DeleteCommandRunner implements CommandRunner, UndoableRedoable {
+public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoable {
   int id;
   String taskDescription;
   Task task;

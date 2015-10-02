@@ -38,7 +38,6 @@ public class Logic {
   
   public Logic(Application raijin) throws FileNotFoundException {
     initAssets(raijin);                   //Initialize required components
-    setupBaseConfig();
   }
   
   private void initAssets(Application raijin) {
@@ -56,23 +55,11 @@ public class Logic {
 
   }
 
-  /*Set up paths and retrieves information from external file*/
-  public void setupEnvironment() {
-    setupDataFolder();
-  }
-
-  
-  /*Checks if this is the first time a user use the program*/
-  public boolean isFirstTime() {
-    //@TODO ensures that the directory path works with Windows
-    String dataDirectory = programDirectory + Constants.NAME_USER_FOLDER;
-    return !StorageHandler.isDirectory(dataDirectory);
-  }
 
   /*Used for testing purpose or in case when user wants to change location of storage*/
   public void setStoragePath(String path) {
     storageDirectory = path;
-    StorageHandler.writeToFile(storageDirectory, baseConfigPath);               //Write changes to base config
+    StorageHandler.writeToFile(storageDirectory, baseConfigPath);             
   }
 
   /*Used for testing purposes*/
@@ -112,38 +99,6 @@ public class Logic {
 
   public ArrayList<Task> retrieveCompletedTasks() {
     return new ArrayList<Task>(tasksManager.getCompletedTasks().values());
-  }
-
-  //===========================================================================
-  // Package methods 
-  //===========================================================================
-  
-
-  /* Base config independent of user's choice will be created */
-  void setupBaseConfig() throws FileNotFoundException {
-    String dataDirectory = programDirectory + Constants.NAME_USER_FOLDER;
-    baseConfigPath = dataDirectory + Constants.NAME_BASE_CONFIG;
-    StorageHandler.createDirectory(dataDirectory);                              //Create working folder 
-    boolean isCreated = StorageHandler.createFile(baseConfigPath);
-    if (!isCreated) {
-      StorageHandler.writeToFile(storageDirectory, baseConfigPath);             //Writes default storage location to base config
-    } else {
-      storageDirectory = StorageHandler.getStorageDirectory(baseConfigPath);    //Get storage directory specified previously
-    }
-  }
-  
-  void setupDataFolder() {
-    /*Initialize paths*/
-    userConfigPath = storageDirectory + Constants.NAME_USER_CONFIG;
-    dataPath = storageDirectory + Constants.NAME_USER_DATA;
-
-    /*Setup data folder if does not exist*/
-    if (!StorageHandler.isDirectory(storageDirectory)) {
-      StorageHandler.createDirectory(storageDirectory);                      
-      StorageHandler.createFile(userConfigPath);                                //Creates user config
-      StorageHandler.createFile(dataPath);                                      //Creates data file
-    }
-    
   }
 
 }

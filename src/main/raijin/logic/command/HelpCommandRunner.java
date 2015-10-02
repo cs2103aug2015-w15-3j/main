@@ -5,7 +5,7 @@ import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 import raijin.common.datatypes.Constants;
 
-public class HelpCommandRunner implements CommandRunner {
+public class HelpCommandRunner extends CommandRunner {
 
   public Status execute(ParsedInput cmd) {
     // TODO Auto-generated method stub

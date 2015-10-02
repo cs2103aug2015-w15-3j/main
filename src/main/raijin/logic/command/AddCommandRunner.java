@@ -8,7 +8,7 @@ import raijin.logic.api.CommandRunner;
 import raijin.logic.api.UndoableRedoable;
 import raijin.logic.parser.ParsedInput;
 
-public class AddCommandRunner implements CommandRunner, UndoableRedoable {
+public class AddCommandRunner extends CommandRunner implements UndoableRedoable {
 
   private Task currentTask;
 
