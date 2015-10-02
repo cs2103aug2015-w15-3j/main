@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.TreeSet;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -18,12 +17,14 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import raijin.common.datatypes.Constants;
-import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.IDManager;
 import raijin.logic.api.Logic;
 import raijin.storage.api.TasksManager;
+import raijin.ui.Raijin;
+
 import static raijin.storage.handler.StorageHandler.*;
+import static org.mockito.Mockito.*;
 
 public class LogicStorageIT {
 
@@ -39,7 +40,7 @@ public class LogicStorageIT {
   @Before
   public void setUp() throws Exception {
     //Initialize assets
-    logic = new Logic();
+    logic = new Logic(mock(Raijin.class));
     programPath = programDirectory.getRoot().getAbsolutePath();
     dataPath = programPath + Constants.NAME_USER_FOLDER + Constants.NAME_USER_DATA;
     userConfigPath = programPath + Constants.NAME_USER_FOLDER + Constants.NAME_USER_CONFIG;

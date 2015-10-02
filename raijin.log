@@ -48,3 +48,7 @@
 2015-09-29 22:16:38,949 WARN [main] r.u.Raijin [RaijinException.java:19] Task ID 1 does not exists
 2015-09-29 22:22:04,866 DEBUG [main] r.c.u.RaijinLoggerTest [RaijinLoggerTest.java:27] Size of array list is 0
 2015-09-29 22:22:05,357 WARN [main] r.u.Raijin [RaijinException.java:19] Task ID 1 does not exists
+2015-10-02 14:02:02,920 DEBUG [main] r.c.u.RaijinLoggerTest [RaijinLoggerTest.java:27] Size of array list is 0
+2015-10-02 14:02:03,473 WARN [main] r.u.Raijin [RaijinException.java:19] Task ID 1 does not exists
+2015-10-02 14:03:12,637 DEBUG [main] r.c.u.RaijinLoggerTest [RaijinLoggerTest.java:27] Size of array list is 0
+2015-10-02 14:03:13,104 WARN [main] r.u.Raijin [RaijinException.java:19] Task ID 1 does not exists

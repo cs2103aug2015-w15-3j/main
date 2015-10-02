@@ -12,8 +12,10 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Mockito;
 
 import raijin.common.datatypes.Constants;
+import raijin.ui.Raijin;
 
 public class LogicTest {
 
@@ -23,7 +25,7 @@ public class LogicTest {
 
   @Before
   public void setUp() throws Exception {
-    logic = new Logic();
+    logic = new Logic(Mockito.mock(Raijin.class));
   }
 
   

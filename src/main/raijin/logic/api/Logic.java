@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javafx.application.Application;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
@@ -25,6 +26,7 @@ import raijin.storage.handler.StorageHandler;
  */
 public class Logic {
 
+  private Application raijin;
   private TasksManager tasksManager;
   private CommandDispatcher commandDispatcher;
   private ParserInterface parser;
@@ -34,12 +36,13 @@ public class Logic {
   private String userConfigPath;        //User config file path
   private String dataPath;              //User's data file path
   
-  public Logic() throws FileNotFoundException {
-    initAssets();                   //Initialize required components
+  public Logic(Application raijin) throws FileNotFoundException {
+    initAssets(raijin);                   //Initialize required components
     setupBaseConfig();
   }
   
-  private void initAssets() {
+  private void initAssets(Application raijin) {
+    this.raijin = raijin;
     tasksManager = TasksManager.getManager();
     commandDispatcher = CommandDispatcher.getDispatcher();
     parser = new SimpleParser();
@@ -95,7 +98,6 @@ public class Logic {
     } catch (IllegalArgumentException e) {
       return new Status(Constants.FEEDBACK_ERROR_ILLEGALCOMMAND);
     } catch (NonExistentTaskException e) {
-      // TODO Auto-generated catch block
       return new Status(Constants.EXCEPTION_NONEXISTENTTASK);
     }
   }
