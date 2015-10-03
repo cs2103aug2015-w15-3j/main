@@ -12,7 +12,8 @@ public class Constants {
   }
   
   public static enum Error {
-    NoSuchTask, IllegalCommand, IllegalCommandArgument, UnableToExecuteCommand
+    NoSuchTask, IllegalCommand, IllegalCommandArgument, UnableToExecuteCommand, 
+    FailedToParse
   }
 
   public static final String FORMAT_DATE = "dd/MM/yyyy";
