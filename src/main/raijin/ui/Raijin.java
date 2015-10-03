@@ -90,6 +90,11 @@ public class Raijin extends Application {
   }
   
   private void handleEnterPress(InputController inputController, String userInput) {
-	  inputController.setFeedback(logic.executeCommand(userInput).getFeedback());
+	  String response = logic.executeCommand(userInput).getFeedback();
+	  if (response.equals("Exiting")) {
+		  System.exit(0);
+	  } else {
+		  inputController.setFeedback(response);
+	  } 
   }
 }
