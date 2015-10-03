@@ -16,6 +16,10 @@ public class EventBus {
     feedBack.set(input);
   }
 
+  public StringProperty feedBackProperty() {
+    return feedBack;
+  }
+
   private EventBus() {}
   
   public static EventBus getEventBus() {
