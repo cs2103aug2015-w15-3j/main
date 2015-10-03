@@ -13,7 +13,7 @@ import javafx.scene.input.KeyEvent;
 
 public class InputController extends BorderPane {
 	@FXML
-	private TextField inputCommandBar;
+	public TextField inputCommandBar;
 	
 	@FXML
 	private Label feedbackBar;
@@ -39,6 +39,10 @@ public class InputController extends BorderPane {
 		eventBus.feedBackProperty().addListener( (v, oldVal, newVal) -> {
 		  setFeedback(newVal);
 		});
+	}
+	
+	public TextField getCommandBar() {
+		return inputCommandBar;
 	}
 	
 	public void clear() {
