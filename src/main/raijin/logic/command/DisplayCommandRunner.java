@@ -60,17 +60,19 @@ public class DisplayCommandRunner extends CommandRunner {
 			  listView.getItems().add("You have no pending tasks!");
 		  }
 		  
-		  // pass the cmdDateTime to displaycontroller
-		  dc.setHeadMessage(cmdDateTime);
-		  
-		  // pass this listView to displaycontroller
-		  dc.setListView(listView);
+
 		  
 	  } else if (cmd.getDisplayOptions().equals(COMPLETED)) {
 		  for (int i=0; i<completed.size(); i++) {
 			  listView.getItems().add(completed.get(i).getName());
 		  }
 	  }
+	  
+	  // pass the cmdDateTime to displaycontroller
+	  dc.setHeadMessage(cmdDateTime);
+	  
+	  // pass this listView to displaycontroller
+	  dc.setListView(listView);
 	  
     return null;
   }

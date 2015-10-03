@@ -19,7 +19,7 @@ public class DisplayController extends BorderPane {
 	 final DateFormat dateFormatSplash = new SimpleDateFormat("EEE, d MMM ''yy");
 	 Date date;
 	 
-	 Label headMessage;
+	 private Label headMessage;
 	 
 	 // Main display for tasks
 	 ListView<String> listView;
