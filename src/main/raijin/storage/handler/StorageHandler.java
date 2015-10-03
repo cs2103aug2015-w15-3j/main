@@ -20,6 +20,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
@@ -31,10 +33,11 @@ import com.google.gson.stream.JsonReader;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
+import raijin.common.utils.RaijinLogger;
 
 public class StorageHandler {
 
-
+  private static Logger logger = RaijinLogger.getLogger();
   private StorageHandler() {}   //Prevent developer from instantiating the class
 
   //===========================================================================
@@ -77,6 +80,16 @@ public class StorageHandler {
       e.printStackTrace();
     }
     return isCreated;
+  }
+
+  public static String createTempFile(String fileName) {
+    File tempFile = null;
+    try {
+      tempFile = File.createTempFile(fileName, ".tmp");
+    } catch (IOException e) {
+      logger.error("Temp file is not created");
+    }
+    return tempFile.getAbsolutePath();
   }
 
   /*Writes content to file*/
