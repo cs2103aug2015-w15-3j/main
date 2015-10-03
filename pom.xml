@@ -174,5 +174,10 @@
 			<artifactId>junit-dataprovider</artifactId>
 			<version>1.10.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.reactfx</groupId>
+			<artifactId>reactfx</artifactId>
+			<version>2.0-M4u1</version>
+		</dependency>
 	</dependencies>
 </project>
