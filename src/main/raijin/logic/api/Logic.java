@@ -15,6 +15,7 @@ import raijin.logic.parser.ParsedInput;
 import raijin.logic.parser.ParserInterface;
 import raijin.logic.parser.SimpleParser;
 import raijin.storage.api.History;
+import raijin.storage.api.Session;
 import raijin.storage.api.TasksManager;
 import raijin.storage.handler.StorageHandler;
 
@@ -30,11 +31,7 @@ public class Logic {
   private TasksManager tasksManager;
   private CommandDispatcher commandDispatcher;
   private ParserInterface parser;
-  private String programDirectory;      //Directory where program is running from
-  private String storageDirectory;      //Directory where user wish to store data on
-  private String baseConfigPath;        //Directory where base config is stored
-  private String userConfigPath;        //User config file path
-  private String dataPath;              //User's data file path
+  private Session session;
   
   public Logic(Application raijin) throws FileNotFoundException {
     initAssets(raijin);                   //Initialize required components
@@ -45,29 +42,9 @@ public class Logic {
     tasksManager = TasksManager.getManager();
     commandDispatcher = CommandDispatcher.getDispatcher();
     parser = new SimpleParser();
-
-    try {
-      programDirectory = StorageHandler.getJarPath();
-      storageDirectory = programDirectory + Constants.NAME_USER_FOLDER; //Default location
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-    }
-
+    session = Session.getSession();
   }
 
-
-  /*Used for testing purpose or in case when user wants to change location of storage*/
-  public void setStoragePath(String path) {
-    storageDirectory = path;
-    StorageHandler.writeToFile(storageDirectory, baseConfigPath);             
-  }
-
-  /*Used for testing purposes*/
-  public void setProgramPath(String path) {
-    programDirectory = path;
-    storageDirectory = programDirectory + Constants.NAME_USER_FOLDER;
-  }
-  
   /*Initialize list of tasks*/
   public void initializeData(TasksManager tasksManager) {
     HashMap<Integer, Task> pendingTasks = tasksManager.getPendingTasks();
