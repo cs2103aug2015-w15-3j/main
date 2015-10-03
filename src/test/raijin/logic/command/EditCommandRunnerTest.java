@@ -11,7 +11,8 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
-import raijin.common.exception.NonExistentTaskException;
+import raijin.common.exception.NoSuchTaskException;
+import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.IDManager;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.TasksManager;
@@ -33,7 +34,7 @@ public class EditCommandRunnerTest {
   }
   
   @Test
-  public void execute_EditTaskName() throws NonExistentTaskException {
+  public void execute_EditTaskName() throws UnableToExecuteCommandException, NoSuchTaskException {
     Status returnStatus = editTask(1, "First entry changed.", null);
     String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1);
     assertEquals(expectedStatusLine, returnStatus.getFeedback());
@@ -41,7 +42,7 @@ public class EditCommandRunnerTest {
   }
   
   @Test
-  public void execute_EditTaskDate() throws NonExistentTaskException {
+  public void execute_EditTaskDate() throws NoSuchTaskException {
     Status returnStatus = editTask(1, null, new DateTime("05/10/2015"));
     String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1);
     assertEquals(expectedStatusLine, returnStatus.getFeedback());
@@ -50,7 +51,7 @@ public class EditCommandRunnerTest {
   }
 
   @Test
-  public void execute_EditTaskNameDate() throws NonExistentTaskException {
+  public void execute_EditTaskNameDate() throws NoSuchTaskException {
     Status returnStatus = editTask(1, "First entry changed again.", new DateTime("05/10/2015"));
     String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1);
     assertEquals(expectedStatusLine, returnStatus.getFeedback());
@@ -60,7 +61,7 @@ public class EditCommandRunnerTest {
   }
   
   @Test
-  public void undo_EditTaskNameDate() throws NonExistentTaskException {
+  public void undo_EditTaskNameDate() throws NoSuchTaskException, UnableToExecuteCommandException {
     editTask(1, "First entry changed.", new DateTime("05/10/2015"));
     editCommandRunner.undo();
     assertEquals("First entry.", tasksManager.getPendingTask(1).getName());
@@ -69,7 +70,7 @@ public class EditCommandRunnerTest {
   }
   
   @Test
-  public void redo_EditTaskNameDate() throws NonExistentTaskException {
+  public void redo_EditTaskNameDate() throws NoSuchTaskException, UnableToExecuteCommandException {
     editTask(1, "First entry changed.", new DateTime("05/10/2015"));
     editCommandRunner.undo();
     editCommandRunner.redo();
@@ -94,7 +95,7 @@ public class EditCommandRunnerTest {
   }
   
   public Status editTask(int id, String inputName, DateTime dateTime) 
-      throws NonExistentTaskException {
+      throws NoSuchTaskException {
     ParsedInput parsedInput;
     if (inputName == null) {
       parsedInput = modifyTaskDate(id, dateTime);

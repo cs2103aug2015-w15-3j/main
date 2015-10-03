@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
+import raijin.common.exception.RaijinException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.RaijinLogger;
 import raijin.logic.parser.ParsedInput;
@@ -17,7 +18,7 @@ public abstract class CommandRunner {
   public TasksManager tasksManager = TasksManager.getManager();
   public History history = History.getHistory();
 
-  abstract Status processCommand(ParsedInput input) throws UnableToExecuteCommandException;
+  protected abstract Status processCommand(ParsedInput input) throws UnableToExecuteCommandException;
 
   public final Status execute(ParsedInput input) {
     return handleCommandException(input);
@@ -31,5 +32,9 @@ public abstract class CommandRunner {
       return new Status(e.getMessage());
     }
   }
-
+  
+  protected void wrapLowerLevelException(RaijinException e, 
+    Constants.Command typeOfCommand) throws UnableToExecuteCommandException {
+    throw new UnableToExecuteCommandException(e.getMessage(), typeOfCommand, e);
+  }
 }

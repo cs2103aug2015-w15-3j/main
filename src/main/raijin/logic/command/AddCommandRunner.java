@@ -4,7 +4,7 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NoSuchTaskException;
-import raijin.common.exception.NonExistentTaskException;
+import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.api.UndoableRedoable;
 import raijin.logic.parser.ParsedInput;
@@ -21,15 +21,20 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
     String taskName = currentTask.getName();
     return new Status(String.format(Constants.FEEDBACK_ADD_SUCCESS, taskName));
   }
-  public Status execute(ParsedInput input) {
+
+  public Status processCommand(ParsedInput input) {
     currentTask = createTask(input);
     tasksManager.addPendingTask(currentTask);
     history.pushCommand(this);
     return createSuccessfulStatus();
   }
 
-  public void undo() throws NoSuchTaskException {
-    tasksManager.deletePendingTask(currentTask.getId());
+  public void undo() throws UnableToExecuteCommandException {
+    try {
+      tasksManager.deletePendingTask(currentTask.getId());
+    } catch (NoSuchTaskException e) {
+      wrapLowerLevelException(e, Constants.Command.ADD);
+    }
   }
 
   public void redo() {

@@ -7,7 +7,7 @@ import raijin.common.datatypes.Constants;
 
 public class HelpCommandRunner extends CommandRunner {
 
-  public Status execute(ParsedInput cmd) {
+  public Status processCommand(ParsedInput cmd) {
     return new Status(Constants.FEEDBACK_INFO_SUCCESS, Constants.HELP_MESSAGE);
   }
 

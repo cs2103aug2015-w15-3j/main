@@ -6,7 +6,7 @@ import raijin.logic.parser.ParsedInput;
 
 public class ExitCommandRunner extends CommandRunner {
 
-  public Status execute(ParsedInput cmd) {
+  public Status processCommand(ParsedInput cmd) {
     System.exit(0);
     return null;
   }

@@ -15,7 +15,8 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
-import raijin.common.exception.NonExistentTaskException;
+import raijin.common.exception.NoSuchTaskException;
+import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.IDManager;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
@@ -67,14 +68,14 @@ public class AddCommandRunnerTest {
   }
   
   @Test
-  public void undo_SpecifiedDeadline() throws NonExistentTaskException {
+  public void undo_SpecifiedDeadline() throws UnableToExecuteCommandException {
     addTask("submit op2 to ms lee", new DateTime("19/09/2015"));
     addCommandRunner.undo();
     assertTrue(tasksManager.isEmptyPendingTasks());
   }
 
   @Test
-  public void redo_SpecifiedDeadline() throws NonExistentTaskException {
+  public void redo_SpecifiedDeadline() throws UnableToExecuteCommandException, NoSuchTaskException {
     addTask("submit op2 to ms lee", new DateTime("19/09/2015"));
     addCommandRunner.undo();
     addCommandRunner.redo();
