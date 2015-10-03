@@ -53,6 +53,11 @@ public class Task {
   }
 
 
+  /*Needed after undo or redo*/
+  public void resetId() {
+    id = idManager.getId();
+  }
+
   public void setPriority(Constants.Priority priority) {
     this.priority = priority;
   }
