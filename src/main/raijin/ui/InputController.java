@@ -41,6 +41,10 @@ public class InputController extends BorderPane {
 		});
 	}
 	
+	public void clear() {
+		inputCommandBar.clear();
+	}
+	
 	@FXML
 	public void onKeyPress(KeyEvent event) {
 		mainApp.handleKeyPress(this, event.getCode(), inputCommandBar.getText());

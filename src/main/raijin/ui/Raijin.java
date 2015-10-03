@@ -1,5 +1,6 @@
 package raijin.ui;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -12,12 +13,14 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
+import raijin.logic.api.Logic;
 
 public class Raijin extends Application {
 	private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
 	
 	private BorderPane rootLayout;
 	private Stage stage;
+	private Logic logic;
 	
 	public static void main(String[] args) {
 	  launch(args);
@@ -28,6 +31,7 @@ public class Raijin extends Application {
     /*Adding fxml */
     initRootLayout();
     initPrimaryStage(stage);
+    initLogic();
     
    addDisplayController(this);
    addInputController(this);
@@ -49,6 +53,10 @@ public class Raijin extends Application {
 	}
   }
  
+  private void initLogic() throws FileNotFoundException {
+	  logic = new Logic(this);
+  }
+  
   /**
    * method to put the DisplayController class that is another FXML
    * file containing information about the display bar ONLY.
@@ -76,11 +84,17 @@ public class Raijin extends Application {
 		  KeyCode key,
 		  String userInput) {
 	  if (key==KeyCode.ENTER) {
+		  inputController.clear();
 		  handleEnterPress(inputController, userInput);
 	  }
   }
   
   private void handleEnterPress(InputController inputController, String userInput) {
-	  inputController.setFeedback(userInput);
+	  String response = logic.executeCommand(userInput).getFeedback();
+	  if (response.equals("Exiting")) {
+		  System.exit(0);
+	  } else {
+		  inputController.setFeedback(response);
+	  } 
   }
 }
