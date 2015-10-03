@@ -6,28 +6,23 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 
 import raijin.common.datatypes.DateTime;
-import raijin.common.datatypes.Task;
 
 import java.util.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 
 public class DisplayController extends BorderPane {
 	
-	private static DisplayController dc = new DisplayController();
+	 private static DisplayController dc = new DisplayController();
 	 
 	 final DateFormat dateFormatSplash = new SimpleDateFormat("EEE, d MMM ''yy");
-	 final DateFormat dateFormatCompare = new SimpleDateFormat("dd/MM/yyyy");
 	 Date date;
-	 Calendar cal = Calendar.getInstance();
 	 
 	 Label headMessage;
 	 
 	 // Main display for tasks
 	 ListView<String> listView;
-	 
 	 
 	 public DisplayController() {
 		 date = new Date();
@@ -40,8 +35,16 @@ public class DisplayController extends BorderPane {
 		 
 	 }
 	 
+	 public void setHeadMessage(DateTime dateTime) {
+		 date = Date.from(dateTime.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+		 headMessage.setText("Tasks pending for " + dateFormatSplash.format(date));
+		 this.setTop(headMessage);
+	 }
+	 
 	 public void setListView(ListView<String> lv) {
-		 this.listView.setItems(lv.getItems());
+		 listView.getItems().clear();
+		 listView.setItems(lv.getItems());
+		 this.setCenter(listView);
 	 }
 	 
 	 public static DisplayController getDisplayController() {

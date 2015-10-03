@@ -51,13 +51,17 @@ public class DisplayCommandRunner extends CommandRunner {
 			  isEmpty = false;
 			  
 			  if (isRelevantDate(cmdDateTime, taskDateTime)) {
-				  listView.getItems().add(pending.get(i).getName() + " by " + pending.get(i).getDateTime().getEndDate().toString());
+				  listView.getItems().add(pending.get(i).getName() + " by " + 
+			                              pending.get(i).getDateTime().getEndDate().toString());
 			  }
 		  }
 		  
 		  if (isEmpty) {
 			  listView.getItems().add("You have no pending tasks!");
 		  }
+		  
+		  // pass the cmdDateTime to displaycontroller
+		  dc.setHeadMessage(cmdDateTime);
 		  
 		  // pass this listView to displaycontroller
 		  dc.setListView(listView);
