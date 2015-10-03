@@ -15,6 +15,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class DisplayController extends BorderPane {
+	
+	private static DisplayController dc = new DisplayController();
 	 
 	 final DateFormat dateFormatSplash = new SimpleDateFormat("EEE, d MMM ''yy");
 	 final DateFormat dateFormatCompare = new SimpleDateFormat("dd/MM/yyyy");
@@ -36,8 +38,14 @@ public class DisplayController extends BorderPane {
 		 listView = new ListView<String>();
 		 this.setCenter(listView);
 		 
-		 
 	 }
 	 
+	 public void setListView(ListView<String> lv) {
+		 this.listView.setItems(lv.getItems());
+	 }
+	 
+	 public static DisplayController getDisplayController() {
+		 return dc;
+	 }
 	 
 }

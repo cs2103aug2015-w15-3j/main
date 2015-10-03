@@ -11,6 +11,7 @@ import raijin.common.datatypes.Task;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.TasksManager;
+import raijin.ui.DisplayController;
 
 public class DisplayCommandRunner extends CommandRunner {
 	
@@ -26,8 +27,7 @@ public class DisplayCommandRunner extends CommandRunner {
   
   private ListView<String> listView;
   
-  //need to somehow get the instance of displaycontroller
-  //private DisplayController dc = 
+  private DisplayController dc = DisplayController.getDisplayController();
 
   public Status execute(ParsedInput cmd) {
 	  // Getting the current DateTime
@@ -44,21 +44,29 @@ public class DisplayCommandRunner extends CommandRunner {
 			  cmdDateTime = new DateTime(now.toString());
 		  }
 		  
+		  boolean isEmpty = true;
+		  
 		  for (int i=0; i<pending.size(); i++) {
 			  taskDateTime = pending.get(i).getDateTime();
+			  isEmpty = false;
 			  
 			  if (isRelevantDate(cmdDateTime, taskDateTime)) {
 				  listView.getItems().add(pending.get(i).getName() + " by " + pending.get(i).getDateTime().getEndDate().toString());
 			  }
 		  }
 		  
+		  if (isEmpty) {
+			  listView.getItems().add("You have no pending tasks!");
+		  }
+		  
 		  // pass this listView to displaycontroller
+		  dc.setListView(listView);
 		  
 	  } else if (cmd.getDisplayOptions().equals(COMPLETED)) {
-		  
+		  for (int i=0; i<completed.size(); i++) {
+			  listView.getItems().add(completed.get(i).getName());
+		  }
 	  }
-
-	  
 	  
     return null;
   }
