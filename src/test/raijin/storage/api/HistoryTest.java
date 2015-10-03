@@ -21,19 +21,11 @@ public class HistoryTest {
   private static History history;
   private static AddCommandRunner addCommandRunner;
 
-  @Rule public TemporaryFolder programDirectory = new TemporaryFolder();
 
   @BeforeClass
   public static void setUpClass() throws Exception {
     history = History.getHistory();
     addCommandRunner = mock(AddCommandRunner.class);
-  }
-
-  @Before
-  public void setUp() throws IOException {
-    programDirectory.newFolder("data");
-    Session.getSession().setupBase(programDirectory.getRoot().getAbsolutePath());
-    Session.getSession().setupStorage();
   }
 
   @Test

@@ -20,6 +20,7 @@ import raijin.common.utils.IDManager;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.History;
+import raijin.storage.api.Session;
 import raijin.storage.api.TasksManager;
 
 public class AddCommandRunnerTest {
