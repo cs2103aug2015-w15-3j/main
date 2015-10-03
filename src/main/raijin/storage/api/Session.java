@@ -1,7 +1,12 @@
 package raijin.storage.api;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import org.slf4j.Logger;
 
@@ -19,6 +24,7 @@ public class Session {
   public String baseConfigPath;
   public String userConfigPath;
   public String dataPath;
+  public String tempPath;
   
   private Session() {
     init();
@@ -32,15 +38,16 @@ public class Session {
   void init() {
     logger = RaijinLogger.getLogger();
     try {
-      setupBasePaths();
+      String basePath = StorageHandler.getJarPath() + Constants.NAME_USER_FOLDER;
+      setupBasePaths(basePath);
     } catch (UnsupportedEncodingException e) {
       logger.warn("Unsupported Encoding");
     }
     setupBaseConfig(baseConfigPath);
   }
   
-  void setupBasePaths() throws UnsupportedEncodingException {
-    programDirectory = StorageHandler.getJarPath() + Constants.NAME_USER_FOLDER;
+  void setupBasePaths(String basePath) {
+    programDirectory = basePath;
     StorageHandler.createDirectory(programDirectory);   //Create working folder 
     baseConfigPath = programDirectory + Constants.NAME_USER_FOLDER 
         + Constants.NAME_BASE_CONFIG;
@@ -59,15 +66,18 @@ public class Session {
     storageDirectory = StorageHandler.getStorageDirectory(baseConfigPath);
     dataPath = storageDirectory + Constants.NAME_USER_DATA;
     userConfigPath = storageDirectory + Constants.NAME_USER_CONFIG;
+    StorageHandler.createDirectory(storageDirectory);       
     setupDataFolder();
+    setupTempPath(StorageHandler.createTempFile(Constants.NAME_TEMP_DATA));
   }
 
   void setupDataFolder() {
-    if (!StorageHandler.isDirectory(storageDirectory)) {
-      StorageHandler.createDirectory(storageDirectory);                      
-      StorageHandler.createFile(userConfigPath);                              
-      StorageHandler.createFile(dataPath);                                    
-    }
+    StorageHandler.createFile(userConfigPath);                              
+    StorageHandler.createFile(dataPath);                                    
+  }
+
+  void setupTempPath(String tempPath) {
+    this.tempPath = tempPath;
   }
 
   /*Checks if this is the first time a user use the program*/
@@ -79,5 +89,16 @@ public class Session {
     StorageHandler.writeToFile(desiredPath, baseConfigPath);
   }
   
+  /*Commit changes to tasks to a temp file*/
+  public void commit() {
+    StorageHandler.writeToFile(StorageHandler.convertToJson(
+        TasksManager.getManager()), tempPath);
+  }
+  
+  public void writeOnExit() throws IOException {
+    Path source = Paths.get(tempPath);
+    Path target = Paths.get(dataPath);
+    Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+  }
 
 }
