@@ -86,18 +86,4 @@ public class LogicStorageIT {
   // Test cases
   //===========================================================================
 
-  @Test
-  public void ValidateStateOfIdManager() {
-    //Make some changes to program internal memory
-    addRandomTasks();
-    writeDataToFile(dataPath, TasksManager.getManager());
-    System.out.println(IDManager.getIdManager().getIdPool().toString());
-    
-    //Reset & read from file
-    resetState();
-    TasksManager deserialized = readDataFromFile(dataPath);
-    logic.initializeData(deserialized);
-    assertEquals(50 - sampleTasks.length, IDManager.getIdManager().getIdPool().size());
-
-  }
 }
