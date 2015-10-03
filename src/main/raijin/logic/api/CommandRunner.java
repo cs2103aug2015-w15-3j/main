@@ -10,13 +10,15 @@ import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.RaijinLogger;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.History;
+import raijin.storage.api.Session;
 import raijin.storage.api.TasksManager;
 
 public abstract class CommandRunner {
 
   private Logger logger = RaijinLogger.getLogger();
-  public TasksManager tasksManager = TasksManager.getManager();
-  public History history = History.getHistory();
+  protected TasksManager tasksManager = TasksManager.getManager();
+  protected History history = History.getHistory();
+  protected Session session = Session.getSession();
 
   protected abstract Status processCommand(ParsedInput input) throws UnableToExecuteCommandException;
 
