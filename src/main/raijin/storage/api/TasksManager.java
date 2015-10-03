@@ -1,13 +1,11 @@
 package raijin.storage.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DisplayContainer;
 import raijin.common.datatypes.ListDisplayContainer;
 import raijin.common.datatypes.Task;
-import raijin.common.exception.NonExistentTaskException;
+import raijin.common.exception.NoSuchTaskException;
 import raijin.common.utils.IDManager;
 
 /**
@@ -67,31 +65,27 @@ public class TasksManager {
     IDManager.getIdManager().returnId(task.getId());
   }
 
-  public Task getPendingTask(int id) throws NonExistentTaskException {
+  public Task getPendingTask(int id) throws NoSuchTaskException {
     int taskId = displayedTasks.isEmpty() ? id : displayedTasks.getRealId(id);
-    if (pendingTasks.containsKey(taskId)) {
-      return pendingTasks.get(taskId);
-    } else {
-      throw new NonExistentTaskException(String.format("Task ID %d does not exists", 
-          taskId));
-    }
+    handleUnknownTask(pendingTasks, taskId);
+    return pendingTasks.get(taskId);
   }
 
-  public void deletePendingTask(int id) throws NonExistentTaskException {
-    if (pendingTasks.containsKey(id)) {
-      pendingTasks.remove(id);
-      IDManager.getIdManager().returnId(id);
-    } else {
-      throw new NonExistentTaskException(String.format(Constants.EXCEPTION_NONEXISTENTTASK, id));
-    }
+  public void deletePendingTask(int id) throws NoSuchTaskException {
+    handleUnknownTask(pendingTasks, id);
+    pendingTasks.remove(id);
+    IDManager.getIdManager().returnId(id);
   }
   
-  public void deleteCompletedTask(int id) throws NonExistentTaskException {
-	if (completedTasks.containsKey(id)) {
-	  completedTasks.remove(id);
-	} else {
-	  throw new NonExistentTaskException(String.format(Constants.EXCEPTION_NONEXISTENTTASK, id));
-	}
+  public void deleteCompletedTask(int id) throws NoSuchTaskException {
+    handleUnknownTask(completedTasks, id);
+    completedTasks.remove(id);
+  }
+  
+  void handleUnknownTask(HashMap<Integer, Task> tasks, int id) throws NoSuchTaskException {
+    if (!tasks.containsKey(id)) {
+      throw new NoSuchTaskException("Task ID does not match", id);
+    }
   }
   
 }
