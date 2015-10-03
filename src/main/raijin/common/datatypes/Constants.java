@@ -26,6 +26,7 @@ public class Constants {
   public static final String FEEDBACK_ERROR_ILLEGALCOMMAND = "Illegal command.";
   public static final String FEEDBACK_ADD_SUCCESS = "Added %s successfully.";
   public static final String FEEDBACK_EDIT_SUCCESS = "Task ID %d edited successfully.";
+  public static final String FEEDBACK_DELETE_SUCCESS = "You have just deleted %s !";
   public static final String EXCEPTION_NONEXISTENTTASK = "Task ID %d does not exist.";
   
   public static final String HELP_MESSAGE = "\nADD <Task Name>\nAdds a task with a specified name.\n"
