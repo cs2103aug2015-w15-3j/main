@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 
@@ -20,39 +21,36 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.IDManager;
 import raijin.logic.api.Logic;
+import raijin.storage.api.Session;
 import raijin.storage.api.TasksManager;
+import raijin.storage.handler.StorageHandler;
 import raijin.ui.Raijin;
-
 import static raijin.storage.handler.StorageHandler.*;
 import static org.mockito.Mockito.*;
 
 public class LogicStorageIT {
 
   private static String[] sampleTasks;
-  private Logic logic;
+  private static Logic logic;
+  private static Session session;
   private String programPath;
   private String dataPath;
   private String userConfigPath;
 
   @Rule public TemporaryFolder programDirectory = new TemporaryFolder();
+  @Rule public TemporaryFolder storageDirectory = new TemporaryFolder();
 
-
-  @Before
-  public void setUp() throws Exception {
-    //Initialize assets
-    logic = new Logic(mock(Raijin.class));
-    programPath = programDirectory.getRoot().getAbsolutePath();
-    dataPath = programPath + Constants.NAME_USER_FOLDER + Constants.NAME_USER_DATA;
-    userConfigPath = programPath + Constants.NAME_USER_FOLDER + Constants.NAME_USER_CONFIG;
-    
-    //Set program directory 
-    logic.setProgramPath(programPath);
-  }
 
   @BeforeClass
-  public static void setUpClass() {
-    sampleTasks = new String[] {"submit op1", "kick people", "test cat or dog", 
-       "knock knock", "say hello to the monster", "leave Mordor"};
+  public static void setUpClass() throws Exception {
+    logic = new Logic(mock(Raijin.class));
+    session = Session.getSession();
+  }
+
+  @Before
+  public void setUp() throws IOException {
+    programDirectory.newFolder("data");
+    session.setupBase(programDirectory.getRoot().getAbsolutePath());
   }
 
   //===========================================================================
@@ -85,5 +83,13 @@ public class LogicStorageIT {
   //===========================================================================
   // Test cases
   //===========================================================================
+
+  @Test 
+  public void setStorageDirectory_MatchUserLocationWithBaseConfig() throws FileNotFoundException {
+    String storagePath = storageDirectory.getRoot().getAbsolutePath();
+    session.setStorageDirectory(storagePath, session.baseConfigPath);
+    session.setupStorage();
+    assertEquals(storagePath, StorageHandler.getStorageDirectory(session.baseConfigPath));
+  }
 
 }

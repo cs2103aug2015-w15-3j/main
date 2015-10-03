@@ -1,6 +1,5 @@
 package raijin.storage.api;
 
-import java.security.SecurityPermission;
 import java.util.HashMap;
 
 import raijin.common.datatypes.Constants;
