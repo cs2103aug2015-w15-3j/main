@@ -10,7 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import raijin.common.datatypes.Status;
 
 public class InputController extends BorderPane {
 	@FXML
@@ -51,7 +50,7 @@ public class InputController extends BorderPane {
 		mainApp.handleKeyPress(this, event.getCode(), inputCommandBar.getText());
 	}
 	
-	public void setFeedback(Status text) {
-		feedbackBar.setText(text.getFeedback());
+	public void setFeedback(String text) {
+		feedbackBar.setText(text);
 	}
 }	
