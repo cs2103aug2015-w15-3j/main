@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
-import raijin.common.exception.NonExistentTaskException;
+import raijin.common.exception.NoSuchTaskException;
 import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
 
@@ -28,15 +28,15 @@ public class TasksManagerTest {
   }
 
   @Test
-  public void getPendingTasks_ReturnValidTask() throws NonExistentTaskException {
+  public void getPendingTasks_ReturnValidTask() throws NoSuchTaskException {
     Task input = new Task("submit op1", new DateTime("19/09/2015"));
     tasksManager.addPendingTask(input);
     assertEquals("submit op1", tasksManager.getPendingTask(1).getName());
   }
 
 
-  @Test(expected = NonExistentTaskException.class)
-  public void getPendingTasks_ThrowException() throws NonExistentTaskException {
+  @Test(expected = NoSuchTaskException.class)
+  public void getPendingTasks_ThrowException() throws NoSuchTaskException {
     tasksManager.getPendingTask(1);
   }
 

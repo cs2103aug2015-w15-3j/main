@@ -12,7 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import raijin.common.exception.NonExistentTaskException;
+import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.command.AddCommandRunner;
 
 
@@ -48,7 +48,7 @@ public class HistoryTest {
   }
   
   @Test
-  public void undo_VerifyAddedToRedoStack() throws NonExistentTaskException {
+  public void undo_VerifyAddedToRedoStack() throws UnableToExecuteCommandException {
     //Ensures start from clean slate
     history.clear();
     history.pushCommand(addCommandRunner);
@@ -57,7 +57,7 @@ public class HistoryTest {
   }
 
   @Test
-  public void redo_VerifyAddedToUndoStack() throws NonExistentTaskException {
+  public void redo_VerifyAddedToUndoStack() throws UnableToExecuteCommandException {
     //Ensures start from clean slate
     history.clear();
     history.pushCommand(addCommandRunner);
@@ -67,13 +67,13 @@ public class HistoryTest {
   }
 
   @Test(expected=EmptyStackException.class)
-  public void undo_NoCommandsInStack_ThrowException() throws NonExistentTaskException {
+  public void undo_NoCommandsInStack_ThrowException() throws UnableToExecuteCommandException {
     history.clear();
     history.undo();
   }
 
   @Test(expected=EmptyStackException.class)
-  public void redo_NoCommandsInStack_ThrowException() {
+  public void redo_NoCommandsInStack_ThrowException() throws UnableToExecuteCommandException {
     history.clear();
     history.redo();
   }
