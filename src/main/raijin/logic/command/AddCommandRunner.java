@@ -32,6 +32,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
   }
 
   public void redo() {
+    currentTask.resetId();  //Previous id may be used by other task
     tasksManager.addPendingTask(currentTask);
   }
 
