@@ -39,45 +39,18 @@ public class Session {
     logger = RaijinLogger.getLogger();
     try {
       String basePath = StorageHandler.getJarPath() + Constants.NAME_USER_FOLDER;
-      setupBasePaths(basePath);
+      setupBase(basePath);
     } catch (UnsupportedEncodingException e) {
       logger.warn("Unsupported Encoding");
     }
-    setupBaseConfig(baseConfigPath);
   }
   
-  void setupBasePaths(String basePath) {
+  public void setupBase(String basePath) {
     programDirectory = basePath;
     StorageHandler.createDirectory(programDirectory);   //Create working folder 
     baseConfigPath = programDirectory + Constants.NAME_USER_FOLDER 
         + Constants.NAME_BASE_CONFIG;
-  }
-
-  void setupBaseConfig(String baseConfigPath) {
-    boolean isCreated = StorageHandler.createFile(baseConfigPath);
-    if (!isCreated) {
-      StorageHandler.writeToFile(programDirectory, baseConfigPath);
-    }
-  }
-
-  /*Needed to be separated from init to ensure user has chosen a storage location*/
-  void setupStorage() throws FileNotFoundException {
-    /*Always read from baseConfigPath to get path to ensure consistency*/
-    storageDirectory = StorageHandler.getStorageDirectory(baseConfigPath);
-    dataPath = storageDirectory + Constants.NAME_USER_DATA;
-    userConfigPath = storageDirectory + Constants.NAME_USER_CONFIG;
-    StorageHandler.createDirectory(storageDirectory);       
-    setupDataFolder();
-    setupTempPath(StorageHandler.createTempFile(Constants.NAME_TEMP_DATA));
-  }
-
-  void setupDataFolder() {
-    StorageHandler.createFile(userConfigPath);                              
-    StorageHandler.createFile(dataPath);                                    
-  }
-
-  void setupTempPath(String tempPath) {
-    this.tempPath = tempPath;
+    setupBaseConfig(baseConfigPath);
   }
 
   /*Checks if this is the first time a user use the program*/
@@ -100,5 +73,34 @@ public class Session {
     Path target = Paths.get(dataPath);
     Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
   }
+
+  /*Needed to be separated from init to ensure user has chosen a storage location*/
+  public void setupStorage() throws FileNotFoundException {
+    /*Always read from baseConfigPath to get path to ensure consistency*/
+    storageDirectory = StorageHandler.getStorageDirectory(baseConfigPath);
+    dataPath = storageDirectory + Constants.NAME_USER_DATA;
+    userConfigPath = storageDirectory + Constants.NAME_USER_CONFIG;
+    StorageHandler.createDirectory(storageDirectory + Constants.NAME_USER_FOLDER);       
+    setupDataFolder();
+    setupTempPath(StorageHandler.createTempFile(Constants.NAME_TEMP_DATA));
+  }
+
+  void setupBaseConfig(String baseConfigPath) {
+    boolean isCreated = StorageHandler.createFile(baseConfigPath);
+    if (!isCreated) {
+      StorageHandler.writeToFile(programDirectory, baseConfigPath);
+    }
+  }
+
+
+  void setupDataFolder() {
+    StorageHandler.createFile(userConfigPath);                              
+    StorageHandler.createFile(dataPath);                                    
+  }
+
+  void setupTempPath(String tempPath) {
+    this.tempPath = tempPath;
+  }
+
 
 }
