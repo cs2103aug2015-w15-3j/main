@@ -27,12 +27,8 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
     tasksManager.addPendingTask(task);
   }
 
-  public void redo() {
-    try {
+  public void redo() throws NonExistentTaskException {
       tasksManager.deletePendingTask(id);
-    } catch (NonExistentTaskException e) {
-      e.printStackTrace();
-    }
   }
 
 }
