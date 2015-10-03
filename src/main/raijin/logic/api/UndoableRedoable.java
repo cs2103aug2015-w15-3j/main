@@ -10,6 +10,6 @@ import raijin.common.exception.NonExistentTaskException;
 public interface UndoableRedoable {
   
   public void undo() throws NonExistentTaskException;
-  public void redo();
+  public void redo() throws NonExistentTaskException;
 
 }

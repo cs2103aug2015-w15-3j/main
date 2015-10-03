@@ -8,8 +8,7 @@ import raijin.common.datatypes.Constants;
 public class HelpCommandRunner extends CommandRunner {
 
   public Status execute(ParsedInput cmd) {
-    // TODO Auto-generated method stub
-    return null;
+    return new Status(Constants.FEEDBACK_INFO_SUCCESS, Constants.HELP_MESSAGE);
   }
 
 }

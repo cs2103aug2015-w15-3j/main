@@ -21,7 +21,6 @@ public class HistoryTest {
   private static History history;
   private static AddCommandRunner addCommandRunner;
 
-
   @BeforeClass
   public static void setUpClass() throws Exception {
     history = History.getHistory();

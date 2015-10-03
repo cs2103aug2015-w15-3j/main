@@ -108,7 +108,7 @@ public class StorageHandler {
 
   /*Retrieves storage location from base config file*/
   public static String getStorageDirectory(String absolutePath) throws FileNotFoundException {
-    String storageLocation = null;
+    String storageLocation = "";
     BufferedReader br = new BufferedReader(new FileReader(absolutePath));
     try {
       storageLocation = br.readLine();

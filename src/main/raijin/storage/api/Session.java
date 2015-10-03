@@ -90,12 +90,12 @@ public class Session {
   
   public String getPathInfo() {
     return programDirectory + "\n" + storageDirectory + "\n" 
-        + baseConfigPath + "\n" + dataPath;
+        + baseConfigPath + "\n" + dataPath + "\n" + userConfigPath;
   }
 
   void setupBaseConfig(String baseConfigPath) {
-    boolean isCreated = StorageHandler.createFile(baseConfigPath);
-    if (!isCreated) {
+    boolean isSuccessful = StorageHandler.createFile(baseConfigPath);
+    if (isSuccessful) {
       StorageHandler.writeToFile(programDirectory, baseConfigPath);
     }
   }
