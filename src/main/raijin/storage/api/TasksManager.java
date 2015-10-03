@@ -3,6 +3,7 @@ package raijin.storage.api;
 import java.util.HashMap;
 
 import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.DisplayContainer;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NonExistentTaskException;
 
@@ -15,6 +16,7 @@ public class TasksManager {
   private static TasksManager tasksManager;
   private HashMap<Integer, Task> pendingTasks = new HashMap<Integer, Task>();
   private HashMap<Integer, Task> completedTasks = new HashMap<Integer, Task>();
+  private DisplayContainer displayedTasks;
 
   private TasksManager() {}
 
@@ -62,10 +64,12 @@ public class TasksManager {
   }
 
   public Task getPendingTask(int id) throws NonExistentTaskException {
-    if (pendingTasks.containsKey(id)) {
-      return pendingTasks.get(id);
-    } else {
-      throw new NonExistentTaskException(String.format(Constants.EXCEPTION_NONEXISTENTTASK, id));
+    int taskId;
+    try {
+      taskId = displayedTasks.getRealId(id);
+      return pendingTasks.get(taskId);
+    } catch (IndexOutOfBoundsException e) {
+      throw new NonExistentTaskException("Task no found");
     }
   }
 
