@@ -3,10 +3,14 @@ package raijin.storage.api;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.util.EmptyStackException;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import raijin.common.exception.NonExistentTaskException;
 import raijin.logic.command.AddCommandRunner;
@@ -17,10 +21,19 @@ public class HistoryTest {
   private static History history;
   private static AddCommandRunner addCommandRunner;
 
+  @Rule public TemporaryFolder programDirectory = new TemporaryFolder();
+
   @BeforeClass
-  public static void setUp() throws Exception {
+  public static void setUpClass() throws Exception {
     history = History.getHistory();
     addCommandRunner = mock(AddCommandRunner.class);
+  }
+
+  @Before
+  public void setUp() throws IOException {
+    programDirectory.newFolder("data");
+    Session.getSession().setupBase(programDirectory.getRoot().getAbsolutePath());
+    Session.getSession().setupStorage();
   }
 
   @Test
