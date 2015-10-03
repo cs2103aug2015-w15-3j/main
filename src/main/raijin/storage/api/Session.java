@@ -25,6 +25,7 @@ public class Session {
   public String userConfigPath;
   public String dataPath;
   public String tempPath;
+  public boolean isFirstTime;           //Verify if user has used this application before
   
   private Session() {
     init();
@@ -47,7 +48,7 @@ public class Session {
   
   public void setupBase(String basePath) {
     programDirectory = basePath;
-    StorageHandler.createDirectory(programDirectory);   //Create working folder 
+    isFirstTime = StorageHandler.createDirectory(programDirectory);   //Create working folder 
     baseConfigPath = programDirectory + Constants.NAME_USER_FOLDER 
         + Constants.NAME_BASE_CONFIG;
     setupBaseConfig(baseConfigPath);
