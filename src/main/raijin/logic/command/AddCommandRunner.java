@@ -3,6 +3,7 @@ package raijin.logic.command;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
+import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.NonExistentTaskException;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.api.UndoableRedoable;
@@ -27,7 +28,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
     return createSuccessfulStatus();
   }
 
-  public void undo() throws NonExistentTaskException {
+  public void undo() throws NoSuchTaskException {
     tasksManager.deletePendingTask(currentTask.getId());
   }
 
