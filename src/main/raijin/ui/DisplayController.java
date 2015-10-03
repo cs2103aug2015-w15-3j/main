@@ -26,13 +26,6 @@ public class DisplayController extends BorderPane {
 	 // Main display for tasks
 	 ListView<String> listView;
 	 
-	 // Retrieve memory
-	 //Memory memory = Memory.getMemory();
-	 //TasksMap tasksMap = memory.getTasksMap();
-	 
-	 // Temporary ArrayLists for storing information
-	 ArrayList<Task> pending;
-	 ArrayList<Task> completed;
 	 
 	 public DisplayController() {
 		 date = new Date();
@@ -43,37 +36,8 @@ public class DisplayController extends BorderPane {
 		 listView = new ListView<String>();
 		 this.setCenter(listView);
 		 
-		 //pending = new ArrayList<Task>(memory.getTasks().values());
-		 //completed = new ArrayList<Task>(memory.getCompletedTasks().values());
-		 pending = new ArrayList<Task>();
-		 
-		 displayTodaysTasks(pending, listView, cal);
-	 }
-	 
-	 
-	 static void displayTodaysTasks(ArrayList<Task> pending, ListView<String> listView, Calendar cal) {
-		
-		 if (pending.isEmpty()) {
-			 listView.getItems().add("You have no pending tasks for today!");
-		 } else {
-			 for (int i=0; i<pending.size(); i++) {
-				 //TODO run a method that checks if
-				 //task startDate <= current dateTime <= task endDate
-				 if (isRelevantDate(cal, pending.get(i).getDateTime())) {
-					 listView.getItems().add(pending.get(i).getName());
-				 }
-			 }
-		 }
 		 
 	 }
 	 
-	 static void displayTasks(String specifiedDate) {
-		 // TODO
-	 }
 	 
-	 static boolean isRelevantDate(Calendar cal, DateTime dateTime) {
-		 // TODO
-		 
-		 return false;
-	 }
 }
