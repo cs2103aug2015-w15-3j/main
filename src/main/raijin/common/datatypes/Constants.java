@@ -2,6 +2,9 @@ package raijin.common.datatypes;
 
 public class Constants {
   
+  public enum CommandParam {
+   ID, NAME, DATETIME
+  }
   public static enum Priority { LOW, MID, HIGH }
 
   public static enum Command { 
@@ -9,7 +12,7 @@ public class Constants {
   }
   
   public static enum Error {
-    NoSuchTask
+    NoSuchTask, IllegalCommand, IllegalCommandArgument, UnableToExecuteCommand
   }
 
   public static final String FORMAT_DATE = "dd/MM/yyyy";
