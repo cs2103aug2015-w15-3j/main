@@ -29,7 +29,7 @@ public class DisplayCommandRunner extends CommandRunner {
   
   private DisplayController dc = DisplayController.getDisplayController();
 
-  public Status execute(ParsedInput cmd) {
+  public Status processCommand(ParsedInput cmd) {
 	  // Getting the current DateTime
 	  now = LocalDate.now();
 	  listView = new ListView<String>();
