@@ -47,6 +47,8 @@ public class SimpleParser implements ParserInterface {
     } else if (isFirstWord("display")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DISPLAY);
       parseDisplay();
+    } else if (isFirstWord("help")) {
+      builder = new ParsedInput.ParsedInputBuilder(Constants.Command.HELP);
     } else if (isFirstWord("exit")) {
       builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT);
     }
