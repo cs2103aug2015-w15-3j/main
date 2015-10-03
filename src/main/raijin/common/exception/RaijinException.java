@@ -1,22 +1,24 @@
 package raijin.common.exception;
 
-import org.slf4j.Logger;
-
-import raijin.common.utils.RaijinLogger;
+import raijin.common.datatypes.Constants;
 
 @SuppressWarnings("serial")
 public class RaijinException extends Exception {
   
     /*Setup logger for error recording*/
-    protected static Logger logger = RaijinLogger.getLogger();
+    private Constants.Error errorCode;
 
     public RaijinException() {
         super();
     }
 
-    public RaijinException(String message) {
+    public RaijinException(String message, Constants.Error errorCode) {
         super(message);
-        logger.warn(message);
+        this.errorCode = errorCode;
+    }
+    
+    public Constants.Error getErrorCode() {
+      return errorCode;
     }
     
 }
