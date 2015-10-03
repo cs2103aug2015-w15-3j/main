@@ -17,6 +17,11 @@ public class RaijinException extends Exception {
         this.errorCode = errorCode;
     }
     
+    public RaijinException(String message, Constants.Error errorCode, Throwable cause) {
+        super(message, cause);
+        this.errorCode = errorCode;
+    }
+
     public Constants.Error getErrorCode() {
       return errorCode;
     }
