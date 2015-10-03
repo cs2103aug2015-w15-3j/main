@@ -1,15 +1,35 @@
 package raijin.logic.api;
 
 
+import org.slf4j.Logger;
+
+import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
-import raijin.common.exception.NonExistentTaskException;
+import raijin.common.exception.UnableToExecuteCommandException;
+import raijin.common.utils.RaijinLogger;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.History;
 import raijin.storage.api.TasksManager;
 
 public abstract class CommandRunner {
 
+  private Logger logger = RaijinLogger.getLogger();
   public TasksManager tasksManager = TasksManager.getManager();
   public History history = History.getHistory();
-  public abstract Status execute(ParsedInput input) throws NonExistentTaskException;
+
+  abstract Status processCommand(ParsedInput input) throws UnableToExecuteCommandException;
+
+  public final Status execute(ParsedInput input) {
+    return handleCommandException(input);
+  }
+  
+  public Status handleCommandException(ParsedInput input) {
+    try {
+      return processCommand(input);
+    } catch (UnableToExecuteCommandException e) {
+      logger.debug(e.getMessage(), e);
+      return new Status(e.getMessage());
+    }
+  }
+
 }

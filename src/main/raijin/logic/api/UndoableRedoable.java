@@ -1,6 +1,6 @@
 package raijin.logic.api;
 
-import raijin.common.exception.NonExistentTaskException;
+import raijin.common.exception.UnableToExecuteCommandException;
 
 /**
  * 
@@ -9,7 +9,7 @@ import raijin.common.exception.NonExistentTaskException;
  */
 public interface UndoableRedoable {
   
-  public void undo() throws NonExistentTaskException;
-  public void redo() throws NonExistentTaskException;
+  public void undo() throws UnableToExecuteCommandException;
+  public void redo() throws UnableToExecuteCommandException;
 
 }
