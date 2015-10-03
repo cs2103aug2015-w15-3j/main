@@ -41,16 +41,18 @@ public class Session {
     try {
       String basePath = StorageHandler.getJarPath() + Constants.NAME_USER_FOLDER;
       setupBase(basePath);
+      setupStorage();
     } catch (UnsupportedEncodingException e) {
-      logger.warn("Unsupported Encoding");
+      logger.warn("UnsupportedEncoding");
+    } catch (FileNotFoundException e) {
+      logger.warn("File not found");
     }
   }
   
   public void setupBase(String basePath) {
     programDirectory = basePath;
     isFirstTime = StorageHandler.createDirectory(programDirectory);   //Create working folder 
-    baseConfigPath = programDirectory + Constants.NAME_USER_FOLDER 
-        + Constants.NAME_BASE_CONFIG;
+    baseConfigPath = programDirectory + Constants.NAME_BASE_CONFIG;
     setupBaseConfig(baseConfigPath);
   }
 
@@ -84,6 +86,11 @@ public class Session {
     StorageHandler.createDirectory(storageDirectory + Constants.NAME_USER_FOLDER);       
     setupDataFolder();
     setupTempPath(StorageHandler.createTempFile(Constants.NAME_TEMP_DATA));
+  }
+  
+  public String getPathInfo() {
+    return programDirectory + "\n" + storageDirectory + "\n" 
+        + baseConfigPath + "\n" + dataPath;
   }
 
   void setupBaseConfig(String baseConfigPath) {

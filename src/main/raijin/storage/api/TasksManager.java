@@ -8,6 +8,7 @@ import raijin.common.datatypes.DisplayContainer;
 import raijin.common.datatypes.ListDisplayContainer;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NonExistentTaskException;
+import raijin.common.utils.IDManager;
 
 /**
  * 
@@ -63,6 +64,7 @@ public class TasksManager {
 
   public void addCompletedTask(Task task) {
     completedTasks.put(task.getId(), task);
+    IDManager.getIdManager().returnId(task.getId());
   }
 
   public Task getPendingTask(int id) throws NonExistentTaskException {
@@ -78,6 +80,7 @@ public class TasksManager {
   public void deletePendingTask(int id) throws NonExistentTaskException {
     if (pendingTasks.containsKey(id)) {
       pendingTasks.remove(id);
+      IDManager.getIdManager().returnId(id);
     } else {
       throw new NonExistentTaskException(String.format(Constants.EXCEPTION_NONEXISTENTTASK, id));
     }
