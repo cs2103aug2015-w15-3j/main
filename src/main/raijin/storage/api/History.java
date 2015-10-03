@@ -39,6 +39,7 @@ public class History {
 
   public void pushCommand(UndoableRedoable commandRunner) {
     undoStack.push(commandRunner);
+    Session.getSession().commit();  //Write changes to temp file each time an undoable command is called
   }
 
   /*Calling class must catch EmptyStackException*/
