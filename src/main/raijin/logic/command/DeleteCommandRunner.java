@@ -25,7 +25,7 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
     } catch (NoSuchTaskException e) {
       wrapLowerLevelException(e, Constants.Command.DELETE);
     }
-    return new Status("You have just deleted " + taskDescription + "!");
+    return new Status(String.format(Constants.FEEDBACK_DELETE_SUCCESS, taskDescription));
   }
 
   public void undo() {
