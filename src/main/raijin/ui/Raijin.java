@@ -35,6 +35,8 @@ public class Raijin extends Application {
     
    addDisplayController(this);
    addInputController(this);
+   
+   ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
   }
 
   private void initPrimaryStage(Stage stage) {
