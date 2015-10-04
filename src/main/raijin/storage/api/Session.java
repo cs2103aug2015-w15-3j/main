@@ -11,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 import org.slf4j.Logger;
 
 import raijin.common.datatypes.Constants;
+import raijin.common.exception.StorageFailureException;
 import raijin.common.utils.RaijinLogger;
 import raijin.storage.handler.StorageHandler;
 
@@ -62,25 +63,19 @@ public class Session {
   }
 
   public void setStorageDirectory(String desiredPath, String baseConfigPath) {
-    StorageHandler.writeToFile(desiredPath, baseConfigPath);
+    writeToFile(desiredPath, baseConfigPath);
   }
   
   /*Commit changes to tasks to a temp file*/
   public void commit() {
-    StorageHandler.writeToFile(StorageHandler.convertToJson(
-        TasksManager.getManager()), tempPath);
+    writeToFile(StorageHandler.convertToJson(TasksManager.getManager()), tempPath);
   }
   
-  public void writeOnExit() throws IOException {
-    Path source = Paths.get(tempPath);
-    Path target = Paths.get(dataPath);
-    Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-  }
 
   /*Needed to be separated from init to ensure user has chosen a storage location*/
   public void setupStorage() throws FileNotFoundException {
     /*Always read from baseConfigPath to get path to ensure consistency*/
-    storageDirectory = StorageHandler.getStorageDirectory(baseConfigPath);
+    storageDirectory = getStorageDirectory(baseConfigPath);
     dataPath = storageDirectory + Constants.NAME_USER_DATA;
     userConfigPath = storageDirectory + Constants.NAME_USER_CONFIG;
     StorageHandler.createDirectory(storageDirectory + Constants.NAME_USER_FOLDER);       
@@ -94,21 +89,62 @@ public class Session {
   }
 
   void setupBaseConfig(String baseConfigPath) {
-    boolean isSuccessful = StorageHandler.createFile(baseConfigPath);
+    boolean isSuccessful = createNewFile(baseConfigPath);
     if (isSuccessful) {
-      StorageHandler.writeToFile(programDirectory, baseConfigPath);
+      writeToFile(programDirectory, baseConfigPath);
     }
   }
 
-
   void setupDataFolder() {
-    StorageHandler.createFile(userConfigPath);                              
-    StorageHandler.createFile(dataPath);                                    
+    createNewFile(userConfigPath);                              
+    createNewFile(dataPath);                                    
   }
 
   void setupTempPath(String tempPath) {
     this.tempPath = tempPath;
   }
 
+  //===========================================================================
+  // IOException Handling 
+  //===========================================================================
+  
+  public void writeOnExit() {
+    Path source = Paths.get(tempPath);
+    Path target = Paths.get(dataPath);
+    try {
+      StorageHandler.copyFiles(source, target);
+    } catch (IOException e) {
+      throw new StorageFailureException(String.format("Unable to copy temp file from %s to "
+          + "overwrite %s", tempPath, dataPath), e);
+    }
+  }
+
+  void writeToFile(String output, String filePath) {
+    try {
+      StorageHandler.writeToFile(output, filePath);
+    } catch (IOException e) {
+      throw new StorageFailureException(String.format(
+          "Failed to write \"%s\" to %s", output, filePath), e);
+    }
+  }
+
+  /*Create new file with exception handling*/
+  boolean createNewFile(String filePath) {
+    try {
+      return StorageHandler.createFile(filePath);
+    } catch (IOException e) {
+      throw new StorageFailureException(String.format("Cannot create file %s",
+          filePath), e);
+    }
+  }
+  
+  String getStorageDirectory(String baseConfigPath) {
+    try {
+      return StorageHandler.getStorageDirectory(baseConfigPath);
+    } catch (IOException e) {
+      throw new StorageFailureException(String.format("Cannot get storage directory from file %s",
+          baseConfigPath), e);
+    }
+  }
 
 }
