@@ -38,7 +38,7 @@ public class AddCommandRunnerTest {
       name(inputName).dateTime(dateTime).createParsedInput();
   }
 
-  public Status addTask(String inputName, DateTime dateTime) {
+  public Status addTask(String inputName, DateTime dateTime) throws UnableToExecuteCommandException {
     ParsedInput parsedInput = createSpecificTask(inputName, dateTime);
     
     Status returnStatus = addCommandRunner.execute(parsedInput);
@@ -58,7 +58,7 @@ public class AddCommandRunnerTest {
   }
 
   @Test
-  public void execute_SpecificDeadline_ReturnSuccessfulStatus() {
+  public void execute_SpecificDeadline_ReturnSuccessfulStatus() throws UnableToExecuteCommandException {
     String inputName = "submit op2 to ms lee";
     DateTime dateTime = new DateTime("19/09/2015");
     Status returnStatus = addTask(inputName, dateTime);

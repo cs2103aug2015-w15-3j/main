@@ -42,7 +42,7 @@ public class EditCommandRunnerTest {
   }
   
   @Test
-  public void execute_EditTaskDate() throws NoSuchTaskException {
+  public void execute_EditTaskDate() throws NoSuchTaskException, UnableToExecuteCommandException {
     Status returnStatus = editTask(1, null, new DateTime("05/10/2015"));
     String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1);
     assertEquals(expectedStatusLine, returnStatus.getFeedback());
@@ -51,7 +51,7 @@ public class EditCommandRunnerTest {
   }
 
   @Test
-  public void execute_EditTaskNameDate() throws NoSuchTaskException {
+  public void execute_EditTaskNameDate() throws NoSuchTaskException, UnableToExecuteCommandException {
     Status returnStatus = editTask(1, "First entry changed again.", new DateTime("05/10/2015"));
     String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1);
     assertEquals(expectedStatusLine, returnStatus.getFeedback());
@@ -83,7 +83,7 @@ public class EditCommandRunnerTest {
   // Helper methods
   //===========================================================================
   
-  public Status addTask(String inputName, DateTime dateTime) {
+  public Status addTask(String inputName, DateTime dateTime) throws UnableToExecuteCommandException {
     ParsedInput parsedInput = createSpecificTask(inputName, dateTime);
     Status returnStatus = addCommandRunner.execute(parsedInput);
     return returnStatus;
@@ -95,7 +95,7 @@ public class EditCommandRunnerTest {
   }
   
   public Status editTask(int id, String inputName, DateTime dateTime) 
-      throws NoSuchTaskException {
+      throws NoSuchTaskException, UnableToExecuteCommandException {
     ParsedInput parsedInput;
     if (inputName == null) {
       parsedInput = modifyTaskDate(id, dateTime);
