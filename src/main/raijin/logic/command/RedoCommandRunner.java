@@ -6,11 +6,12 @@ import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 
-public class UndoCommandRunner extends CommandRunner {
+public class RedoCommandRunner extends CommandRunner {
 
-  public Status processCommand(ParsedInput cmd) throws UnableToExecuteCommandException {
-    history.undo();
-    return new Status(Constants.FEEDBACK_UNDO_SUCCESS);
+  @Override
+  protected Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
+    history.redo();
+    return new Status(Constants.FEEDBACK_REDO_SUCCESS);
   }
 
 }
