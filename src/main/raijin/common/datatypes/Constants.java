@@ -28,6 +28,8 @@ public class Constants {
   public static final String FEEDBACK_ADD_SUCCESS = "Added %s successfully.";
   public static final String FEEDBACK_EDIT_SUCCESS = "Task ID %d edited successfully.";
   public static final String FEEDBACK_DELETE_SUCCESS = "You have just deleted %s !";
+  public static final String FEEDBACK_UNDO_SUCCESS = "Undo successfully";
+  public static final String FEEDBACK_REDO_SUCCESS = "Redo successfully";
 
   public static final String FEEDBACK_ERROR_FAILEDPARSING = "Failed to parse \"%s\"";
   public static final String FEEDBACK_ERROR_FAILEDCOMMAND = "Failed to execute %s command";
