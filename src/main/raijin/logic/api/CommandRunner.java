@@ -15,7 +15,7 @@ import raijin.storage.api.TasksManager;
 
 public abstract class CommandRunner {
 
-  private Logger logger = RaijinLogger.getLogger();
+  protected Logger logger = RaijinLogger.getLogger();
   protected TasksManager tasksManager = TasksManager.getManager();
   protected History history = History.getHistory();
   protected Session session = Session.getSession();
