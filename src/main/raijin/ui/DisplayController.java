@@ -29,7 +29,6 @@ public class DisplayController extends BorderPane {
 	 ListView<String> listView;
 	 
 	 public DisplayController () {
-		 this.mainApp = mainApp;
 		 date = new Date();
 		 headMessage = new Label("Tasks pending for " + dateFormatSplash.format(date));
 		 headMessage.setStyle("-fx-font-size: 20px; -fx-padding: 5px;");
