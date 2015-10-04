@@ -62,7 +62,7 @@ public class StorageHandlerTest {
   }
   
   @Test
-  public void testCreateFile() {
+  public void testCreateFile() throws IOException {
     String expectedPath = tmpFolder.getRoot().getAbsolutePath() + Constants.NAME_BASE_CONFIG;
     StorageHandler.createFile(expectedPath);
     assertTrue(new File(expectedPath).exists());
