@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+
+<fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+	<top>
+		<Label fx:id="headMessage" BorderPane.alignment="CENTER"/>
+	</top>
+	<center>
+		<ListView fx:id="listView" BorderPane.alignment="CENTER"/>
+	
+	</center>
+</fx:root>
+
