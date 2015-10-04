@@ -73,7 +73,7 @@ public class Session {
     storageDirectory = getStorageDirectory(baseConfigPath);
     dataPath = storageDirectory + Constants.NAME_USER_DATA;
     userConfigPath = storageDirectory + Constants.NAME_USER_CONFIG;
-    StorageHandler.createDirectory(storageDirectory + Constants.NAME_USER_FOLDER);       
+    StorageHandler.createDirectory(storageDirectory);       
     setupDataFolder();
     setupTempPath(StorageHandler.createTempFile(Constants.NAME_TEMP_DATA));
   }
