@@ -71,14 +71,10 @@ public class StorageHandler {
     return new File(dirPath).isDirectory();
   }
 
-  public static boolean createFile(String filePath) {
+  public static boolean createFile(String filePath) throws IOException {
     File file = new File(filePath);
     boolean isCreated = false;
-    try {
-      isCreated = file.createNewFile();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    isCreated = file.createNewFile();
     return isCreated;
   }
 
@@ -93,32 +89,24 @@ public class StorageHandler {
   }
 
   /*Writes content to file*/
-  public static void writeToFile(String output, String filePath) {
-    try {
-      FileOutputStream os = new FileOutputStream(filePath); // Overwrite whole file
-      BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+  public static void writeToFile(String output, String filePath) throws IOException {
+    try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+        new FileOutputStream(filePath)))) {
       bw.append(output);
-      bw.close();
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    } 
   }
 
-  /*Retrieves storage location from base config file*/
-  public static String getStorageDirectory(String absolutePath) throws FileNotFoundException {
-    String storageLocation = "";
-    BufferedReader br = new BufferedReader(new FileReader(absolutePath));
-    try {
-      storageLocation = br.readLine();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    //@TODO prevent from returning null
-    return storageLocation;
+  /**
+   * Cannot recover from such error and storageDirectory is too important 
+   * @param absolutePath
+   * @return path of user storage directory
+   * @throws IOException 
+   */
+  public static String getStorageDirectory(String absolutePath) throws IOException {
+    try (BufferedReader br = new BufferedReader(new FileReader(absolutePath))) {
+      return br.readLine();
+    } 
   }
-
 
   //===========================================================================
   //JSON Functions
