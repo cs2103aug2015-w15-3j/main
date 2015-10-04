@@ -37,14 +37,19 @@ public class DisplayCommandRunner extends CommandRunner {
 	  pending = new ArrayList<Task>(TasksManager.getManager().getPendingTasks().values());
 	  completed = new ArrayList<Task>(TasksManager.getManager().getCompletedTasks().values());
 	  
+	  boolean isEmpty = true;
+	  
 	  if (cmd.getDisplayOptions().equals(PENDING)) {
-		  try {
-		  cmdDateTime = cmd.getDateTime();
-		  } catch (NullPointerException e) {
-			  cmdDateTime = new DateTime(now.toString());
+		  
+		  if (cmd.getDateTime() != null) {
+			  cmdDateTime = cmd.getDateTime();
+		  } else {
+			  cmdDateTime = new DateTime(String.format("%02d", now.getDayOfMonth()) 
+					                     + "/" 
+					                     + String.format("%02d", now.getMonthValue())
+					                     + "/" + now.getYear());
 		  }
 		  
-		  boolean isEmpty = true;
 		  
 		  for (int i=0; i<pending.size(); i++) {
 			  taskDateTime = pending.get(i).getDateTime();
@@ -60,11 +65,15 @@ public class DisplayCommandRunner extends CommandRunner {
 			  listView.getItems().add("You have no pending tasks!");
 		  }
 		  
-
 		  
 	  } else if (cmd.getDisplayOptions().equals(COMPLETED)) {
 		  for (int i=0; i<completed.size(); i++) {
+			  isEmpty = false;
 			  listView.getItems().add(completed.get(i).getName());
+		  }
+		  
+		  if (isEmpty) {
+			  listView.getItems().add("You have no completed tasks!");
 		  }
 	  }
 	  
@@ -74,7 +83,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	  // pass this listView to displaycontroller
 	  dc.setListView(listView);
 	  
-    return null;
+    return new Status("Displaying", "success");
   }
   
   public boolean isRelevantDate(DateTime cmdDateTime, DateTime taskDateTime) {
