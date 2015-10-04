@@ -56,7 +56,7 @@ public class LogicStorageIT {
   //===========================================================================
   // Helper methods
   //===========================================================================
-  public <T> void writeDataToFile(String dataPath, T data) {
+  public <T> void writeDataToFile(String dataPath, T data) throws IOException {
     writeToFile(convertToJson(data), dataPath);
   }
 
@@ -85,7 +85,7 @@ public class LogicStorageIT {
   //===========================================================================
 
   @Test 
-  public void setStorageDirectory_MatchUserLocationWithBaseConfig() throws FileNotFoundException {
+  public void setStorageDirectory_MatchUserLocationWithBaseConfig() throws IOException {
     String storagePath = storageDirectory.getRoot().getAbsolutePath();
     session.setStorageDirectory(storagePath, session.baseConfigPath);
     session.setupStorage();
