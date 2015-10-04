@@ -1,13 +1,9 @@
 package raijin.storage.api;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-
 import org.slf4j.Logger;
 
 import raijin.common.datatypes.Constants;
@@ -44,10 +40,8 @@ public class Session {
       setupBase(basePath);
       setupStorage();
     } catch (UnsupportedEncodingException e) {
-      logger.warn("UnsupportedEncoding");
-    } catch (FileNotFoundException e) {
-      logger.warn("File not found");
-    }
+      throw new StorageFailureException("Unsupported Encoding while getting program path", e);
+    } 
   }
   
   public void setupBase(String basePath) {
@@ -64,6 +58,7 @@ public class Session {
 
   public void setStorageDirectory(String desiredPath, String baseConfigPath) {
     writeToFile(desiredPath, baseConfigPath);
+    setupStorage();                             //trigger setup of storage after deciding storage path
   }
   
   /*Commit changes to tasks to a temp file*/
@@ -73,7 +68,7 @@ public class Session {
   
 
   /*Needed to be separated from init to ensure user has chosen a storage location*/
-  public void setupStorage() throws FileNotFoundException {
+  public void setupStorage() {
     /*Always read from baseConfigPath to get path to ensure consistency*/
     storageDirectory = getStorageDirectory(baseConfigPath);
     dataPath = storageDirectory + Constants.NAME_USER_DATA;
