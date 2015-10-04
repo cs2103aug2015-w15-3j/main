@@ -1,6 +1,7 @@
 package raijin.ui;
 
-//import javafx.application.Application;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
@@ -19,12 +20,16 @@ public class DisplayController extends BorderPane {
 	 final DateFormat dateFormatSplash = new SimpleDateFormat("EEE, d MMM ''yy");
 	 Date date;
 	 
+	 @FXML
 	 private Label headMessage;
+	 private Raijin mainApp;
 	 
 	 // Main display for tasks
+	 @FXML
 	 ListView<String> listView;
 	 
-	 public DisplayController() {
+	 public DisplayController () {
+		 this.mainApp = mainApp;
 		 date = new Date();
 		 headMessage = new Label("Tasks pending for " + dateFormatSplash.format(date));
 		 headMessage.setStyle("-fx-font-size: 20px; -fx-padding: 5px;");
