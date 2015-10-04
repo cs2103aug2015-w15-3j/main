@@ -31,7 +31,7 @@ public class DisplayController extends BorderPane {
 		 this.setTop(headMessage);
 		 
 		 listView = new ListView<String>();
-		 listView.getItems().add("test");
+		 //listView.getItems().add("test");
 		 this.setCenter(listView);
 		 
 	 }
