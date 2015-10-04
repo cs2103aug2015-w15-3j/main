@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
+import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.parser.ParsedInput;
 
 public class CommandDispatcher {
@@ -19,7 +20,7 @@ public class CommandDispatcher {
     return commandDispatcher;
   }
   
-  public Status delegateCommand(ParsedInput input) {
+  public Status delegateCommand(ParsedInput input) throws UnableToExecuteCommandException {
       CommandRunner commandRunner = commandRunners.get(input.getCommand());
       return commandRunner.execute(input);
   }

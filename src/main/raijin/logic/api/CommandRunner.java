@@ -22,7 +22,7 @@ public abstract class CommandRunner {
 
   protected abstract Status processCommand(ParsedInput input) throws UnableToExecuteCommandException;
 
-  public final Status execute(ParsedInput input) {
+  public final Status execute(ParsedInput input) throws UnableToExecuteCommandException {
     return handleCommandException(input);
   }
   

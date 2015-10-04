@@ -9,6 +9,8 @@ import javafx.application.Application;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
+import raijin.common.exception.FailedToParseException;
+import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.IDManager;
 import raijin.logic.parser.ParsedInput;
 import raijin.logic.parser.ParserInterface;
@@ -58,8 +60,10 @@ public class Logic {
       ParsedInput parsed = parser.parse(userInput);
       return commandDispatcher.delegateCommand(parsed);
 
-    } catch (IllegalArgumentException e) {
-      return new Status(Constants.FEEDBACK_ERROR_ILLEGALCOMMAND);
+    } catch (FailedToParseException e) {
+      return new Status(Constants.FEEDBACK_ERROR_FAILEDPARSING);
+    } catch (UnableToExecuteCommandException e) {
+      return new Status(Constants.FEEDBACK_ERROR_FAILEDCOMMAND);
     } 
   }
 
