@@ -23,12 +23,14 @@ public class Constants {
   public static final String NAME_USER_FOLDER = "/data";         //Default folder name for storage
   public static final String NAME_BASE_CONFIG = "/base.cfg";     //Base config which stores location of storage
   public static final String NAME_TEMP_DATA = "RaijinData";
+
   public static final String FEEDBACK_INFO_SUCCESS = "Operation is successful.";
-  public static final String FEEDBACK_ERROR_ILLEGALCOMMAND = "Illegal command.";
   public static final String FEEDBACK_ADD_SUCCESS = "Added %s successfully.";
   public static final String FEEDBACK_EDIT_SUCCESS = "Task ID %d edited successfully.";
   public static final String FEEDBACK_DELETE_SUCCESS = "You have just deleted %s !";
-  public static final String EXCEPTION_NONEXISTENTTASK = "Task ID %d does not exist.";
+
+  public static final String FEEDBACK_ERROR_FAILEDPARSING = "Failed to parse \"%s\"";
+  public static final String FEEDBACK_ERROR_FAILEDCOMMAND = "Failed to execute %s command";
   
   public static final String HELP_MESSAGE = "\nADD <Task Name>\nAdds a task with a specified name.\n"
       + "ADD <Task Name> <DateTime>\nAdds a task with a specified name and timeline*.\n"
