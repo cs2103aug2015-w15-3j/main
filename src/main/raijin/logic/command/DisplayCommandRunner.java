@@ -21,10 +21,12 @@ public class DisplayCommandRunner extends CommandRunner {
 	
   private static final String TYPE_PENDING = "p";
   private static final String TYPE_COMPLETED = "c";
-  private static final String MESSAGE_DISPLAY = "Displaying: ";
-  private static final String MESSAGE_PENDING = "pending tasks";
-  private static final String MESSAGE_COMPLETED = "completed tasks";
+  private static final String FEEDBACK_DISPLAY = "Displaying: ";
+  private static final String FEEDBACK_PENDING = "pending tasks";
+  private static final String FEEDBACK_COMPLETED = "completed tasks";
   private static final String MESSAGE_SUCCESS = "Success";
+  private static final String MESSAGE_NO_PENDING = "You have no pending tasks!";
+  private static final String MESSAGE_NO_COMPLETED = "You have no completed tasks!";
   
   private DateTime cmdDateTime;
   private DateTime taskDateTime;
@@ -62,7 +64,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	  String feedbackMessage = "";
 	  
 	  if (cmd.getDisplayOptions().equals(TYPE_PENDING)) {
-		  feedbackMessage = MESSAGE_PENDING;
+		  feedbackMessage = FEEDBACK_PENDING;
 		  for (int i=0; i<pending.size(); i++) {
 			  taskDateTime = pending.get(i).getDateTime();
 			  
@@ -73,7 +75,7 @@ public class DisplayCommandRunner extends CommandRunner {
 		  }
 		  
 		  if (isEmpty) {
-			  eventBus.setCurrentTasks("You have no pending tasks!");
+			  eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
 		  } else {
 	          eventBus.setCurrentTasks(relevant);
 	        //TODO note: need to give this list somewhere
@@ -82,7 +84,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	      message = "Tasks pending for " + dateFormat.format(date);
 		  
 	  } else if (cmd.getDisplayOptions().equals(TYPE_COMPLETED)) {
-		  feedbackMessage = MESSAGE_COMPLETED;
+		  feedbackMessage = FEEDBACK_COMPLETED;
 		  for (int i=0; i<completed.size(); i++) {
 			  isEmpty = false;
 			  relevant.add(completed.get(i));
@@ -91,7 +93,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	      message = "Tasks completed on " + dateFormat.format(date);
 		  
 		  if (isEmpty) {
-			  eventBus.setCurrentTasks("You have no completed tasks!");
+			  eventBus.setCurrentTasks(MESSAGE_NO_COMPLETED);
 		  } else {
 			  eventBus.setCurrentTasks(relevant);
 		  }
@@ -99,7 +101,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	  
 	  eventBus.setHeadMessage(message);
 	  
-    return new Status(MESSAGE_DISPLAY + feedbackMessage, MESSAGE_SUCCESS);
+    return new Status(FEEDBACK_DISPLAY + feedbackMessage, MESSAGE_SUCCESS);
   }
   
   public boolean isRelevantDate(DateTime cmdDateTime, DateTime taskDateTime) {
