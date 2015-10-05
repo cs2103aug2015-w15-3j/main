@@ -73,10 +73,10 @@ public class DisplayCommandRunner extends CommandRunner {
 		  }
 		  
 		  if (isEmpty) {
-			  // TODO add in "you have no pending tasks message", by creating a new task?
 			  eventBus.setCurrentTasks("You have no pending tasks!");
 		  } else {
 	          eventBus.setCurrentTasks(relevant);
+	        //TODO note: need to give this list somewhere
 		  }
 		  
 	      message = "Tasks pending for " + dateFormat.format(date);
@@ -91,11 +91,9 @@ public class DisplayCommandRunner extends CommandRunner {
 	      message = "Tasks completed on " + dateFormat.format(date);
 		  
 		  if (isEmpty) {
-			  // TODO add message "You have no completed tasks!"
 			  eventBus.setCurrentTasks("You have no completed tasks!");
 		  } else {
 			  eventBus.setCurrentTasks(relevant);
-			  //note: need to give this list somewhere
 		  }
 	  }
 	  
