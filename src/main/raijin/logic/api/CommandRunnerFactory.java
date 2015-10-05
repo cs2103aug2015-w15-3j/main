@@ -9,6 +9,7 @@ import raijin.logic.command.EditCommandRunner;
 import raijin.logic.command.ExitCommandRunner;
 import raijin.logic.command.RedoCommandRunner;
 import raijin.logic.command.UndoCommandRunner;
+import raijin.logic.command.RedoCommandRunner;
 import raijin.logic.command.HelpCommandRunner;
 
 /**
@@ -37,6 +38,9 @@ public class CommandRunnerFactory {
 
       case UNDO:
         return new UndoCommandRunner();
+        
+      case REDO:
+        return new RedoCommandRunner();
 
       case EXIT:
         return new ExitCommandRunner();
@@ -47,8 +51,6 @@ public class CommandRunnerFactory {
       case HELP:
         return new HelpCommandRunner();
 
-      case REDO:
-        return new RedoCommandRunner();
 
       default:
         throw new IllegalArgumentException();
