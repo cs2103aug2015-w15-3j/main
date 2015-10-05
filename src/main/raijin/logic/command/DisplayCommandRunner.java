@@ -1,7 +1,11 @@
 package raijin.logic.command;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.apache.commons.lang.RandomStringUtils;
 
@@ -27,34 +31,54 @@ public class DisplayCommandRunner extends CommandRunner {
 
   private ArrayList<Task> pending;
   private ArrayList<Task> completed;
+  private ArrayList<Task> relevant;
   
-  private ListView<String> listView;
   
   private EventBus eventBus = EventBus.getEventBus();
+  
+  final DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM ''yy");
 
   public Status processCommand(ParsedInput cmd) {
 	  // Getting the current DateTime
 	  now = LocalDate.now();
-	  listView = new ListView<String>();
 	  
 	  pending = new ArrayList<Task>(TasksManager.getManager().getPendingTasks().values());
 	  completed = new ArrayList<Task>(TasksManager.getManager().getCompletedTasks().values());
+	  relevant = new ArrayList<Task>();
 	  
 	  boolean isEmpty = true;
+	  
+	  if (cmd.getDateTime() != null) {
+		  cmdDateTime = cmd.getDateTime();
+	  } else {
+		  cmdDateTime = new DateTime(String.format("%02d", now.getDayOfMonth()) 
+				                     + "/" 
+				                     + String.format("%02d", now.getMonthValue())
+				                     + "/" + now.getYear());
+	  }
+	  
+	  Date date = Date.from(cmdDateTime.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+	  String message = "";
+	  
 	  if (cmd.getDisplayOptions().equals(PENDING)) {
-		  
-	    eventBus.setCurrentTasks(pending);
-	    /*
-		  if (cmd.getDateTime() != null) {
-			  cmdDateTime = cmd.getDateTime();
-		  } else {
-			  cmdDateTime = new DateTime(String.format("%02d", now.getDayOfMonth()) 
-					                     + "/" 
-					                     + String.format("%02d", now.getMonthValue())
-					                     + "/" + now.getYear());
+		  for (int i=0; i<pending.size(); i++) {
+			  taskDateTime = pending.get(i).getDateTime();
+			  
+			  if (isRelevantDate(cmdDateTime, taskDateTime)) {
+				  isEmpty = false;
+				  relevant.add(pending.get(i));
+			  }
 		  }
 		  
+		  if (isEmpty) {
+			  // add in "you have no pending tasks message", by creating a new task?
+		  } else {
+	          eventBus.setCurrentTasks(relevant);
+		  }
 		  
+	      message = "Tasks pending for " + dateFormat.format(date);
+		  
+		  /*
 		  for (int i=0; i<pending.size(); i++) {
 			  taskDateTime = pending.get(i).getDateTime();
 			  isEmpty = false;
@@ -75,6 +99,9 @@ public class DisplayCommandRunner extends CommandRunner {
 	  } else if (cmd.getDisplayOptions().equals(COMPLETED)) {
 
 	      eventBus.setCurrentTasks(completed);
+	      
+	      message = "Tasks completed on " + dateFormat.format(date);
+	      
 	    /*
 		  for (int i=0; i<completed.size(); i++) {
 			  isEmpty = false;
@@ -87,7 +114,9 @@ public class DisplayCommandRunner extends CommandRunner {
 		  */
 	  }
 	  
-	  eventBus.setHeadMessage(RandomStringUtils.random(6));
+	  //eventBus.setHeadMessage(RandomStringUtils.random(6));
+	  
+	  eventBus.setHeadMessage(message);
 
 	  /*
 	  // pass the cmdDateTime to displaycontroller
