@@ -1,5 +1,6 @@
 package raijin.ui;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -11,13 +12,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import raijin.logic.api.Logic;
 
 public class Raijin extends Application {
 	private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
-	
+	private static final String NO_DIRECTORY_SELECTED_FEEDBACK = "I'm sorry! You have not selected "
+															+ "a directory yet. Please try again!";
 	private BorderPane rootLayout;
 	private Stage stage;
 	private Logic logic;
@@ -57,6 +60,17 @@ public class Raijin extends Application {
  
   private void initLogic() throws FileNotFoundException {
 	  logic = new Logic(this);
+	  System.out.println(logic.isFirstTime());
+	  if (logic.isFirstTime()) {
+		  DirectoryChooser directoryChooser = new DirectoryChooser();
+		  File selectedDirectory = directoryChooser.showDialog(this.stage);
+	  
+		  if (selectedDirectory == null) {
+			  ((InputController) rootLayout.getBottom()).setFeedback(NO_DIRECTORY_SELECTED_FEEDBACK);
+		  } else {
+			  logic.setChosenUserStorage(selectedDirectory.getAbsolutePath());
+		  }
+	  }
   }
   
   /**
