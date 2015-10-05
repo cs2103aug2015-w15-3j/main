@@ -49,7 +49,7 @@ public class StorageHandler {
     String path = StorageHandler.class.getProtectionDomain().
         getCodeSource().getLocation().getPath();
     String decodedPath = URLDecoder.decode(path, "UTF-8");
-    return decodedPath.substring(0, decodedPath.length()-1);    //Trim last backslash for standardisation
+    return sanitizePath(decodedPath.substring(0, decodedPath.length()-1));    //Trim last backslash for standardisation
   }
 
   public static boolean createDirectory(String dirPath){
@@ -106,6 +106,11 @@ public class StorageHandler {
     try (BufferedReader br = new BufferedReader(new FileReader(absolutePath))) {
       return br.readLine();
     } 
+  }
+
+  /*make path invariant to windows and linux*/
+  public static String sanitizePath(String path) {
+    return path.replaceFirst("^/(.:/)", "$1");
   }
 
   //===========================================================================

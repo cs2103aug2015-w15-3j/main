@@ -65,7 +65,8 @@ public class Session {
   }
 
   public void setStorageDirectory(String desiredPath, String baseConfigPath) {
-    writeToFile(desiredPath, baseConfigPath);
+    String sanitizedPath = StorageHandler.sanitizePath(desiredPath);
+    writeToFile(sanitizedPath, baseConfigPath);
     setupStorage();                             //trigger setup of storage after deciding storage path
   }
   
