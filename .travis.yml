@@ -13,8 +13,8 @@ notifications:
     - leeyingjie_95@hotmail.com
 
 before-install:
-    - "export DISPLAY=:99.0"
-    - "sh -e /etc/init.d/xvfb start"
+    - export DISPLAY=:99.0
+    - sh -e /etc/init.d/xvfb start
 
 after_success:
     - mvn clean test jacoco:report coveralls:report
