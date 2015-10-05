@@ -18,7 +18,6 @@ import java.time.ZoneId;
 
 public class DisplayController extends BorderPane {
 
-  private static DisplayController dc = new DisplayController();
   private EventBus eventBus = EventBus.getEventBus();
 
   private static final String DISPLAY_CONTROLLER_FXML = "resource/layout/DisplayController.fxml";
@@ -50,7 +49,7 @@ public class DisplayController extends BorderPane {
     this.setTop(headMessage);
 
     listView = new ListView<String>();
-    // listView.getItems().add("test");
+    
     this.setCenter(listView);
 
     eventBus.displayHeadMessageProperty().addListener((v, oldVal, newVal) -> {
@@ -85,10 +84,6 @@ public class DisplayController extends BorderPane {
     listView.getItems().clear();
     listView.setItems(lv.getItems());
     this.setCenter(listView);
-  }
-
-  public static DisplayController getDisplayController() {
-    return dc;
   }
 
 }

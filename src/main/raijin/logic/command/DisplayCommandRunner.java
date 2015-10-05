@@ -1,25 +1,32 @@
 package raijin.logic.command;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 
-import org.apache.commons.lang.RandomStringUtils;
-
-import javafx.scene.control.ListView;
 import raijin.common.datatypes.DateTime;
-import raijin.common.datatypes.ListDisplayContainer;
+//import raijin.common.datatypes.ListDisplayContainer;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.EventBus;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.TasksManager;
-import raijin.ui.DisplayController;
+//import raijin.ui.DisplayController;
 
 public class DisplayCommandRunner extends CommandRunner {
 	
-  private static final String PENDING = "p";
-  private static final String COMPLETED = "c";
+  private static final String TYPE_PENDING = "p";
+  private static final String TYPE_COMPLETED = "c";
+  private static final String FEEDBACK_DISPLAY = "Displaying: ";
+  private static final String FEEDBACK_PENDING = "pending tasks";
+  private static final String FEEDBACK_COMPLETED = "completed tasks";
+  private static final String MESSAGE_SUCCESS = "Success";
+  private static final String MESSAGE_NO_PENDING = "You have no pending tasks!";
+  private static final String MESSAGE_NO_COMPLETED = "You have no completed tasks!";
   
   private DateTime cmdDateTime;
   private DateTime taskDateTime;
@@ -27,77 +34,74 @@ public class DisplayCommandRunner extends CommandRunner {
 
   private ArrayList<Task> pending;
   private ArrayList<Task> completed;
-  
-  private ListView<String> listView;
+  private ArrayList<Task> relevant;
   
   private EventBus eventBus = EventBus.getEventBus();
+  
+  final DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM ''yy");
 
   public Status processCommand(ParsedInput cmd) {
 	  // Getting the current DateTime
 	  now = LocalDate.now();
-	  listView = new ListView<String>();
 	  
 	  pending = new ArrayList<Task>(TasksManager.getManager().getPendingTasks().values());
 	  completed = new ArrayList<Task>(TasksManager.getManager().getCompletedTasks().values());
+	  relevant = new ArrayList<Task>();
 	  
 	  boolean isEmpty = true;
-	  if (cmd.getDisplayOptions().equals(PENDING)) {
-		  
-	    eventBus.setCurrentTasks(pending);
-	    /*
-		  if (cmd.getDateTime() != null) {
-			  cmdDateTime = cmd.getDateTime();
-		  } else {
-			  cmdDateTime = new DateTime(String.format("%02d", now.getDayOfMonth()) 
-					                     + "/" 
-					                     + String.format("%02d", now.getMonthValue())
-					                     + "/" + now.getYear());
-		  }
-		  
-		  
+	  
+	  if (cmd.getDateTime() != null) {
+		  cmdDateTime = cmd.getDateTime();
+	  } else {
+		  cmdDateTime = new DateTime(String.format("%02d", now.getDayOfMonth()) 
+				                     + "/" 
+				                     + String.format("%02d", now.getMonthValue())
+				                     + "/" + now.getYear());
+	  }
+	  
+	  Date date = Date.from(cmdDateTime.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+	  String message = "";
+	  String feedbackMessage = "";
+	  
+	  if (cmd.getDisplayOptions().equals(TYPE_PENDING)) {
+		  feedbackMessage = FEEDBACK_PENDING;
 		  for (int i=0; i<pending.size(); i++) {
 			  taskDateTime = pending.get(i).getDateTime();
-			  isEmpty = false;
 			  
-			  test.add(pending.get(i).getName());
 			  if (isRelevantDate(cmdDateTime, taskDateTime)) {
-				  listView.getItems().add(pending.get(i).getName() + " by " + 
-			                              pending.get(i).getDateTime().getEndDate().toString());
+				  isEmpty = false;
+				  relevant.add(pending.get(i));
 			  }
 		  }
 		  
 		  if (isEmpty) {
-			  listView.getItems().add("You have no pending tasks!");
+			  eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
+		  } else {
+	          eventBus.setCurrentTasks(relevant);
+	        //TODO note: need to give this list somewhere
 		  }
 		  
-		  */
+	      message = "Tasks pending for " + dateFormat.format(date);
 		  
-	  } else if (cmd.getDisplayOptions().equals(COMPLETED)) {
-
-	      eventBus.setCurrentTasks(completed);
-	    /*
+	  } else if (cmd.getDisplayOptions().equals(TYPE_COMPLETED)) {
+		  feedbackMessage = FEEDBACK_COMPLETED;
 		  for (int i=0; i<completed.size(); i++) {
 			  isEmpty = false;
-			  listView.getItems().add(completed.get(i).getName());
+			  relevant.add(completed.get(i));
 		  }
+	      
+	      message = "Tasks completed on " + dateFormat.format(date);
 		  
 		  if (isEmpty) {
-			  listView.getItems().add("You have no completed tasks!");
+			  eventBus.setCurrentTasks(MESSAGE_NO_COMPLETED);
+		  } else {
+			  eventBus.setCurrentTasks(relevant);
 		  }
-		  */
 	  }
 	  
-	  eventBus.setHeadMessage(RandomStringUtils.random(6));
-
-	  /*
-	  // pass the cmdDateTime to displaycontroller
-	  dc.setHeadMessage(cmdDateTime);
+	  eventBus.setHeadMessage(message);
 	  
-	  // pass this listView to displaycontroller
-	  dc.setListView(listView);
-	  */
-	  
-    return new Status("Displaying", "success");
+    return new Status(FEEDBACK_DISPLAY + feedbackMessage, MESSAGE_SUCCESS);
   }
   
   public boolean isRelevantDate(DateTime cmdDateTime, DateTime taskDateTime) {

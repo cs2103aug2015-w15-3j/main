@@ -47,6 +47,10 @@ public class EventBus {
   public void setCurrentTasks(List<Task> tasks) {
     currentTasks.setAll(filterName(tasks));
   }
+ 
+  public void setCurrentTasks(String message) {
+	  currentTasks.setAll(message);
+  }
 
   public StringProperty feedBackProperty() {
     return feedBack;
