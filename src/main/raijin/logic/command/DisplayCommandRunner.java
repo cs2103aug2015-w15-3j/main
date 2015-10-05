@@ -41,11 +41,6 @@ public class DisplayCommandRunner extends CommandRunner {
 	  completed = new ArrayList<Task>(TasksManager.getManager().getCompletedTasks().values());
 	  
 	  boolean isEmpty = true;
-	  ArrayList<String> test = new ArrayList<String>();
-	  
-      for (int i = 0; i < pending.size(); i++) {
-        test.add(pending.get(i).getName());
-      }
 	  /*
 	  if (cmd.getDisplayOptions().equals(PENDING)) {
 		  
@@ -88,7 +83,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	  
 	  */
 	  eventBus.setHeadMessage(RandomStringUtils.random(6));
-	  eventBus.setCurrentTasks(test);
+	  eventBus.setCurrentTasks(pending);
 
 	  /*
 	  // pass the cmdDateTime to displaycontroller

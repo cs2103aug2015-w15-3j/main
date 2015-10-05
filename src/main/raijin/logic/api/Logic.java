@@ -76,16 +76,5 @@ public class Logic {
     } 
   }
 
-  //===========================================================================
-  // Storage methods
-  //===========================================================================
-  
-  public ArrayList<Task> retrievePendingTasks() {
-    return new ArrayList<Task>(tasksManager.getPendingTasks().values());
-  }
-
-  public ArrayList<Task> retrieveCompletedTasks() {
-    return new ArrayList<Task>(tasksManager.getCompletedTasks().values());
-  }
 
 }

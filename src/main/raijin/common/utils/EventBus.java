@@ -17,12 +17,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 
+import static raijin.common.utils.DisplayUtils.*;
+
 public class EventBus {
 
   private static EventBus eventBus = new EventBus();
   private StringProperty feedBack = new SimpleStringProperty(this, "feedback", "Write here");
   private StringProperty displayHeadMessage = new SimpleStringProperty(this, "displayHeadMessage", "");
   private ObservableList<String> currentTasks = FXCollections.observableArrayList();
+  private ObservableList<String> completedTasks = FXCollections.observableArrayList();
   private DisplayContainer displayedTasks = new ListDisplayContainer();
   
   public String getFeedback() {
@@ -41,8 +44,8 @@ public class EventBus {
     displayHeadMessage.set(input);
   }
 
-  public void setCurrentTasks(List<String> tasks) {
-    currentTasks.setAll(tasks);
+  public void setCurrentTasks(List<Task> tasks) {
+    currentTasks.setAll(filterName(tasks));
   }
 
   public StringProperty feedBackProperty() {
@@ -57,13 +60,17 @@ public class EventBus {
     return currentTasks;
   }
 
+  public ObservableList<String> completedTasksProperty() {
+    return completedTasks;
+  }
+
   public void initDisplayTasks(TasksManager tasksManager) {
     initCurrentTasks(tasksManager.getPendingTasks());
   }
 
   private void initCurrentTasks(HashMap<Integer, Task> pendingTasks) {
     List<Task> tempList = new ArrayList<Task>(pendingTasks.values());
-    currentTasks.setAll(tempList.stream().map(Task::getName).collect(Collectors.toList()));
+    currentTasks.setAll(filterName(tempList));
   }
 
   private EventBus() {}
