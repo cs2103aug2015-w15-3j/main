@@ -3,11 +3,14 @@ package raijin.logic.command;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 import javafx.scene.control.ListView;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.ListDisplayContainer;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
+import raijin.common.utils.EventBus;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.TasksManager;
@@ -28,6 +31,7 @@ public class DisplayCommandRunner extends CommandRunner {
   private ListView<String> listView;
   
   private DisplayController dc = DisplayController.getDisplayController();
+  private EventBus eventBus = EventBus.getEventBus();
 
   public Status processCommand(ParsedInput cmd) {
 	  // Getting the current DateTime
@@ -38,7 +42,12 @@ public class DisplayCommandRunner extends CommandRunner {
 	  completed = new ArrayList<Task>(TasksManager.getManager().getCompletedTasks().values());
 	  
 	  boolean isEmpty = true;
+	  ArrayList<String> test = new ArrayList<String>();
 	  
+      for (int i = 0; i < pending.size(); i++) {
+        test.add(pending.get(i).getName());
+      }
+	  /*
 	  if (cmd.getDisplayOptions().equals(PENDING)) {
 		  
 		  if (cmd.getDateTime() != null) {
@@ -55,6 +64,7 @@ public class DisplayCommandRunner extends CommandRunner {
 			  taskDateTime = pending.get(i).getDateTime();
 			  isEmpty = false;
 			  
+			  test.add(pending.get(i).getName());
 			  if (isRelevantDate(cmdDateTime, taskDateTime)) {
 				  listView.getItems().add(pending.get(i).getName() + " by " + 
 			                              pending.get(i).getDateTime().getEndDate().toString());
@@ -77,11 +87,17 @@ public class DisplayCommandRunner extends CommandRunner {
 		  }
 	  }
 	  
+	  */
+	  eventBus.setHeadMessage(RandomStringUtils.random(6));
+	  eventBus.setCurrentTasks(test);
+
+	  /*
 	  // pass the cmdDateTime to displaycontroller
 	  dc.setHeadMessage(cmdDateTime);
 	  
 	  // pass this listView to displaycontroller
 	  dc.setListView(listView);
+	  */
 	  
     return new Status("Displaying", "success");
   }
