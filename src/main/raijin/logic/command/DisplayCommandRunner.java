@@ -78,48 +78,23 @@ public class DisplayCommandRunner extends CommandRunner {
 		  
 	      message = "Tasks pending for " + dateFormat.format(date);
 		  
-		  /*
-		  for (int i=0; i<pending.size(); i++) {
-			  taskDateTime = pending.get(i).getDateTime();
-			  isEmpty = false;
-			  
-			  test.add(pending.get(i).getName());
-			  if (isRelevantDate(cmdDateTime, taskDateTime)) {
-				  listView.getItems().add(pending.get(i).getName() + " by " + 
-			                              pending.get(i).getDateTime().getEndDate().toString());
-			  }
-		  }
-		  
-		  if (isEmpty) {
-			  listView.getItems().add("You have no pending tasks!");
-		  }
-		  
-		  */
-		  
 	  } else if (cmd.getDisplayOptions().equals(COMPLETED)) {
 		  
 		  for (int i=0; i<completed.size(); i++) {
 			  isEmpty = false;
 			  relevant.add(completed.get(i));
 		  }
-
-	      eventBus.setCurrentTasks(relevant);
 	      
 	      message = "Tasks completed on " + dateFormat.format(date);
-	      
-	    /*
-		  for (int i=0; i<completed.size(); i++) {
-			  isEmpty = false;
-			  listView.getItems().add(completed.get(i).getName());
-		  }
 		  
 		  if (isEmpty) {
-			  listView.getItems().add("You have no completed tasks!");
+			  // add message "You have no completed tasks!"
+		  } else {
+			  eventBus.setCurrentTasks(relevant);
+			  //note: need to give this list somewhere
 		  }
-		  */
 	  }
 	  
-	  //eventBus.setHeadMessage(RandomStringUtils.random(6));
 	  eventBus.setHeadMessage(message);
 	  
     return new Status("Displaying", "success");
