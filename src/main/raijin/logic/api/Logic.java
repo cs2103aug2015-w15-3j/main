@@ -78,9 +78,16 @@ public class Logic {
     } 
   }
   
+  //===========================================================================
+  // Session methods
+  //===========================================================================
+
   public boolean isFirstTime() {
     return session.isFirstTime;
   }
 
+  public void setChosenUserStorage(String path) {
+    session.setStorageDirectory(path, session.baseConfigPath);
+  }
 
 }
