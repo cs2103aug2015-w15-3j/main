@@ -119,14 +119,8 @@ public class StorageHandler {
 
   public static JsonReader getJsonReaderFromFile(String filePath) {
     JsonReader jsonReader = null;
-    try(FileReader f = new FileReader(filePath)){
-      jsonReader = new JsonReader(f);
-    } catch (JsonIOException e) {
-      e.printStackTrace();
-    } catch (JsonSyntaxException e) {
-      e.printStackTrace();
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
+    try {
+      jsonReader = new JsonReader(new FileReader(filePath));
     } catch (IOException e1) {
       e1.printStackTrace();
     }
