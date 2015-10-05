@@ -19,11 +19,15 @@ import raijin.logic.api.Logic;
 
 public class Raijin extends Application {
 	private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
+	private static final String INTRO_LAYOUT_FXML_LOCATION = "resource/layout/IntroLayout.fxml";
+	
 	private static final String NO_DIRECTORY_SELECTED_FEEDBACK = "I'm sorry! You have not selected "
 															+ "a directory yet. Please try again!";
-	private BorderPane rootLayout;
+	private BorderPane rootLayout, introLayout;
 	private Stage stage;
+	private Scene workingScene, introScene;
 	private Logic logic;
+	private IntroController introController;
 	
 	public static void main(String[] args) {
 	  launch(args);
@@ -32,21 +36,16 @@ public class Raijin extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     /*Adding fxml */
-    initRootLayout();
     initPrimaryStage(stage);
     initLogic();
+    decideScene();
     
-    addDisplayController(this);
-    addInputController(this);
-
-    ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
+    this.stage.show();
   }
 
   private void initPrimaryStage(Stage stage) {
 	this.stage = stage;
 	this.stage.setTitle("Welcome to Raijin");
-    this.stage.setScene(new Scene(rootLayout));
-    this.stage.show();
   }
 
   private void initRootLayout() {
@@ -60,17 +59,39 @@ public class Raijin extends Application {
  
   private void initLogic() throws FileNotFoundException {
 	  logic = new Logic(this);
-	  System.out.println(logic.isFirstTime());
-	  if (logic.isFirstTime()) {
-		  DirectoryChooser directoryChooser = new DirectoryChooser();
-		  File selectedDirectory = directoryChooser.showDialog(this.stage);
+  }
+  
+  private void initIntroLayout() {
+	  FXMLLoader loader = new FXMLLoader(getClass().getResource(INTRO_LAYOUT_FXML_LOCATION));
+	  loader.setController(introController);
+	  loader.setRoot(introController);
 	  
-		  if (selectedDirectory == null) {
-			  ((InputController) rootLayout.getBottom()).setFeedback(NO_DIRECTORY_SELECTED_FEEDBACK);
-		  } else {
-			  logic.setChosenUserStorage(selectedDirectory.getAbsolutePath());
-		  }
-	  }
+	  try {
+			introLayout = loader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+  }
+  
+  public void initMainLayout() {
+	  initRootLayout();
+  	  addDisplayController(this);
+      addInputController(this);
+      ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
+  
+      this.stage.setScene(new Scene(rootLayout));
+  }
+  
+  public void decideScene() {
+	 
+	  if (logic.isFirstTime()) {
+		  introController = new IntroController(this, logic, stage);
+		  initIntroLayout();
+	
+		  this.stage.setScene(new Scene(introLayout));
+	  } else {
+		  initMainLayout();
+	  }  
   }
   
   /**
