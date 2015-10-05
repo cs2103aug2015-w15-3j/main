@@ -72,6 +72,7 @@ public class TasksManager {
   public void addCompletedTask(Task task) {
     completedTasks.put(task.getId(), task);
     IDManager.getIdManager().returnId(task.getId());
+    pendingTasks.remove(task.getId());
   }
 
   public Task getPendingTask(int id) throws NoSuchTaskException {
