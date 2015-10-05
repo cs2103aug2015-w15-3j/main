@@ -13,6 +13,7 @@ import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.FailedToParseException;
 import raijin.common.exception.UnableToExecuteCommandException;
+import raijin.common.utils.EventBus;
 import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
 import raijin.logic.parser.ParsedInput;
@@ -37,6 +38,7 @@ public class Logic {
   private ParserInterface parser;
   private Session session;
   private Logger logger;
+  private EventBus eventBus;
   
   public Logic(Application raijin) throws FileNotFoundException {
     initAssets(raijin);                   //Initialize required components
@@ -49,6 +51,7 @@ public class Logic {
     parser = new SimpleParser();
     session = Session.getSession();
     logger = RaijinLogger.getLogger();
+    eventBus = EventBus.getEventBus();
   }
 
   /*Initialize list of tasks*/

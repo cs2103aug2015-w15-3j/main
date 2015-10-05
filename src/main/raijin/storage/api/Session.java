@@ -4,10 +4,15 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import org.slf4j.Logger;
+
+import com.google.common.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.exception.StorageFailureException;
+import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
 import raijin.storage.handler.StorageHandler;
 
@@ -15,6 +20,7 @@ public class Session {
 
   private static Session session = new Session();
   private Logger logger;
+  private TasksManager tasksManager;
 
   public String programDirectory;      
   public String storageDirectory;
@@ -35,10 +41,12 @@ public class Session {
   /*Needed to run regardless of user's choice of storage location*/
   void init() {
     logger = RaijinLogger.getLogger();
+    tasksManager = TasksManager.getManager();
     try {
       String basePath = StorageHandler.getJarPath() + Constants.NAME_USER_FOLDER;
       setupBase(basePath);
       setupStorage();
+      initTasksManager();
     } catch (UnsupportedEncodingException e) {
       throw new StorageFailureException("Unsupported Encoding while getting program path", e);
     } 
@@ -140,6 +148,15 @@ public class Session {
       throw new StorageFailureException(String.format("Cannot get storage directory from file %s",
           baseConfigPath), e);
     }
+  }
+  
+  @SuppressWarnings("serial")
+  void initTasksManager() {
+    JsonReader reader = StorageHandler.getJsonReaderFromFile(dataPath);
+    TasksManager retrievedData = StorageHandler.readFromJson(reader, 
+        new TypeToken<TasksManager>() {}.getType());
+    tasksManager.sync(retrievedData);
+    IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
   }
 
 }

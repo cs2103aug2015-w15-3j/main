@@ -6,6 +6,7 @@ import raijin.common.datatypes.DisplayContainer;
 import raijin.common.datatypes.ListDisplayContainer;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NoSuchTaskException;
+import raijin.common.utils.EventBus;
 import raijin.common.utils.IDManager;
 
 /**
@@ -17,7 +18,6 @@ public class TasksManager {
   private static TasksManager tasksManager;
   private HashMap<Integer, Task> pendingTasks = new HashMap<Integer, Task>();
   private HashMap<Integer, Task> completedTasks = new HashMap<Integer, Task>();
-  private DisplayContainer displayedTasks = new ListDisplayContainer();
 
   private TasksManager() {}
 
@@ -52,6 +52,15 @@ public class TasksManager {
     return completedTasks.isEmpty();
   }
 
+  /*Sync pending and completed tasks to target tasksManager retrieved from Json file*/
+  public void sync(TasksManager target) {
+    //@TODO fix checking null
+    if (null != target) {
+      pendingTasks = target.getPendingTasks();
+      completedTasks = target.getCompletedTasks();
+    }
+  }
+
   //===========================================================================
   // Command related functions
   //===========================================================================
@@ -66,6 +75,7 @@ public class TasksManager {
   }
 
   public Task getPendingTask(int id) throws NoSuchTaskException {
+    DisplayContainer displayedTasks = EventBus.getEventBus().getDisplayedTasks();
     int taskId = displayedTasks.isEmpty() ? id : displayedTasks.getRealId(id);
     handleUnknownTask(pendingTasks, taskId);
     return pendingTasks.get(taskId);
