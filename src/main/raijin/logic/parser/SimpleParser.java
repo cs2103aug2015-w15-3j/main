@@ -113,14 +113,14 @@ public class SimpleParser implements ParserInterface {
               endDate = wordsOfInput[i+4];
             } else {
               throw new IllegalCommandArgumentException("Invalid end date format.",
-                                                        Arrays.asList(wordsOfInput)); 
+                                                        Constants.CommandParam.DATETIME); 
             }
             if (wordsOfInput[i+5].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+5];
             } else {
               throw new IllegalCommandArgumentException("Invalid end time format.",
-                                                        Arrays.asList(wordsOfInput)); 
+                                                        Constants.CommandParam.DATETIME); 
             } 
           } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && 
               wordsOfInput[i+3].toLowerCase().matches(Constants.DATE_END_PREPOSITION)) {
@@ -130,7 +130,7 @@ public class SimpleParser implements ParserInterface {
               endTime = wordsOfInput[i+4];
             } else {
               throw new IllegalCommandArgumentException("Invalid end time format.",
-                                                        Arrays.asList(wordsOfInput)); 
+                                                        Constants.CommandParam.DATETIME); 
             } 
           }
         } else if (wordsOfInput[i+1].matches(timePattern)) {
@@ -180,7 +180,7 @@ public class SimpleParser implements ParserInterface {
       builder.id(Integer.parseInt(wordsOfInput[1]));
     } catch (NumberFormatException e) {
       throw new IllegalCommandArgumentException("Invalid task number format.",
-                                                Arrays.asList(wordsOfInput));
+                                                Constants.CommandParam.ID);
     }
     
     // Deletes taskID from wordsOfInput and makes use of parseAddTask() method.
@@ -203,7 +203,7 @@ public class SimpleParser implements ParserInterface {
       builder.id(Integer.parseInt(wordsOfInput[1]));
     } catch (NumberFormatException e) {
       throw new IllegalCommandArgumentException("Invalid task number format.", 
-                                                Arrays.asList(wordsOfInput));
+                                                Constants.CommandParam.ID);
     }
   }
   
@@ -217,7 +217,7 @@ public class SimpleParser implements ParserInterface {
       builder.id(Integer.parseInt(wordsOfInput[1]));
     } catch (NumberFormatException e) {
       throw new IllegalCommandArgumentException("Invalid task number format.",
-                                                Arrays.asList(wordsOfInput));
+                                                Constants.CommandParam.ID);
     }
   }
   
