@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 public class StorageHandlerTest {
 
   @Rule public TemporaryFolder tmpFolder = new TemporaryFolder();
+
   @Test
   public void testCreateDirectory() throws IOException {
     String path = tmpFolder.getRoot().getAbsolutePath();
@@ -77,4 +78,13 @@ public class StorageHandlerTest {
     assertEquals(expectedStorageLocation, storageLocation);
   }
 
+  @Test
+  public void sanitizePath_WindowPath_ReturnInvariantPath() {
+    String input = "/D:/LingJie Work/Workspace/Repo/main/target/classes/data";
+    String expected = "D:/LingJie Work/Workspace/Repo/main/target/classes/data";
+    
+    String sanitized = StorageHandler.sanitizePath(input);
+    assertEquals(expected, sanitized);
+  }
+  
 }
