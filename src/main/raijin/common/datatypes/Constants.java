@@ -34,7 +34,8 @@ public class Constants {
   public static final String FEEDBACK_ERROR_FAILEDPARSING = "Failed to parse \"%s\"";
   public static final String FEEDBACK_ERROR_FAILEDCOMMAND = "Failed to execute %s command";
   
-  public static final String HELP_MESSAGE = "\nADD <Task Name>\nAdds a task with a specified name.\n"
+  public static final String HELP_MESSAGE = "\n<----==== Raijin to the Rescue! ====---->"
+      + "\nADD <Task Name>\nAdds a task with a specified name.\n"
       + "ADD <Task Name> <DateTime>\nAdds a task with a specified name and timeline*.\n"
       + "\nEDIT <Task ID> <Task Name>\nEdits a task's name based on its associated ID.\n"
       + "EDIT <Task ID> <DateTime>\nEdits a task's timeline* based on its associated ID.\n"
