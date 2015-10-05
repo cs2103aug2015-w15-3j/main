@@ -130,6 +130,11 @@ public class StorageHandler {
   /*Deserializes object from JSON*/
   public static <T> T readFromJson(JsonReader jsonReader, Type typeOfSrc) {
     T deserializedObject = new Gson().fromJson(jsonReader, typeOfSrc);
+    try {
+      jsonReader.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     return deserializedObject;
   }
 
