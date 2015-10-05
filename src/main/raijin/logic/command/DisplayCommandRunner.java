@@ -105,9 +105,15 @@ public class DisplayCommandRunner extends CommandRunner {
   }
   
   public boolean isRelevantDate(DateTime cmdDateTime, DateTime taskDateTime) {
-	  LocalDate taskStart = taskDateTime.getStartDate();
-	  LocalDate taskEnd = taskDateTime.getEndDate();
-	  
+	  LocalDate taskStart;
+	  LocalDate taskEnd;
+	 
+	  try {
+		  taskStart = taskDateTime.getStartDate();
+		  taskEnd = taskDateTime.getEndDate();
+	  } catch (NullPointerException e) {
+		  return false;
+	  }
 	  LocalDate date = cmdDateTime.getStartDate();
 	  
 	  if (taskStart.isBefore(date) && taskEnd.isAfter(date)) {
