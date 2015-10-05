@@ -19,8 +19,12 @@ import raijin.storage.api.TasksManager;
 
 public class DisplayCommandRunner extends CommandRunner {
 	
-  private static final String PENDING = "p";
-  private static final String COMPLETED = "c";
+  private static final String TYPE_PENDING = "p";
+  private static final String TYPE_COMPLETED = "c";
+  private static final String MESSAGE_DISPLAY = "Displaying: ";
+  private static final String MESSAGE_PENDING = "pending tasks";
+  private static final String MESSAGE_COMPLETED = "completed tasks";
+  private static final String MESSAGE_SUCCESS = "Success";
   
   private DateTime cmdDateTime;
   private DateTime taskDateTime;
@@ -57,8 +61,8 @@ public class DisplayCommandRunner extends CommandRunner {
 	  String message = "";
 	  String feedbackMessage = "";
 	  
-	  if (cmd.getDisplayOptions().equals(PENDING)) {
-		  feedbackMessage = "pending tasks";
+	  if (cmd.getDisplayOptions().equals(TYPE_PENDING)) {
+		  feedbackMessage = MESSAGE_PENDING;
 		  for (int i=0; i<pending.size(); i++) {
 			  taskDateTime = pending.get(i).getDateTime();
 			  
@@ -70,14 +74,15 @@ public class DisplayCommandRunner extends CommandRunner {
 		  
 		  if (isEmpty) {
 			  // TODO add in "you have no pending tasks message", by creating a new task?
+			  eventBus.setCurrentTasks("You have no pending tasks!");
 		  } else {
 	          eventBus.setCurrentTasks(relevant);
 		  }
 		  
 	      message = "Tasks pending for " + dateFormat.format(date);
 		  
-	  } else if (cmd.getDisplayOptions().equals(COMPLETED)) {
-		  feedbackMessage = "completed tasks";
+	  } else if (cmd.getDisplayOptions().equals(TYPE_COMPLETED)) {
+		  feedbackMessage = MESSAGE_COMPLETED;
 		  for (int i=0; i<completed.size(); i++) {
 			  isEmpty = false;
 			  relevant.add(completed.get(i));
@@ -87,6 +92,7 @@ public class DisplayCommandRunner extends CommandRunner {
 		  
 		  if (isEmpty) {
 			  // TODO add message "You have no completed tasks!"
+			  eventBus.setCurrentTasks("You have no completed tasks!");
 		  } else {
 			  eventBus.setCurrentTasks(relevant);
 			  //note: need to give this list somewhere
@@ -95,7 +101,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	  
 	  eventBus.setHeadMessage(message);
 	  
-    return new Status("Displaying " + feedbackMessage, "success");
+    return new Status(MESSAGE_DISPLAY + feedbackMessage, MESSAGE_SUCCESS);
   }
   
   public boolean isRelevantDate(DateTime cmdDateTime, DateTime taskDateTime) {
