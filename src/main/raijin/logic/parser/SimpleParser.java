@@ -8,8 +8,13 @@ package raijin.logic.parser;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
+import raijin.common.exception.IllegalCommandException;
+import raijin.common.exception.IllegalCommandArgumentException;
+import raijin.common.exception.FailedToParseException;
 
 public class SimpleParser implements ParserInterface {
   
@@ -27,30 +32,38 @@ public class SimpleParser implements ParserInterface {
    * @return            ParsedInput object based on user input.
    * @throws Exception  When invalid input is detected.
    */
-  public ParsedInput parse(String userInput) throws IllegalArgumentException {
+  public ParsedInput parse(String userInput) throws FailedToParseException {
     wordsOfInput = userInput.split(" ");
     
-    if (isFirstWord("add")) {
-      builder = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD);
-      parseAddTask();
-    } else if (isFirstWord("edit")) {
-      builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EDIT);
-      parseEditTask();
-    } else if (isFirstWord("delete")) {
-      builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DELETE);  
-      parseDeleteTask();
-    } else if (isFirstWord("done")) {
-      builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DONE); 
-      parseDoneTask();
-    } else if (isFirstWord("undo")) {
-      builder = new ParsedInput.ParsedInputBuilder(Constants.Command.UNDO);
-    } else if (isFirstWord("display")) {
-      builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DISPLAY);
-      parseDisplay();
-    } else if (isFirstWord("help")) {
-      builder = new ParsedInput.ParsedInputBuilder(Constants.Command.HELP);
-    } else if (isFirstWord("exit")) {
-      builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT);
+    try {
+      if (isFirstWord("add")) {
+        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD);
+        parseAddTask();
+      } else if (isFirstWord("edit")) {
+        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EDIT);
+        parseEditTask();
+      } else if (isFirstWord("delete")) {
+        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DELETE);  
+        parseDeleteTask();
+      } else if (isFirstWord("done")) {
+        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DONE); 
+        parseDoneTask();
+      } else if (isFirstWord("undo")) {
+        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.UNDO);
+      } else if (isFirstWord("display")) {
+        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DISPLAY);
+        parseDisplay();
+      } else if (isFirstWord("help")) {
+        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.HELP);
+      } else if (isFirstWord("exit")) {
+        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT);
+      } else {
+        throw new IllegalCommandException("Invalid command input.", wordsOfInput[0]);
+      }
+    } catch (IllegalCommandException e1) {
+      throw new FailedToParseException(e1.getMessage(), userInput, e1);
+    } catch (IllegalCommandArgumentException e2) {
+      throw new FailedToParseException(e2.getMessage(), userInput, e2);
     }
      
     return builder.createParsedInput();
@@ -70,9 +83,9 @@ public class SimpleParser implements ParserInterface {
    * Method that parses the input for any date or time inputs when task is added.
    * Creates appropriate ParseInputBuilders accordingly.
    * 
-   * @throws Exception  When invalid input command is detected.
+   * @throws    IllegalCommandArgumentException
    */
-  public void parseAddTask() throws IllegalArgumentException {
+  public void parseAddTask() throws IllegalCommandArgumentException {
     boolean containsStartDate = false;
     boolean containsEndDate = false;
     boolean containsStartTime = false;
@@ -99,13 +112,15 @@ public class SimpleParser implements ParserInterface {
               containsEndDate = true;
               endDate = wordsOfInput[i+4];
             } else {
-              throw new IllegalArgumentException("Invalid input! Proper end date format expected."); 
+              throw new IllegalCommandArgumentException("Invalid end date format.",
+                                                        Arrays.asList(wordsOfInput)); 
             }
             if (wordsOfInput[i+5].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+5];
             } else {
-              throw new IllegalArgumentException("Invalid input! Proper end time format expected."); 
+              throw new IllegalCommandArgumentException("Invalid end time format.",
+                                                        Arrays.asList(wordsOfInput)); 
             } 
           } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && 
               wordsOfInput[i+3].toLowerCase().matches(Constants.DATE_END_PREPOSITION)) {
@@ -114,7 +129,8 @@ public class SimpleParser implements ParserInterface {
               containsEndTime = true;
               endTime = wordsOfInput[i+4];
             } else {
-              throw new IllegalArgumentException("Invalid input! Proper end time format expected."); 
+              throw new IllegalCommandArgumentException("Invalid end time format.",
+                                                        Arrays.asList(wordsOfInput)); 
             } 
           }
         } else if (wordsOfInput[i+1].matches(timePattern)) {
@@ -157,13 +173,14 @@ public class SimpleParser implements ParserInterface {
    * Method that parses the input for any modification users want to make for a specific task.
    * Able to modify name, date, or time.
    * 
-   * @throws IllegalArgumentException
+   * @throws IllegalCommandArgumentException
    */
-  public void parseEditTask() throws IllegalArgumentException {
+  public void parseEditTask() throws IllegalCommandArgumentException {
     try {
       builder.id(Integer.parseInt(wordsOfInput[1]));
     } catch (NumberFormatException e) {
-      throw new IllegalArgumentException("Please enter valid task number!");
+      throw new IllegalCommandArgumentException("Invalid task number format.",
+                                                Arrays.asList(wordsOfInput));
     }
     
     // Deletes taskID from wordsOfInput and makes use of parseAddTask() method.
@@ -179,26 +196,28 @@ public class SimpleParser implements ParserInterface {
   /**
    * Method that deletes a task based on the taskID input by user.
    * 
-   * @throws IllegalArgumentException
+   * @throws IllegalCommandArgumentException
    */
-  public void parseDeleteTask() throws IllegalArgumentException {
+  public void parseDeleteTask() throws IllegalCommandArgumentException {
     try {
       builder.id(Integer.parseInt(wordsOfInput[1]));
     } catch (NumberFormatException e) {
-      throw new IllegalArgumentException("Please enter valid task number!");
+      throw new IllegalCommandArgumentException("Invalid task number format.", 
+                                                Arrays.asList(wordsOfInput));
     }
   }
   
   /**
    * Method that marks a task as done based on taskID input by user.
    * 
-   * @throws IllegalArgumentException
+   * @throws IllegalCommandArgumentException
    */
-  public void parseDoneTask() throws IllegalArgumentException {
+  public void parseDoneTask() throws IllegalCommandArgumentException {
     try {
       builder.id(Integer.parseInt(wordsOfInput[1]));
     } catch (NumberFormatException e) {
-      throw new IllegalArgumentException("Please enter valid task number!");
+      throw new IllegalCommandArgumentException("Invalid task number format.",
+                                                Arrays.asList(wordsOfInput));
     }
   }
   
@@ -206,9 +225,9 @@ public class SimpleParser implements ParserInterface {
    * Method that parses display type input by user and responds accordingly.
    * Currently allows for "p", "c" or dates for its options.
    * 
-   * @throws IllegalArgumentException
+   * @throws IllegalCommandArgumentException
    */
-  public void parseDisplay() throws IllegalArgumentException {
+  public void parseDisplay() throws IllegalCommandArgumentException {
     String displayType = "p";
     for (int i = 1; i < wordsOfInput.length; i++) {
       if (wordsOfInput[i].matches(datePattern)) {
@@ -217,16 +236,18 @@ public class SimpleParser implements ParserInterface {
         displayType = wordsOfInput[i];
       }
     }
+    // TO ADD ADDITIONAL FEATURES HERE.
     builder.displayOptions(displayType);
   }
   
   /**
    * Method that formats date into the proper dd/mm/yyyy format.
    * Date will be assumed to be next year if (year isn't input) & (current date is later).
+   * Assumption: Date string has already been checked to be valid.
    * 
    * @param date    date String that hasn't been formatted.
    * @param type    Type of formatting: 0 for add/edit, 1 for display
-   * @return        
+   * @return        Date string formatted to proper dd/mm/yyyy format.  
    */
   public String formatDate(String date, int type) {
     if (date.length() == 0) {
@@ -271,10 +292,10 @@ public class SimpleParser implements ParserInterface {
   
   /**
    * Method that formats time to a proper format that will allow LocalTime parsing.
+   * Assumes that the time format has already been checked to be valid (24h timing).
    * 
    * @param time    String of time input by user.
-   * @return        The proper time format after formatting the string input.
-   * @throws        IllegalArgumentException      
+   * @return        The proper time format after formatting the string input.     
    */
   public static String formatTime(String time) {
     if (time.length() == 3) {

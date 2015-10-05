@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
+import raijin.common.exception.FailedToParseException;
 
 public class ParsedInputTest {
 
@@ -23,7 +24,7 @@ public class ParsedInputTest {
   }
   
   @Test
-  public void parseAddCommandInSimpleParser_WithStandardDate() {
+  public void parseAddCommandInSimpleParser_WithStandardDate() throws FailedToParseException {
     SimpleParser parser = new SimpleParser();
     ParsedInput addCommand = parser.parse("add finish parser by 26/12/2015");
     assertEquals("finish parser", addCommand.getName());
@@ -31,7 +32,7 @@ public class ParsedInputTest {
   }
   
   @Test
-  public void parseAddCommandInSimpleParser_WithInformalDate() {
+  public void parseAddCommandInSimpleParser_WithInformalDate() throws FailedToParseException {
     SimpleParser parser = new SimpleParser();
     ParsedInput addCommand = parser.parse("add finish something by 27/12");
     assertEquals("finish something", addCommand.getName());
@@ -61,7 +62,7 @@ public class ParsedInputTest {
   }
   
   @Test
-  public void parseEditCommandInSimpleParser() {
+  public void parseEditCommandInSimpleParser() throws FailedToParseException {
     SimpleParser parser = new SimpleParser();
     ParsedInput editCommand = parser.parse("edit 12 something");
     assertEquals("something", editCommand.getName());
@@ -81,21 +82,21 @@ public class ParsedInputTest {
   }
   
   @Test
-  public void parseDeleteCommandInSimpleParser() {
+  public void parseDeleteCommandInSimpleParser() throws FailedToParseException {
     SimpleParser parser = new SimpleParser();
     ParsedInput deleteCommand = parser.parse("delete 12");
     assertEquals(12, deleteCommand.getId());
   }
   
   @Test
-  public void parseDoneCommandInSimpleParser() {
+  public void parseDoneCommandInSimpleParser() throws FailedToParseException {
     SimpleParser parser = new SimpleParser();
     ParsedInput doneCommand = parser.parse("done 28");
     assertEquals(28, doneCommand.getId());
   }
   
   @Test
-  public void parseDisplayCommandInSimpleParser() {
+  public void parseDisplayCommandInSimpleParser() throws FailedToParseException {
     SimpleParser parser = new SimpleParser();
     ParsedInput displayCommand = parser.parse("display c");
     assertEquals("c", displayCommand.getDisplayOptions());
@@ -107,6 +108,10 @@ public class ParsedInputTest {
     displayCommand = parser.parse("display 1.1");
     assertEquals("p", displayCommand.getDisplayOptions());
     assertEquals("2015-01-01", displayCommand.getDateTime().getStartDate().toString());
+    
+    displayCommand = parser.parse("display 30/10");
+    assertEquals("p", displayCommand.getDisplayOptions());
+    assertEquals("2015-10-30", displayCommand.getDateTime().getStartDate().toString());
   }
 
 }
