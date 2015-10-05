@@ -69,10 +69,12 @@ public class Logic {
       return commandDispatcher.delegateCommand(parsed);
     } catch (FailedToParseException e) {
       logger.error(e.getMessage(), e);
-      return new Status(Constants.FEEDBACK_ERROR_FAILEDPARSING);
+      return new Status(String.format(Constants.FEEDBACK_ERROR_FAILEDPARSING,
+          e.getUserInput()));
     } catch (UnableToExecuteCommandException e) {
       logger.error(e.getMessage(), e);
-      return new Status(Constants.FEEDBACK_ERROR_FAILEDCOMMAND);
+      return new Status(String.format(Constants.FEEDBACK_ERROR_FAILEDCOMMAND,
+          e.getCommand()));
     } 
   }
 
