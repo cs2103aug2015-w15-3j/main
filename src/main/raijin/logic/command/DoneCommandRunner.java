@@ -34,6 +34,8 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
   public void undo() throws UnableToExecuteCommandException {
     try {
 	  tasksManager.deleteCompletedTask(id);
+	  task.resetId();
+	  tasksManager.addPendingTask(task);
     } catch (NoSuchTaskException e) {
       wrapLowerLevelException(e, Constants.Command.DONE);
     }
