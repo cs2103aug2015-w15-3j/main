@@ -55,8 +55,10 @@ public class DisplayCommandRunner extends CommandRunner {
 	  
 	  Date date = Date.from(cmdDateTime.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 	  String message = "";
+	  String feedbackMessage = "";
 	  
 	  if (cmd.getDisplayOptions().equals(PENDING)) {
+		  feedbackMessage = "pending tasks";
 		  for (int i=0; i<pending.size(); i++) {
 			  taskDateTime = pending.get(i).getDateTime();
 			  
@@ -75,7 +77,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	      message = "Tasks pending for " + dateFormat.format(date);
 		  
 	  } else if (cmd.getDisplayOptions().equals(COMPLETED)) {
-		  
+		  feedbackMessage = "completed tasks";
 		  for (int i=0; i<completed.size(); i++) {
 			  isEmpty = false;
 			  relevant.add(completed.get(i));
@@ -93,7 +95,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	  
 	  eventBus.setHeadMessage(message);
 	  
-    return new Status("Displaying", "success");
+    return new Status("Displaying " + feedbackMessage, "success");
   }
   
   public boolean isRelevantDate(DateTime cmdDateTime, DateTime taskDateTime) {
