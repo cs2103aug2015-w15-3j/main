@@ -30,6 +30,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
   }
 
   public void undo() throws UnableToExecuteCommandException {
+    logger.info("Undoing task id {} with content {}", currentTask.getId(), currentTask.getName());
     try {
       tasksManager.deletePendingTask(currentTask.getId());
     } catch (NoSuchTaskException e) {
@@ -39,6 +40,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
 
   public void redo() {
     currentTask.resetId();  //Previous id may be used by other task
+    logger.info("Re-adding task id {} with content {}", currentTask.getId(), currentTask.getName());
     tasksManager.addPendingTask(currentTask);
   }
 

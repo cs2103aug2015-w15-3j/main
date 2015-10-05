@@ -23,6 +23,13 @@ public class History {
     tasksManager = TasksManager.getManager();
   }
   
+  /*Helper to write changes to file and trigger view change*/
+  void reflectChanges() {
+    EventBus.getEventBus().setCurrentTasks(new ArrayList<Task>(
+        tasksManager.getPendingTasks().values()));
+    Session.getSession().commit();
+  }
+
   public static History getHistory() {
     return history;
   }
@@ -45,15 +52,14 @@ public class History {
 
   public void pushCommand(UndoableRedoable commandRunner) {
     undoStack.push(commandRunner);
-    EventBus.getEventBus().setCurrentTasks(new ArrayList<Task>(
-        tasksManager.getPendingTasks().values()));
-    Session.getSession().commit();  //Write changes to temp file each time an undoable command is called
+    reflectChanges();
   }
 
   /*Calling class must catch EmptyStackException*/
   public void undo() throws UnableToExecuteCommandException {
     UndoableRedoable undoCommand = undoStack.pop();
     undoCommand.undo();
+    reflectChanges();
     redoStack.add(undoCommand);     //Add removed command to redo stack
   }
 
@@ -61,6 +67,7 @@ public class History {
   public void redo() throws UnableToExecuteCommandException {
     UndoableRedoable redoCommand = redoStack.pop();
     redoCommand.redo();
+    reflectChanges();
     undoStack.add(redoCommand);     //Add command to redo stack
   }
   
