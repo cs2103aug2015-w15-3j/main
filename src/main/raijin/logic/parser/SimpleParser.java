@@ -9,7 +9,6 @@ package raijin.logic.parser;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.exception.IllegalCommandException;
@@ -50,6 +49,8 @@ public class SimpleParser implements ParserInterface {
         parseDoneTask();
       } else if (isFirstWord("undo")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.UNDO);
+      } else if (isFirstWord("redo")) {
+        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.REDO);
       } else if (isFirstWord("display")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DISPLAY);
         parseDisplay();
@@ -158,15 +159,54 @@ public class SimpleParser implements ParserInterface {
     DateTime dateTime = null;
     if (containsStartDate && containsStartTime && containsEndDate && containsEndTime) {
       dateTime = new DateTime(startDate, startTime, endDate, endTime);
+      checkStartEndDate(startDate, endDate, dateTime);
     } else if (containsStartDate && containsStartTime && containsEndTime) {
       dateTime = new DateTime(startDate, startTime, endTime);
+      checkStartDate(startDate, dateTime);
     } else if (containsStartDate && containsStartTime) {
       dateTime = new DateTime(startDate, startTime);
+      checkStartDate(startDate, dateTime);
     } else if (containsStartDate) {
       dateTime = new DateTime(startDate);
+      checkStartDate(startDate, dateTime);
     }
     
     builder.name(name).dateTime(dateTime);
+  }
+
+  /**
+   * Method that checks if start and end date exists on the calendar.
+   * 
+   * @param startDate       Start date in dd/mm/yyyy format.
+   * @param endDate         End date in dd/mm/yyyy format.
+   * @param dateTime        DateTime object created from both startDate & endDate.
+   * @throws                IllegalCommandArgumentException
+   */
+  public void checkStartEndDate(String startDate, String endDate, DateTime dateTime)
+      throws IllegalCommandArgumentException {
+    int startDay = Integer.parseInt(startDate.split(dateOperator)[0]);
+    int endDay = Integer.parseInt(endDate.split(dateOperator)[0]);
+    if (dateTime.getStartDate().getDayOfMonth() != startDay ||
+        dateTime.getEndDate().getDayOfMonth() != endDay) {
+      throw new IllegalCommandArgumentException(
+                "Date doesn't exist.", Constants.CommandParam.DATETIME);
+    }
+  }
+  
+  /**
+   * Method that checks if start date exists on the calendar.
+   * 
+   * @param startDate       Start date in dd/mm/yyyy format.
+   * @param dateTime        DateTime object created from startDate.
+   * @throws                IllegalCommandArgumentException
+   */
+  public void checkStartDate(String startDate, DateTime dateTime)
+      throws IllegalCommandArgumentException {
+    int startDay = Integer.parseInt(startDate.split(dateOperator)[0]);
+    if (dateTime.getStartDate().getDayOfMonth() != startDay) {
+      throw new IllegalCommandArgumentException(
+          "Date doesn't exist.", Constants.CommandParam.DATETIME);
+    }
   }
   
   /**
@@ -232,7 +272,7 @@ public class SimpleParser implements ParserInterface {
     for (int i = 1; i < wordsOfInput.length; i++) {
       if (wordsOfInput[i].matches(datePattern)) {
         builder.dateTime(new DateTime(formatDate(wordsOfInput[i], 1)));
-      } else if (wordsOfInput[i].matches("p|c")){
+      } else if (wordsOfInput[i].matches("p|c|a")){
         displayType = wordsOfInput[i];
       }
     }

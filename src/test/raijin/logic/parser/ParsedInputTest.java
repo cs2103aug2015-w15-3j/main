@@ -8,11 +8,16 @@ import org.junit.Test;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.exception.FailedToParseException;
+import raijin.common.exception.IllegalCommandArgumentException;
 
 public class ParsedInputTest {
 
+  private SimpleParser parser;
+  
   @Before
-  public void setUp() throws Exception {}
+  public void setUp() throws Exception {
+    parser = new SimpleParser();
+  }
 
   @Test
   public void parseAddCommand_ReturnParsedInput() {
@@ -25,7 +30,6 @@ public class ParsedInputTest {
   
   @Test
   public void parseAddCommandInSimpleParser_WithStandardDate() throws FailedToParseException {
-    SimpleParser parser = new SimpleParser();
     ParsedInput addCommand = parser.parse("add finish parser by 26/12/2015");
     assertEquals("finish parser", addCommand.getName());
     assertEquals("2015-12-26", addCommand.getDateTime().getStartDate().toString());
@@ -33,7 +37,6 @@ public class ParsedInputTest {
   
   @Test
   public void parseAddCommandInSimpleParser_WithInformalDate() throws FailedToParseException {
-    SimpleParser parser = new SimpleParser();
     ParsedInput addCommand = parser.parse("add finish something by 27/12");
     assertEquals("finish something", addCommand.getName());
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
@@ -63,7 +66,6 @@ public class ParsedInputTest {
   
   @Test
   public void parseEditCommandInSimpleParser() throws FailedToParseException {
-    SimpleParser parser = new SimpleParser();
     ParsedInput editCommand = parser.parse("edit 12 something");
     assertEquals("something", editCommand.getName());
     
@@ -83,21 +85,18 @@ public class ParsedInputTest {
   
   @Test
   public void parseDeleteCommandInSimpleParser() throws FailedToParseException {
-    SimpleParser parser = new SimpleParser();
     ParsedInput deleteCommand = parser.parse("delete 12");
     assertEquals(12, deleteCommand.getId());
   }
   
   @Test
   public void parseDoneCommandInSimpleParser() throws FailedToParseException {
-    SimpleParser parser = new SimpleParser();
     ParsedInput doneCommand = parser.parse("done 28");
     assertEquals(28, doneCommand.getId());
   }
   
   @Test
   public void parseDisplayCommandInSimpleParser() throws FailedToParseException {
-    SimpleParser parser = new SimpleParser();
     ParsedInput displayCommand = parser.parse("display c");
     assertEquals("c", displayCommand.getDisplayOptions());
     
@@ -116,6 +115,17 @@ public class ParsedInputTest {
     displayCommand = parser.parse("display 30/2");
     assertEquals("p", displayCommand.getDisplayOptions());
     assertEquals("2015-02-28", displayCommand.getDateTime().getStartDate().toString());
+  }
+  
+  @Test(expected=IllegalCommandArgumentException.class)
+  public void testCheckStartDate() throws IllegalCommandArgumentException {
+    parser.checkStartDate("30/02/2015", new DateTime("30/02/2015"));
+  }
+  
+  @Test(expected=IllegalCommandArgumentException.class)
+  public void testCheckStartEndDate() throws IllegalCommandArgumentException {
+    parser.checkStartEndDate("29/02/2015", "30/02/2015", 
+        new DateTime("29/02/2015", "0800", "30/02/2015", "1000"));
   }
 
 }
