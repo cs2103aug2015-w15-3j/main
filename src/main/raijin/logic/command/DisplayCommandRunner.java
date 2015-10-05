@@ -7,18 +7,15 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.apache.commons.lang.RandomStringUtils;
-
-import javafx.scene.control.ListView;
 import raijin.common.datatypes.DateTime;
-import raijin.common.datatypes.ListDisplayContainer;
+//import raijin.common.datatypes.ListDisplayContainer;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.EventBus;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.TasksManager;
-import raijin.ui.DisplayController;
+//import raijin.ui.DisplayController;
 
 public class DisplayCommandRunner extends CommandRunner {
 	
@@ -32,7 +29,6 @@ public class DisplayCommandRunner extends CommandRunner {
   private ArrayList<Task> pending;
   private ArrayList<Task> completed;
   private ArrayList<Task> relevant;
-  
   
   private EventBus eventBus = EventBus.getEventBus();
   
@@ -71,7 +67,7 @@ public class DisplayCommandRunner extends CommandRunner {
 		  }
 		  
 		  if (isEmpty) {
-			  // add in "you have no pending tasks message", by creating a new task?
+			  // TODO add in "you have no pending tasks message", by creating a new task?
 		  } else {
 	          eventBus.setCurrentTasks(relevant);
 		  }
@@ -88,7 +84,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	      message = "Tasks completed on " + dateFormat.format(date);
 		  
 		  if (isEmpty) {
-			  // add message "You have no completed tasks!"
+			  // TODO add message "You have no completed tasks!"
 		  } else {
 			  eventBus.setCurrentTasks(relevant);
 			  //note: need to give this list somewhere
