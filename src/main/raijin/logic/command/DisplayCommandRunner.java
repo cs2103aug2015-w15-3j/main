@@ -97,8 +97,13 @@ public class DisplayCommandRunner extends CommandRunner {
 		  */
 		  
 	  } else if (cmd.getDisplayOptions().equals(COMPLETED)) {
+		  
+		  for (int i=0; i<completed.size(); i++) {
+			  isEmpty = false;
+			  relevant.add(completed.get(i));
+		  }
 
-	      eventBus.setCurrentTasks(completed);
+	      eventBus.setCurrentTasks(relevant);
 	      
 	      message = "Tasks completed on " + dateFormat.format(date);
 	      
@@ -115,16 +120,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	  }
 	  
 	  //eventBus.setHeadMessage(RandomStringUtils.random(6));
-	  
 	  eventBus.setHeadMessage(message);
-
-	  /*
-	  // pass the cmdDateTime to displaycontroller
-	  dc.setHeadMessage(cmdDateTime);
-	  
-	  // pass this listView to displaycontroller
-	  dc.setListView(listView);
-	  */
 	  
     return new Status("Displaying", "success");
   }
