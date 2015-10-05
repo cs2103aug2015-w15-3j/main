@@ -112,6 +112,10 @@ public class ParsedInputTest {
     displayCommand = parser.parse("display 30/10");
     assertEquals("p", displayCommand.getDisplayOptions());
     assertEquals("2015-10-30", displayCommand.getDateTime().getStartDate().toString());
+    
+    displayCommand = parser.parse("display 30/2");
+    assertEquals("p", displayCommand.getDisplayOptions());
+    assertEquals("2015-02-28", displayCommand.getDateTime().getStartDate().toString());
   }
 
 }

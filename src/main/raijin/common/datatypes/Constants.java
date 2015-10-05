@@ -49,6 +49,10 @@ public class Constants {
       + "\nUNDO/REDO\nUndo a command you previously did, or redo a command you undid.";
 
   // Regex for recognizing date patterns. Available test cases at: http://fiddle.re/56t2j6
+  public static final String DATE_PATTERN = "^(0?[1-9]|[12][0-9]|3[01])(\\/|-|\\.)((0?[1-9]|1[012])"
+      + "|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)((\\/|-|\\.)(\\d{4}|\\d{2}))?$";
+
+  /*  // Loopholes: 28/29/30 October. Tried to account for leap year.
   public static final String DATE_PATTERN = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]"
       + "|(?:jan|mar|may|jul|aug|oct|dec)))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2]"
       + "|(?:jan|mar|apr|may|jun|jul|aug|sep|oct|nov|dec))\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$"
@@ -56,6 +60,7 @@ public class Constants {
       + "|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$"
       + "|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9]|(?:jan|feb|mar|apr|may|jun|jul|aug|sep))"
       + "|(?:1[0-2]|(?:oct|nov|dec)))(\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2}))?$";
+      */
   
   public static final String DATE_START_PREPOSITION = "by|at|on|during|from";
   public static final String DATE_END_PREPOSITION = "to|till|until";
