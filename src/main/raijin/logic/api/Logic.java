@@ -77,6 +77,10 @@ public class Logic {
           e.getCommand()));
     } 
   }
+  
+  public boolean isFirstTime() {
+    return session.isFirstTime;
+  }
 
 
 }
