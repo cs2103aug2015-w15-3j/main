@@ -30,7 +30,6 @@ public class DisplayCommandRunner extends CommandRunner {
   
   private ListView<String> listView;
   
-  private DisplayController dc = DisplayController.getDisplayController();
   private EventBus eventBus = EventBus.getEventBus();
 
   public Status processCommand(ParsedInput cmd) {
