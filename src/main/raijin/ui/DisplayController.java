@@ -8,6 +8,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import raijin.common.datatypes.DateTime;
 import raijin.common.utils.EventBus;
+import raijin.storage.api.TasksManager;
 
 import java.util.Date;
 import java.io.IOException;
@@ -64,6 +65,8 @@ public class DisplayController extends BorderPane {
       }
       
     });
+    
+    eventBus.initDisplayTasks(TasksManager.getManager());
 
   }
 
