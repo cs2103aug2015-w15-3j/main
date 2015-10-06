@@ -44,7 +44,8 @@ public class DisplayController extends BorderPane {
     }
 
     date = new Date();
-    headMessage = new Label("Tasks pending for " + dateFormatSplash.format(date));
+    //headMessage = new Label("Tasks pending for " + dateFormatSplash.format(date));
+    headMessage = new Label("All pending tasks");
     headMessage.setStyle("-fx-font-size: 20px; -fx-padding: 5px;");
     this.setTop(headMessage);
 
