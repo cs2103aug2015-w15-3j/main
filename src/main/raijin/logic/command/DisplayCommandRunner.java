@@ -18,11 +18,13 @@ import raijin.storage.api.TasksManager;
 //import raijin.ui.DisplayController;
 
 public class DisplayCommandRunner extends CommandRunner {
-	
-  private static final String TYPE_PENDING = "p";
-  private static final String TYPE_COMPLETED = "c";
+
+  private static final String TYPE_ALL = "a";			// display ALL PENDING
+  private static final String TYPE_PENDING = "p";		// display PENDING (for today)
+  private static final String TYPE_COMPLETED = "c";     // display COMPLETED
   private static final String FEEDBACK_DISPLAY = "Displaying: ";
-  private static final String FEEDBACK_PENDING = "pending tasks";
+  private static final String FEEDBACK_ALL_PENDING = "all pending tasks";
+  private static final String FEEDBACK_PENDING = "pending tasks for today";
   private static final String FEEDBACK_COMPLETED = "completed tasks";
   private static final String MESSAGE_SUCCESS = "Success";
   private static final String MESSAGE_NO_PENDING = "You have no pending tasks!";
@@ -82,6 +84,17 @@ public class DisplayCommandRunner extends CommandRunner {
 		  }
 		  
 	      message = "Tasks pending for " + dateFormat.format(date);
+		  
+	  } else if (cmd.getDisplayOptions().equals(TYPE_ALL)) {
+		  feedbackMessage = FEEDBACK_ALL_PENDING;
+		  
+		  if (pending.isEmpty()) {
+			  eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
+		  } else {
+			  eventBus.setCurrentTasks(pending);
+		  }
+		  
+		  message = "All current pending tasks";
 		  
 	  } else if (cmd.getDisplayOptions().equals(TYPE_COMPLETED)) {
 		  feedbackMessage = FEEDBACK_COMPLETED;
