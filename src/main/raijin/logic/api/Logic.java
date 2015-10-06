@@ -32,24 +32,20 @@ import raijin.storage.handler.StorageHandler;
  */
 public class Logic {
 
-  private TasksManager tasksManager;
   private CommandDispatcher commandDispatcher;
   private ParserInterface parser;
   private Session session;
   private Logger logger;
-  private EventBus eventBus;
   
   public Logic() throws FileNotFoundException {
-    initAssets();                   //Initialize required components
+    initAssets();                               //Initialize required components
   }
   
   private void initAssets() {
-    tasksManager = TasksManager.getManager();
     commandDispatcher = CommandDispatcher.getDispatcher();
     parser = new SimpleParser();
     session = Session.getSession();
     logger = RaijinLogger.getLogger();
-    eventBus = EventBus.getEventBus();
   }
 
   /*Initialize list of tasks*/
