@@ -69,7 +69,7 @@ public class DisplayController extends BorderPane {
     eventBus.initDisplayTasks(TasksManager.getManager());
 
   }
-
+  
   private void setHeadMessage(String newVal) {
     headMessage.setText(newVal);
   }
@@ -80,11 +80,12 @@ public class DisplayController extends BorderPane {
     headMessage.setText("Tasks pending for " + dateFormatSplash.format(date));
     this.setTop(headMessage);
   }
-
+  
+  /* TODO remove if confirm not needed.
   public void setListView(ListView<String> lv) {
     listView.getItems().clear();
     listView.setItems(lv.getItems());
     this.setCenter(listView);
-  }
+  }*/
 
 }
