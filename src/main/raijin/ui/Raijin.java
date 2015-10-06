@@ -58,7 +58,7 @@ public class Raijin extends Application {
   }
  
   private void initLogic() throws FileNotFoundException {
-	  logic = new Logic(this);
+	  logic = new Logic();
   }
   
   private void initIntroLayout() {

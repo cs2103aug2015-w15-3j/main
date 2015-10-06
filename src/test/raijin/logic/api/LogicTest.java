@@ -25,6 +25,6 @@ public class LogicTest {
 
   @Before
   public void setUp() throws Exception {
-    logic = new Logic(Mockito.mock(Raijin.class));
+    logic = new Logic();
   }
 }

@@ -43,7 +43,7 @@ public class LogicStorageIT {
 
   @BeforeClass
   public static void setUpClass() throws Exception {
-    logic = new Logic(mock(Raijin.class));
+    logic = new Logic();
     session = Session.getSession();
   }
 
