@@ -45,7 +45,6 @@ public class Session {
     tasksManager = TasksManager.getManager();
     try {
       String basePath = StorageHandler.getJarPath() + Constants.NAME_USER_FOLDER;
-      logger.info(basePath);
       setupBase(basePath);
       setupStorage();
       initTasksManager();
