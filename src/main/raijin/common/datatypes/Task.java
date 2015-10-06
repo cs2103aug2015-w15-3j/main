@@ -16,7 +16,7 @@ public class Task {
   private int id;                                                  //Unique id that describes a task
   private String name;                                             //Description of a task
   private DateTime dateTime;
-  private IDManager idManager = IDManager.getIdManager();          //To generate unique id 
+  private transient IDManager idManager = IDManager.getIdManager();          //To generate unique id 
   private Constants.Priority priority = Constants.Priority.MID;    //Default priority level to medium
   private TreeSet<String> tags = new TreeSet<String>();            //Empty tag set when initialized
 
