@@ -22,12 +22,13 @@ public class Session {
   private Logger logger;
   private TasksManager tasksManager;
 
-  public String programDirectory;      
+  String programDirectory;      
+  String userConfigPath;
+  String dataPath;
+  String tempPath;
+
   public String storageDirectory;
   public String baseConfigPath;
-  public String userConfigPath;
-  public String dataPath;
-  public String tempPath;
   public boolean isFirstTime;           //Verify if user has used this application before
   
   private Session() {
