@@ -9,14 +9,16 @@ public class DisplayUtils {
 
   public static List<String> filterName(List<Task> tasks) {
     return tasks.stream().map(
-        (Task t) -> t.getId() + " : " + t.getName() + 
-        (t.getDateTime() == null ? "" : " [" +
+        (Task t) -> t.getId() + ":" +
+        		 (t.getDateTime() == null ? "" : " [ " +
         		 String.format("%02d", t.getDateTime().getEndDate().getDayOfMonth()) 
                  + "/" 
                  + String.format("%02d", t.getDateTime().getEndDate().getMonthValue())
                  + "/" + t.getDateTime().getEndDate().getYear()
-                 + "]"
-                 )
+                 + " | "
+                 + (t.getDateTime().getStartTime() == null ? "" : t.getDateTime().getStartTime().toString())
+                 + (t.getDateTime().getEndTime() == null ? "" : " - " + t.getDateTime().getEndTime().toString()) + " ]")
+        		 + " " + t.getName()
         ).collect(Collectors.toList());
     
     // TODO Below for reference, to be removed later.
