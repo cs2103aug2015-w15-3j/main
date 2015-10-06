@@ -26,13 +26,13 @@ public class EventBus {
   private StringProperty displayHeadMessage = new SimpleStringProperty(this, "displayHeadMessage", "");
   private ObservableList<String> currentTasks = FXCollections.observableArrayList();
   private ObservableList<String> completedTasks = FXCollections.observableArrayList();
-  private DisplayContainer displayedTasks = new ListDisplayContainer();
+  private List<Task> displayedTasks;
   
   public String getFeedback() {
     return feedBack.get();
   }
     
-  public DisplayContainer getDisplayedTasks() {
+  public List<Task> getDisplayedTasks() {
     return displayedTasks;
   }
 
@@ -45,6 +45,7 @@ public class EventBus {
   }
 
   public void setCurrentTasks(List<Task> tasks) {
+    displayedTasks = tasks;
     currentTasks.setAll(filterName(tasks));
   }
  
@@ -73,8 +74,8 @@ public class EventBus {
   }
 
   private void initCurrentTasks(HashMap<Integer, Task> pendingTasks) {
-    List<Task> tempList = new ArrayList<Task>(pendingTasks.values());
-    currentTasks.setAll(filterName(tempList));
+    displayedTasks = new ArrayList<Task>(pendingTasks.values());
+    currentTasks.setAll(filterName(displayedTasks));
   }
 
   private EventBus() {}

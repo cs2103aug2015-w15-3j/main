@@ -1,6 +1,7 @@
 package raijin.storage.api;
 
 import java.util.HashMap;
+import java.util.List;
 
 import raijin.common.datatypes.DisplayContainer;
 import raijin.common.datatypes.ListDisplayContainer;
@@ -76,8 +77,8 @@ public class TasksManager {
   }
 
   public Task getPendingTask(int id) throws NoSuchTaskException {
-    DisplayContainer displayedTasks = EventBus.getEventBus().getDisplayedTasks();
-    int taskId = displayedTasks.isEmpty() ? id : displayedTasks.getRealId(id);
+    List<Task> displayedTasks = EventBus.getEventBus().getDisplayedTasks();
+    int taskId = displayedTasks.isEmpty() ? id : displayedTasks.get(id-1).getId();
     handleUnknownTask(pendingTasks, taskId);
     return pendingTasks.get(taskId);
   }
