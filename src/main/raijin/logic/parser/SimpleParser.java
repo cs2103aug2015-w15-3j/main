@@ -171,7 +171,11 @@ public class SimpleParser implements ParserInterface {
       checkStartDate(startDate, dateTime);
     }
     
-    builder.name(name).dateTime(dateTime);
+    if (!name.equals("")) {
+      builder.name(name).dateTime(dateTime);
+    } else {
+      builder.dateTime(dateTime);
+    }
   }
 
   /**
