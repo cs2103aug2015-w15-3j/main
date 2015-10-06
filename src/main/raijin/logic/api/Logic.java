@@ -86,8 +86,10 @@ public class Logic {
     return session.isFirstTime;
   }
 
-  public void setChosenUserStorage(String path) {
-    session.setStorageDirectory(path, session.baseConfigPath);
+  public void setChosenUserStorage(String userPath) {
+    /*Append data folder to the path*/
+    String storagePath = userPath + Constants.NAME_USER_FOLDER;
+    session.setStorageDirectory(storagePath, session.baseConfigPath);
   }
 
 }
