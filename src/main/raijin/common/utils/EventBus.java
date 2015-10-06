@@ -26,7 +26,7 @@ public class EventBus {
   private StringProperty displayHeadMessage = new SimpleStringProperty(this, "displayHeadMessage", "");
   private ObservableList<String> currentTasks = FXCollections.observableArrayList();
   private ObservableList<String> completedTasks = FXCollections.observableArrayList();
-  private List<Task> displayedTasks;
+  private List<Task> displayedTasks = new ArrayList<Task>();
   
   public String getFeedback() {
     return feedBack.get();
