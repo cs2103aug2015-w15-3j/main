@@ -30,13 +30,13 @@ public class EditCommandRunner extends CommandRunner implements UndoableRedoable
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
     try {
     taskBeforeChange = tasksManager.getPendingTask(input.getId());
-    history.pushCommand(this);
     tasksManager.deletePendingTask(taskBeforeChange.getId());
     } catch (NoSuchTaskException e) {
       wrapLowerLevelException(e, Constants.Command.EDIT);
     }
     taskAfterChange = modifyTask(input);
     tasksManager.addPendingTask(taskAfterChange);
+    history.pushCommand(this);
     return editSuccessfulStatus();
   }
 
