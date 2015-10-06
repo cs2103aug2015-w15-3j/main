@@ -24,7 +24,7 @@ public class DisplayCommandRunner extends CommandRunner {
   private static final String TYPE_COMPLETED = "c";     // display COMPLETED
   private static final String FEEDBACK_DISPLAY = "Displaying: ";
   private static final String FEEDBACK_ALL_PENDING = "all pending tasks";
-  private static final String FEEDBACK_PENDING = "pending tasks for today";
+  private static final String FEEDBACK_PENDING = "pending tasks";
   private static final String FEEDBACK_COMPLETED = "completed tasks";
   private static final String MESSAGE_SUCCESS = "Success";
   private static final String MESSAGE_NO_PENDING = "You have no pending tasks!";
@@ -121,6 +121,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	  LocalDate taskStart;
 	  LocalDate taskEnd;
 	 
+	  // Don't display floating tasks
 	  try {
 		  taskStart = taskDateTime.getStartDate();
 		  taskEnd = taskDateTime.getEndDate();
@@ -131,8 +132,10 @@ public class DisplayCommandRunner extends CommandRunner {
 	  
 	  if (taskStart.isBefore(date) && taskEnd.isAfter(date)) {
 		  return true;
-	  } else if (taskStart.isBefore(date)) {
-		  return true;
+	  } else if (taskStart.isBefore(date) && taskEnd.isBefore(date)) {
+		  return false;
+	  /*} else if (taskStart.isBefore(date)) {
+		  return true;*/
 	  } else if (taskStart.isEqual(date) || taskEnd.isEqual(date)) {
 		  return true;
 	  } else {
