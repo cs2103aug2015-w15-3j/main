@@ -34,6 +34,7 @@ import com.google.gson.stream.JsonReader;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.RaijinLogger;
+import raijin.ui.Raijin;
 
 public class StorageHandler {
 
@@ -49,7 +50,9 @@ public class StorageHandler {
     String path = StorageHandler.class.getProtectionDomain().
         getCodeSource().getLocation().getPath();
     String decodedPath = URLDecoder.decode(path, "UTF-8");
-    return sanitizePath(decodedPath.substring(0, decodedPath.length()-1));    //Trim last backslash for standardisation
+    String sanitizedPath = sanitizePath(decodedPath.substring(0, decodedPath.length()-1));    
+    /*Get parent path instead in case when packaged in JAR*/
+    return Paths.get(sanitizedPath).getParent().toString();         
   }
 
   public static boolean createDirectory(String dirPath){
