@@ -1,8 +1,10 @@
 package raijin.storage.api;
 
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.Stack;
 
+import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.UnableToExecuteCommandException;
@@ -57,18 +59,26 @@ public class History {
 
   /*Calling class must catch EmptyStackException*/
   public void undo() throws UnableToExecuteCommandException {
-    UndoableRedoable undoCommand = undoStack.pop();
-    undoCommand.undo();
-    reflectChanges();
-    redoStack.add(undoCommand);     //Add removed command to redo stack
+    try {
+      UndoableRedoable undoCommand = undoStack.pop();
+      undoCommand.undo();
+      reflectChanges();
+      redoStack.add(undoCommand); // Add removed command to redo stack
+    } catch(EmptyStackException e) {
+      throw new UnableToExecuteCommandException("Nothing to undo", Constants.Command.UNDO, e);
+    }
   }
 
   /*Calling class must catch EmptyStackException*/
   public void redo() throws UnableToExecuteCommandException {
-    UndoableRedoable redoCommand = redoStack.pop();
-    redoCommand.redo();
-    reflectChanges();
-    undoStack.add(redoCommand);     //Add command to redo stack
+    try {
+      UndoableRedoable redoCommand = redoStack.pop();
+      redoCommand.redo();
+      reflectChanges();
+      undoStack.add(redoCommand); // Add command to redo stack
+    } catch(EmptyStackException e) {
+      throw new UnableToExecuteCommandException("Nothing to redo", Constants.Command.REDO, e);
+    }
   }
   
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.rmi.UnexpectedException;
 import java.util.EmptyStackException;
 
 import org.junit.Before;
@@ -66,13 +67,13 @@ public class HistoryTest {
     assertFalse(history.isEmptyUndoStack());
   }
 
-  @Test(expected=EmptyStackException.class)
+  @Test(expected=UnableToExecuteCommandException.class)
   public void undo_NoCommandsInStack_ThrowException() throws UnableToExecuteCommandException {
     history.clear();
     history.undo();
   }
 
-  @Test(expected=EmptyStackException.class)
+  @Test(expected=UnableToExecuteCommandException.class)
   public void redo_NoCommandsInStack_ThrowException() throws UnableToExecuteCommandException {
     history.clear();
     history.redo();
