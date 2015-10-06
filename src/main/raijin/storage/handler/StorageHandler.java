@@ -82,6 +82,8 @@ public class StorageHandler {
     File tempFile = null;
     try {
       tempFile = File.createTempFile(fileName, ".tmp");
+      /*Mark file to be deleted when JVM exit*/
+      tempFile.deleteOnExit();
     } catch (IOException e) {
       logger.error("Temp file is not created");
     }
