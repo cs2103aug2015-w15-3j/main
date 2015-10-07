@@ -94,7 +94,7 @@ public class DisplayCommandRunner extends CommandRunner {
 			  eventBus.setCurrentTasks(pending);
 		  }
 		  
-		  message = "All current pending tasks";
+		  message = "All pending tasks";
 		  
 	  } else if (cmd.getDisplayOptions().equals(TYPE_COMPLETED)) {
 		  feedbackMessage = FEEDBACK_COMPLETED;
