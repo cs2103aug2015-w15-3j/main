@@ -25,7 +25,7 @@ public class ParsedInput {
   private String displayOptions;                  //Pending or completed view of tasks
   
   /*Delete, done and edit properties*/
-  private int id;                               //Id associated with a task
+  private int id = 0;                               //Id associated with a task
 
   //===========================================================================
   // Private constructor
@@ -56,6 +56,10 @@ public class ParsedInput {
 
   public int getId() {
     return id;
+  }
+  
+  public void setId(int id) {
+    this.id = id;
   }
 
   public String getName() {
