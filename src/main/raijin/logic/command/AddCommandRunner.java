@@ -13,7 +13,12 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
 
   private Task currentTask;
 
-  Task createTask(ParsedInput input) {
+  Task createTask(ParsedInput input) throws UnableToExecuteCommandException {
+    /*At least need a name to create flexible task*/
+    if (input.getName() == null) {
+      throw new UnableToExecuteCommandException("Empty task name", Constants.Command.ADD,
+          new IllegalArgumentException());
+    }
     return new Task(input.getName(), input.getDateTime());
   }
 
@@ -22,7 +27,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
     return new Status(String.format(Constants.FEEDBACK_ADD_SUCCESS, taskName));
   }
 
-  public Status processCommand(ParsedInput input) {
+  public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
     currentTask = createTask(input);
     tasksManager.addPendingTask(currentTask);
     history.pushCommand(this);
