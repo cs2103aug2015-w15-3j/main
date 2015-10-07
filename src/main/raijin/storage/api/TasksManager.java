@@ -77,22 +77,19 @@ public class TasksManager {
   }
 
   public Task getPendingTask(int id) throws NoSuchTaskException {
-    int taskId = getRealId(id);
-    handleUnknownTask(pendingTasks, taskId);
-    return pendingTasks.get(taskId);
+    handleUnknownTask(pendingTasks, id);
+    return pendingTasks.get(id);
   }
 
   public void deletePendingTask(int id) throws NoSuchTaskException {
-    int taskId = getRealId(id);
-    handleUnknownTask(pendingTasks, taskId);
-    pendingTasks.remove(taskId);
-    IDManager.getIdManager().returnId(taskId);
+    handleUnknownTask(pendingTasks, id);
+    pendingTasks.remove(id);
+    IDManager.getIdManager().returnId(id);
   }
   
   public void deleteCompletedTask(int id) throws NoSuchTaskException {
-    int taskId = getRealId(id);
-    handleUnknownTask(completedTasks, taskId);
-    completedTasks.remove(taskId);
+    handleUnknownTask(completedTasks, id);
+    completedTasks.remove(id);
   }
   
   void handleUnknownTask(HashMap<Integer, Task> tasks, int id) throws NoSuchTaskException {
@@ -101,9 +98,4 @@ public class TasksManager {
     }
   }
   
-  int getRealId(int displayId) {
-    List<Task> displayedTasks = EventBus.getEventBus().getDisplayedTasks();
-    int taskId = displayedTasks.isEmpty() ? displayId : displayedTasks.get(displayId-1).getId();
-    return taskId;
-  }
 }
