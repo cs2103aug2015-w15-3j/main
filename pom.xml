@@ -175,9 +175,9 @@
 			<version>1.10.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.reactfx</groupId>
-			<artifactId>reactfx</artifactId>
-			<version>2.0-M4u1</version>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>4.0</version>
 		</dependency>
 	</dependencies>
 </project>
