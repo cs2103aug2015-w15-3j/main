@@ -1,5 +1,7 @@
 package raijin.common.datatypes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.TreeSet;
 
 import raijin.common.utils.IDManager;
@@ -18,19 +20,18 @@ public class Task {
   private DateTime dateTime;
   private Constants.Priority priority = Constants.Priority.MID;    //Default priority level to medium
   private TreeSet<String> tags = new TreeSet<String>();            //Empty tag set when initialized
+  private ArrayList<String> keywords;
 
 
   /*Constructor for flexible task*/
   public Task(String name, int id) {
-    this.id = id;
-    this.name = name;
+    init(name, id);
   }
 
   
   /*Constructor for task or event*/
   public Task(String name, int id, DateTime dateTime) {
-    this.id = id;
-    this.name = name;
+    init(name, id);
     this.dateTime = dateTime;
   }
 
@@ -84,5 +85,12 @@ public class Task {
   public boolean equals(Object ob2) {
     return ob2 instanceof Task && ((Task) ob2).getId() == getId() 
         && ((Task) ob2).getName().equals(getName());
+  }
+  
+  void init(String name, int id) {
+    this.name = name;
+    this.id = id;
+    String[] keywords = name.split(" ");
+    this.keywords = new ArrayList<String>(Arrays.asList(keywords));
   }
 }
