@@ -36,7 +36,7 @@ public class TasksManagerTest {
 
   @Test
   public void getPendingTasks_ReturnValidTask() throws NoSuchTaskException {
-    Task input = new Task("submit op1", idManager.getId(), new DateTime("19/09/2015"));
+    Task input = new Task("submit op1", idManager.getId());
     tasksManager.addPendingTask(input);
     assertEquals("submit op1", tasksManager.getPendingTask(1).getName());
   }

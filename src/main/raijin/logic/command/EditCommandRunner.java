@@ -12,14 +12,15 @@ import raijin.logic.parser.ParsedInput;
 
 public class EditCommandRunner extends CommandRunner implements UndoableRedoable {
 
+  private ParsedInput inputBeforeChange;
   private Task taskAfterChange;
   private Task taskBeforeChange;
   
   Task modifyTask(ParsedInput input) {
     String name = (input.getName() == null) ? taskBeforeChange.getName() : input.getName();
-    DateTime dateTime = (input.getDateTime() == null) ? 
-                        taskBeforeChange.getDateTime() : input.getDateTime();
-    return new Task(name, idManager.getId(), dateTime);
+    ParsedInput modifiedInput = (input.getDateTime() == null) ? 
+                        inputBeforeChange : input;
+    return new Task(name, idManager.getId(), modifiedInput);
   }
   
   Status editSuccessfulStatus() {
@@ -29,8 +30,9 @@ public class EditCommandRunner extends CommandRunner implements UndoableRedoable
   
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
     try {
-    taskBeforeChange = tasksManager.getPendingTask(input.getId());
-    tasksManager.deletePendingTask(taskBeforeChange.getId());
+      inputBeforeChange = input;
+      taskBeforeChange = tasksManager.getPendingTask(input.getId());
+      tasksManager.deletePendingTask(taskBeforeChange.getId());
     } catch (NoSuchTaskException e) {
       wrapLowerLevelException(e, Constants.Command.EDIT);
     }

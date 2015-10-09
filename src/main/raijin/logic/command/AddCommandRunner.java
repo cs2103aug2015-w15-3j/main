@@ -14,12 +14,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
   private Task currentTask;
 
   Task createTask(ParsedInput input) throws UnableToExecuteCommandException {
-    /*At least need a name to create flexible task*/
-    if (input.getName() == null) {
-      throw new UnableToExecuteCommandException("Empty task name", Constants.Command.ADD,
-          new IllegalArgumentException());
-    }
-    return new Task(input.getName(), idManager.getId(), input.getDateTime());
+    return new Task(input.getName(), idManager.getId(), input);
   }
 
   Status createSuccessfulStatus() {

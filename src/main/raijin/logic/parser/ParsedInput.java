@@ -1,5 +1,7 @@
 package raijin.logic.parser;
 
+import java.util.TreeSet;
+
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Status;
@@ -19,7 +21,7 @@ public class ParsedInput {
   private String name;                             
   private DateTime dateTime;
   private String displayOptions;                  
-  private String tag;
+  private TreeSet<String> tags = new TreeSet<String>();
   private String priority = "m";              //Default to medium priority
 
   //===========================================================================
@@ -33,7 +35,7 @@ public class ParsedInput {
     final String name,
     final DateTime dateTime, 
     final String displayOptions, 
-    final String tag,
+    final TreeSet<String> tags,
     final String priority) {
 
     this.command = command;
@@ -41,7 +43,7 @@ public class ParsedInput {
     this.name = name;
     this.dateTime = dateTime;
     this.displayOptions = displayOptions;
-    this.tag = tag;
+    this.tags = tags;
     this.priority = priority;
   }
 
@@ -73,8 +75,8 @@ public class ParsedInput {
     return displayOptions;
   }
   
-  public String getTag() {
-    return tag;
+  public TreeSet<String> getTags() {
+    return tags;
   }
 
   public String getPriority() {
@@ -91,7 +93,7 @@ public class ParsedInput {
     private String name;
     private DateTime dateTime;
     private String displayOptions;
-    private String tag;
+    private TreeSet<String> tags;
     private String priority;
     
     public ParsedInputBuilder(final Constants.Command command) {
@@ -118,8 +120,8 @@ public class ParsedInput {
       return this;
     }
     
-    public ParsedInputBuilder tag(final String tag) {
-      this.tag = tag;
+    public ParsedInputBuilder tag(final TreeSet<String> tags) {
+      this.tags = tags;
       return this;
     }
     
@@ -131,7 +133,7 @@ public class ParsedInput {
     /*Generate parsedinput when client is done building the object*/
     public ParsedInput createParsedInput() {
       return new ParsedInput(command, id, name, dateTime, displayOptions, 
-                             tag, priority);
+                             tags, priority);
     }
 
   }

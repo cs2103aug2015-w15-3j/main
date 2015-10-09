@@ -82,4 +82,11 @@ public class AddCommandRunnerTest {
     assertEquals(tasksManager.getPendingTask(1).getName(), "submit op2 to ms lee");
   }
 
+  @Test
+  public void execute_WithHighPriority() throws UnableToExecuteCommandException, NoSuchTaskException {
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
+        name("submit test").priority("h").createParsedInput();
+    addCommandRunner.execute(input);
+    assertEquals("h", tasksManager.getPendingTask(1).getPriority());
+  }
 }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.TreeSet;
 
 import raijin.common.utils.IDManager;
+import raijin.logic.parser.ParsedInput;
 
 
 /**
@@ -28,11 +29,10 @@ public class Task {
     init(name, id);
   }
 
-  
   /*Constructor for task or event*/
-  public Task(String name, int id, DateTime dateTime) {
+  public Task(String name, int id, ParsedInput input) {
     init(name, id);
-    this.dateTime = dateTime;
+    initExtra(input);
   }
 
   public String getName() {
@@ -62,14 +62,17 @@ public class Task {
     this.priority = priority;
   }
 
+  public void setDateTime(DateTime dateTime) {
+    this.dateTime = dateTime;
+  }
 
   public TreeSet<String> getTags() {
     return tags;
   }
 
 
-  public void addTags(String tag) {
-    tags.add(tag.toLowerCase().trim()); //Sanitize string before adding 
+  public void addTags(TreeSet<String> input) {
+    tags.addAll(input); 
   }
 
   public void removeTags(String tag) {
@@ -87,10 +90,19 @@ public class Task {
         && ((Task) ob2).getName().equals(getName());
   }
   
+  /*Initialise most basic fields*/
   void init(String name, int id) {
     this.name = name;
     this.id = id;
-    String[] keywords = name.split(" ");
-    this.keywords = new ArrayList<String>(Arrays.asList(keywords));
+    this.keywords = new ArrayList<String>(Arrays.asList(name.split(" ")));
+  }
+  
+  /*Init non-mandatory fields for task*/
+  void initExtra(ParsedInput input) {
+    dateTime = input.getDateTime();
+    priority = input.getPriority();
+    if (input.getTags() != null) {                  //append only if initialized
+      addTags(input.getTags());
+    }
   }
 }

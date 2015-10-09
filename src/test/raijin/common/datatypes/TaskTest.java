@@ -3,10 +3,14 @@ package raijin.common.datatypes;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.TreeSet;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.IDManager;
 
@@ -24,7 +28,7 @@ public class TaskTest {
 
   @Before
   public void setUp(){
-    task = new Task("submit op1", idManager.getId(), new DateTime("19/09/2015"));
+    task = new Task("submit op1", idManager.getId());
   }
   
   @Test
@@ -45,7 +49,10 @@ public class TaskTest {
 
   @Test
   public void testAddTag(){
-    task.addTags("CS2101");
+    TreeSet<String> tags = new TreeSet<String>();
+    tags.add("cs2101");
+    task.addTags(tags);
+    System.out.println(task.getTags().toString());
     assertTrue(task.getTags().contains("cs2101"));
   }
   
