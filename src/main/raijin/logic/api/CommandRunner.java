@@ -9,6 +9,7 @@ import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.RaijinException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.EventBus;
+import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.History;
@@ -22,6 +23,7 @@ public abstract class CommandRunner {
   protected History history = History.getHistory();
   protected Session session = Session.getSession();
   protected EventBus eventBus = EventBus.getEventBus();
+  protected IDManager idManager = IDManager.getIdManager();
 
   protected abstract Status processCommand(ParsedInput input) throws UnableToExecuteCommandException;
 

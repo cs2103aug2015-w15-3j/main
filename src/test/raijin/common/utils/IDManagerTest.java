@@ -47,9 +47,9 @@ public class IDManagerTest {
   @Test
   public void initIdPoolFromPendingTasks_ReduceAvaibleIds() {
     HashMap<Integer, Task> tasks = new HashMap<Integer, Task>();
-    tasks.put(1, new Task("submit op2"));
-    tasks.put(2, new Task("submit op3"));
-    tasks.put(3, new Task("submit op4"));
+    tasks.put(1, new Task("submit op2", idManager.getId()));
+    tasks.put(2, new Task("submit op3", idManager.getId()));
+    tasks.put(3, new Task("submit op4", idManager.getId()));
     idManager.flushIdPool();
 
     int expected_size = idManager.getMaxId() - tasks.size();

@@ -16,21 +16,20 @@ public class Task {
   private int id;                                                  //Unique id that describes a task
   private String name;                                             //Description of a task
   private DateTime dateTime;
-  private transient IDManager idManager = IDManager.getIdManager();          //To generate unique id 
   private Constants.Priority priority = Constants.Priority.MID;    //Default priority level to medium
   private TreeSet<String> tags = new TreeSet<String>();            //Empty tag set when initialized
 
 
   /*Constructor for flexible task*/
-  public Task(String name) {
-    this.id = idManager.getId();
+  public Task(String name, int id) {
+    this.id = id;
     this.name = name;
   }
 
   
   /*Constructor for task or event*/
-  public Task(String name, DateTime dateTime) {
-    this.id = idManager.getId();
+  public Task(String name, int id, DateTime dateTime) {
+    this.id = id;
     this.name = name;
     this.dateTime = dateTime;
   }
@@ -54,8 +53,8 @@ public class Task {
 
 
   /*Needed after undo or redo*/
-  public void resetId() {
-    id = idManager.getId();
+  public void setId(int id) {
+   this.id = id;
   }
 
   public void setPriority(Constants.Priority priority) {

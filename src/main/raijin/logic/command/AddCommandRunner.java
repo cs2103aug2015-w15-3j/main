@@ -19,7 +19,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
       throw new UnableToExecuteCommandException("Empty task name", Constants.Command.ADD,
           new IllegalArgumentException());
     }
-    return new Task(input.getName(), input.getDateTime());
+    return new Task(input.getName(), idManager.getId(), input.getDateTime());
   }
 
   Status createSuccessfulStatus() {
@@ -44,7 +44,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
   }
 
   public void redo() {
-    currentTask.resetId();  //Previous id may be used by other task
+    currentTask.setId(idManager.getId());  //Previous id may be used by other task
     logger.info("Re-adding task id {} with content {}", currentTask.getId(), currentTask.getName());
     tasksManager.addPendingTask(currentTask);
   }

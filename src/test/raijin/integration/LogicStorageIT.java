@@ -33,6 +33,7 @@ public class LogicStorageIT {
   private static String[] sampleTasks;
   private static Logic logic;
   private static Session session;
+  private static IDManager idManager;
   private String programPath;
   private String dataPath;
   private String userConfigPath;
@@ -45,6 +46,7 @@ public class LogicStorageIT {
   public static void setUpClass() throws Exception {
     logic = new Logic();
     session = Session.getSession();
+    idManager = IDManager.getIdManager();
   }
 
   @Before
@@ -70,7 +72,7 @@ public class LogicStorageIT {
   public void addRandomTasks() {
     TasksManager tasksManager = TasksManager.getManager();
     for (int i = 0; i < sampleTasks.length; i++) {
-      tasksManager.addPendingTask(new Task(sampleTasks[i]));
+      tasksManager.addPendingTask(new Task(sampleTasks[i], idManager.getId()));
     }
   }
 

@@ -29,7 +29,7 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
   }
 
   public void undo() {
-	task.resetId();  
+	task.setId(idManager.getId());  
 	this.id = task.getId();
     tasksManager.addPendingTask(task);
   }

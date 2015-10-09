@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -17,6 +18,12 @@ import raijin.common.utils.RaijinLogger;
 public class TasksManagerTest {
 
   private TasksManager tasksManager;
+  private static IDManager idManager;
+
+  @BeforeClass
+  public static void setUpClass() {
+    idManager = IDManager.getIdManager();
+  }
 
   @Before
   public void setUp() throws Exception {
@@ -29,7 +36,7 @@ public class TasksManagerTest {
 
   @Test
   public void getPendingTasks_ReturnValidTask() throws NoSuchTaskException {
-    Task input = new Task("submit op1", new DateTime("19/09/2015"));
+    Task input = new Task("submit op1", idManager.getId(), new DateTime("19/09/2015"));
     tasksManager.addPendingTask(input);
     assertEquals("submit op1", tasksManager.getPendingTask(1).getName());
   }

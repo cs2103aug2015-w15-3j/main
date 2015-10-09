@@ -19,7 +19,7 @@ public class EditCommandRunner extends CommandRunner implements UndoableRedoable
     String name = (input.getName() == null) ? taskBeforeChange.getName() : input.getName();
     DateTime dateTime = (input.getDateTime() == null) ? 
                         taskBeforeChange.getDateTime() : input.getDateTime();
-    return new Task(name, dateTime);
+    return new Task(name, idManager.getId(), dateTime);
   }
   
   Status editSuccessfulStatus() {
@@ -55,7 +55,7 @@ public class EditCommandRunner extends CommandRunner implements UndoableRedoable
     } catch (NoSuchTaskException e) {
       wrapLowerLevelException(e, Constants.Command.EDIT);
     }
-    taskAfterChange.resetId();
+    taskAfterChange.setId(idManager.getId());
     tasksManager.addPendingTask(taskAfterChange);
     
   }
