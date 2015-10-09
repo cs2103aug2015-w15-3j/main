@@ -18,7 +18,7 @@ public class Task {
   private int id;                                                  //Unique id that describes a task
   private String name;                                             //Description of a task
   private DateTime dateTime;
-  private Constants.Priority priority = Constants.Priority.MID;    //Default priority level to medium
+  private String priority;                                         //Default priority level to medium
   private TreeSet<String> tags = new TreeSet<String>();            //Empty tag set when initialized
   private ArrayList<String> keywords;
 
@@ -48,7 +48,7 @@ public class Task {
   }
 
 
-  public Constants.Priority getPriority() {
+  public String getPriority() {
     return priority;
   }
 
@@ -58,7 +58,7 @@ public class Task {
    this.id = id;
   }
 
-  public void setPriority(Constants.Priority priority) {
+  public void setPriority(String priority) {
     this.priority = priority;
   }
 

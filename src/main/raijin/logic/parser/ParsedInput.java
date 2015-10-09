@@ -20,7 +20,7 @@ public class ParsedInput {
   private DateTime dateTime;
   private String displayOptions;                  
   private String tag;
-  private char priority = 'm';              //Default to medium priority
+  private String priority = "m";              //Default to medium priority
 
   //===========================================================================
   // Private constructor
@@ -34,7 +34,7 @@ public class ParsedInput {
     final DateTime dateTime, 
     final String displayOptions, 
     final String tag,
-    final char priority) {
+    final String priority) {
 
     this.command = command;
     this.id = id;
@@ -77,7 +77,7 @@ public class ParsedInput {
     return tag;
   }
 
-  public char getPriority() {
+  public String getPriority() {
     return priority;
   }
 
@@ -92,7 +92,7 @@ public class ParsedInput {
     private DateTime dateTime;
     private String displayOptions;
     private String tag;
-    private char priority;
+    private String priority;
     
     public ParsedInputBuilder(final Constants.Command command) {
       this.command = command;
@@ -123,7 +123,7 @@ public class ParsedInput {
       return this;
     }
     
-    public ParsedInputBuilder priority(final char priority) {
+    public ParsedInputBuilder priority(final String priority) {
       this.priority = priority;
       return this;
     }
