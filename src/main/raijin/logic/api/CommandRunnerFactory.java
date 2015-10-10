@@ -8,6 +8,7 @@ import raijin.logic.command.DoneCommandRunner;
 import raijin.logic.command.EditCommandRunner;
 import raijin.logic.command.ExitCommandRunner;
 import raijin.logic.command.RedoCommandRunner;
+import raijin.logic.command.SearchCommandRunner;
 import raijin.logic.command.UndoCommandRunner;
 import raijin.logic.command.RedoCommandRunner;
 import raijin.logic.command.HelpCommandRunner;
@@ -29,6 +30,9 @@ public class CommandRunnerFactory {
 
       case EDIT:
         return new EditCommandRunner();
+
+      case SEARCH:
+        return new SearchCommandRunner();
 
       case DELETE:
         return new DeleteCommandRunner();
