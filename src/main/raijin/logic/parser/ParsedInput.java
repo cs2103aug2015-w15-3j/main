@@ -22,6 +22,7 @@ public class ParsedInput {
   private DateTime dateTime;
   private String displayOptions;                  
   private TreeSet<String> tags = new TreeSet<String>();
+  private int subTaskOf = 0;                    //Default to sentinel value 0
   private String priority = "m";              //Default to medium priority
 
   //===========================================================================
@@ -36,6 +37,7 @@ public class ParsedInput {
     final DateTime dateTime, 
     final String displayOptions, 
     final TreeSet<String> tags,
+    final int subTaskOf,
     final String priority) {
 
     this.command = command;
@@ -44,6 +46,7 @@ public class ParsedInput {
     this.dateTime = dateTime;
     this.displayOptions = displayOptions;
     this.tags = tags;
+    this.subTaskOf = subTaskOf;
     this.priority = priority;
   }
 
@@ -79,6 +82,10 @@ public class ParsedInput {
     return tags;
   }
 
+  public int getSubTaskOf() {
+    return subTaskOf;
+  }
+
   public String getPriority() {
     return priority;
   }
@@ -94,6 +101,7 @@ public class ParsedInput {
     private DateTime dateTime;
     private String displayOptions;
     private TreeSet<String> tags;
+    private int subTaskOf;
     private String priority;
     
     public ParsedInputBuilder(final Constants.Command command) {
@@ -125,6 +133,11 @@ public class ParsedInput {
       return this;
     }
     
+    public ParsedInputBuilder subTaskOf(final int subTaskOf) {
+      this.subTaskOf = subTaskOf;
+      return this;
+    }
+
     public ParsedInputBuilder priority(final String priority) {
       this.priority = priority;
       return this;
@@ -133,7 +146,7 @@ public class ParsedInput {
     /*Generate parsedinput when client is done building the object*/
     public ParsedInput createParsedInput() {
       return new ParsedInput(command, id, name, dateTime, displayOptions, 
-                             tags, priority);
+                             tags, subTaskOf, priority);
     }
 
   }

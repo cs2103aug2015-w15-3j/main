@@ -2,10 +2,15 @@ package raijin.common.datatypes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import raijin.common.utils.IDManager;
 import raijin.logic.parser.ParsedInput;
+import raijin.storage.api.TasksManager;
 
 
 /**
@@ -21,6 +26,7 @@ public class Task {
   private DateTime dateTime;
   private String priority;                                         //Default priority level to medium
   private TreeSet<String> tags = new TreeSet<String>();            //Empty tag set when initialized
+  private TreeSet<Integer> subTasks = new TreeSet<Integer>();
   private ArrayList<String> keywords;
 
 
@@ -80,8 +86,21 @@ public class Task {
   }
 
   /*Returns keywords from task description*/
-  public String[] getKeywords() {
-    return name.split(" ");
+  public ArrayList<String> getKeywords() {
+    return keywords;
+  }
+
+  public void addSubTask(int taskID) {
+    subTasks.add(taskID);
+  }
+  
+  public void removeSubTask(int taskID) {
+    subTasks.remove(taskID);
+  }
+
+  public TreeSet<Integer> getSubTasks() {
+    lazyUpdateSubTasks();                       //Update status of subtasks
+    return subTasks;
   }
 
   @Override
@@ -101,8 +120,26 @@ public class Task {
   void initExtra(ParsedInput input) {
     dateTime = input.getDateTime();
     priority = input.getPriority();
-    if (input.getTags() != null) {                  //append only if initialized
+    extractTags(input);
+  }
+  
+  void extractTags(ParsedInput input) {
+    if (input.getTags() != null) {                 
       addTags(input.getTags());
     }
   }
+
+  void extractSubTasks(ParsedInput input) {
+    if (input.getSubTaskOf() != 0) {                 
+      addSubTask(input.getSubTaskOf());
+    }
+  }
+  
+  void lazyUpdateSubTasks() {
+    HashMap<Integer, Task> pendingTasks = TasksManager.getManager().getPendingTasks();
+    List<Integer> filtered = subTasks.stream().filter(x -> pendingTasks.
+        containsKey(x)).collect(Collectors.toList());
+    subTasks = new TreeSet<Integer>(filtered);
+  }
+
 }
