@@ -38,6 +38,7 @@ public class SearchCommandRunner extends CommandRunner {
     ArrayList<Task> tempList = new ArrayList<Task>(pendingTasks.values());
     List<Task> filtered = tempList.stream().filter(
         x -> isMatchedKeywords(keywords, x.getKeywords())).collect(Collectors.toList());
+    eventBus.setCurrentTasks(filtered);
     return createSuccessfulStatus(filtered.size());
   }
 
