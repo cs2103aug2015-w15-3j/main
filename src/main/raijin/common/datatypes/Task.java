@@ -111,6 +111,7 @@ public class Task {
   
   /*Initialise most basic fields*/
   void init(String name, int id) {
+    assert(id > 0);
     this.name = name;
     this.id = id;
     this.keywords = new ArrayList<String>(Arrays.asList(name.split(" ")));

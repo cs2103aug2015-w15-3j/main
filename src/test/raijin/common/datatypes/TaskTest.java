@@ -99,4 +99,10 @@ public class TaskTest {
     assertEquals(1, task.getSubTasks().size());
   }
 
+  @Test(expected = AssertionError.class)
+  public void testIdNotZero() {
+    Task test = new Task("I am wrong", -1);
+    assertEquals("I am wrong", test.getName());
+  }
+
 }
