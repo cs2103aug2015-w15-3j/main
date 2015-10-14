@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.EventBus;
+import raijin.common.utils.RaijinLogger;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.api.UndoableRedoable;
 
@@ -18,11 +21,13 @@ public class History {
   private TasksManager tasksManager;
   private Stack<UndoableRedoable> undoStack;   //Stores commandRunner created via user input
   private Stack<UndoableRedoable> redoStack;   //Stores commandRunner undo(ed) via user input
+  private Logger logger;
   
   private History() {
     undoStack = new Stack<UndoableRedoable>();
     redoStack = new Stack<UndoableRedoable>();
     tasksManager = TasksManager.getManager();
+    logger = RaijinLogger.getLogger();
   }
   
   /*Helper to write changes to file and trigger view change*/
@@ -54,6 +59,7 @@ public class History {
   }
 
   public void pushCommand(UndoableRedoable commandRunner) {
+    logger.info("{} is added to undo stack", commandRunner.getClass());
     undoStack.push(commandRunner);
     reflectChanges();
   }
