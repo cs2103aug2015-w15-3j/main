@@ -91,4 +91,19 @@ public class Logic {
   public Session getSession() {
 	  return this.session;
   }
+  
+  //===========================================================================
+  // Auxilliary commands
+  //===========================================================================
+  
+  public void exit() {
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT)
+      .createParsedInput();
+    try {
+      commandDispatcher.delegateCommand(input);
+    } catch (UnableToExecuteCommandException e) {
+      logger.error(e.getMessage());
+    }
+  }
+
 }
