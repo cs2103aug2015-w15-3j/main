@@ -22,8 +22,9 @@ public class ParsedInput {
   private DateTime dateTime;
   private String displayOptions;                  
   private TreeSet<String> tags = new TreeSet<String>();
-  private int subTaskOf = 0;                    //Default to sentinel value 0
+  private int subTaskOf = 0;                  //Default to sentinel value 0
   private String priority = "m";              //Default to medium priority
+  private String helperOption;                //Stores argument for helper command
 
   //===========================================================================
   // Private constructor
@@ -38,7 +39,8 @@ public class ParsedInput {
     final String displayOptions, 
     final TreeSet<String> tags,
     final int subTaskOf,
-    final String priority) {
+    final String priority,
+    final String helperOption) {
 
     this.command = command;
     this.id = id;
@@ -48,6 +50,7 @@ public class ParsedInput {
     this.tags = tags;
     this.subTaskOf = subTaskOf;
     this.priority = priority;
+    this.helperOption = helperOption;
   }
 
   //===========================================================================
@@ -89,6 +92,10 @@ public class ParsedInput {
   public String getPriority() {
     return priority;
   }
+  
+  public String getHelperOption() {
+    return helperOption;
+  }
 
   //===========================================================================
   // Builder Class
@@ -103,6 +110,7 @@ public class ParsedInput {
     private TreeSet<String> tags;
     private int subTaskOf;
     private String priority;
+    private String helperOption;
     
     public ParsedInputBuilder(final Constants.Command command) {
       this.command = command;
@@ -143,10 +151,15 @@ public class ParsedInput {
       return this;
     }
 
+    public ParsedInputBuilder helperOption(final String helperOption) {
+      this.helperOption = helperOption;
+      return this;
+    }
+
     /*Generate parsedinput when client is done building the object*/
     public ParsedInput createParsedInput() {
       return new ParsedInput(command, id, name, dateTime, displayOptions, 
-                             tags, subTaskOf, priority);
+                             tags, subTaskOf, priority, helperOption);
     }
 
   }

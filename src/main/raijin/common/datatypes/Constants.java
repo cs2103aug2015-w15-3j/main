@@ -8,7 +8,8 @@ public class Constants {
   public static enum Priority { LOW, MID, HIGH }
 
   public static enum Command { 
-    ADD, EDIT, DISPLAY, SEARCH, DELETE, DONE, EXIT, UNDO, REDO, HELP
+    ADD, EDIT, DISPLAY, SEARCH, DELETE, DONE, EXIT, UNDO, REDO, HELP,
+    SET
   }
   
   public static enum Error {

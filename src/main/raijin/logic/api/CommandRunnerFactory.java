@@ -9,6 +9,7 @@ import raijin.logic.command.EditCommandRunner;
 import raijin.logic.command.ExitCommandRunner;
 import raijin.logic.command.RedoCommandRunner;
 import raijin.logic.command.SearchCommandRunner;
+import raijin.logic.command.SetCommandRunner;
 import raijin.logic.command.UndoCommandRunner;
 import raijin.logic.command.RedoCommandRunner;
 import raijin.logic.command.HelpCommandRunner;
@@ -55,6 +56,8 @@ public class CommandRunnerFactory {
       case HELP:
         return new HelpCommandRunner();
 
+      case SET:
+        return new SetCommandRunner();
 
       default:
         throw new IllegalArgumentException();
