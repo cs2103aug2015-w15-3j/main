@@ -40,5 +40,16 @@ public class SearchCommandRunnerTest {
     
     assertEquals("Result(2) matched found", output.getFeedback());
   }
+  
+  @Test
+  public void processCommand_PartialMatched_NumberOfMatched() throws UnableToExecuteCommandException {
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.SEARCH).
+        name("su").createParsedInput();
+    tasksManager.addPendingTask(new Task("submit OP1 to Kuma", 1));
+    tasksManager.addPendingTask(new Task("play OP1 with Djinn", 2));
+    Status output = searchCommandRunner.execute(input);
+    
+    assertEquals("Result(1) matched found", output.getFeedback());
+  }
 
 }

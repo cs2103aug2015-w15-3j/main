@@ -26,8 +26,13 @@ public class SearchCommandRunner extends CommandRunner {
   }
 
   boolean isMatchedKeywords(ArrayList<String> source, ArrayList<String> target) {
-    ArrayList<String> commonKeyWords = (ArrayList<String>) CollectionUtils.intersection(source, target);
-    return !commonKeyWords.isEmpty();
+    String targetKeywords = target.toString();
+    for (String keyword : source) {
+      if (targetKeywords.contains(keyword)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
