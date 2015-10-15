@@ -72,6 +72,7 @@ public class Logic {
     } 
   }
   
+
   //===========================================================================
   // Session methods
   //===========================================================================
@@ -86,4 +87,8 @@ public class Logic {
     session.setStorageDirectory(storagePath, session.baseConfigPath);
   }
 
+  //for UI to save on closing when exiting.
+  public Session getSession() {
+	  return this.session;
+  }
 }
