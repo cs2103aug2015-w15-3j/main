@@ -17,16 +17,20 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
     return new Task(input.getName(), idManager.getId(), input);
   }
 
-  Status createSuccessfulStatus() {
+  Status createStatus() {
     String taskName = currentTask.getName();
+    if (tasksManager.getPendingTasks().containsValue(currentTask)) {
+      return new Status(Constants.FEEDBACK_ADD_FAILURE);
+    } 
     return new Status(String.format(Constants.FEEDBACK_ADD_SUCCESS, taskName));
   }
 
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
     currentTask = createTask(input);
+    Status feedback = createStatus();
     tasksManager.addPendingTask(currentTask);
     history.pushCommand(this);
-    return createSuccessfulStatus();
+    return feedback;
   }
 
   public void undo() throws UnableToExecuteCommandException {

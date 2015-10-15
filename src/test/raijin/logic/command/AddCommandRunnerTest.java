@@ -89,4 +89,12 @@ public class AddCommandRunnerTest {
     addCommandRunner.execute(input);
     assertEquals("h", tasksManager.getPendingTask(1).getPriority());
   }
+  
+  @Test
+  public void execute_DuplicateTask_ReturnWarning() throws UnableToExecuteCommandException {
+    addTask("submit op2 to ms lee", new DateTime("19/09/2015"));
+    Status status = addTask("submit op2 to ms lee", new DateTime("19/09/2015"));
+    assertEquals("Task already exists", status.getFeedback());
+  }
+
 }

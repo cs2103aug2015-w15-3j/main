@@ -105,8 +105,9 @@ public class Task {
 
   @Override
   public boolean equals(Object ob2) {
-    return ob2 instanceof Task && ((Task) ob2).getId() == getId() 
-        && ((Task) ob2).getName().equals(getName());
+    return ob2 instanceof Task 
+        && ((Task) ob2).getName().equals(getName())
+        && compareDateTime(((Task) ob2).getDateTime());
   }
   
   /*Initialise most basic fields*/
@@ -141,6 +142,14 @@ public class Task {
     List<Integer> filtered = subTasks.stream().filter(x -> pendingTasks.
         containsKey(x)).collect(Collectors.toList());
     subTasks = new TreeSet<Integer>(filtered);
+  }
+  
+  boolean compareDateTime(DateTime target) {
+    if (getDateTime() == null) {
+      return target == null;
+    } else {
+      return getDateTime().equals(target);
+    }
   }
 
 }

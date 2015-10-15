@@ -61,5 +61,24 @@ public class DateTime {
   public LocalTime getStartTime() {
     return startTime;
   }
+  
+  @Override
+  public boolean equals(Object ob2) {
+    if (ob2 instanceof DateTime) {
+      return compare(startDate, ((DateTime) ob2).getStartDate())
+          && compare(endDate, ((DateTime) ob2).getEndDate()) 
+          && compare(startTime, ((DateTime) ob2).getStartTime())
+          && compare(endTime, ((DateTime) ob2).getEndTime());
+    }
+    return false;
+  }
+
+  boolean compare(Object source, Object target) {
+    if (source == null) {
+      return target == null;
+    } else {
+      return source.equals(target);
+    }
+  }
 
 }
