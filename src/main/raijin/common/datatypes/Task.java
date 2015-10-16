@@ -28,17 +28,20 @@ public class Task {
   private TreeSet<String> tags = new TreeSet<String>();            //Empty tag set when initialized
   private TreeSet<Integer> subTasks = new TreeSet<Integer>();
   private ArrayList<String> keywords;
+  private Constants.TYPE_TASK type;
 
 
   /*Constructor for flexible task*/
   public Task(String name, int id) {
     init(name, id);
+    setTypeOfTask();
   }
 
   /*Constructor for task or event*/
   public Task(String name, int id, ParsedInput input) {
     init(name, id);
     initExtra(input);
+    setTypeOfTask();
   }
 
   public String getName() {
@@ -103,6 +106,11 @@ public class Task {
     return subTasks;
   }
 
+  /*Returns type of a task*/
+  public Constants.TYPE_TASK getType() {
+    return type;
+  }
+
   @Override
   public boolean equals(Object ob2) {
     return ob2 instanceof Task 
@@ -149,6 +157,21 @@ public class Task {
       return target == null;
     } else {
       return getDateTime().equals(target);
+    }
+  }
+  
+  void setTypeOfTask() {    
+    if (dateTime == null) {
+      type = Constants.TYPE_TASK.FLOATING;
+    } else {
+      
+      if (dateTime.getEndTime() == null
+          || dateTime.getStartTime().equals(dateTime.getEndTime())) {
+        type = Constants.TYPE_TASK.SPECIFIC;
+      } else {
+        type = Constants.TYPE_TASK.EVENT;
+      }
+
     }
   }
 

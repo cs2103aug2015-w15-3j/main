@@ -2,6 +2,10 @@ package raijin.common.datatypes;
 
 public class Constants {
   
+  public enum TYPE_TASK {
+    FLOATING, EVENT, SPECIFIC
+  }
+  
   public enum CommandParam {
    ID, NAME, DATETIME
   }

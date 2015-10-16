@@ -15,6 +15,7 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NoSuchTaskException;
 import raijin.common.utils.IDManager;
+import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.TasksManager;
 
 public class TaskTest {
@@ -105,5 +106,31 @@ public class TaskTest {
     assertEquals("I am wrong", test.getName());
   }
   
+  @Test
+  public void getType_FloatingTask_ReturnType() {
+    Task floatingTask = new Task("submit op1", 1);
+    assertEquals(Constants.TYPE_TASK.FLOATING, floatingTask.getType());
+  }
 
+  @Test
+  public void getType_SpecificTask_ReturnType() {
+    DateTime task = new DateTime("19/09/2015", "2359");
+    ParsedInput specificTaskInput = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
+        dateTime(task).createParsedInput();
+
+    Task specificTask = new Task("submit op1", 2, specificTaskInput);
+    
+    assertEquals(Constants.TYPE_TASK.SPECIFIC, specificTask.getType());
+  }
+
+  @Test
+  public void getType_EventTask_ReturnType() {
+    DateTime event = new DateTime("19/09/2015", "0800", "1000");
+    ParsedInput eventInput = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
+        dateTime(event).createParsedInput();
+
+    Task eventTask = new Task("submit op1", 3, eventInput);
+    
+    assertEquals(Constants.TYPE_TASK.EVENT, eventTask.getType());
+  }
 }
