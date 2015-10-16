@@ -15,7 +15,9 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.WindowEvent;
 import raijin.logic.api.Logic;
+import raijin.storage.api.Session;
 
 public class Raijin extends Application {
 	private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
@@ -28,6 +30,7 @@ public class Raijin extends Application {
 	private Scene workingScene, introScene;
 	private Logic logic;
 	private IntroController introController;
+	private Session session;
 	
 	public static void main(String[] args) {
 	  launch(args);
@@ -38,9 +41,15 @@ public class Raijin extends Application {
     /*Adding fxml */
     initPrimaryStage(stage);
     initLogic();
+    initSession();
     decideScene();
     
     this.stage.show();
+    stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+    	public void handle(WindowEvent onClose) {
+    		session.writeOnExit();
+    	}
+    });
   }
 
   private void initPrimaryStage(Stage stage) {
@@ -59,6 +68,10 @@ public class Raijin extends Application {
  
   private void initLogic() throws FileNotFoundException {
 	  logic = new Logic();
+  }
+  
+  private void initSession() {
+	  this.session = logic.getSession();
   }
   
   private void initIntroLayout() {
