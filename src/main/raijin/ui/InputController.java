@@ -4,7 +4,9 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
-import raijin.common.utils.EventBus;
+import com.google.common.eventbus.EventBus;
+
+import raijin.common.eventbus.RaijinEventBus;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -21,7 +23,7 @@ public class InputController extends BorderPane {
 	private static final String INPUT_COMMAND_BAR_LAYOUT_FXML = "resource/layout/InputController.fxml";
 	
 	private Raijin mainApp;
-	private EventBus eventBus = EventBus.getEventBus();
+	private EventBus eventbus = RaijinEventBus.getEventBus();
 	
 	public InputController(Raijin mainApp) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(INPUT_COMMAND_BAR_LAYOUT_FXML));
@@ -34,11 +36,6 @@ public class InputController extends BorderPane {
 		}
 		
 		this.mainApp = mainApp;
-		
-		//Setup
-		eventBus.feedBackProperty().addListener( (v, oldVal, newVal) -> {
-		  setFeedback(newVal);
-		});
 	}
 	
 	public TextField getCommandBar() {
@@ -51,6 +48,7 @@ public class InputController extends BorderPane {
 	
 	@FXML
 	public void onKeyPress(KeyEvent event) {
+	    eventbus.post(event);
 		mainApp.handleKeyPress(this, event.getCode(), inputCommandBar.getText());
 	}
 	
