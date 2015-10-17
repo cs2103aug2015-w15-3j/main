@@ -206,8 +206,9 @@ public int compareTo(Task other) {
 			
 			// Case #5: both tasks have same end date.
 			if (thisDate.compareTo(otherDate) == 0) {
-				LocalTime thisTime = this.getDateTime().getEndTime();
-				LocalTime otherTime = other.getDateTime().getEndTime();
+				// TODO change these back to getEndTime once parser is finalised.
+				LocalTime thisTime = this.getDateTime().getStartTime();
+				LocalTime otherTime = other.getDateTime().getStartTime();
 				
 				return thisTime.compareTo(otherTime);
 				

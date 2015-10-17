@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 //import java.util.Collections;
@@ -85,6 +86,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	    	  if (isEmpty) {
 				  eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
 			  } else {
+				  Collections.sort(relevant);
 		          eventBus.setCurrentTasks(relevant);
 			  }
 	    	  
@@ -98,6 +100,7 @@ public class DisplayCommandRunner extends CommandRunner {
 			  if (pending.isEmpty()) {
 				  eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
 			  } else {
+				  Collections.sort(pending);
 				  eventBus.setCurrentTasks(pending);
 			  }
 			  
@@ -139,6 +142,7 @@ public class DisplayCommandRunner extends CommandRunner {
 			  if (isEmpty) {
 				  eventBus.setCurrentTasks(MESSAGE_NO_COMPLETED);
 			  } else {
+				  Collections.sort(relevant);
 				  eventBus.setCurrentTasks(relevant);
 			  }
 			  
@@ -168,6 +172,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	    	  if (isEmpty) {
 				  eventBus.setCurrentTasks(MESSAGE_NO_OVERDUE);
 			  } else {
+				  Collections.sort(relevant);
 		          eventBus.setCurrentTasks(relevant);
 			  }
 	    	  
@@ -177,8 +182,6 @@ public class DisplayCommandRunner extends CommandRunner {
 	  }
 	  
 	  eventBus.setHeadMessage(message);
-	  //TODO find a good way to sort the tasks.
-	  //Collections.sort(relevant);
 	  
     return new Status(FEEDBACK_DISPLAY + feedbackMessage, MESSAGE_SUCCESS);
   }

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.loadui.testfx.FXScreenController;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import raijin.common.datatypes.DisplayContainer;
 import raijin.common.datatypes.ListDisplayContainer;
 import raijin.common.datatypes.Task;
@@ -75,6 +76,7 @@ public class EventBus {
 
   private void initCurrentTasks(HashMap<Integer, Task> pendingTasks) {
     displayedTasks = new ArrayList<Task>(pendingTasks.values());
+    Collections.sort(displayedTasks);
     currentTasks.setAll(filterName(displayedTasks));
   }
 
