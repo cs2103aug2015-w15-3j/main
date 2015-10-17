@@ -9,7 +9,8 @@ public class DisplayUtils {
 
   public static List<String> filterName(List<Task> tasks) {
     return tasks.stream().map(
-        (Task t) -> (tasks.indexOf(t)+1) + " : " + t.getName() 
+        (Task t) -> (tasks.indexOf(t)+1) + " : " 
+        		 + (t.getName().length() > 60 ? t.getName().substring(0, 59) + "..." : t.getName()) 
         		 + (t.getDateTime() == null ? "" : " [ " 
         		 + String.format("%02d", t.getDateTime().getStartDate().getDayOfMonth()) 
                  + "/" 
