@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
+//import java.util.Collections;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 //import raijin.common.datatypes.ListDisplayContainer;
@@ -36,6 +37,8 @@ public class DisplayCommandRunner extends CommandRunner {
   private static final String MESSAGE_SUCCESS = "Success";
   private static final String MESSAGE_NO_PENDING = "You have no pending tasks!";
   private static final String MESSAGE_NO_COMPLETED = "You have no completed tasks!";
+  private static final String MESSAGE_NO_FLOATING = "You have no pending floating tasks!";
+  private static final String MESSAGE_NO_OVERDUE = "You have no overdue tasks! Well done!";
   
   private DateTime cmdDateTime;
   private DateTime taskDateTime;
@@ -52,25 +55,30 @@ public class DisplayCommandRunner extends CommandRunner {
   public Status processCommand(ParsedInput cmd) {
 	  
 	  now = LocalDate.now();
-	  
+			  
 	  retrieveLists();
 	  cmdDateTime = getQueriedDate(cmd);
 	  
-	  Date date = Date.from(cmdDateTime.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+	  Date dateForDisplay = Date.from(cmdDateTime.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 	  String message = "";
 	  String feedbackMessage = "";
 	  
 	  boolean isEmpty = true;
+	  Task currentTask;
 	  
 	  switch (cmd.getDisplayOptions()) {
 	      case TYPE_PENDING:
 	    	  feedbackMessage = FEEDBACK_PENDING;
 	    	  for (int i=0; i<pending.size(); i++) {
-				  taskDateTime = pending.get(i).getDateTime();
+	    		  currentTask = pending.get(i);
+	    		  
+				  taskDateTime = currentTask.getDateTime();
 				  
-				  if (isRelevantDate(cmdDateTime, taskDateTime)) {
+				  if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
+					  isRelevantDate(cmdDateTime, taskDateTime)) {
+					  
 					  isEmpty = false;
-					  relevant.add(pending.get(i));
+					  relevant.add(currentTask);
 				  }
 			  }
 	    	  
@@ -80,7 +88,7 @@ public class DisplayCommandRunner extends CommandRunner {
 		          eventBus.setCurrentTasks(relevant);
 			  }
 	    	  
-	    	  message = "Tasks pending for " + dateFormat.format(date);
+	    	  message = "Tasks pending for " + dateFormat.format(dateForDisplay);
 	    	  
 	    	  break;
 	    	  
@@ -101,10 +109,19 @@ public class DisplayCommandRunner extends CommandRunner {
 	    	  feedbackMessage = FEEDBACK_FLOATING;
 	    	  
 	    	  for(int i=0; i<pending.size(); i++) {
-	    		  if (pending.get(i).getType().equals(Constants.TYPE_TASK.FLOATING)) {
-	    			  relevant.add(pending.get(i));
+	    		  currentTask = pending.get(i);
+	    		  
+	    		  if (currentTask.getType().equals(Constants.TYPE_TASK.FLOATING)) {
+	    			  relevant.add(currentTask);
+	    			  isEmpty = false;
 	    		  }
 	    	  }
+	    	  
+	    	  if (isEmpty) {
+				  eventBus.setCurrentTasks(MESSAGE_NO_FLOATING);
+			  } else {
+		          eventBus.setCurrentTasks(relevant);
+			  }
 	    	  
 	    	  message = "All floating tasks";
 	    	  
@@ -112,32 +129,54 @@ public class DisplayCommandRunner extends CommandRunner {
 	    	  
 	      case TYPE_COMPLETED:
 	    	  feedbackMessage = FEEDBACK_COMPLETED;
+	    	  
 			  for (int i=0; i<completed.size(); i++) {
+				  currentTask = completed.get(i);
+				  relevant.add(currentTask);
 				  isEmpty = false;
-				  relevant.add(completed.get(i));
 			  }
-		      
-		      message = "Tasks completed as of " + dateFormat.format(date);
-			  
+		     
 			  if (isEmpty) {
 				  eventBus.setCurrentTasks(MESSAGE_NO_COMPLETED);
 			  } else {
 				  eventBus.setCurrentTasks(relevant);
 			  }
 			  
+			  message = "Tasks completed as of " + dateFormat.format(dateForDisplay);
+			  
 	    	  break;
 	    	  
 	      case TYPE_OVERDUE:
 	    	  feedbackMessage = FEEDBACK_OVERDUE;
 	    	  
+	    	  for(int i=0; i<pending.size(); i++) {
+	    		  currentTask = pending.get(i);
+	    		  
+	    		  if (isOverdue(currentTask.getDateTime())) {
+	    			  relevant.add(currentTask);
+	    			  isEmpty = false;
+	    		  }
+	    	  }
+	    	  
+	    	  if (isEmpty) {
+				  eventBus.setCurrentTasks(MESSAGE_NO_OVERDUE);
+			  } else {
+		          eventBus.setCurrentTasks(relevant);
+			  }
+	    	  
+	    	  message = "All overdue tasks";
 	    	  
 	    	  break;
 	  }
 	  
 	  eventBus.setHeadMessage(message);
+	  //TODO find a good way to sort the tasks.
+	  //Collections.sort(relevant);
 	  
     return new Status(FEEDBACK_DISPLAY + feedbackMessage, MESSAGE_SUCCESS);
   }
+ 
+  
   
   /**
    * This method is used to retrieve the updated list of tasks from
@@ -201,6 +240,28 @@ public class DisplayCommandRunner extends CommandRunner {
 	  } else if (taskStart.isBefore(date) && taskEnd.isBefore(date)) {
 		  return false;
 	  } else if (taskStart.isEqual(date) || taskEnd.isEqual(date)) {
+		  return true;
+	  } else {
+		  return false;
+	  }
+  }
+  
+  /**
+   * This method determines whether a task is overdue as of today.
+   * 
+   * @param taskDateTime    A task's DateTime.
+   * @return
+   */
+  public boolean isOverdue(DateTime taskDateTime) {
+	  LocalDate taskEnd;
+	  
+	  try {
+		  taskEnd = taskDateTime.getEndDate();
+	  } catch (NullPointerException e) {
+		  return false;
+	  }
+	  
+	  if (taskEnd.isBefore(now)) {
 		  return true;
 	  } else {
 		  return false;
