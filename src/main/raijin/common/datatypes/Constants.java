@@ -1,33 +1,30 @@
 package raijin.common.datatypes;
 
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+
 public class Constants {
   
-  public enum TYPE_TASK {
-    FLOATING, EVENT, SPECIFIC
-  }
-  
-  public enum CommandParam {
-   ID, NAME, DATETIME
-  }
-  public static enum Priority { LOW, MID, HIGH }
 
-  public static enum Command { 
-    ADD, EDIT, DISPLAY, SEARCH, DELETE, DONE, EXIT, UNDO, REDO, HELP,
-    SET
-  }
+  //===========================================================================
+  // Storage Constants
+  //===========================================================================
   
-  public static enum Error {
-    NoSuchTask, IllegalCommand, IllegalCommandArgument, UnableToExecuteCommand, 
-    FailedToParse
-  }
-
-  public static final String FORMAT_DATE = "dd/MM/yyyy";
-  public static final String FORMAT_TIME = "HHmm";
   public static final String NAME_USER_DATA = "/data.json";      //Default name used to store data 
   public static final String NAME_USER_CONFIG = "/config.json";  //Default name used to store user config
   public static final String NAME_USER_FOLDER = "/data";         //Default folder name for storage
   public static final String NAME_BASE_CONFIG = "/base.cfg";     //Base config which stores location of storage
   public static final String NAME_TEMP_DATA = "RaijinData";
+
+  //===========================================================================
+  // Status and Exception messages
+  //===========================================================================
+
+  public static enum Error {
+    NoSuchTask, IllegalCommand, IllegalCommandArgument, UnableToExecuteCommand, 
+    FailedToParse
+  }
 
   public static final String FEEDBACK_INFO_SUCCESS = "Operation is successful.";
   public static final String FEEDBACK_ADD_SUCCESS = "Added %s successfully.";
@@ -36,25 +33,32 @@ public class Constants {
   public static final String FEEDBACK_DELETE_SUCCESS = "You have just deleted %s !";
   public static final String FEEDBACK_UNDO_SUCCESS = "Undo successfully";
   public static final String FEEDBACK_REDO_SUCCESS = "Redo successfully";
-
   public static final String FEEDBACK_ERROR_FAILEDPARSING = "Failed to parse \"%s\"";
   public static final String FEEDBACK_ERROR_FAILEDCOMMAND = "Failed to execute %s command";
   
+  //===========================================================================
+  // Datatypes Constants
+  //===========================================================================
+
+  public enum TYPE_TASK {
+    FLOATING, EVENT, SPECIFIC
+  }
+  
+  /*Levels of priority supported*/
+  public static final String PRIORITY_LOW = "l";
+  public static final String PRIORITY_MID = "m";
+  public static final String PRIORITY_HIGH = "h";
+
+  /*Universal date format used*/
+  public static final String FORMAT_DATE = "dd/MM/yyyy";
+  public static final String FORMAT_TIME = "HHmm";
+  
+  /*Initial number of IDs created*/
   public static final int MAX_ID = 200;
   
-  public static final String HELP_MESSAGE = "\n<----==== Raijin to the Rescue! ====---->"
-      + "\nADD <Task Name>\nAdds a task with a specified name.\n"
-      + "ADD <Task Name> <DateTime>\nAdds a task with a specified name and timeline*.\n"
-      + "\nEDIT <Task ID> <Task Name>\nEdits a task's name based on its associated ID.\n"
-      + "EDIT <Task ID> <DateTime>\nEdits a task's timeline* based on its associated ID.\n"
-      + "EDIT <Task ID> <Task Name> <DateTime>\nEdits both the task's name and timeline*.\n"
-      + "\n*DateTime: Can be input in flexible formats. Below are relevant examples:\n"
-      + "by 18/3\ton 18/3 1800\tfrom 18/3 1800 to 2000\tfrom 18/3 1800 till 19/3 2000\n"
-      + "\nDONE <Task ID>\nMark a task as done.\n"
-      + "\nDELETE <Task ID>\nDelete a task.\n"
-      + "\nDISPLAY <Date> or <Type>\nDisplay list of tasks depending on type or date specified.\n"
-      + "Type: \"c\" for completed tasks, \"p\" for pending tasks. Default: Pending tasks.\n"
-      + "\nUNDO/REDO\nUndo a command you previously did, or redo a command you undid.";
+  //===========================================================================
+  // Parser Constants
+  //===========================================================================
 
   // Regex for recognizing date patterns. Available test cases at: http://fiddle.re/56t2j6
   public static final String DATE_PATTERN = "^(0?[1-9]|[12][0-9]|3[01])(\\/|-|\\.)((0?[1-9]|1[012])"
@@ -80,4 +84,42 @@ public class Constants {
   public static final String TIME_PATTERN = "^([01]?[0-9]|2[0-3])[0-5][0-9]$";
   public static final String[] MONTHS = new String[]{"jan","feb","mar","apr","may","jun","jul",
       "aug","sep","oct","nov","dec"};
+  
+  //===========================================================================
+  // Command related constants
+  //===========================================================================
+
+  public enum CommandParam {
+   ID, NAME, DATETIME
+  }
+
+  public static enum Command { 
+    ADD, EDIT, DISPLAY, SEARCH, DELETE, DONE, EXIT, UNDO, REDO, HELP,
+    SET
+  }
+  
+  public static final String HELP_MESSAGE = "\n<----==== Raijin to the Rescue! ====---->"
+      + "\nADD <Task Name>\nAdds a task with a specified name.\n"
+      + "ADD <Task Name> <DateTime>\nAdds a task with a specified name and timeline*.\n"
+      + "\nEDIT <Task ID> <Task Name>\nEdits a task's name based on its associated ID.\n"
+      + "EDIT <Task ID> <DateTime>\nEdits a task's timeline* based on its associated ID.\n"
+      + "EDIT <Task ID> <Task Name> <DateTime>\nEdits both the task's name and timeline*.\n"
+      + "\n*DateTime: Can be input in flexible formats. Below are relevant examples:\n"
+      + "by 18/3\ton 18/3 1800\tfrom 18/3 1800 to 2000\tfrom 18/3 1800 till 19/3 2000\n"
+      + "\nDONE <Task ID>\nMark a task as done.\n"
+      + "\nDELETE <Task ID>\nDelete a task.\n"
+      + "\nDISPLAY <Date> or <Type>\nDisplay list of tasks depending on type or date specified.\n"
+      + "Type: \"c\" for completed tasks, \"p\" for pending tasks. Default: Pending tasks.\n"
+      + "\nUNDO/REDO\nUndo a command you previously did, or redo a command you undid.";
+
+  
+  //===========================================================================
+  // Keyboard shortcuts
+  //===========================================================================
+  
+  public static final KeyCodeCombination KEY_UNDO = new KeyCodeCombination(KeyCode.Z,   //Undo shortcut
+      KeyCombination.CONTROL_DOWN);
+
+  public static final KeyCodeCombination KEY_REDO = new KeyCodeCombination(KeyCode.R,   //Redo shortcut
+      KeyCombination.CONTROL_DOWN);
 }

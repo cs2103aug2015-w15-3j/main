@@ -17,7 +17,7 @@ public class EditCommandRunner extends CommandRunner implements UndoableRedoable
   private Task taskBeforeChange;
   
   Task modifyTask(ParsedInput input) {
-    String name = (input.getName() == null) ? taskBeforeChange.getName() : input.getName();
+    String name = (input.getName() == "") ? taskBeforeChange.getName() : input.getName();
     ParsedInput modifiedInput = (input.getDateTime() == null) ? 
                         inputBeforeChange : input;
     return new Task(name, idManager.getId(), modifiedInput);
