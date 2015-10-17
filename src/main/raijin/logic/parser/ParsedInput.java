@@ -1,5 +1,6 @@
 package raijin.logic.parser;
 
+import java.util.Collection;
 import java.util.TreeSet;
 
 import raijin.common.datatypes.Constants;
@@ -17,8 +18,8 @@ public class ParsedInput {
   //===========================================================================
   
   private Constants.Command command;            
-  private int id = 0;                              
-  private String name;                             
+  private TreeSet<Integer> id = new TreeSet<Integer>();
+  private TreeSet<String> name = new TreeSet<String>();
   private DateTime dateTime;
   private String displayOptions;                  
   private TreeSet<String> tags = new TreeSet<String>();
@@ -33,8 +34,8 @@ public class ParsedInput {
   /*Private contructor because only used by nested Builder class*/
   private ParsedInput(
     final Constants.Command command,
-    final int id,
-    final String name,
+    final TreeSet<Integer> id,
+    final TreeSet<String> name,
     final DateTime dateTime, 
     final String displayOptions, 
     final TreeSet<String> tags,
@@ -62,14 +63,31 @@ public class ParsedInput {
   }
 
   public int getId() {
-    return id;
+    if (id.isEmpty()) {
+      return 0;                                     // If not assigned, default to 0
+    }
+    return id.first();
   }
   
+  /*Returns a group of ids for bulk processing*/
+  public TreeSet<Integer> getIds() {
+    return id;
+  }
+
   public void setId(int id) {
-    this.id = id;
+    this.id.clear();
+    this.id.add(id);
   }
 
   public String getName() {
+    if (name.isEmpty()) {                          // If not assigned, default to empty string
+      return "";
+    }
+    return name.first();
+  }
+
+  /*Returns a group of names for bulk processing*/
+  public TreeSet<String> getNames() {
     return name;
   }
 
@@ -103,8 +121,8 @@ public class ParsedInput {
 
   public static class ParsedInputBuilder {
     private final Constants.Command command;
-    private int id;
-    private String name;
+    private TreeSet<Integer> id = new TreeSet<Integer>();
+    private TreeSet<String> name = new TreeSet<String>();
     private DateTime dateTime;
     private String displayOptions;
     private TreeSet<String> tags;
@@ -117,15 +135,25 @@ public class ParsedInput {
     }
     
     public ParsedInputBuilder id(final int id) {
-      this.id = id;
+      this.id.add(id);
       return this;
     }
     
+    public ParsedInputBuilder id(final Collection<Integer> ids) {
+      this.id.addAll(ids);
+      return this;
+    }
+
     public ParsedInputBuilder name(final String name) {
-      this.name = name;
+      this.name.add(name);
       return this;
     }
     
+    public ParsedInputBuilder name(final Collection<String> names) {
+      this.name.addAll(names);
+      return this;
+    }
+
     public ParsedInputBuilder dateTime(final DateTime dateTime) {
       this.dateTime = dateTime;
       return this;
