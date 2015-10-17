@@ -1,5 +1,9 @@
 package raijin.common.datatypes;
 
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+
 public class Constants {
   
   public enum TYPE_TASK {
@@ -80,4 +84,10 @@ public class Constants {
   public static final String TIME_PATTERN = "^([01]?[0-9]|2[0-3])[0-5][0-9]$";
   public static final String[] MONTHS = new String[]{"jan","feb","mar","apr","may","jun","jul",
       "aug","sep","oct","nov","dec"};
+  
+  public static final KeyCodeCombination KEY_UNDO = new KeyCodeCombination(KeyCode.Z,   //Undo shortcut
+      KeyCombination.CONTROL_DOWN);
+
+  public static final KeyCodeCombination KEY_REDO = new KeyCodeCombination(KeyCode.R,   //Redo shortcut
+      KeyCombination.CONTROL_DOWN);
 }
