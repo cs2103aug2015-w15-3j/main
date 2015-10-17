@@ -11,9 +11,10 @@ import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.CommandRunner;
+import raijin.logic.api.CommandShortcut;
 import raijin.logic.parser.ParsedInput;
 
-public class RedoCommandRunner extends CommandRunner {
+public class RedoCommandRunner extends CommandRunner implements CommandShortcut {
 
   public RedoCommandRunner() {
     handleKeyEvent();
@@ -25,8 +26,7 @@ public class RedoCommandRunner extends CommandRunner {
     return new Status(Constants.FEEDBACK_REDO_SUCCESS);
   }
 
-  void handleKeyEvent() {
-    EventBus eventbus = RaijinEventBus.getEventBus();           //Get universal eventbus
+  public void handleKeyEvent() {
     MainSubscriber<KeyEvent> redoKeySubscriber = new MainSubscriber<KeyEvent>(eventbus) {
 
       @Subscribe

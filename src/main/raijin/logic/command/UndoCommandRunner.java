@@ -11,9 +11,10 @@ import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.CommandRunner;
+import raijin.logic.api.CommandShortcut;
 import raijin.logic.parser.ParsedInput;
 
-public class UndoCommandRunner extends CommandRunner {
+public class UndoCommandRunner extends CommandRunner implements CommandShortcut {
 
   public UndoCommandRunner() {
     handleKeyEvent();
@@ -24,8 +25,7 @@ public class UndoCommandRunner extends CommandRunner {
     return new Status(Constants.FEEDBACK_UNDO_SUCCESS);
   }
 
-  void handleKeyEvent() {
-    EventBus eventbus = RaijinEventBus.getEventBus();           //Get universal eventbus
+  public void handleKeyEvent() {
     MainSubscriber<KeyEvent> undoKeySubscriber = new MainSubscriber<KeyEvent>(eventbus) {
 
       @Subscribe
