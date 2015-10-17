@@ -30,7 +30,6 @@ public class Raijin extends Application {
 	private Scene workingScene, introScene;
 	private Logic logic;
 	private IntroController introController;
-	private Session session;
 	
 	public static void main(String[] args) {
 	  launch(args);
@@ -41,13 +40,13 @@ public class Raijin extends Application {
     /*Adding fxml */
     initPrimaryStage(stage);
     initLogic();
-    initSession();
     decideScene();
     
     this.stage.show();
     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-    	public void handle(WindowEvent onClose) {
-    		session.writeOnExit();
+    	public void handle(WindowEvent we) {
+    		logic.executeCommand("exit");
+    		System.exit(0);
     	}
     });
   }
@@ -68,10 +67,6 @@ public class Raijin extends Application {
  
   private void initLogic() throws FileNotFoundException {
 	  logic = new Logic();
-  }
-  
-  private void initSession() {
-	  this.session = logic.getSession();
   }
   
   private void initIntroLayout() {
