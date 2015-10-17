@@ -11,9 +11,6 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 
 public class TaskPane extends StackPane {
-	//private static final String PRIORITY_HIGH = "high";
-	//private static final String PRIORITY_MID = "mid";
-	//private static final String PRIORITY_LOW = "low";
 	
 	private String[] highPriorityColours = {"#FF9494", "#FFA366"}; 		// red, orange
 	private String[] midPriorityColours = {"#B2FFB2", "#99E6FF"}; 		// green, blue
@@ -44,10 +41,20 @@ public class TaskPane extends StackPane {
 		id = new Label(String.valueOf(task.getId()));
 		id.setStyle("-fx-font-family: Georgia; -fx-font-weight: bold; -fx-font-size: 20px;");
 		taskName = new Label(task.getName());
-		taskName.setStyle("-fx-font-weight: bold;");
+		taskName.setStyle("-fx-font-weight: bold; -fx-font-");
 		tags = new Label(retrieveTags(task));
-		priorityValue = new Label(task.getPriority());
 		
+		try {
+		if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
+			priorityValue = new Label("High");
+		} else if (task.getPriority().equals(Constants.PRIORITY_MID)) {
+			priorityValue = new Label("Mid");
+		} else {
+			priorityValue = new Label("Low");
+		}
+		} catch (NullPointerException e) {
+			priorityValue = new Label("placeholder");
+		}
 		taskType = task.getType();
 		
 		if (taskType.equals(Constants.TYPE_TASK.EVENT)) {
@@ -148,6 +155,13 @@ public class TaskPane extends StackPane {
 		this.setPadding(new Insets(2));
 		
 	}
+	
+	public TaskPane (String message) {
+		Label msg = new Label(message);
+		
+		this.getChildren().addAll(msg);
+		this.setStyle("-fx-background-color: white;");
+	}
 
 	/**
 	 * This method is to get all the tags of the task into a single String
@@ -158,7 +172,7 @@ public class TaskPane extends StackPane {
 	 */
 	public String retrieveTags(Task task) {
 		TreeSet<String> tagsTree = new TreeSet<String>(task.getTags());
-		String tagString = "";
+		String tagString = "Tags: ";
 		boolean hasTags = false;
 		
 		while (!tagsTree.isEmpty()) {
@@ -170,7 +184,7 @@ public class TaskPane extends StackPane {
 		if (hasTags) {
 			tagString = tagString.substring(0, tagString.length() -  2);
 		} else {
-			tagString = "none";
+			tagString += "none";
 		}
 		
 		return tagString;

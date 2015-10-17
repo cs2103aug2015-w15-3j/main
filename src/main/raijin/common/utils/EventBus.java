@@ -51,7 +51,7 @@ public class EventBus {
   }
  
   public void setCurrentTasks(String message) {
-	  currentTasks.setAll(message);
+   currentTasks.setAll(message);
   }
 
   public StringProperty feedBackProperty() {
