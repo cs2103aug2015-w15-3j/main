@@ -5,8 +5,11 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.SetFeedbackEvent;
+import raijin.common.eventbus.subscribers.MainSubscriber;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -36,6 +39,7 @@ public class InputController extends BorderPane {
 		}
 		
 		this.mainApp = mainApp;
+		handleSetFeedbackEvent();             //Handles any call to set feedback
 	}
 	
 	public TextField getCommandBar() {
@@ -54,5 +58,17 @@ public class InputController extends BorderPane {
 	
 	public void setFeedback(String text) {
 		feedbackBar.setText(text);
+	}
+	
+	public void handleSetFeedbackEvent() {
+	  MainSubscriber<SetFeedbackEvent> feedbackSubscriber = new MainSubscriber<
+	      SetFeedbackEvent>(eventbus) {
+
+	      @Subscribe
+          @Override
+          public void handleEvent(SetFeedbackEvent event) {
+            setFeedback(event.output);
+            
+          }};
 	}
 }	

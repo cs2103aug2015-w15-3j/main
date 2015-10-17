@@ -8,6 +8,7 @@ import com.google.common.eventbus.Subscribe;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.CommandRunner;
@@ -34,10 +35,16 @@ public class UndoCommandRunner extends CommandRunner implements CommandShortcut 
         if (Constants.KEY_UNDO.match(event)) {
           try {
             history.undo();
+            sendFeedbackEvent(Constants.FEEDBACK_UNDO_SUCCESS);
           } catch (UnableToExecuteCommandException e) {
             logger.error(e.getMessage());
           }
         }
       }};
   }
+  
+  void sendFeedbackEvent(String msg) {
+    eventbus.post(new SetFeedbackEvent(msg));
+  }
+
 }
