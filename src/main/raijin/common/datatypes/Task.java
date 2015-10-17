@@ -1,5 +1,7 @@
 package raijin.common.datatypes;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,7 +21,7 @@ import raijin.storage.api.TasksManager;
  * This is a basic unit of todo that is used to describe details of a todo
  *
  */
-public class Task {
+public class Task implements Comparable<Task> {
   
   private int id;                                                  //Unique id that describes a task
   private String name;                                             //Description of a task
@@ -174,5 +176,49 @@ public class Task {
 
     }
   }
+
+@Override
+public int compareTo(Task other) {
+	
+	if (this.getType().equals(Constants.TYPE_TASK.FLOATING)) {
+		
+		// Case #1: both tasks being compared are floating tasks.
+		if (other.getType().equals(Constants.TYPE_TASK.FLOATING)) {
+			return this.getName().compareToIgnoreCase(other.getName());
+		}
+		
+		// Case #2: this task is floating while the other is not.
+		else {
+			return 1;
+		}
+		
+	} else {
+		
+		// Case #3: this task is not floating, the other is floating.
+		if (other.getType().equals(Constants.TYPE_TASK.FLOATING)) {
+			return -1;
+		}
+		
+		// Case #4: both tasks are not floating.
+		else {
+			LocalDate thisDate = this.getDateTime().getEndDate();
+			LocalDate otherDate = other.getDateTime().getEndDate();
+			
+			// Case #5: both tasks have same end date.
+			if (thisDate.compareTo(otherDate) == 0) {
+				LocalTime thisTime = this.getDateTime().getEndTime();
+				LocalTime otherTime = other.getDateTime().getEndTime();
+				
+				return thisTime.compareTo(otherTime);
+				
+			} 
+			
+			// Case #6: both tasks have different dates.
+			else {
+				return thisDate.compareTo(otherDate);
+			}
+		}
+	}
+}
 
 }
