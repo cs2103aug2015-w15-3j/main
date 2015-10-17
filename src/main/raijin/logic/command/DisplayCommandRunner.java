@@ -22,6 +22,9 @@ public class DisplayCommandRunner extends CommandRunner {
   private static final String TYPE_ALL = "a";			// display ALL PENDING
   private static final String TYPE_PENDING = "p";		// display PENDING (for today)
   private static final String TYPE_COMPLETED = "c";     // display COMPLETED
+  private static final String TYPE_FLOATING = "f";
+  private static final String TYPE_OVERDUE = "o";
+  
   private static final String FEEDBACK_DISPLAY = "Displaying: ";
   private static final String FEEDBACK_ALL_PENDING = "all pending tasks";
   private static final String FEEDBACK_PENDING = "pending tasks";
@@ -43,12 +46,10 @@ public class DisplayCommandRunner extends CommandRunner {
   final DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM ''yy");
 
   public Status processCommand(ParsedInput cmd) {
-	  // Getting the current DateTime
+	  
 	  now = LocalDate.now();
 	  
-	  pending = new ArrayList<Task>(TasksManager.getManager().getPendingTasks().values());
-	  completed = new ArrayList<Task>(TasksManager.getManager().getCompletedTasks().values());
-	  relevant = new ArrayList<Task>();
+	  retrieveLists();
 	  
 	  boolean isEmpty = true;
 	  
@@ -80,7 +81,6 @@ public class DisplayCommandRunner extends CommandRunner {
 			  eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
 		  } else {
 	          eventBus.setCurrentTasks(relevant);
-	        //TODO note: need to give this list somewhere
 		  }
 		  
 	      message = "Tasks pending for " + dateFormat.format(date);
@@ -117,6 +117,21 @@ public class DisplayCommandRunner extends CommandRunner {
     return new Status(FEEDBACK_DISPLAY + feedbackMessage, MESSAGE_SUCCESS);
   }
   
+  public void retrieveLists() {
+	  pending = new ArrayList<Task>(TasksManager.getManager().getPendingTasks().values());
+	  completed = new ArrayList<Task>(TasksManager.getManager().getCompletedTasks().values());
+	  relevant = new ArrayList<Task>();
+  }
+  
+  /**
+   * This method is used to determine whether a task's date is relevant
+   * to the date that the user has specified. e.g. does start/end fall on
+   * specified date, or the specified date falls in between the queried date.
+   * 
+   * @param cmdDateTime     Specified/queried DateTime by user.
+   * @param taskDateTime	A task's DateTime.
+   * @return true if relevant, false if otherwise
+   */
   public boolean isRelevantDate(DateTime cmdDateTime, DateTime taskDateTime) {
 	  LocalDate taskStart;
 	  LocalDate taskEnd;
@@ -128,14 +143,13 @@ public class DisplayCommandRunner extends CommandRunner {
 	  } catch (NullPointerException e) {
 		  return false;
 	  }
+	  
 	  LocalDate date = cmdDateTime.getStartDate();
 	  
 	  if (taskStart.isBefore(date) && taskEnd.isAfter(date)) {
 		  return true;
 	  } else if (taskStart.isBefore(date) && taskEnd.isBefore(date)) {
 		  return false;
-	  /*} else if (taskStart.isBefore(date)) {
-		  return true;*/
 	  } else if (taskStart.isEqual(date) || taskEnd.isEqual(date)) {
 		  return true;
 	  } else {
