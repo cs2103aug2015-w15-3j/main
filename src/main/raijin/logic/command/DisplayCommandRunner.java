@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
+import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 //import raijin.common.datatypes.ListDisplayContainer;
 import raijin.common.datatypes.Status;
@@ -22,8 +23,8 @@ public class DisplayCommandRunner extends CommandRunner {
   private static final String TYPE_ALL = "a";			// display ALL PENDING
   private static final String TYPE_PENDING = "p";		// display PENDING (for today)
   private static final String TYPE_COMPLETED = "c";     // display COMPLETED
-  private static final String TYPE_FLOATING = "f";
-  private static final String TYPE_OVERDUE = "o";
+  private static final String TYPE_FLOATING = "f";		// display FLOATING
+  private static final String TYPE_OVERDUE = "o";		// display OVERDUE
   
   private static final String FEEDBACK_DISPLAY = "Displaying: ";
   private static final String FEEDBACK_ALL_PENDING = "all pending tasks";
@@ -50,9 +51,91 @@ public class DisplayCommandRunner extends CommandRunner {
 	  now = LocalDate.now();
 	  
 	  retrieveLists();
+	  cmdDateTime = getQueriedDate(cmd);
+	  
+	  Date date = Date.from(cmdDateTime.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+	  String message = "";
+	  String feedbackMessage = "";
 	  
 	  boolean isEmpty = true;
 	  
+	  switch (cmd.getDisplayOptions()) {
+	      case TYPE_PENDING:
+	    	  feedbackMessage = FEEDBACK_PENDING;
+	    	  for (int i=0; i<pending.size(); i++) {
+				  taskDateTime = pending.get(i).getDateTime();
+				  
+				  if (isRelevantDate(cmdDateTime, taskDateTime)) {
+					  isEmpty = false;
+					  relevant.add(pending.get(i));
+				  }
+			  }
+	    	  
+	    	  if (isEmpty) {
+				  eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
+			  } else {
+		          eventBus.setCurrentTasks(relevant);
+			  }
+	    	  
+	    	  message = "Tasks pending for " + dateFormat.format(date);
+	    	  
+	    	  break;
+	    	  
+	      case TYPE_ALL:
+	    	  feedbackMessage = FEEDBACK_ALL_PENDING;
+			  
+			  if (pending.isEmpty()) {
+				  eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
+			  } else {
+				  eventBus.setCurrentTasks(pending);
+			  }
+			  
+			  message = "All pending tasks";
+	    	 
+	    	  break;
+	    	  
+	      case TYPE_FLOATING:
+	    	  
+	    	  break;
+	    	  
+	      case TYPE_COMPLETED:
+	    	  feedbackMessage = FEEDBACK_COMPLETED;
+			  for (int i=0; i<completed.size(); i++) {
+				  isEmpty = false;
+				  relevant.add(completed.get(i));
+			  }
+		      
+		      message = "Tasks completed as of " + dateFormat.format(date);
+			  
+			  if (isEmpty) {
+				  eventBus.setCurrentTasks(MESSAGE_NO_COMPLETED);
+			  } else {
+				  eventBus.setCurrentTasks(relevant);
+			  }
+			  
+	    	  break;
+	    	  
+	      case TYPE_OVERDUE:
+	    	  break;
+	  }
+	  
+	  eventBus.setHeadMessage(message);
+	  
+    return new Status(FEEDBACK_DISPLAY + feedbackMessage, MESSAGE_SUCCESS);
+  }
+  
+  /**
+   * This method is used to retrieve the updated list of tasks from
+   * TasksManager, and initialise a new list 'relevant' for filtering
+   * out the relevant tasks to be displayed.
+   */
+  public void retrieveLists() {
+	  pending = new ArrayList<Task>(TasksManager.getManager().getPendingTasks().values());
+	  completed = new ArrayList<Task>(TasksManager.getManager().getCompletedTasks().values());
+	  relevant = new ArrayList<Task>();
+  }
+  
+  public DateTime getQueriedDate(ParsedInput cmd) {
 	  if (cmd.getDateTime() != null) {
 		  cmdDateTime = cmd.getDateTime();
 	  } else {
@@ -62,65 +145,7 @@ public class DisplayCommandRunner extends CommandRunner {
 				                     + "/" + now.getYear());
 	  }
 	  
-	  Date date = Date.from(cmdDateTime.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-	  String message = "";
-	  String feedbackMessage = "";
-	  
-	  if (cmd.getDisplayOptions().equals(TYPE_PENDING)) {
-		  feedbackMessage = FEEDBACK_PENDING;
-		  for (int i=0; i<pending.size(); i++) {
-			  taskDateTime = pending.get(i).getDateTime();
-			  
-			  if (isRelevantDate(cmdDateTime, taskDateTime)) {
-				  isEmpty = false;
-				  relevant.add(pending.get(i));
-			  }
-		  }
-		  
-		  if (isEmpty) {
-			  eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
-		  } else {
-	          eventBus.setCurrentTasks(relevant);
-		  }
-		  
-	      message = "Tasks pending for " + dateFormat.format(date);
-		  
-	  } else if (cmd.getDisplayOptions().equals(TYPE_ALL)) {
-		  feedbackMessage = FEEDBACK_ALL_PENDING;
-		  
-		  if (pending.isEmpty()) {
-			  eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
-		  } else {
-			  eventBus.setCurrentTasks(pending);
-		  }
-		  
-		  message = "All pending tasks";
-		  
-	  } else if (cmd.getDisplayOptions().equals(TYPE_COMPLETED)) {
-		  feedbackMessage = FEEDBACK_COMPLETED;
-		  for (int i=0; i<completed.size(); i++) {
-			  isEmpty = false;
-			  relevant.add(completed.get(i));
-		  }
-	      
-	      message = "Tasks completed on " + dateFormat.format(date);
-		  
-		  if (isEmpty) {
-			  eventBus.setCurrentTasks(MESSAGE_NO_COMPLETED);
-		  } else {
-			  eventBus.setCurrentTasks(relevant);
-		  }
-	  }
-	  
-	  eventBus.setHeadMessage(message);
-	  
-    return new Status(FEEDBACK_DISPLAY + feedbackMessage, MESSAGE_SUCCESS);
-  }
-  
-  public void retrieveLists() {
-	  pending = new ArrayList<Task>(TasksManager.getManager().getPendingTasks().values());
-	  completed = new ArrayList<Task>(TasksManager.getManager().getCompletedTasks().values());
-	  relevant = new ArrayList<Task>();
+	  return cmdDateTime;
   }
   
   /**
