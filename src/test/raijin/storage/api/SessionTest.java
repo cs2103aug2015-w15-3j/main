@@ -42,4 +42,10 @@ public class SessionTest {
     TasksManager tasksManager = session.getDataFromJson(StorageHandler.getJarPath() 
         + wrongFormatFile);
   }
+
+  @Test(expected = StorageFailureException.class)
+  public void initTasksManager_MissingFile() throws UnsupportedEncodingException {
+    TasksManager tasksManager = session.getDataFromJson(StorageHandler.getJarPath() 
+        + "nothing");
+  }
 }

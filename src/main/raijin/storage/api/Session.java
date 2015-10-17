@@ -155,14 +155,21 @@ public class Session {
   }
   
   @SuppressWarnings("serial")
-  TasksManager getDataFromJson(String dataPath) {
+  TasksManager getDataFromJson(String dataPath) throws StorageFailureException {
     JsonReader reader = StorageHandler.getJsonReaderFromFile(dataPath);
     try {
       TasksManager retrievedData = StorageHandler.readFromJson(reader, 
         new TypeToken<TasksManager>() {}.getType());
       return retrievedData;
-    } catch (JsonParseException e) {
-      throw new StorageFailureException("Corrupted JSON file", e);
+
+    } catch (NullPointerException e) {  //JSON file is missing
+      createNewFile(dataPath);
+      throw new StorageFailureException("Missing JSON file.New JSON file created", e);
+
+    } catch (JsonParseException e) {    //JSON file is corrupted
+      StorageHandler.deleteFile(dataPath);
+      throw new StorageFailureException("Corrupted JSON file.New JSON file created", e);
+
     } catch (IOException e) {
       throw new StorageFailureException("Failed to read from JSON file", e);
     }
@@ -174,5 +181,7 @@ public class Session {
         tasksManager.sync(retrievedData);
         IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
       }
+      /*@TODO replace with backup*/
+      StorageHandler.deleteFile(dataPath);              //Remove json file if corrupted
   }
 }

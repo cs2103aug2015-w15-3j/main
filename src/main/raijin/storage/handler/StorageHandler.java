@@ -119,6 +119,10 @@ public class StorageHandler {
     return path.replaceFirst("^/(.:/)", "$1");
   }
 
+  public static boolean deleteFile(String path) {
+    return new File(path).delete();
+  }
+
   //===========================================================================
   //JSON Functions
   //===========================================================================
