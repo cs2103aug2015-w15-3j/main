@@ -3,6 +3,7 @@ package raijin.logic.command;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
+import java.util.TreeSet;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -92,9 +93,78 @@ public class AddCommandRunnerTest {
   
   @Test
   public void execute_DuplicateTask_ReturnWarning() throws UnableToExecuteCommandException {
-    addTask("submit op2 to ms lee", new DateTime("19/09/2015"));
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
+        name("submit op2 to ms lee").dateTime(new DateTime("19/09/2015")).createParsedInput();
+    tasksManager.addPendingTask(new Task(input.getName(), IDManager.getIdManager().getId(), input));
     Status status = addTask("submit op2 to ms lee", new DateTime("19/09/2015"));
-    assertEquals("Task already exists", status.getFeedback());
+    assertEquals(String.format(Constants.FEEDBACK_ADD_FAILURE, "submit op2 to ms lee"), status.getFeedback());
   }
 
+  @Test
+  public void isMultipleTasks_MultipleTasks_ReturnTrue() {
+    //Setup multiple tasks
+    TreeSet<String> testNames = new TreeSet<String>();
+    testNames.add("I am cute");
+    testNames.add("wash batu");
+    testNames.add("watch monty");
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
+        name(testNames).priority("h").createParsedInput();
+    assertTrue(addCommandRunner.isMultipleTasks(input));
+  }
+
+  @Test
+  public void undo_MultipleTasks() throws UnableToExecuteCommandException {
+    TreeSet<String> testNames = new TreeSet<String>();
+    testNames.add("I am cute");
+    testNames.add("wash batu");
+    testNames.add("watch monty");
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
+        name(testNames).priority("h").createParsedInput();
+
+    addCommandRunner.execute(input);
+    int afterAdd = tasksManager.getPendingTasks().size();
+    addCommandRunner.undo();
+    int afterUndo = tasksManager.getPendingTasks().size();
+    
+    assertEquals(3, afterAdd);
+    assertEquals(0, afterUndo);
+  }
+
+  @Test
+  public void redo_MultipleTasks() throws UnableToExecuteCommandException {
+    TreeSet<String> testNames = new TreeSet<String>();
+    testNames.add("I am cute");
+    testNames.add("wash batu");
+    testNames.add("watch monty");
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
+        name(testNames).priority("h").createParsedInput();
+
+    addCommandRunner.execute(input);
+    addCommandRunner.undo();
+    int afterUndo = tasksManager.getPendingTasks().size();
+    addCommandRunner.redo();
+    int afterRedo = tasksManager.getPendingTasks().size();
+    
+    assertEquals(0, afterUndo);
+    assertEquals(3, afterRedo);
+  }
+
+  @Test
+  public void createStatus_MultipleTasks() throws UnableToExecuteCommandException {
+    
+    //Add some existing task
+    tasksManager.addPendingTask(new Task("I am cute", 1));
+
+    TreeSet<String> testNames = new TreeSet<String>();
+    testNames.add("I am cute");
+    testNames.add("wash batu");
+    testNames.add("watch monty");
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
+        name(testNames).priority("h").createParsedInput();
+    
+    Status status = addCommandRunner.execute(input);
+    String expected = "Task \"I am cute\" already exists\nAdded wash batu successfully"
+        + "\nAdded watch monty successfully";
+    assertEquals(expected, status.getFeedback());
+  }
 }
