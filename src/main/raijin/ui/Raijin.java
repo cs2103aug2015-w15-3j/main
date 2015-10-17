@@ -43,6 +43,7 @@ public class Raijin extends Application {
     decideScene();
     
     this.stage.show();
+    
     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
     	public void handle(WindowEvent we) {
     		logic.executeCommand("exit");
@@ -85,9 +86,10 @@ public class Raijin extends Application {
 	  initRootLayout();
   	  addDisplayController(this);
       addInputController(this);
-      ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
-  
+      
       this.stage.setScene(new Scene(rootLayout));
+      ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
+      
   }
   
   public void decideScene() {
