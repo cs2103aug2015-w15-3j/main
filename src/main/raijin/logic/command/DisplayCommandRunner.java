@@ -27,9 +27,12 @@ public class DisplayCommandRunner extends CommandRunner {
   private static final String TYPE_OVERDUE = "o";		// display OVERDUE
   
   private static final String FEEDBACK_DISPLAY = "Displaying: ";
+  private static final String FEEDBACK_FLOATING = "floating tasks";
   private static final String FEEDBACK_ALL_PENDING = "all pending tasks";
   private static final String FEEDBACK_PENDING = "pending tasks";
   private static final String FEEDBACK_COMPLETED = "completed tasks";
+  private static final String FEEDBACK_OVERDUE = "overdue tasks";
+  
   private static final String MESSAGE_SUCCESS = "Success";
   private static final String MESSAGE_NO_PENDING = "You have no pending tasks!";
   private static final String MESSAGE_NO_COMPLETED = "You have no completed tasks!";
@@ -95,6 +98,15 @@ public class DisplayCommandRunner extends CommandRunner {
 	    	  break;
 	    	  
 	      case TYPE_FLOATING:
+	    	  feedbackMessage = FEEDBACK_FLOATING;
+	    	  
+	    	  for(int i=0; i<pending.size(); i++) {
+	    		  if (pending.get(i).getType().equals(Constants.TYPE_TASK.FLOATING)) {
+	    			  relevant.add(pending.get(i));
+	    		  }
+	    	  }
+	    	  
+	    	  message = "All floating tasks";
 	    	  
 	    	  break;
 	    	  
@@ -116,6 +128,9 @@ public class DisplayCommandRunner extends CommandRunner {
 	    	  break;
 	    	  
 	      case TYPE_OVERDUE:
+	    	  feedbackMessage = FEEDBACK_OVERDUE;
+	    	  
+	    	  
 	    	  break;
 	  }
 	  
@@ -135,6 +150,15 @@ public class DisplayCommandRunner extends CommandRunner {
 	  relevant = new ArrayList<Task>();
   }
   
+  /**
+   * This method returns a DateTime object for the queried date
+   * as specified by user. If no date has been specified, it
+   * defaults to the today's date.
+   * 
+   * @param cmd			ParsedInput that the user keyed in.
+   * @return the queried DateTime
+   */
+  
   public DateTime getQueriedDate(ParsedInput cmd) {
 	  if (cmd.getDateTime() != null) {
 		  cmdDateTime = cmd.getDateTime();
@@ -142,7 +166,8 @@ public class DisplayCommandRunner extends CommandRunner {
 		  cmdDateTime = new DateTime(String.format("%02d", now.getDayOfMonth()) 
 				                     + "/" 
 				                     + String.format("%02d", now.getMonthValue())
-				                     + "/" + now.getYear());
+				                     + "/"
+				                     + now.getYear());
 	  }
 	  
 	  return cmdDateTime;
