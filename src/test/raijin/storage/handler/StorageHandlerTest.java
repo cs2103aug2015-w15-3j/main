@@ -14,10 +14,15 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.Task;
+import raijin.storage.api.TasksManager;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 public class StorageHandlerTest {
 

@@ -2,6 +2,9 @@ package raijin.logic.command;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,16 +14,24 @@ import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.parser.ParsedInput;
 import raijin.logic.parser.ParsedInputTest;
 import raijin.storage.api.Session;
+import raijin.storage.handler.StorageHandler;
 
 public class SetCommandRunnerTest {
 
   private Session session;
   private SetCommandRunner setCommandRunner;
+  private String storageDirectory;
 
   @Before
   public void setUp() throws Exception {
     session = Session.getSession();
+    storageDirectory = session.storageDirectory;
     setCommandRunner = new SetCommandRunner();
+  }
+  
+  @After
+  public void tearDown() throws IOException {
+    StorageHandler.writeToFile(storageDirectory, session.baseConfigPath);
   }
 
   @Test

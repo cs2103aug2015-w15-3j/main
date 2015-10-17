@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import com.google.common.reflect.TypeToken;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
 import raijin.common.datatypes.Constants;
@@ -63,7 +64,7 @@ public class LogicStorageIT {
   }
 
   @SuppressWarnings("serial")
-  public TasksManager readDataFromFile(String dataPath) {
+  public TasksManager readDataFromFile(String dataPath) throws JsonSyntaxException, IOException {
     JsonReader jsonReader = getJsonReaderFromFile(dataPath);
     return readFromJson(jsonReader, new TypeToken<TasksManager>() {}.getType());
   }

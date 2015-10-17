@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import org.slf4j.Logger;
 
 import com.google.common.reflect.TypeToken;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
 import raijin.common.datatypes.Constants;
@@ -153,12 +155,24 @@ public class Session {
   }
   
   @SuppressWarnings("serial")
-  void initTasksManager() {
+  TasksManager getDataFromJson(String dataPath) {
     JsonReader reader = StorageHandler.getJsonReaderFromFile(dataPath);
-    TasksManager retrievedData = StorageHandler.readFromJson(reader, 
+    try {
+      TasksManager retrievedData = StorageHandler.readFromJson(reader, 
         new TypeToken<TasksManager>() {}.getType());
-    tasksManager.sync(retrievedData);
-    IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
+      return retrievedData;
+    } catch (JsonParseException e) {
+      throw new StorageFailureException("Corrupted JSON file", e);
+    } catch (IOException e) {
+      throw new StorageFailureException("Failed to read from JSON file", e);
+    }
   }
 
+  void initTasksManager() {
+      TasksManager retrievedData = getDataFromJson(dataPath);
+      if (retrievedData != null) {
+        tasksManager.sync(retrievedData);
+        IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
+      }
+  }
 }

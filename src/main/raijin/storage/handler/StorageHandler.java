@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -133,13 +134,10 @@ public class StorageHandler {
   }
 
   /*Deserializes object from JSON*/
-  public static <T> T readFromJson(JsonReader jsonReader, Type typeOfSrc) {
+  public static <T> T readFromJson(JsonReader jsonReader, Type typeOfSrc) 
+    throws JsonParseException, IOException {
     T deserializedObject = new Gson().fromJson(jsonReader, typeOfSrc);
-    try {
-      jsonReader.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    jsonReader.close();
     return deserializedObject;
   }
 
@@ -149,5 +147,6 @@ public class StorageHandler {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     return gson.toJson(targetObject);
   }
+  
 
 }
