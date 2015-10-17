@@ -116,16 +116,5 @@ public class ParsedInputTest {
     assertEquals("p", displayCommand.getDisplayOptions());
     assertEquals("2015-02-28", displayCommand.getDateTime().getStartDate().toString());
   }
-  
-  @Test(expected=IllegalCommandArgumentException.class)
-  public void testCheckStartDate() throws IllegalCommandArgumentException {
-    parser.checkStartDate("30/02/2015", new DateTime("30/02/2015"));
-  }
-  
-  @Test(expected=IllegalCommandArgumentException.class)
-  public void testCheckStartEndDate() throws IllegalCommandArgumentException {
-    parser.checkStartEndDate("29/02/2015", "30/02/2015", 
-        new DateTime("29/02/2015", "0800", "30/02/2015", "1000"));
-  }
 
 }
