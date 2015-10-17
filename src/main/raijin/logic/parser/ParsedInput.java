@@ -22,9 +22,9 @@ public class ParsedInput {
   private DateTime dateTime;
   private String displayOptions;                  
   private TreeSet<String> tags = new TreeSet<String>();
-  private int subTaskOf = 0;                  //Default to sentinel value 0
-  private String priority = "m";              //Default to medium priority
-  private String helperOption;                //Stores argument for helper command
+  private int subTaskOf = 0;                                     //Default to sentinel value 0
+  private String priority = Constants.PRIORITY_MID;              //Default to medium priority
+  private String helperOption;                                   //Stores argument for helper command
 
   //===========================================================================
   // Private constructor

@@ -13,7 +13,6 @@ public class Constants {
   public enum CommandParam {
    ID, NAME, DATETIME
   }
-  public static enum Priority { LOW, MID, HIGH }
 
   public static enum Command { 
     ADD, EDIT, DISPLAY, SEARCH, DELETE, DONE, EXIT, UNDO, REDO, HELP,
@@ -44,6 +43,10 @@ public class Constants {
   public static final String FEEDBACK_ERROR_FAILEDPARSING = "Failed to parse \"%s\"";
   public static final String FEEDBACK_ERROR_FAILEDCOMMAND = "Failed to execute %s command";
   
+  public static final String PRIORITY_LOW = "l";
+  public static final String PRIORITY_MID = "m";
+  public static final String PRIORITY_HIGH = "h";
+
   public static final int MAX_ID = 200;
   
   public static final String HELP_MESSAGE = "\n<----==== Raijin to the Rescue! ====---->"
