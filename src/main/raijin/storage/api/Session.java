@@ -49,7 +49,6 @@ public class Session {
       String basePath = StorageHandler.getJarPath() + Constants.NAME_USER_FOLDER;
       setupBase(basePath);
       setupStorage();
-      initTasksManager();
     } catch (UnsupportedEncodingException e) {
       throw new StorageFailureException("Unsupported Encoding while getting program path", e);
     } 
@@ -88,6 +87,7 @@ public class Session {
     StorageHandler.createDirectory(storageDirectory);       
     setupDataFolder();
     setupTempPath(StorageHandler.createTempFile(Constants.NAME_TEMP_DATA));
+    initTasksManager();
   }
   
   public String getPathInfo() {
@@ -162,13 +162,13 @@ public class Session {
         new TypeToken<TasksManager>() {}.getType());
       return retrievedData;
 
+    } catch (JsonParseException e) {          //JSON file is corrupted
+      generateNewFile(dataPath);              //Recreate empty file
+      throw new StorageFailureException("Corrupted JSON file.New JSON file created", e);
+
     } catch (NullPointerException e) {  //JSON file is missing
       createNewFile(dataPath);
       throw new StorageFailureException("Missing JSON file.New JSON file created", e);
-
-    } catch (JsonParseException e) {    //JSON file is corrupted
-      StorageHandler.deleteFile(dataPath);
-      throw new StorageFailureException("Corrupted JSON file.New JSON file created", e);
 
     } catch (IOException e) {
       throw new StorageFailureException("Failed to read from JSON file", e);
@@ -182,6 +182,11 @@ public class Session {
         IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
       }
       /*@TODO replace with backup*/
-      StorageHandler.deleteFile(dataPath);              //Remove json file if corrupted
+      generateNewFile(dataPath);              //Recreate empty file
+  }
+  
+  void generateNewFile(String filePath) {
+    StorageHandler.deleteFile(filePath);
+    createNewFile(filePath);
   }
 }

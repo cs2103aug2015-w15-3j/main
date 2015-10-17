@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.UnsupportedEncodingException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -46,6 +47,6 @@ public class SessionTest {
   @Test(expected = StorageFailureException.class)
   public void initTasksManager_MissingFile() throws UnsupportedEncodingException {
     TasksManager tasksManager = session.getDataFromJson(StorageHandler.getJarPath() 
-        + "nothing");
+        + "/nothing");
   }
 }
