@@ -11,9 +11,9 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 
 public class TaskPane extends StackPane {
-	private static final String PRIORITY_HIGH = "high";
-	private static final String PRIORITY_MID = "mid";
-	private static final String PRIORITY_LOW = "low";
+	//private static final String PRIORITY_HIGH = "high";
+	//private static final String PRIORITY_MID = "mid";
+	//private static final String PRIORITY_LOW = "low";
 	
 	private String[] highPriorityColours = {"#FF9494", "#FFA366"}; 		// red, orange
 	private String[] midPriorityColours = {"#B2FFB2", "#99E6FF"}; 		// green, blue
@@ -104,13 +104,13 @@ public class TaskPane extends StackPane {
 		HBox pane = new HBox();
 
 		if (!colourOfParent.equals("none")) {
-			if (task.getPriority().equals(PRIORITY_HIGH)) {
+			if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
 				this.setStyle("-fx-background-color: " + highPriorityColours[task.getId()%2]);
 				this.colour = highPriorityColours[task.getId()%2];
-			} else if (task.getPriority().equals(PRIORITY_MID)) {
+			} else if (task.getPriority().equals(Constants.PRIORITY_MID)) {
 				this.setStyle("-fx-background-color: " + midPriorityColours[task.getId()%2]);
 				this.colour = midPriorityColours[task.getId()%2];
-			} else if(task.getPriority().equals(PRIORITY_LOW)) {
+			} else if(task.getPriority().equals(Constants.PRIORITY_LOW)) {
 				this.setStyle("-fx-background-color: " + lowPriorityColours[task.getId()%1]);
 				this.colour = lowPriorityColours[task.getId()%1];
 			}
