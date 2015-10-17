@@ -151,11 +151,18 @@ public class DisplayCommandRunner extends CommandRunner {
 	    	  
 	    	  for(int i=0; i<pending.size(); i++) {
 	    		  currentTask = pending.get(i);
+	    		  DateTime currentTaskDateTime;
 	    		  
-	    		  if (isOverdue(currentTask.getDateTime())) {
-	    			  relevant.add(currentTask);
-	    			  isEmpty = false;
+	    		  try {
+	    			  currentTaskDateTime = currentTask.getDateTime();
+	    		  } catch (NullPointerException e) {
+	    			  continue;
 	    		  }
+	    		  
+    		      if (isOverdue(currentTaskDateTime)) {
+    			      relevant.add(currentTask);
+    			      isEmpty = false;
+    		      }
 	    	  }
 	    	  
 	    	  if (isEmpty) {
@@ -225,6 +232,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	  LocalDate taskStart;
 	  LocalDate taskEnd;
 	 
+	  //TODO this needs to change. start=end default?
 	  // Don't display floating tasks
 	  try {
 		  taskStart = taskDateTime.getStartDate();
