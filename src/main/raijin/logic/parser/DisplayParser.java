@@ -23,7 +23,7 @@ public class DisplayParser {
   
   /**
    * Method that parses display type input by user and responds accordingly.
-   * Currently allows for "p", "c", "a", "o" or dates for its options.
+   * Currently allows for "p", "c", "a", "o", "f" or dates for its options.
    * 
    * @returns   ParsedInputBuilder                  Appropriate ParsedInputBuilders accordingly.
    * @throws    IllegalCommandArgumentException
@@ -33,7 +33,7 @@ public class DisplayParser {
     for (int i = 1; i < wordsOfInput.length; i++) {
       if (wordsOfInput[i].matches(datePattern)) {
         builder.dateTime(new DateTime(dtFormat.formatDate(wordsOfInput[i], 1)));
-      } else if (wordsOfInput[i].matches("p|c|a|o")){
+      } else if (wordsOfInput[i].matches("p|c|a|o|f")){
         displayType = wordsOfInput[i];
       }
     }
