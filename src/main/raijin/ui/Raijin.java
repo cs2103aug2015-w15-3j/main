@@ -228,16 +228,11 @@ public class Raijin extends Application {
       showItem.addActionListener(showListener);
       popup.add(showItem);
 
-<<<<<<< HEAD
+
       trayIcon.setImageAutoSize(true);
-=======
-      MenuItem closeItem = new MenuItem("Close");
-      closeItem.addActionListener(closeListener);
-      popup.add(closeItem);
-      
+
       final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", popup);
 	  trayIcon.setImageAutoSize(true);
->>>>>>> 916953eae031f9f389024142713df34f2df80aba
       trayIcon.addActionListener(showListener);
       trayIcon.setPopupMenu(popup);
   }
