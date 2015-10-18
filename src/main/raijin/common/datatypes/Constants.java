@@ -124,4 +124,7 @@ public class Constants {
       KeyCombination.CONTROL_DOWN);
 
   public static final KeyCodeCombination KEY_TAB = new KeyCodeCombination(KeyCode.ENTER);
+
+  public  static final KeyCodeCombination KEY_SPACE = new KeyCodeCombination(KeyCode.SPACE);
+
 }

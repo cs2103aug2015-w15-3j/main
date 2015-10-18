@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+
 import com.google.common.eventbus.Subscribe;
 
 import javafx.scene.input.KeyEvent;
@@ -11,6 +13,7 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.SetTrie;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.KeyPressEvent;
+import raijin.common.eventbus.events.SetInputEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.storage.api.TasksManager;
 
@@ -22,10 +25,12 @@ import raijin.storage.api.TasksManager;
  */
 public class AutoComplete {
 
+  private int tabCount = 0;
   private SetTrie commandList;          //List of commands
   private SetTrie tagList;              //List of tags
   private SetTrie taskList;             //List of task names
   private TasksManager tasksManager;
+  private Logger logger;
   private com.google.common.eventbus.EventBus eventbus;
   public List<String> suggestions;
   
@@ -35,6 +40,7 @@ public class AutoComplete {
     taskList = new SetTrie();
     this.tasksManager =  tasksManager;
     this.eventbus = RaijinEventBus.getEventBus();
+    this.logger = RaijinLogger.getLogger();
     suggestions = new ArrayList<String>();
     
     TreeSet<String> tagList  = TaskUtils.getTags(tasksManager.getPendingTasks());
@@ -77,11 +83,16 @@ public class AutoComplete {
       @Subscribe
       @Override
       public void handleEvent(KeyPressEvent event) {
-        String userInput = event.currentUserInput;
-        updateSuggestions(userInput);
-        
-        if (Constants.KEY_TAB.match(event.keyEvent)) {
-          
+        if (Constants.KEY_SPACE.match(event.keyEvent)) {
+          tabCount = 0;
+        } else if (Constants.KEY_TAB.match(event.keyEvent)) {
+          logger.info("TAB called");
+          String suggestion = suggestions.get((tabCount++)%suggestions.size());
+          eventbus.post(new SetInputEvent(suggestion));
+          event.keyEvent.consume();
+        } else {
+          String userInput = event.currentUserInput;
+          updateSuggestions(userInput);
         }
         
       }};
