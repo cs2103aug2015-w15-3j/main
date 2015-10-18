@@ -109,6 +109,11 @@ public class ParsedInputTest {
     parser.parse("done");
   }
   
+  @Test(expected=FailedToParseException.class)
+  public void testInvalidSearchInput() throws FailedToParseException {
+    parser.parse("search");
+  }
+  
   @Test
   public void testBasicSearch() throws FailedToParseException {
     ParsedInput searchCommand = parser.parse("search everything including 1 is included 4");
