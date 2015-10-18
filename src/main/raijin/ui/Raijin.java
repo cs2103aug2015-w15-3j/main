@@ -78,6 +78,7 @@ public class Raijin extends Application {
     		System.exit(0);
     	}
     });
+    
   }
 
   private void initPrimaryStage(Stage stage) {

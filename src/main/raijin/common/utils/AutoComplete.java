@@ -46,6 +46,7 @@ public class AutoComplete {
     TreeSet<String> tagList  = TaskUtils.getTags(tasksManager.getPendingTasks());
     TreeSet<String> taskList  = TaskUtils.getTaskNames(tasksManager.getPendingTasks());
     setupList(tagList, taskList);
+    handleKeyEvent();
   }
   
   /**
@@ -86,7 +87,6 @@ public class AutoComplete {
         if (Constants.KEY_SPACE.match(event.keyEvent)) {
           tabCount = 0;
         } else if (Constants.KEY_TAB.match(event.keyEvent)) {
-          logger.info("TAB called");
           String suggestion = suggestions.get((tabCount++)%suggestions.size());
           eventbus.post(new SetInputEvent(suggestion));
           event.keyEvent.consume();
