@@ -10,6 +10,7 @@ import com.google.common.eventbus.Subscribe;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
+import raijin.common.eventbus.events.SetInputEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -69,6 +70,18 @@ public class InputController extends BorderPane {
           @Override
           public void handleEvent(SetFeedbackEvent event) {
             setFeedback(event.output);
+            
+          }};
+	}
+
+	public void handleSetInputEvent() {
+	  MainSubscriber<SetInputEvent> inputSubscriber = new MainSubscriber<
+	      SetInputEvent>(eventbus) {
+
+	      @Subscribe
+          @Override
+          public void handleEvent(SetInputEvent event) {
+            inputCommandBar.setText(event.output);
             
           }};
 	}
