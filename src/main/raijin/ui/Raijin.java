@@ -45,6 +45,7 @@ import raijin.storage.api.Session;
 public class Raijin extends Application {
 	private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
 	private static final String INTRO_LAYOUT_FXML_LOCATION = "resource/layout/IntroLayout.fxml";
+	private static final String TRAY_ICON_LOCATION = "resource/styles/raijin2.png";
 	
 	private static final String NO_DIRECTORY_SELECTED_FEEDBACK = "I'm sorry! You have not selected "
 															+ "a directory yet. Please try again!";
@@ -236,7 +237,7 @@ public class Raijin extends Application {
       closeItem.addActionListener(closeListener);
       popup.add(closeItem);
       
-      final TrayIcon trayIcon = new TrayIcon(createImage("/raijin2.png"), "Raijin.java", popup);
+      final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", popup);
 	  trayIcon.setImageAutoSize(true);
       trayIcon.addActionListener(showListener);
       
