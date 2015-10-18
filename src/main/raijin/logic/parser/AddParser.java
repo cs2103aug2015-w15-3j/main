@@ -140,7 +140,10 @@ public class AddParser {
         }
       }
       
-      if (wordsOfInput[i].indexOf("@") == 0) {
+      if (wordsOfInput[i].indexOf("!") == 0) {
+        if (index > i) {
+          index = i;
+        }
         String priority = wordsOfInput[i].substring(1);
         if (priority.matches("h|high")) {
           builder.priority(Constants.PRIORITY_HIGH);
@@ -156,8 +159,24 @@ public class AddParser {
       }
       
       if (wordsOfInput[i].indexOf('#') == 0) {
+        if (index > i) {
+          index = i;
+        }
         String tag = wordsOfInput[i].substring(1);
         tags.add(tag);
+      }
+      
+      if (wordsOfInput[i].indexOf('@') == 0) {
+        if (index > i) {
+          index = i;
+        }
+        String id = wordsOfInput[i].substring(1);
+        try {
+          builder.subTaskOf(Integer.parseInt(id));
+        } catch (NumberFormatException e) {
+          throw new IllegalCommandArgumentException("Invalid subtask input",
+                                                    Constants.CommandParam.SUBTASKOF);
+        }
       }
       
     }

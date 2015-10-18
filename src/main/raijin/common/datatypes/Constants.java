@@ -90,7 +90,7 @@ public class Constants {
   //===========================================================================
 
   public enum CommandParam {
-   ID, NAME, DATETIME, PRIORITY, HELPEROPTION
+   ID, NAME, DATETIME, PRIORITY, HELPEROPTION, SUBTASKOF
   }
 
   public static enum Command { 
