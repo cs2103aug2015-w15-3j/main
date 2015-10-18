@@ -13,6 +13,7 @@ import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.FailedToParseException;
 import raijin.common.exception.UnableToExecuteCommandException;
+import raijin.common.utils.AutoComplete;
 import raijin.common.utils.EventBus;
 import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
@@ -35,6 +36,8 @@ public class Logic {
   private ParserInterface parser;
   private Session session;
   private Logger logger;
+  private AutoComplete autoComplete;
+  private HashMap<Constants.Command, CommandRunner> commandRunners;
   
   public Logic() throws FileNotFoundException {
     initAssets();                               //Initialize required components
@@ -44,6 +47,9 @@ public class Logic {
     parser = new SimpleParser();
     session = Session.getSession();
     logger = RaijinLogger.getLogger();
+    autoComplete = new AutoComplete(TasksManager.getManager());
+    commandRunners = new HashMap<Constants.Command, CommandRunner>();
+    setupCommandRunners();
   }
 
   /*Initialize list of tasks*/
@@ -106,4 +112,9 @@ public class Logic {
     }
   }
 
+  void setupCommandRunners() {
+    for (Constants.Command cmd : Constants.Command.values()) {
+      commandRunners.put(cmd, CommandRunnerFactory.getCommandRunner(cmd));
+    }
+  }
 }
