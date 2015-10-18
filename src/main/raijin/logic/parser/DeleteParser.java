@@ -28,12 +28,17 @@ public class DeleteParser {
    * @throws    IllegalCommandArgumentException
    */
   public ParsedInput.ParsedInputBuilder process() throws IllegalCommandArgumentException {
+    if (wordsOfInput.length < 2) {
+      throw new IllegalCommandArgumentException("Please specify task to delete!",
+          Constants.CommandParam.ID);
+    }
+    
     for (int i = 1; i < wordsOfInput.length; i++) {
       try {
         builder.id(Integer.parseInt(wordsOfInput[i]));
       } catch (NumberFormatException e) {
         tags.add(wordsOfInput[i]);
-      }
+      } 
     }
     
     return builder.tag(tags);

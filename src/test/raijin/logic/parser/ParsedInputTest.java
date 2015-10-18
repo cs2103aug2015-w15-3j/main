@@ -30,15 +30,7 @@ public class ParsedInputTest {
   
   @Test
   public void parseEditCommandInSimpleParser() throws FailedToParseException {
-    ParsedInput editCommand = parser.parse("edit 12 something");
-    assertEquals("something", editCommand.getName());
-    
-    editCommand = parser.parse("edit 12 by 1/1 1800");
-    assertEquals(12, editCommand.getId());
-    assertEquals("2016-01-01", editCommand.getDateTime().getStartDate().toString());
-    assertEquals("18:00", editCommand.getDateTime().getStartTime().toString());
-    
-    editCommand = parser.parse("edit 1 full test from 1/1 800 to 12/5 000");
+    ParsedInput editCommand = parser.parse("edit 1 full test from 1/1 800 to 12/5 000");
     assertEquals(1, editCommand.getId());
     assertEquals("full test", editCommand.getName());
     assertEquals("2016-01-01", editCommand.getDateTime().getStartDate().toString());
@@ -100,5 +92,32 @@ public class ParsedInputTest {
     ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
         name("I am cute").createParsedInput();
     assertEquals(Constants.PRIORITY_MID, input.getPriority());
+  }
+  
+  @Test(expected=FailedToParseException.class)
+  public void testInvalidFilePathInput() throws FailedToParseException {
+    parser.parse("set");
+  }
+  
+  @Test(expected=FailedToParseException.class)
+  public void testInvalidDeleteInput() throws FailedToParseException {
+    parser.parse("delete");
+  }
+  
+  @Test(expected=FailedToParseException.class)
+  public void testInvalidDoneInput() throws FailedToParseException {
+    parser.parse("done");
+  }
+  
+  @Test(expected=FailedToParseException.class)
+  public void testInvalidSearchInput() throws FailedToParseException {
+    parser.parse("search");
+  }
+  
+  @Test
+  public void testBasicSearch() throws FailedToParseException {
+    ParsedInput searchCommand = parser.parse("search everything including 1 is included 4");
+    assertEquals(4, searchCommand.getId());
+    assertEquals("everything including 1 is included 4", searchCommand.getName());
   }
 }
