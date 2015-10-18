@@ -4,16 +4,21 @@
  */
 package raijin.logic.parser;
 
+import java.util.TreeSet;
+
 import raijin.common.datatypes.Constants;
 import raijin.common.exception.IllegalCommandArgumentException;
 
 public class DoneParser {
   
   private String[] wordsOfInput;
-  private int id;
+  private ParsedInput.ParsedInputBuilder builder;
+  private TreeSet<String> tags; 
   
   public DoneParser(String[] wordsOfInput) {
     this.wordsOfInput = wordsOfInput;
+    builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DONE);
+    tags = new TreeSet<String>();
   }
   
   /**
@@ -23,13 +28,13 @@ public class DoneParser {
    * @throws    IllegalCommandArgumentException
    */
   public ParsedInput.ParsedInputBuilder process() throws IllegalCommandArgumentException {
-    try {
-      id = Integer.parseInt(wordsOfInput[1]);
-    } catch (NumberFormatException e) {
-      throw new IllegalCommandArgumentException("Invalid task number format.",
-                                                Constants.CommandParam.ID);
+    for (int i = 1; i < wordsOfInput.length; i++) {
+      try {
+        builder.id(Integer.parseInt(wordsOfInput[i]));
+      } catch (NumberFormatException e) {
+        tags.add(wordsOfInput[i]);
+      }
     }
-    
-    return new ParsedInput.ParsedInputBuilder(Constants.Command.DONE).id(id);
+    return builder.tag(tags);
   }
 }

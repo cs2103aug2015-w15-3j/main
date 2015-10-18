@@ -3,6 +3,7 @@ package raijin.ui;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 
@@ -67,6 +68,7 @@ public class Raijin extends Application {
     decideScene();
     makeTray(stage); // listen out for any ctrl-h events
     Platform.setImplicitExit(false);
+    handleMinimiseEvent();
     
     this.stage.show();
     
@@ -177,8 +179,18 @@ public class Raijin extends Application {
   // Methods for Eventbus
   //
 
-  
-  
+  public void handleMinimiseEvent() {
+	  MainSubscriber<KeyPressEvent> activateHideSubscriber = new MainSubscriber<
+			  KeyPressEvent>(eventbus) {
+
+	      @Subscribe
+	      @Override
+	      public void handleEvent(KeyPressEvent event) {
+	        if (Constants.KEY_HIDEUNHIDE.match(event.keyEvent)) {
+	        	  hide(stage);
+	        }};
+	  };
+  }
   
   //
   // Setting up Activate and Hide
@@ -188,25 +200,6 @@ public class Raijin extends Application {
 	  }
 	  
 	  final SystemTray tray = SystemTray.getSystemTray();
-	 
-	  MainSubscriber<KeyEvent> activateHideSubscriber = new MainSubscriber<KeyEvent>(eventbus) {
-
-	      @Subscribe
-	      @Override
-	      public void handleEvent(KeyEvent event) {
-	        if (Constants.KEY_HIDEUNHIDE.match(event)) {
-	        	  hide(stage);
-	        
-	        }};
-	  };
-	  
-	  stage.setOnCloseRequest(new EventHandler<WindowEvent>(
-			  ) {
-		  @Override
-		  public void handle(WindowEvent t) {
-			  hide(stage);
-		  }
-	  });
 	  
 	  final ActionListener closeListener = new ActionListener() {
 		  @Override
@@ -253,11 +246,9 @@ public class Raijin extends Application {
           @Override
           public void run() {
               if (SystemTray.isSupported()) {
-            	  System.out.println("awesome");
-                  stage.hide();
+            	  stage.hide();
               } else {
-            	  System.out.println("maybe not");
-                  System.exit(0);
+            	  System.exit(0);
               }
           }
       });
