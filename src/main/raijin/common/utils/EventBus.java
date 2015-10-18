@@ -18,7 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 
-import static raijin.common.utils.DisplayUtils.*;
+import static raijin.common.utils.TaskUtils.*;
 
 public class EventBus {
 

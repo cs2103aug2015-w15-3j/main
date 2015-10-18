@@ -1,5 +1,6 @@
 package raijin.common.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -26,6 +27,7 @@ public class AutoComplete {
   private SetTrie taskList;             //List of task names
   private TasksManager tasksManager;
   private com.google.common.eventbus.EventBus eventbus;
+  public List<String> suggestions;
   
   public AutoComplete(TasksManager tasksManager) {
     commandList = new SetTrie();
@@ -33,9 +35,10 @@ public class AutoComplete {
     taskList = new SetTrie();
     this.tasksManager =  tasksManager;
     this.eventbus = RaijinEventBus.getEventBus();
+    suggestions = new ArrayList<String>();
     
-    TreeSet<String> tagList  = tasksManager.getTags();
-    TreeSet<String> taskList = tasksManager.getTaskNames();
+    TreeSet<String> tagList  = TaskUtils.getTags(tasksManager.getPendingTasks());
+    TreeSet<String> taskList  = TaskUtils.getTaskNames(tasksManager.getPendingTasks());
     setupList(tagList, taskList);
   }
   
@@ -80,17 +83,36 @@ public class AutoComplete {
       }};
   }
 
-  String getLastWord(String userInput) {
-    String[] tokens = userInput.toLowerCase().trim().split(" ");    //Sanitize string and retrieve tokens
+  String getLastWord(String[] tokens) {
     if (tokens.length == 0) {
       return "";
     } else {
-      return userInput.substring(userInput.length() - 1, userInput.length());
+      return tokens[tokens.length - 1];
     }
   }
 
+  String[] getTokens(String userInput) {
+    return userInput.toLowerCase().trim().split(" ");
+  }
+
   void updateSuggestions(String input) {
-    String prefix = getLastWord(input);
+    String[] tokens = getTokens(input);
+    String prefix = getLastWord(tokens);
+    
+    if (isCommand(tokens)) {                    //Get suggestions from commandList
+      suggestions = commandList.getSuggestions(prefix);
+    } else if (isTag(tokens)) {
+      suggestions = tagList.getSuggestions(prefix.substring(1, prefix.length()));
+    }
+
+  }
+
+  boolean isCommand(String[] tokens) {
+    return tokens.length == 1;
+  }
+
+  boolean isTag(String[] tokens) {
+    return tokens.length > 1 && getLastWord(tokens).substring(0, 1).equals("#");
   }
 
   public static void main(String[] args) {
