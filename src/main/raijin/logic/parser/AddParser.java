@@ -4,6 +4,10 @@
  */
 package raijin.logic.parser;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.exception.IllegalCommandArgumentException;
@@ -12,14 +16,21 @@ public class AddParser {
   
   private String[] wordsOfInput;
   private ParsedInput.ParsedInputBuilder builder;
+  private String currentTime;
+  private String currentDate;
+  private int parseType; // 0 for add, 1 for edit.
+  
   private static final String datePattern = Constants.DATE_PATTERN;
   private static final String dateOperator = Constants.DATE_OPERATOR;
   private static final String timePattern = Constants.TIME_PATTERN;
   private static final DateTimeFormat dtFormat = new DateTimeFormat();
   
-  public AddParser(ParsedInput.ParsedInputBuilder builder, String[] wordsOfInput) {
+  public AddParser(ParsedInput.ParsedInputBuilder builder, String[] wordsOfInput, int type) {
     this.wordsOfInput = wordsOfInput;
     this.builder = builder;
+    parseType = type;
+    currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HHmm"));
+    currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
   }
   
   /**
@@ -38,19 +49,42 @@ public class AddParser {
     
     for (int i = 0; i < wordsOfInput.length - 1; i++) {
       if (wordsOfInput[i].toLowerCase().matches(Constants.DATE_START_PREPOSITION)) {
+        
+        // Checks for format of {startDate}. If doesn't exist, ignore.
         if (wordsOfInput[i+1].toLowerCase().matches(datePattern)) {
-          // Checks for format of {startDate}. If doesn't exist, ignore.
+          
           containsStartDate = true;
           index = i;
           startDate = wordsOfInput[i+1];
+          
+          // startDate {startTime}
           if (i < wordsOfInput.length - 2 && wordsOfInput[i+2].matches(timePattern)) {
-            // Checks for format of {startTime}. If doesn't exist, ignore.
             containsStartTime = true;
             startTime = wordsOfInput[i+2];
+          } else if (i < wordsOfInput.length-2 && !wordsOfInput[i+2].matches(timePattern)
+              && !wordsOfInput[i+2].matches(Constants.DATE_END_PREPOSITION)){
+            throw new IllegalCommandArgumentException("Invalid start time format.",
+                                                      Constants.CommandParam.DATETIME); 
           }
+
+          
+          // startDate {endDate}
+          if (i < wordsOfInput.length-3 && 
+              wordsOfInput[i+2].matches(Constants.DATE_END_PREPOSITION)) {
+            if (wordsOfInput[i+3].matches(datePattern)) {
+              containsEndDate = true;
+              endDate = wordsOfInput[i+3];
+            } else {
+              throw new IllegalCommandArgumentException("Invalid end date format.",
+                                                        Constants.CommandParam.DATETIME); 
+            }
+          }
+          
+          // startDate startTime {endDate endTime}
           if (containsStartDate && containsStartTime && i < wordsOfInput.length-5 && 
-              wordsOfInput[i+3].equalsIgnoreCase("to")) {
-            // startDate startTime endDate endTime
+              wordsOfInput[i+3].matches(Constants.DATE_END_PREPOSITION)) {
+            
+            // startDate startTime {endDate} endTime
             if (wordsOfInput[i+4].toLowerCase().matches(datePattern)) {
               containsEndDate = true;
               endDate = wordsOfInput[i+4];
@@ -58,6 +92,8 @@ public class AddParser {
               throw new IllegalCommandArgumentException("Invalid end date format.",
                                                         Constants.CommandParam.DATETIME); 
             }
+            
+            // startDate startTime endDate {endTime}
             if (wordsOfInput[i+5].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+5];
@@ -65,9 +101,11 @@ public class AddParser {
               throw new IllegalCommandArgumentException("Invalid end time format.",
                                                         Constants.CommandParam.DATETIME); 
             } 
+            
           } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && 
               wordsOfInput[i+3].toLowerCase().matches(Constants.DATE_END_PREPOSITION)) {
-            // startDate startTime endTime
+            
+            // startDate startTime {endTime}
             if (wordsOfInput[i+4].matches(timePattern)) {
               containsEndTime = true;
               endTime = wordsOfInput[i+4];
@@ -75,22 +113,44 @@ public class AddParser {
               throw new IllegalCommandArgumentException("Invalid end time format.",
                                                         Constants.CommandParam.DATETIME); 
             } 
+            
           }
         } else if (wordsOfInput[i+1].matches(timePattern)) {
+          
           // Checks for format of {startTime}. If doesn't exist, ignore.
           containsStartTime = true;
           index = i;
           startTime = wordsOfInput[i+1];
+          
+          // startTime {endTime}
+          if (i < wordsOfInput.length - 3 && 
+              wordsOfInput[i+2].matches(Constants.DATE_END_PREPOSITION)) {
+            if (wordsOfInput[i+3].matches(timePattern)) {
+              containsEndTime = true;
+              endTime = wordsOfInput[i+3];
+            } else {
+              throw new IllegalCommandArgumentException("Invalid end time format.",
+                                                        Constants.CommandParam.DATETIME); 
+            } 
+          }
+          
         }
       }
+      
     }
     
-    // Creates objects and then ParseInputBuilders based on info.
+    /********** Creates objects and then ParseInputBuilders based on info. **********/  
     for (int i = 1; i < index; i++) {
       name += wordsOfInput[i];
       if (i < index-1) {
         name += " ";
       }
+    }
+    
+    // Name for EDIT is "", and acceptable.
+    if (name.length() == 0 && parseType != 1) {
+      throw new IllegalCommandArgumentException("Please specify a task name!",
+                                                Constants.CommandParam.NAME);
     }
     
     startDate = dtFormat.formatDate(startDate,0);
@@ -108,9 +168,16 @@ public class AddParser {
     } else if (containsStartDate && containsStartTime) {
       dateTime = new DateTime(startDate, startTime);
       checkStartDate(startDate, dateTime);
+    } else if (containsStartDate && containsEndDate) {
+      dateTime = new DateTime(startDate, currentTime, endDate, "2359");
+      checkStartDate(startDate, dateTime);
     } else if (containsStartDate) {
       dateTime = new DateTime(startDate);
       checkStartDate(startDate, dateTime);
+    } else if (containsStartTime && containsEndTime) {
+      dateTime = new DateTime(currentDate, startTime, endTime);
+    } else if (containsStartTime) {
+      dateTime = new DateTime(currentDate, startTime);
     }
     
     if (!name.equals("")) {

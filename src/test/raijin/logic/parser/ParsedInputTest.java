@@ -29,42 +29,6 @@ public class ParsedInputTest {
   }
   
   @Test
-  public void parseAddCommandInSimpleParser_WithStandardDate() throws FailedToParseException {
-    ParsedInput addCommand = parser.parse("add finish parser by 26/12/2015");
-    assertEquals("finish parser", addCommand.getName());
-    assertEquals("2015-12-26", addCommand.getDateTime().getStartDate().toString());
-  }
-  
-  @Test
-  public void parseAddCommandInSimpleParser_WithInformalDate() throws FailedToParseException {
-    ParsedInput addCommand = parser.parse("add finish something by 27/12");
-    assertEquals("finish something", addCommand.getName());
-    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
-    
-    addCommand = parser.parse("add finish something by 27/12/15");
-    assertEquals("finish something", addCommand.getName());
-    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
-    
-    addCommand = parser.parse("add finish something on 27.dec");
-    assertEquals("finish something", addCommand.getName());
-    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
-    
-    addCommand = parser.parse("add finish something BY 27-DEc");
-    assertEquals("finish something", addCommand.getName());
-    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
-    
-    addCommand = parser.parse("add finish something by 1-1");
-    assertEquals("finish something", addCommand.getName());
-    assertEquals("2016-01-01", addCommand.getDateTime().getStartDate().toString());
-    
-    addCommand = parser.parse("add attend something from 27.dec 0800 till 900");
-    assertEquals("attend something", addCommand.getName());
-    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
-    assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
-    assertEquals("09:00", addCommand.getDateTime().getEndTime().toString());
-  }
-  
-  @Test
   public void parseEditCommandInSimpleParser() throws FailedToParseException {
     ParsedInput editCommand = parser.parse("edit 12 something");
     assertEquals("something", editCommand.getName());

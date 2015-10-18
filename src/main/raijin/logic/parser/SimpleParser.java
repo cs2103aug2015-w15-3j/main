@@ -33,7 +33,7 @@ public class SimpleParser implements ParserInterface {
     try {
       if (isFirstWord("add")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD);
-        builder = new AddParser(builder, wordsOfInput).process();
+        builder = new AddParser(builder, wordsOfInput, 0).process();
       } else if (isFirstWord("edit")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EDIT);
         builder = new EditParser(builder, wordsOfInput).process();

@@ -27,7 +27,6 @@ public class EditParser {
    */
   public ParsedInput.ParsedInputBuilder process() throws IllegalCommandArgumentException {
     try {
-      //TODO EDIT'S OWN ALGO
       id = Integer.parseInt(wordsOfInput[1]);
     } catch (NumberFormatException e) {
       throw new IllegalCommandArgumentException("Invalid task number format.",
@@ -41,7 +40,7 @@ public class EditParser {
       newWordsOfInput[i] = wordsOfInput[i+1];
     }
     wordsOfInput = newWordsOfInput;
-    return new AddParser(builder, wordsOfInput).process().id(id);
+    return new AddParser(builder, wordsOfInput, 1).process().id(id);
   }
   
 }
