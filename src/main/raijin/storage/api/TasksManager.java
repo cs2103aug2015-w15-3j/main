@@ -2,6 +2,8 @@ package raijin.storage.api;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import raijin.common.datatypes.DisplayContainer;
 import raijin.common.datatypes.ListDisplayContainer;
@@ -98,4 +100,32 @@ public class TasksManager {
     }
   }
   
+  //===========================================================================
+  // Helper functions to retrieve different properties of task
+  //===========================================================================
+  
+  /**
+   * Retrieves set of tags specified by user 
+   * @return set of tags 
+   */
+  public TreeSet<String> getTags() {
+    TreeSet<String> tags = new TreeSet<String>();
+    
+    for (Task task : pendingTasks.values()) {
+      tags.addAll(task.getTags());
+    }
+    return tags;
+  }
+  
+
+  /**
+   * Retrieves set of task names 
+   * @return set of task names
+   */
+  public TreeSet<String> getTaskNames() {
+    List<String> names = pendingTasks.entrySet().stream().map(
+       e -> e.getValue().getName()).collect(Collectors.toList());
+    return new TreeSet<String>(names);
+  }
+
 }

@@ -1,13 +1,10 @@
 package raijin.logic.command;
 
-import javafx.scene.input.KeyEvent;
-
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
-import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.exception.UnableToExecuteCommandException;
@@ -27,12 +24,13 @@ public class UndoCommandRunner extends CommandRunner implements CommandShortcut 
   }
 
   public void handleKeyEvent() {
-    MainSubscriber<KeyEvent> undoKeySubscriber = new MainSubscriber<KeyEvent>(eventbus) {
+    MainSubscriber<KeyPressEvent> undoKeySubscriber = new MainSubscriber<
+        KeyPressEvent>(eventbus) {
 
       @Subscribe
       @Override
-      public void handleEvent(KeyEvent event) {
-        if (Constants.KEY_UNDO.match(event)) {
+      public void handleEvent(KeyPressEvent event) {
+        if (Constants.KEY_UNDO.match(event.keyEvent)) {
           try {
             history.undo();
             sendFeedbackEvent(Constants.FEEDBACK_UNDO_SUCCESS);
