@@ -7,9 +7,6 @@ import java.util.stream.Collectors;
 
 import org.loadui.testfx.FXScreenController;
 
-import edu.emory.mathcs.backport.java.util.Collections;
-import raijin.common.datatypes.DisplayContainer;
-import raijin.common.datatypes.ListDisplayContainer;
 import raijin.common.datatypes.Task;
 import raijin.storage.api.TasksManager;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,6 +25,10 @@ public class EventBus {
   private ObservableList<String> currentTasks = FXCollections.observableArrayList();
   private ObservableList<String> completedTasks = FXCollections.observableArrayList();
   private List<Task> displayedTasks = new ArrayList<Task>();
+  //
+  private List<TaskPane> displayedTasksPane = new ArrayList<TaskPane>();
+  private ObservableList<TaskPane> oDisplayedTasksPane;
+  private ObservableList<TaskPane> oCompletedTasksPane;
   
   public String getFeedback() {
     return feedBack.get();
@@ -47,11 +48,19 @@ public class EventBus {
 
   public void setCurrentTasks(List<Task> tasks) {
     displayedTasks = tasks;
+    displayedTasksPane = convertToTaskPane(tasks);
+    updateDisplay();
     currentTasks.setAll(filterName(tasks));
   }
  
   public void setCurrentTasks(String message) {
-   currentTasks.setAll(message);
+	displayedTasksPane = displayMessage(message);
+	updateDisplay();
+    currentTasks.setAll(message);
+  }
+  
+  public void updateDisplay() {
+	oDisplayedTasksPane = FXCollections.observableArrayList(displayedTasksPane);
   }
 
   public StringProperty feedBackProperty() {
@@ -65,10 +74,18 @@ public class EventBus {
   public ObservableList<String> currentTasksProperty() {
     return currentTasks;
   }
+  
+  public ObservableList<TaskPane> currentTasksPropertyPane() {
+	return oDisplayedTasksPane;
+  }
 
   public ObservableList<String> completedTasksProperty() {
     return completedTasks;
   }
+  
+  //public ObservableList<String> completedTasksPropertyPane() {
+	//return oCompletedTasksPane;
+  //}
 
   public void initDisplayTasks(TasksManager tasksManager) {
     initCurrentTasks(tasksManager.getPendingTasks());
@@ -76,7 +93,8 @@ public class EventBus {
 
   private void initCurrentTasks(HashMap<Integer, Task> pendingTasks) {
     displayedTasks = new ArrayList<Task>(pendingTasks.values());
-    Collections.sort(displayedTasks);
+    displayedTasksPane = initTasks(displayedTasks);
+    updateDisplay();
     currentTasks.setAll(filterName(displayedTasks));
   }
 

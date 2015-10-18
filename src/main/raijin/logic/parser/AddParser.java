@@ -1,5 +1,5 @@
 /**
- * Class that handles add parsing.
+ * Class that handles ADD parsing.
  * @author LingJie
  */
 package raijin.logic.parser;
@@ -25,8 +25,8 @@ public class AddParser {
   /**
    * Method that parses the input for name, date or time inputs when task is added.
    * 
-   * @return ParsedInputBuilders    Appropriate ParsedInputBuilders accordingly.
-   * @throws                        IllegalCommandArgumentException
+   * @return    ParsedInputBuilder                 Appropriate ParsedInputBuilders accordingly.
+   * @throws    IllegalCommandArgumentException
    */
   public ParsedInput.ParsedInputBuilder process() throws IllegalCommandArgumentException {
     boolean containsStartDate = false;

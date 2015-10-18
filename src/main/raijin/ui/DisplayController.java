@@ -8,6 +8,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import raijin.common.datatypes.DateTime;
 import raijin.common.utils.EventBus;
+import raijin.common.utils.TaskPane;
 import raijin.storage.api.TasksManager;
 
 import java.util.Date;
@@ -30,7 +31,8 @@ public class DisplayController extends BorderPane {
   private Label headMessage;
 
   @FXML
-  ListView<String> listView;
+  //ListView<String> listView;
+  ListView<TaskPane> tasksPane;
 
   public DisplayController() {
     FXMLLoader loader = new FXMLLoader(getClass().getResource(DISPLAY_CONTROLLER_FXML));
@@ -44,14 +46,15 @@ public class DisplayController extends BorderPane {
     }
 
     date = new Date();
-    //headMessage = new Label("Tasks pending for " + dateFormatSplash.format(date));
+    
     headMessage = new Label("All pending tasks");
     headMessage.setStyle("-fx-font-size: 20px; -fx-padding: 5px;");
     this.setTop(headMessage);
 
-    listView = new ListView<String>();
+    //listView = new ListView<String>();
+    tasksPane = new ListView<TaskPane>();
     
-    this.setCenter(listView);
+    this.setCenter(tasksPane);
 
     eventBus.displayHeadMessageProperty().addListener((v, oldVal, newVal) -> {
       setHeadMessage(newVal);
@@ -61,12 +64,14 @@ public class DisplayController extends BorderPane {
 
       @Override
       public void onChanged(javafx.collections.ListChangeListener.Change<? extends String> c) {
-        listView.setItems(eventBus.currentTasksProperty());
+        tasksPane.setItems(eventBus.currentTasksPropertyPane());
       }
       
     });
     
+    //eventBus.initDisplayTasks(TasksManager.getManager());
     eventBus.initDisplayTasks(TasksManager.getManager());
+    tasksPane.setItems(eventBus.currentTasksPropertyPane());
 
   }
   

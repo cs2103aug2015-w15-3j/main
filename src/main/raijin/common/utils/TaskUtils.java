@@ -13,7 +13,20 @@ public class TaskUtils {
 	
   public static List<TaskPane> initTasks(List<Task> tasks) {
 	  ArrayList<TaskPane> list = new ArrayList<TaskPane>();
-	  Collections.sort(tasks);
+	  
+	  if (tasks.isEmpty()) {
+		  return displayMessage("You have no pending tasks!");
+	  }
+	  
+	  for (int i=0; i<tasks.size(); i++) {
+		  list.add(new TaskPane(tasks.get(i), "none"));
+	  }
+	  
+	  return list;
+  }
+  
+  public static List<TaskPane> convertToTaskPane(List<Task> tasks) {
+	  ArrayList<TaskPane> list = new ArrayList<TaskPane>();
 	  
 	  for (int i=0; i<tasks.size(); i++) {
 		  list.add(new TaskPane(tasks.get(i), "none"));

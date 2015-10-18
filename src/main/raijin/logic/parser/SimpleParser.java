@@ -15,8 +15,6 @@ import raijin.common.exception.FailedToParseException;
 public class SimpleParser implements ParserInterface {
   
   private static final String datePattern = Constants.DATE_PATTERN;
-  private static final String dateOperator = Constants.DATE_OPERATOR;
-  private static final String timePattern = Constants.TIME_PATTERN;
   private static final DateTimeFormat dtFormat = new DateTimeFormat();
   
   private String[] wordsOfInput;
@@ -40,20 +38,17 @@ public class SimpleParser implements ParserInterface {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EDIT);
         builder = new EditParser(builder, wordsOfInput).process();
       } else if (isFirstWord("delete")) {
-        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DELETE);  
-        parseDeleteTask();
+        builder = new DeleteParser(wordsOfInput).process();
       } else if (isFirstWord("done")) {
-        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DONE); 
-        parseDoneTask();
+        builder = new DoneParser(wordsOfInput).process();
+      } else if (isFirstWord("display")) {
+        builder = new DisplayParser(wordsOfInput).process();
+      } else if (isFirstWord("help")) { //TODO: Specific help commands.
+        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.HELP);
       } else if (isFirstWord("undo")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.UNDO);
       } else if (isFirstWord("redo")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.REDO);
-      } else if (isFirstWord("display")) {
-        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.DISPLAY);
-        parseDisplay();
-      } else if (isFirstWord("help")) { //TODO: Specific help commands.
-        builder = new ParsedInput.ParsedInputBuilder(Constants.Command.HELP);
       } else if (isFirstWord("exit")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT);
       } else {
@@ -76,53 +71,6 @@ public class SimpleParser implements ParserInterface {
    */
   public boolean isFirstWord(String word) {
     return wordsOfInput[0].toLowerCase().equals(word.toLowerCase());
-  }
-  
-  /**
-   * Method that deletes a task based on the taskID input by user.
-   * 
-   * @throws IllegalCommandArgumentException
-   */
-  public void parseDeleteTask() throws IllegalCommandArgumentException {
-    try {
-      builder.id(Integer.parseInt(wordsOfInput[1]));
-    } catch (NumberFormatException e) {
-      throw new IllegalCommandArgumentException("Invalid task number format.", 
-                                                Constants.CommandParam.ID);
-    }
-  }
-  
-  /**
-   * Method that marks a task as done based on taskID input by user.
-   * 
-   * @throws IllegalCommandArgumentException
-   */
-  public void parseDoneTask() throws IllegalCommandArgumentException {
-    try {
-      builder.id(Integer.parseInt(wordsOfInput[1]));
-    } catch (NumberFormatException e) {
-      throw new IllegalCommandArgumentException("Invalid task number format.",
-                                                Constants.CommandParam.ID);
-    }
-  }
-  
-  /**
-   * Method that parses display type input by user and responds accordingly.
-   * Currently allows for "p", "c" or dates for its options.
-   * 
-   * @throws IllegalCommandArgumentException
-   */
-  public void parseDisplay() throws IllegalCommandArgumentException {
-    String displayType = "p";
-    for (int i = 1; i < wordsOfInput.length; i++) {
-      if (wordsOfInput[i].matches(datePattern)) {
-        builder.dateTime(new DateTime(dtFormat.formatDate(wordsOfInput[i], 1)));
-      } else if (wordsOfInput[i].matches("p|c|a")){
-        displayType = wordsOfInput[i];
-      }
-    }
-    //TODO: ADD ADDITIONAL FEATURES HERE.
-    builder.displayOptions(displayType);
   }
   
 }

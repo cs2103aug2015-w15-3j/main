@@ -3,10 +3,12 @@ package raijin.common.utils;
 import java.util.TreeSet;
 
 import javafx.geometry.Insets;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 
@@ -21,7 +23,8 @@ public class TaskPane extends StackPane {
 	private Label id;
 	private Label taskName;
 	private Label start, end;
-	private Label tags;
+	private Label tags = new Label("Tags: ");
+	private Label tagsValue;
 	private Label priority = new Label("Priority:");
 	private Label priorityValue;
 	
@@ -39,10 +42,16 @@ public class TaskPane extends StackPane {
 	
 	public TaskPane (Task task, String colourOfParent) {
 		id = new Label(String.valueOf(task.getId()));
-		id.setStyle("-fx-font-family: Georgia; -fx-font-weight: bold; -fx-font-size: 20px;");
+		id.setStyle("-fx-font-weight: bold; -fx-font-size: 30px;");
+		id.setPadding(new Insets(20));
+		id.setTextAlignment(TextAlignment.LEFT); // this seems useless
+		
 		taskName = new Label(task.getName());
-		taskName.setStyle("-fx-font-weight: bold; -fx-font-");
-		tags = new Label(retrieveTags(task));
+		taskName.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+		tags.setStyle("-fx-font-weight:bold;");
+		tagsValue = new Label(retrieveTags(task));
+		tagsValue.setStyle("-fx-font-style: italic;");
+		priority.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
 		
 		try {
 		if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
@@ -85,11 +94,15 @@ public class TaskPane extends StackPane {
 			end = new Label();
 		}
 		
-		HBox fillerBox = new HBox();
-		fillerBox.setPrefWidth(50);
+		HBox indentBox = new HBox();
+		indentBox.setPrefWidth(50);
 		
 		HBox idBox = new HBox();
+		idBox.setMaxWidth(30);
 		idBox.getChildren().addAll(id);
+		
+		HBox fillerBox = new HBox();
+		fillerBox.setPrefWidth(30);
 		
 		HBox taskBox = new HBox();
 		taskBox.setPrefHeight(30);
@@ -97,9 +110,10 @@ public class TaskPane extends StackPane {
 		
 		HBox datesBox = new HBox();
 		datesBox.getChildren().addAll(start, end);
+		datesBox.setPrefHeight(20);
 		
 		HBox tagsBox = new HBox();
-		tagsBox.getChildren().addAll(tags);
+		tagsBox.getChildren().addAll(tags, tagsValue);
 		
 		VBox centre = new VBox();
 		centre.setPrefWidth(500);
@@ -109,7 +123,8 @@ public class TaskPane extends StackPane {
 		right.getChildren().addAll(priority, priorityValue);
 
 		HBox pane = new HBox();
-
+		
+		// TODO remove the ! after parser supports priority
 		if (!colourOfParent.equals("none")) {
 			if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
 				this.setStyle("-fx-background-color: " + highPriorityColours[task.getId()%2]);
@@ -122,7 +137,7 @@ public class TaskPane extends StackPane {
 				this.colour = lowPriorityColours[task.getId()%1];
 			}
 			
-			pane.getChildren().addAll(idBox, centre, right);
+			pane.getChildren().addAll(idBox, fillerBox, centre, right);
 			
 		} else {
 			String colourForThis = "";
@@ -147,10 +162,11 @@ public class TaskPane extends StackPane {
 			
 			this.colour = colourForThis;
 			this.setStyle("-fx-background-color: " + colourForThis);
-			pane.getChildren().addAll(fillerBox, idBox, centre, right);
+			pane.getChildren().addAll(idBox, centre, right); // TODO add back the indentbox
 		}
 		
 		this.getChildren().addAll(pane);
+		this.setMaxHeight(20);
 		this.setStyle("-fx-background-radius: 5px");
 		this.setPadding(new Insets(2));
 		
@@ -158,6 +174,7 @@ public class TaskPane extends StackPane {
 	
 	public TaskPane (String message) {
 		Label msg = new Label(message);
+		msg.setStyle("-fx-font-size: 25px");
 		
 		this.getChildren().addAll(msg);
 		this.setStyle("-fx-background-color: white;");
@@ -172,7 +189,7 @@ public class TaskPane extends StackPane {
 	 */
 	public String retrieveTags(Task task) {
 		TreeSet<String> tagsTree = new TreeSet<String>(task.getTags());
-		String tagString = "Tags: ";
+		String tagString = "";
 		boolean hasTags = false;
 		
 		while (!tagsTree.isEmpty()) {
@@ -184,7 +201,7 @@ public class TaskPane extends StackPane {
 		if (hasTags) {
 			tagString = tagString.substring(0, tagString.length() -  2);
 		} else {
-			tagString += "none";
+			tagString = "none";
 		}
 		
 		return tagString;
