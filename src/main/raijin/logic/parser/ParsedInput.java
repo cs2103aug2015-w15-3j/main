@@ -99,6 +99,10 @@ public class ParsedInput {
     return displayOptions;
   }
   
+  public void setTags(TreeSet<String> tags) {
+    this.tags = tags;
+  }
+
   public TreeSet<String> getTags() {
     return tags;
   }
