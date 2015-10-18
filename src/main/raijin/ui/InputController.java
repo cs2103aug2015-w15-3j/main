@@ -8,6 +8,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import javafx.fxml.FXML;
@@ -52,7 +53,7 @@ public class InputController extends BorderPane {
 	
 	@FXML
 	public void onKeyPress(KeyEvent event) {
-	    eventbus.post(event);
+	    eventbus.post(new KeyPressEvent(event, inputCommandBar.getText()));
 		mainApp.handleKeyPress(this, event.getCode(), inputCommandBar.getText());
 	}
 	
