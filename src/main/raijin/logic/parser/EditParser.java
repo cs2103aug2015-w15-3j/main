@@ -1,3 +1,7 @@
+/**
+ * Class that handles EDIT parsing.
+ * @author LingJie
+ */
 package raijin.logic.parser;
 
 import raijin.common.datatypes.Constants;
@@ -18,7 +22,7 @@ public class EditParser {
    * Method that parses the input for any modification users want to make for a specific task.
    * Able to modify name, date, or time.
    * 
-   * @return    ParsedInput.ParsedInputBuilder  Appropriate ParsedInputBuilders accordingly.
+   * @return    ParsedInputBuilder                  Appropriate ParsedInputBuilders accordingly.
    * @throws    IllegalCommandArgumentException
    */
   public ParsedInput.ParsedInputBuilder process() throws IllegalCommandArgumentException {
