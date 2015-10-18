@@ -53,6 +53,10 @@ public class AutoComplete {
     loadTaskList(tasks);
   }
 
+  public SetTrie getTaskList() {
+    return taskList;
+  }
+
   void loadCommandList() {
     for (Constants.Command cmd : Constants.Command.values()) {
       commandList.add(cmd.toString().toLowerCase());    //Convert enum to string and lowercase
@@ -101,8 +105,10 @@ public class AutoComplete {
     
     if (isCommand(tokens)) {                    //Get suggestions from commandList
       suggestions = commandList.getSuggestions(prefix);
-    } else if (isTag(tokens)) {
+    } else if (isTag(tokens)) {                 //Get suggestions from tagList
       suggestions = tagList.getSuggestions(prefix.substring(1, prefix.length()));
+    } else {                                    //Get suggestions from task
+      suggestions = taskList.getSuggestions(input.trim());
     }
 
   }

@@ -98,5 +98,13 @@ public class AutoCompleteTest {
     assertEquals(2, autoComplete.suggestions.size());
   }
 
+  @Test
+  public void updateSuggestions_Task() {
+    generateTasksManager();
+    autoComplete.loadTaskList(TaskUtils.getTaskNames(tasksManager.getPendingTasks()));
+    String input = "I am";
+    autoComplete.updateSuggestions(input);
+    assertEquals(3, autoComplete.suggestions.size());
+  }
 }
 
