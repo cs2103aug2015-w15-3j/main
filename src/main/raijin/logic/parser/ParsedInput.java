@@ -129,7 +129,7 @@ public class ParsedInput {
     private TreeSet<String> name = new TreeSet<String>();
     private DateTime dateTime;
     private String displayOptions;
-    private TreeSet<String> tags;
+    private TreeSet<String> tags = new TreeSet<String>();
     private int subTaskOf;
     private String priority = Constants.PRIORITY_MID;
     private String helperOption;
