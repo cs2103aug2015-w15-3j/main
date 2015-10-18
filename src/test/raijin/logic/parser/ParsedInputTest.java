@@ -51,18 +51,32 @@ public class ParsedInputTest {
   public void parseDeleteCommandInSimpleParser() throws FailedToParseException {
     ParsedInput deleteCommand = parser.parse("delete 12");
     assertEquals(12, deleteCommand.getId());
+    
+    deleteCommand = parser.parse("delete 1 work 2 school 3 ");
+    assertEquals(1, deleteCommand.getIds().pollFirst().intValue());
+    assertEquals(2, deleteCommand.getIds().pollFirst().intValue());
+    assertEquals(3, deleteCommand.getIds().pollFirst().intValue());
+    assertEquals("school", deleteCommand.getTags().pollFirst());
+    assertEquals("work", deleteCommand.getTags().pollFirst());
   }
   
   @Test
   public void parseDoneCommandInSimpleParser() throws FailedToParseException {
     ParsedInput doneCommand = parser.parse("done 28");
     assertEquals(28, doneCommand.getId());
+    
+    doneCommand = parser.parse("done 4 work 5 school 6");
+    assertEquals(4, doneCommand.getIds().pollFirst().intValue());
+    assertEquals(5, doneCommand.getIds().pollFirst().intValue());
+    assertEquals(6, doneCommand.getIds().pollFirst().intValue());
+    assertEquals("school", doneCommand.getTags().pollFirst());
+    assertEquals("work", doneCommand.getTags().pollFirst());
   }
   
   @Test
   public void parseDisplayCommandInSimpleParser() throws FailedToParseException {
-    ParsedInput displayCommand = parser.parse("display c");
-    assertEquals("c", displayCommand.getDisplayOptions());
+    ParsedInput displayCommand = parser.parse("display a");
+    assertEquals("a", displayCommand.getDisplayOptions());
     
     displayCommand = parser.parse("display c 19/9");
     assertEquals("c", displayCommand.getDisplayOptions());

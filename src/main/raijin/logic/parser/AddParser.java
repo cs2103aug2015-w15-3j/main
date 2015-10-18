@@ -7,6 +7,7 @@ package raijin.logic.parser;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.TreeSet;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
@@ -16,6 +17,7 @@ public class AddParser {
   
   private String[] wordsOfInput;
   private ParsedInput.ParsedInputBuilder builder;
+  private TreeSet<String> tags;
   private String currentTime;
   private String currentDate;
   private int parseType; // 0 for add, 1 for edit.
@@ -28,6 +30,7 @@ public class AddParser {
   public AddParser(ParsedInput.ParsedInputBuilder builder, String[] wordsOfInput, int type) {
     this.wordsOfInput = wordsOfInput;
     this.builder = builder;
+    tags = new TreeSet<String>();
     parseType = type;
     currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HHmm"));
     currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -47,18 +50,18 @@ public class AddParser {
     String name = "", startDate = "", startTime = "", endDate = "", endTime = "";
     int index = wordsOfInput.length; // (Last index of task name - 1)
     
-    for (int i = 0; i < wordsOfInput.length - 1; i++) {
+    for (int i = 0; i < wordsOfInput.length; i++) {
       if (wordsOfInput[i].toLowerCase().matches(Constants.DATE_START_PREPOSITION)) {
         
         // Checks for format of {startDate}. If doesn't exist, ignore.
-        if (wordsOfInput[i+1].toLowerCase().matches(datePattern)) {
+        if (i < wordsOfInput.length-1 && wordsOfInput[i+1].toLowerCase().matches(datePattern)) {
           
           containsStartDate = true;
           index = i;
           startDate = wordsOfInput[i+1];
           
           // startDate {startTime}
-          if (i < wordsOfInput.length - 2 && wordsOfInput[i+2].matches(timePattern)) {
+          if (i < wordsOfInput.length-2 && wordsOfInput[i+2].matches(timePattern)) {
             containsStartTime = true;
             startTime = wordsOfInput[i+2];
           } else if (i < wordsOfInput.length-2 && !wordsOfInput[i+2].matches(timePattern)
@@ -115,7 +118,7 @@ public class AddParser {
             } 
             
           }
-        } else if (wordsOfInput[i+1].matches(timePattern)) {
+        } else if (i < wordsOfInput.length-1 && wordsOfInput[i+1].matches(timePattern)) {
           
           // Checks for format of {startTime}. If doesn't exist, ignore.
           containsStartTime = true;
@@ -135,6 +138,26 @@ public class AddParser {
           }
           
         }
+      }
+      
+      if (wordsOfInput[i].indexOf("@") == 0) {
+        String priority = wordsOfInput[i].substring(1);
+        if (priority.matches("h|high")) {
+          builder.priority(Constants.PRIORITY_HIGH);
+        } else if (priority.matches("m|mid|middle|medium")) {
+          builder.priority(Constants.PRIORITY_MID);
+        } else if (priority.matches("l|low")) {
+          builder.priority(Constants.PRIORITY_LOW);
+        } else {
+          throw new IllegalCommandArgumentException("Invalid priority input.",
+                                                    Constants.CommandParam.PRIORITY);
+        }
+        
+      }
+      
+      if (wordsOfInput[i].indexOf('#') == 0) {
+        String tag = wordsOfInput[i].substring(1);
+        tags.add(tag);
       }
       
     }
@@ -181,9 +204,9 @@ public class AddParser {
     }
     
     if (!name.equals("")) {
-      return builder.name(name).dateTime(dateTime);
+      return builder.name(name).dateTime(dateTime).tag(tags);
     } else {
-      return builder.dateTime(dateTime);
+      return builder.dateTime(dateTime).tag(tags);
     }
   }
   
