@@ -127,7 +127,7 @@ public class ParsedInput {
     private String displayOptions;
     private TreeSet<String> tags;
     private int subTaskOf;
-    private String priority;
+    private String priority = Constants.PRIORITY_MID;
     private String helperOption;
     
     public ParsedInputBuilder(final Constants.Command command) {

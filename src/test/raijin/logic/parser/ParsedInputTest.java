@@ -117,4 +117,10 @@ public class ParsedInputTest {
     assertEquals("2015-02-28", displayCommand.getDateTime().getStartDate().toString());
   }
 
+  @Test
+  public void getPriority_ReturnPriority() {
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
+        name("I am cute").createParsedInput();
+    assertEquals(Constants.PRIORITY_MID, input.getPriority());
+  }
 }
