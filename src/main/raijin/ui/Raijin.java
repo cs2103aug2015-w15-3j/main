@@ -54,7 +54,9 @@ public class Raijin extends Application {
 	private Logic logic;
 	private IntroController introController;
 	private EventBus eventbus = RaijinEventBus.getEventBus();
-	
+	private SystemTray tray;
+	final TrayIcon trayIcon = new TrayIcon(createImage("/raijin2.png"), "Raijin.java", null);
+	 
 	public static void main(String[] args) {
 	  launch(args);
 	}
@@ -187,6 +189,11 @@ public class Raijin extends Application {
 	      public void handleEvent(KeyPressEvent event) {
 	        if (Constants.KEY_HIDEUNHIDE.match(event.keyEvent)) {
 	        	  hide(stage);
+	        	  try {
+	        		  tray.add(trayIcon);
+	        	  } catch (AWTException e) {
+	        		  System.out.println("TrayIcon could not be added.");
+	        	  }
 	        }};
 	  };
   }
@@ -198,14 +205,7 @@ public class Raijin extends Application {
 		  System.out.println("Looks like you don't have System Tray on your Operating System!:(");
 	  }
 	  
-	  final SystemTray tray = SystemTray.getSystemTray();
-	  
-	  final ActionListener closeListener = new ActionListener() {
-		  @Override
-		  public void actionPerformed(java.awt.event.ActionEvent e) {
-			  System.exit(0);
-		  }
-	  };
+	  this.tray = SystemTray.getSystemTray();
 	  
 	  ActionListener showListener = new ActionListener() {
 		  @Override
@@ -214,8 +214,10 @@ public class Raijin extends Application {
 				  @Override
 				  public void run() {
 					  stage.show();
+					  tray.remove(trayIcon);
 				  }
 			  });
+			  
 		  }
 	  };
 	  
@@ -225,19 +227,9 @@ public class Raijin extends Application {
       showItem.addActionListener(showListener);
       popup.add(showItem);
 
-      MenuItem closeItem = new MenuItem("Close");
-      closeItem.addActionListener(closeListener);
-      popup.add(closeItem);
-      
-      final TrayIcon trayIcon = new TrayIcon(createImage("/raijin2.png"), "Raijin.java", popup);
-	  trayIcon.setImageAutoSize(true);
+      trayIcon.setImageAutoSize(true);
       trayIcon.addActionListener(showListener);
-      
-      try {
-		  tray.add(trayIcon);
-	  } catch (AWTException e) {
-		  System.out.println("TrayIcon could not be added.");
-	  }
+      trayIcon.setPopupMenu(popup);
   }
   
   private void hide(final Stage stage) {
