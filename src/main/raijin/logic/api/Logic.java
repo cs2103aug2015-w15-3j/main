@@ -32,7 +32,6 @@ import raijin.storage.handler.StorageHandler;
  */
 public class Logic {
 
-  private CommandDispatcher commandDispatcher;
   private ParserInterface parser;
   private Session session;
   private Logger logger;
@@ -42,7 +41,6 @@ public class Logic {
   }
   
   private void initAssets() {
-    commandDispatcher = CommandDispatcher.getDispatcher();
     parser = new SimpleParser();
     session = Session.getSession();
     logger = RaijinLogger.getLogger();
@@ -60,7 +58,8 @@ public class Logic {
   public Status executeCommand(String userInput) {
     try {
       ParsedInput parsed = parser.parse(userInput);
-      return commandDispatcher.delegateCommand(parsed);
+      CommandRunner cmdRunner = CommandRunnerFactory.getCommandRunner(parsed.getCommand());
+      return cmdRunner.execute(parsed);
     } catch (FailedToParseException e) {
       logger.error(e.getMessage(), e);
       return new Status(String.format(Constants.FEEDBACK_ERROR_FAILEDPARSING,
@@ -100,7 +99,8 @@ public class Logic {
     ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT)
       .createParsedInput();
     try {
-      commandDispatcher.delegateCommand(input);
+      CommandRunner cmdRunner = CommandRunnerFactory.getCommandRunner(Constants.Command.EXIT);
+      cmdRunner.execute(input);
     } catch (UnableToExecuteCommandException e) {
       logger.error(e.getMessage());
     }

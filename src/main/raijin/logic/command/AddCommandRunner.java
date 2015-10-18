@@ -13,10 +13,11 @@ import raijin.logic.parser.ParsedInput;
 
 public class AddCommandRunner extends CommandRunner implements UndoableRedoable {
 
-  private Task currentTask;                                 //First task 
+  private Task currentTask;                                        //First task 
   private ArrayList<Task> listOfTasks = new ArrayList<Task>();
 
   void createTasks(ParsedInput input) {
+    listOfTasks.clear();
     for (String name : input.getNames()) {
       listOfTasks.add(new Task(name, idManager.getId(), input));
     }

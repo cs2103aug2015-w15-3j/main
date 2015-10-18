@@ -167,4 +167,11 @@ public class AddCommandRunnerTest {
         + "\nAdded watch monty successfully";
     assertEquals(expected, status.getFeedback());
   }
+  
+  @Test
+  public void processCommand_MultipleTasks() throws UnableToExecuteCommandException {
+    addTask("I am weird", new DateTime("19/09/2011"));
+    addTask("I am new", new DateTime("19/09/2011"));
+    addTask("I am old", new DateTime("19/09/2011"));
+  }
 }
