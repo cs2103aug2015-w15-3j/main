@@ -22,6 +22,7 @@
         <directory>src/main/raijin/ui/resource/styles</directory>
         <includes>
           <include>**/*.css</include>
+          <include>**/*.png</include>
         </includes>
       </resource>
     </resources>
