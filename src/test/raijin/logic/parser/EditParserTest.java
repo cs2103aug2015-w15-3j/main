@@ -24,6 +24,12 @@ public class EditParserTest {
     new EditParser(builder, wordsOfInput).process();
   }
   
+  @Test(expected=IllegalCommandArgumentException.class)
+  public void testInvalidInput() throws IllegalCommandArgumentException {
+    wordsOfInput = new String("edit").split(" ");
+    new EditParser(builder, wordsOfInput).process();
+  }
+  
   @Test
   public void testBasicEditing() throws IllegalCommandArgumentException {
     wordsOfInput = new String("edit 1 something by 28/12").split(" ");
