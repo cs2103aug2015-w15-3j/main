@@ -64,4 +64,8 @@ public class SetTrie {
 
     return suggestions;
   }
+  
+  public TreeSet<String> getWordList() {
+    return wordList;
+  }
 }
