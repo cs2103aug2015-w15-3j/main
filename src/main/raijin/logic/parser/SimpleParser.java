@@ -51,6 +51,8 @@ public class SimpleParser implements ParserInterface {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.REDO);
       } else if (isFirstWord("exit")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT);
+      } else if (isFirstWord("set")) {
+        builder = new SetParser(wordsOfInput).process();
       } else {
         throw new IllegalCommandException("Invalid command input.", wordsOfInput[0]);
       }
