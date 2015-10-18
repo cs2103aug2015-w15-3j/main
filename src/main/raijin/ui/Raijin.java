@@ -1,10 +1,28 @@
 package raijin.ui;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+
+import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.subscribers.MainSubscriber;
+
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -12,10 +30,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.WindowEvent;
+
+import raijin.common.datatypes.Constants;
+import raijin.common.eventbus.subscribers.MainSubscriber;
+import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.Logic;
 import raijin.storage.api.Session;
 
@@ -27,9 +50,9 @@ public class Raijin extends Application {
 															+ "a directory yet. Please try again!";
 	private BorderPane rootLayout, introLayout;
 	private Stage stage;
-	private Scene workingScene, introScene;
 	private Logic logic;
 	private IntroController introController;
+	private EventBus eventbus = RaijinEventBus.getEventBus();
 	
 	public static void main(String[] args) {
 	  launch(args);
@@ -41,6 +64,8 @@ public class Raijin extends Application {
     initPrimaryStage(stage);
     initLogic();
     decideScene();
+    makeTray(stage); // listen out for any ctrl-h events
+    Platform.setImplicitExit(false);
     
     this.stage.show();
     
@@ -125,7 +150,9 @@ public class Raijin extends Application {
 	  rootLayout.setBottom(new InputController(mainApp));
   }
   
+  //
   // Methods to transfer to logic
+  //
   
   public void handleKeyPress(InputController inputController,
 		  KeyCode key,
@@ -143,5 +170,105 @@ public class Raijin extends Application {
 	  } else {
 		  inputController.setFeedback(response);
 	  } 
+  }
+
+  //
+  // Methods for Eventbus
+  //
+
+  
+  
+  
+  //
+  // Setting up Activate and Hide
+  public void makeTray(final Stage stage) {
+	  if (!SystemTray.isSupported()) {
+		  System.out.println("Looks like you don't have System Tray on your Operating System!:(");
+	  }
+	  
+	  final SystemTray tray = SystemTray.getSystemTray();
+	 
+	  MainSubscriber<KeyEvent> activateHideSubscriber = new MainSubscriber<KeyEvent>(eventbus) {
+
+	      @Subscribe
+	      @Override
+	      public void handleEvent(KeyEvent event) {
+	        if (Constants.KEY_HIDEUNHIDE.match(event)) {
+	        	  hide(stage);
+	        
+	        }};
+	  };
+	  
+	  stage.setOnCloseRequest(new EventHandler<WindowEvent>(
+			  ) {
+		  @Override
+		  public void handle(WindowEvent t) {
+			  hide(stage);
+		  }
+	  });
+	  
+	  final ActionListener closeListener = new ActionListener() {
+		  @Override
+		  public void actionPerformed(java.awt.event.ActionEvent e) {
+			  System.exit(0);
+		  }
+	  };
+	  
+	  ActionListener showListener = new ActionListener() {
+		  @Override
+		  public void actionPerformed(java.awt.event.ActionEvent e) {
+			  Platform.runLater(new Runnable() {
+				  @Override
+				  public void run() {
+					  stage.show();
+				  }
+			  });
+		  }
+	  };
+	  
+	  PopupMenu popup = new PopupMenu();
+
+      MenuItem showItem = new MenuItem("Show");
+      showItem.addActionListener(showListener);
+      popup.add(showItem);
+
+      MenuItem closeItem = new MenuItem("Close");
+      closeItem.addActionListener(closeListener);
+      popup.add(closeItem);
+      
+      final TrayIcon trayIcon = new TrayIcon(createImage("/raijin2.png"), "Raijin.java", popup);
+	  trayIcon.setImageAutoSize(true);
+      trayIcon.addActionListener(showListener);
+      
+      try {
+		  tray.add(trayIcon);
+	  } catch (AWTException e) {
+		  System.out.println("TrayIcon could not be added.");
+	  }
+  }
+  
+  private void hide(final Stage stage) {
+      Platform.runLater(new Runnable() {
+          @Override
+          public void run() {
+              if (SystemTray.isSupported()) {
+            	  System.out.println("awesome");
+                  stage.hide();
+              } else {
+            	  System.out.println("maybe not");
+                  System.exit(0);
+              }
+          }
+      });
+  }
+  protected static Image createImage(String path) {
+	  URL imageUrl = Raijin.class.getResource(path);
+	  
+	  if(imageUrl == null) {
+		  System.err.println("no image found: " + path);
+		  return null;
+	  } else {
+		  return (new ImageIcon(imageUrl)).getImage();
+	  }
   }
 }
