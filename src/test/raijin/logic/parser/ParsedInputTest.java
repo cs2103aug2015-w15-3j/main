@@ -98,4 +98,21 @@ public class ParsedInputTest {
   public void testInvalidFilePathInput() throws FailedToParseException {
     parser.parse("set");
   }
+  
+  @Test(expected=FailedToParseException.class)
+  public void testInvalidDeleteInput() throws FailedToParseException {
+    parser.parse("delete");
+  }
+  
+  @Test(expected=FailedToParseException.class)
+  public void testInvalidDoneInput() throws FailedToParseException {
+    parser.parse("done");
+  }
+  
+  @Test
+  public void testBasicSearch() throws FailedToParseException {
+    ParsedInput searchCommand = parser.parse("search everything including 1 is included 4");
+    assertEquals(4, searchCommand.getId());
+    assertEquals("everything including 1 is included 4", searchCommand.getName());
+  }
 }
