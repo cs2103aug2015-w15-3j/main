@@ -56,7 +56,7 @@ public class Raijin extends Application {
 	private IntroController introController;
 	private EventBus eventbus = RaijinEventBus.getEventBus();
 	private SystemTray tray;
-	final TrayIcon trayIcon = new TrayIcon(createImage("/raijin2.png"), "Raijin.java", null);
+	final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", null);
 	 
 	public static void main(String[] args) {
 	  launch(args);
@@ -231,8 +231,7 @@ public class Raijin extends Application {
 
       trayIcon.setImageAutoSize(true);
 
-      final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", popup);
-	  trayIcon.setImageAutoSize(true);
+      trayIcon.setImageAutoSize(true);
       trayIcon.addActionListener(showListener);
       trayIcon.setPopupMenu(popup);
   }
