@@ -7,14 +7,18 @@ import java.util.stream.Collectors;
 
 import org.loadui.testfx.FXScreenController;
 
+import com.google.common.eventbus.Subscribe;
+
 import raijin.common.datatypes.Task;
+import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.SetCurrentTasksEvent;
+import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.storage.api.TasksManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
-
 import static raijin.common.utils.TaskUtils.*;
 
 public class EventBus {
@@ -98,7 +102,20 @@ public class EventBus {
     currentTasks.setAll(filterName(displayedTasks));
   }
 
-  private EventBus() {}
+  void handleSetCurrentTasksEvent() {
+    MainSubscriber<SetCurrentTasksEvent> setCurrentHandler = new MainSubscriber<
+        SetCurrentTasksEvent>(RaijinEventBus.getEventBus()) {
+
+          @Subscribe
+          @Override
+          public void handleEvent(SetCurrentTasksEvent event) {
+            displayedTasks = event.tasks;
+          }};
+  }
+
+  private EventBus() {
+    handleSetCurrentTasksEvent();
+  }
   
   public static EventBus getEventBus() {
     return eventBus;
