@@ -64,10 +64,7 @@ public class Raijin extends Application implements NativeKeyListener {
 	private EventBus eventbus = RaijinEventBus.getEventBus();
 	private SystemTray tray;
 	final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", null);
-	private static boolean isCtrlPressed = false;
-	private static boolean isAltPressed = false;
-	private static boolean isHPressed = false;
-	
+
 	public static void main(String[] args) {
 	  launch(args);
 	}
