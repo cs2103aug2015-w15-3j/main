@@ -43,6 +43,9 @@ public class TaskPane extends StackPane {
 	//|Overdue? |	tags go here											  | low       |
 	//====================================================================================//
 	
+	public TaskPane() {
+		
+	}
 	
 	public TaskPane (int displayedNum, Task task, String colourOfParent) {
 		id = new Label(String.valueOf(displayedNum));
