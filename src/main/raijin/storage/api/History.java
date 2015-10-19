@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
+import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.SetCurrentTasksEvent;
 import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.EventBus;
@@ -33,8 +35,12 @@ public class History {
   /*Helper to write changes to file and trigger view change*/
   void reflectChanges() {
     EventBus.getEventBus().setHeadMessage("All pending tasks");
+    /*
     EventBus.getEventBus().setCurrentTasks(new ArrayList<Task>(
         tasksManager.getPendingTasks().values()));
+        */
+    RaijinEventBus.getEventBus().post(new SetCurrentTasksEvent(new ArrayList<Task>(
+        tasksManager.getPendingTasks().values())));
     Session.getSession().commit();
   }
 
