@@ -120,4 +120,5 @@ public class ParsedInputTest {
     assertEquals(4, searchCommand.getId());
     assertEquals("everything including 1 is included 4", searchCommand.getName());
   }
+  
 }
