@@ -3,6 +3,7 @@ package raijin.ui;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
@@ -31,7 +32,6 @@ public class DisplayController extends BorderPane {
   private Label headMessage;
 
   @FXML
-  //ListView<String> listView;
   ListView<TaskPane> tasksPane;
 
   public DisplayController() {
@@ -48,11 +48,12 @@ public class DisplayController extends BorderPane {
     date = new Date();
     
     headMessage = new Label("All pending tasks");
-    headMessage.setStyle("-fx-font-size: 20px; -fx-padding: 5px;");
+    headMessage.setStyle("-fx-font-size: 20px; -fx-padding: 10px;");
     this.setTop(headMessage);
 
-    //listView = new ListView<String>();
     tasksPane = new ListView<TaskPane>();
+    tasksPane.setStyle("-fx-background-insets: 0; -fx-background-color: #fff, #fff;");
+    tasksPane.setPadding(new Insets(0));
     
     this.setCenter(tasksPane);
 

@@ -100,8 +100,9 @@ public class DisplayCommandRunner extends CommandRunner {
 			if (pending.isEmpty()) {
 				eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
 			} else {
-				Collections.sort(pending);
-				eventBus.setCurrentTasks(pending);
+				relevant = new ArrayList<Task>(pending);
+				Collections.sort(relevant);
+				eventBus.setCurrentTasks(relevant);
 			}
 
 			message = "All pending tasks";
