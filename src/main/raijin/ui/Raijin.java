@@ -37,19 +37,26 @@ import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.WindowEvent;
 
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.NativeInputEvent;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
+
 import raijin.common.datatypes.Constants;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.Logic;
 import raijin.storage.api.Session;
 
-public class Raijin extends Application {
+public class Raijin extends Application implements NativeKeyListener {
 	private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
 	private static final String INTRO_LAYOUT_FXML_LOCATION = "resource/layout/IntroLayout.fxml";
 	private static final String TRAY_ICON_LOCATION = "resource/styles/raijin2.png";
 	
 	private static final String NO_DIRECTORY_SELECTED_FEEDBACK = "I'm sorry! You have not selected "
 															+ "a directory yet. Please try again!";
+	private boolean isVisible = false;
 	private BorderPane rootLayout, introLayout;
 	private Stage stage;
 	private Logic logic;
@@ -57,7 +64,10 @@ public class Raijin extends Application {
 	private EventBus eventbus = RaijinEventBus.getEventBus();
 	private SystemTray tray;
 	final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", null);
-	 
+	private static boolean isCtrlPressed = false;
+	private static boolean isAltPressed = false;
+	private static boolean isHPressed = false;
+	
 	public static void main(String[] args) {
 	  launch(args);
 	}
@@ -70,9 +80,12 @@ public class Raijin extends Application {
     decideScene();
     makeTray(stage); // listen out for any ctrl-h events
     Platform.setImplicitExit(false);
-    handleMinimiseEvent();
+
+    GlobalScreen.registerNativeHook();
+    GlobalScreen.addNativeKeyListener(this);
     
     this.stage.show();
+    this.isVisible = true;
     
     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
     	public void handle(WindowEvent we) {
@@ -182,26 +195,9 @@ public class Raijin extends Application {
   // Methods for Eventbus
   //
 
-  public void handleMinimiseEvent() {
-	  MainSubscriber<KeyPressEvent> activateHideSubscriber = new MainSubscriber<
-			  KeyPressEvent>(eventbus) {
-
-	      @Subscribe
-	      @Override
-	      public void handleEvent(KeyPressEvent event) {
-	        if (Constants.KEY_HIDEUNHIDE.match(event.keyEvent)) {
-	        	  hide(stage);
-	        	  try {
-	        		  tray.add(trayIcon);
-	        	  } catch (AWTException e) {
-	        		  System.out.println("TrayIcon could not be added.");
-	        	  }
-	        }};
-	  };
-  }
-  
   //
   // Setting up Activate and Hide
+  //
   public void makeTray(final Stage stage) {
 	  if (!SystemTray.isSupported()) {
 		  System.out.println("Looks like you don't have System Tray on your Operating System!:(");
@@ -209,32 +205,8 @@ public class Raijin extends Application {
 	  
 	  this.tray = SystemTray.getSystemTray();
 	  
-	  ActionListener showListener = new ActionListener() {
-		  @Override
-		  public void actionPerformed(java.awt.event.ActionEvent e) {
-			  Platform.runLater(new Runnable() {
-				  @Override
-				  public void run() {
-					  stage.show();
-					  tray.remove(trayIcon);
-				  }
-			  });
-			  
-		  }
-	  };
 	  
-	  PopupMenu popup = new PopupMenu();
-
-      MenuItem showItem = new MenuItem("Show");
-      showItem.addActionListener(showListener);
-      popup.add(showItem);
-
-
       trayIcon.setImageAutoSize(true);
-
-      trayIcon.setImageAutoSize(true);
-      trayIcon.addActionListener(showListener);
-      trayIcon.setPopupMenu(popup);
   }
   
   private void hide(final Stage stage) {
@@ -260,4 +232,40 @@ public class Raijin extends Application {
 	  }
   }
   
+@Override
+public void nativeKeyPressed(NativeKeyEvent arg0) {
+	boolean isCtrlHPressed = arg0.getKeyCode() == NativeKeyEvent.VC_H 
+			&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
+			equals("Ctrl");
+	
+	if (isCtrlHPressed && isVisible) {
+		hide(stage);
+  	  try {
+  		  tray.add(trayIcon);
+  	  } catch (AWTException e) {
+  		  System.out.println("TrayIcon could not be added.");
+  	  }
+  	  isVisible = false;
+	} else if (isCtrlHPressed) {
+		Platform.runLater(new Runnable() {
+			  @Override
+			  public void run() {
+				  stage.show();
+				  tray.remove(trayIcon);
+			  }
+		  });
+		isVisible = true;
+	}
+}
+
+@Override
+public void nativeKeyReleased(NativeKeyEvent arg0) {
+	
+}
+
+@Override
+public void nativeKeyTyped(NativeKeyEvent arg0) {
+	// TODO Auto-generated method stub
+	
+}
 }

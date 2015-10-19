@@ -69,7 +69,7 @@ public class AddParserTest {
   
   @Test
   public void testAddWithPriorityAndTags() throws FailedToParseException {
-    addCommand = parser.parse("add finish work from 0800 to 0900 @h #work #school");
+    addCommand = parser.parse("add finish work from 0800 to 0900 !h #work #school");
     assertEquals("finish work", addCommand.getName());
     assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
     assertEquals("09:00", addCommand.getDateTime().getEndTime().toString());
@@ -78,14 +78,26 @@ public class AddParserTest {
     assertEquals("work", addCommand.getTags().pollFirst());
   }
   
+  @Test
+  public void testAddSubtasking() throws FailedToParseException {
+    addCommand = parser.parse("add finish work @3");
+    assertEquals("finish work", addCommand.getName());
+    assertEquals(3, addCommand.getSubTaskOf());
+  }
+  
   @Test(expected=IllegalCommandArgumentException.class)
   public void testNoNameGivenError() throws IllegalCommandArgumentException {
     new AddParser(builder, new String("add").split(" "), 0).process();
   }
   
   @Test(expected=IllegalCommandArgumentException.class)
-  public void testInvalidPriorityInput() throws IllegalCommandArgumentException {
+  public void testInvalidSubTaskInput() throws IllegalCommandArgumentException {
     new AddParser(builder, new String("add work @a").split(" "), 0).process();
+  }
+  
+  @Test(expected=IllegalCommandArgumentException.class)
+  public void testInvalidPriorityInput() throws IllegalCommandArgumentException {
+    new AddParser(builder, new String("add work !a").split(" "), 0).process();
   }
   
   @Test(expected=IllegalCommandArgumentException.class)
