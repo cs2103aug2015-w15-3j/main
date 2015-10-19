@@ -21,11 +21,14 @@ public class TaskPane extends StackPane {
 	private String[] midPriorityColours = {"#99E6FF"}; 		// green, blue
 	private String[] lowPriorityColours = {"#E6E6E6"};					// grey
 	
-	private String[] subTaskColours = {"#FFC2C2", "#FFC299", "#D1FFD1", "#C2F0FF", "#F0F0F0"};
+	//private String[] subTaskColours = {"#FFC2C2", "#FFC299", "#D1FFD1", "#C2F0FF", "#F0F0F0"};
+	private String[] subTaskColours = {"#FFC2C2", "#D1FFD1", "#F0F0F0"};
 	
 	private Label id;
 	private Label taskName;
-	private Label start, end;
+	private Label start = new Label("Start: "), end = new Label("End: ");
+	private Label startByOn = new Label("By/On: ");
+	private Label startValue, endValue;
 	private Label tags = new Label("Tags: ");
 	private Label tagsValue;
 	private Label priority = new Label("Priority:");
@@ -47,16 +50,22 @@ public class TaskPane extends StackPane {
 	}
 	
 	public TaskPane (int displayedNum, Task task, String colourOfParent) {
-		id = new Label(String.valueOf(displayedNum));
+		id = new Label(Integer.toString(displayedNum));
 		id.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
-		id.setPadding(new Insets(10,20,0,20));
-		id.setTextAlignment(TextAlignment.CENTER); // this seems useless
+		id.setPadding(new Insets(15,20,0,25));
+		//id.setTextAlignment(TextAlignment.CENTER); // this seems useless
+		
+		start.setStyle("-fx-font-weight:bold");
+		end.setStyle("-fx-font-weight:bold");
+		startByOn.setStyle("-fx-font-weight:bold");
 		
 		taskName = new Label((task.getName().length() > 59 ? task.getName().substring(0,59) + "..." : task.getName()));
 		taskName.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+		
 		tags.setStyle("-fx-font-weight:bold;");
 		tagsValue = new Label(retrieveTags(task));
 		tagsValue.setStyle("-fx-font-style: italic;");
+		
 		priority.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
 		
 		
@@ -70,6 +79,8 @@ public class TaskPane extends StackPane {
 		
 		taskType = task.getType();
 		
+		HBox datesBox = new HBox();
+		
 		if (taskType.equals(Constants.TYPE_TASK.EVENT)) {
 			String startDate = task.getDateTime().getStartDate().toString();
 			String startTime = task.getDateTime().getStartTime() == null ? "" 
@@ -79,8 +90,11 @@ public class TaskPane extends StackPane {
 			String endTime = task.getDateTime().getEndTime() == null ? "" 
 								: " @ " + task.getDateTime().getEndTime().toString();
 			
-			start = new Label("Start: " + startDate + startTime);
-			end = new Label("End: " + endDate + endTime);
+			startValue = new Label(startDate + startTime);
+			startValue.setPadding(new Insets(0, 50, 0, 0));
+			endValue = new Label(endDate + endTime);
+			
+			datesBox.getChildren().addAll(start, startValue, end, endValue);
 			
 		} else if (taskType.equals(Constants.TYPE_TASK.SPECIFIC)) {
 			// TODO may need better formatting.
@@ -90,33 +104,34 @@ public class TaskPane extends StackPane {
 			String endTime = task.getDateTime().getEndTime() == null ? "" 
 					: " to " + task.getDateTime().getEndTime().toString();
 			
-			start = new Label("By/On: " + endDate + startTime + endTime);
-			end = new Label();
+			startValue = new Label(endDate + startTime + endTime);
+			
+			datesBox.getChildren().addAll(startByOn, startValue);
 			
 		} else if (taskType.equals(Constants.TYPE_TASK.FLOATING)) {
-			start = new Label("No deadlines for this! :)");
-			end = new Label();
+			startValue = new Label("No deadlines for this! :)");
+			datesBox.getChildren().addAll(startValue);
 		}
 		
 		HBox indentBox = new HBox();
 		indentBox.setPrefWidth(50);
 		
 		HBox idBox = new HBox();
-		idBox.setMaxWidth(30);
+		idBox.setPrefWidth(80);
 		idBox.getChildren().addAll(id);
 		
 		HBox fillerBox = new HBox();
 		fillerBox.setPrefWidth(10);
 		
 		HBox taskBox = new HBox();
-		taskBox.setPrefHeight(30);
+		//taskBox.setPrefHeight(30);
+		taskBox.setPadding(new Insets(3, 0, 3, 0));
 		taskBox.getChildren().addAll(taskName);
 		
-		HBox datesBox = new HBox();
-		datesBox.getChildren().addAll(start, end);
 		datesBox.setPrefHeight(10);
 		
 		HBox tagsBox = new HBox();
+		tagsBox.setPadding(new Insets(3, 0, 5, 0));
 		tagsBox.getChildren().addAll(tags, tagsValue);
 		
 		VBox centre = new VBox();
@@ -127,8 +142,8 @@ public class TaskPane extends StackPane {
 		right.getChildren().addAll(priority, priorityValue);
 
 		HBox pane = new HBox();
+		//pane.setPrefHeight(0);
 		
-		// TODO remove the ! after parser supports priority
 		if (colourOfParent.equals("none")) {
 			if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
 				this.setStyle("-fx-background-color: " + highPriorityColours[task.getId()%1] + ";");
@@ -155,25 +170,25 @@ public class TaskPane extends StackPane {
 			
 			for (int i=0; i<midPriorityColours.length; i++) {
 				if (colourOfParent.equals(midPriorityColours[i])) {
-					colourForThis = subTaskColours[i+2];
+					colourForThis = subTaskColours[i+1];
 				}
 			}
 			
 			for (int i=0; i<lowPriorityColours.length; i++) {
 				if (colourOfParent.equals(lowPriorityColours[i])) {
-					colourForThis = subTaskColours[i+3];
+					colourForThis = subTaskColours[i+2];
 				}
 			}
 			
 			this.colour = colourForThis;
 			this.setStyle("-fx-background-color: " + colourForThis);
-			pane.getChildren().addAll(idBox, centre, right); // TODO add back the indentbox
+			pane.getChildren().addAll(indentBox, idBox, centre, right);
 		}
 		
 		this.getChildren().addAll(pane);
-		this.setMaxHeight(20);
-		this.setStyle(this.getStyle() + "-fx-background-radius: 10px;");
-		//this.setPadding(new Insets(2));
+		this.setPrefHeight(65);
+		this.setStyle(this.getStyle() + "-fx-background-radius: 20px;");
+		//this.setPadding(new Insets(10));
 		
 	}
 	

@@ -64,6 +64,7 @@ public class DisplayController extends BorderPane {
     tasksPane.setStyle("-fx-background-insets: 0; -fx-background-color: #fff, #fff;");
     tasksPane.setPadding(new Insets(0));
     
+    this.setStyle("-fx-background-color: white;");
     this.setCenter(tasksPane);
 
     eventBus.displayHeadMessageProperty().addListener((v, oldVal, newVal) -> {
