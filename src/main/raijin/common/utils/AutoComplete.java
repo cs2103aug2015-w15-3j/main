@@ -121,9 +121,9 @@ public class AutoComplete {
     if (isCommand(tokens)) { // Get suggestions from commandList
       suggestions = commandList.getSuggestions(prefix);
     } else if (isTag(tokens)) { // Get suggestions from tagList
-      suggestions = tagList.getSuggestions(prefix.substring(1, prefix.length()));
+      updateTagSuggestion(input);
     } else { // Get suggestions from task
-      updateTaskNames(input);
+      updateTaskSuggestion(input);
     }
 
   }
@@ -136,7 +136,7 @@ public class AutoComplete {
     return tokens.length > 1 && getLastWord(tokens).substring(0, 1).equals("#");
   }
 
-  void updateTaskNames(String input) {
+  void updateTaskSuggestion(String input) {
     String[] tokens = getTokens(input);
     String command = tokens[0];
 
@@ -144,6 +144,19 @@ public class AutoComplete {
       suggestions = taskList.getSuggestions(getArguments(input)).stream().map(
           str -> command + " " + str).collect(Collectors.toList());
     }
+  }
+
+  void updateTagSuggestion(String input) {
+    String[] tokens = getTokens(input);
+    String prefix = getLastWord(tokens);
+    int lastTagIndex = input.lastIndexOf("#");
+    String previousString = input.substring(0, lastTagIndex-1);
+    String tag = prefix.substring(1, prefix.length());      //Get tag from last word
+    
+    System.out.println(tag);
+    suggestions = tagList.getSuggestions(tag).stream().map(
+        str -> previousString + " #" + str).collect(Collectors.toList());
+    System.out.println(suggestions.toString());
   }
 
   boolean isValidCommand(String input) {
@@ -167,7 +180,7 @@ public class AutoComplete {
 
   /*Update any to any recently updated tags*/
   void updateTags() {
-    taskNames = TaskUtils.getTags(tasksManager.getPendingTasks());
+    tags = TaskUtils.getTags(tasksManager.getPendingTasks());
   }
 
   /*Overall update with states of application*/
