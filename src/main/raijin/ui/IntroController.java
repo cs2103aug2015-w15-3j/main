@@ -43,7 +43,7 @@ public class IntroController extends BorderPane {
 		} else {
 		  logic.setChosenUserStorage(selectedDirectory.getAbsolutePath());
 		  System.out.println("setted new directory");
-		  mainApp.initMainLayout();
+		  mainApp.changeToMinimisedView();
 		}
 	}
 }
