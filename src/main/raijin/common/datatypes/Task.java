@@ -29,6 +29,7 @@ public class Task implements Comparable<Task> {
   private String priority;                                         //Default priority level to medium
   private TreeSet<String> tags = new TreeSet<String>();            //Empty tag set when initialized
   private TreeSet<Integer> subTasks = new TreeSet<Integer>();
+  private String project;
   private ArrayList<String> keywords;
   private Constants.TYPE_TASK type;
 
@@ -63,6 +64,10 @@ public class Task implements Comparable<Task> {
     return priority;
   }
 
+
+  public String getProject() {    
+    return project;
+  }
 
   /*Needed after undo or redo*/
   public void setId(int id) {
@@ -132,6 +137,7 @@ public class Task implements Comparable<Task> {
   void initExtra(ParsedInput input) {
     dateTime = input.getDateTime();
     priority = input.getPriority();
+    project = input.getProject();
     extractTags(input);
   }
   

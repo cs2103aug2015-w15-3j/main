@@ -26,6 +26,7 @@ public class ParsedInput {
   private int subTaskOf = 0;                                     //Default to sentinel value 0
   private String priority = Constants.PRIORITY_MID;              //Default to medium priority
   private String helperOption;                                   //Stores argument for helper command
+  private String project;
 
   //===========================================================================
   // Private constructor
@@ -41,7 +42,8 @@ public class ParsedInput {
     final TreeSet<String> tags,
     final int subTaskOf,
     final String priority,
-    final String helperOption) {
+    final String helperOption,
+    final String project) {
 
     this.command = command;
     this.id = id;
@@ -52,6 +54,7 @@ public class ParsedInput {
     this.subTaskOf = subTaskOf;
     this.priority = priority;
     this.helperOption = helperOption;
+    this.project = project;
   }
 
   //===========================================================================
@@ -64,7 +67,7 @@ public class ParsedInput {
 
   public int getId() {
     if (id.isEmpty()) {
-      return 0;                                     // If not assigned, default to 0
+      return 0;                     // If not assigned, default to 0
     }
     return id.first();
   }
@@ -80,7 +83,7 @@ public class ParsedInput {
   }
 
   public String getName() {
-    if (name.isEmpty()) {                          // If not assigned, default to empty string
+    if (name.isEmpty()) {           // If not assigned, default to empty string
       return "";
     }
     return name.first();
@@ -119,6 +122,10 @@ public class ParsedInput {
     return helperOption;
   }
 
+  public String getProject() {
+    return project;
+  }
+
   //===========================================================================
   // Builder Class
   //===========================================================================
@@ -133,6 +140,7 @@ public class ParsedInput {
     private int subTaskOf;
     private String priority = Constants.PRIORITY_MID;
     private String helperOption;
+    private String project;
     
     public ParsedInputBuilder(final Constants.Command command) {
       this.command = command;
@@ -188,10 +196,16 @@ public class ParsedInput {
       return this;
     }
 
+    public ParsedInputBuilder project(final String project) {
+      this.project = project;
+      return this;
+    }
+
     /*Generate parsedinput when client is done building the object*/
     public ParsedInput createParsedInput() {
       return new ParsedInput(command, id, name, dateTime, displayOptions, 
-                             tags, subTaskOf, priority, helperOption);
+                             tags, subTaskOf, priority, helperOption,
+                             project);
     }
 
   }
