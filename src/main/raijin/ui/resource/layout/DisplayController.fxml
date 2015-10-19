@@ -2,18 +2,16 @@
 
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
 
-<fx:root type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
-	<top>
-		<Label fx:id="headMessage" BorderPane.alignment="CENTER"/>
-	</top>
-	<center>
-		<ListView fx:id="listView" BorderPane.alignment="CENTER"/>
-	
-	</center>
+<fx:root type="BorderPane" HBox.hgrow="ALWAYS" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <center>
+    <ListView fx:id="listView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
+  </center>
+  <top>
+    <Label fx:id="headMessage" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
+  </top>
 </fx:root>
-
