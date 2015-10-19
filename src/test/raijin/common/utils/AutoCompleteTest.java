@@ -102,7 +102,7 @@ public class AutoCompleteTest {
   public void updateSuggestions_Task() {
     generateTasksManager();
     autoComplete.loadTaskList(TaskUtils.getTaskNames(tasksManager.getPendingTasks()));
-    String input = "I am";
+    String input = "add I am";
     autoComplete.updateSuggestions(input);
     assertEquals(3, autoComplete.suggestions.size());
   }

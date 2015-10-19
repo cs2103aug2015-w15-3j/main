@@ -148,7 +148,11 @@ public class AutoComplete {
 
   boolean isValidCommand(String input) {
     String command = input.toUpperCase(); // To create enum command
-    return Arrays.asList(Constants.Command.values()).contains(Constants.Command.valueOf(command));
+    try {
+      return Arrays.asList(Constants.Command.values()).contains(Constants.Command.valueOf(command));
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
   }
 
   String getArguments(String input) {
