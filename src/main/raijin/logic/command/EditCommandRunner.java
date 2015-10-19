@@ -1,5 +1,7 @@
 package raijin.logic.command;
 
+import java.util.TreeSet;
+
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
@@ -18,9 +20,18 @@ public class EditCommandRunner extends CommandRunner implements UndoableRedoable
   
   Task modifyTask(ParsedInput input) {
     String name = (input.getName() == "") ? taskBeforeChange.getName() : input.getName();
-    ParsedInput modifiedInput = (input.getDateTime() == null) ? 
-                        inputBeforeChange : input;
-    return new Task(name, idManager.getId(), modifiedInput);
+    String priority = (!input.getPriority().equals(Constants.PRIORITY_MID)) 
+        ? input.getPriority() : taskBeforeChange.getPriority();
+    TreeSet<String> tags = (input.getTags().isEmpty()) 
+        ? taskBeforeChange.getTags() : input.getTags();
+    DateTime date = (input.getDateTime() == null) 
+        ? taskBeforeChange.getDateTime() : input.getDateTime();
+    int id = idManager.getId();    
+        
+    ParsedInput modifiedInput = new ParsedInput.ParsedInputBuilder(Constants.Command.EDIT)
+        .name(name).dateTime(date).priority(priority).tag(tags).createParsedInput();
+    
+    return new Task(name, id, modifiedInput);
   }
   
   Status editSuccessfulStatus() {

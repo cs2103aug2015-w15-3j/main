@@ -3,6 +3,7 @@ package raijin.logic.command;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
+import java.util.TreeSet;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class EditCommandRunnerTest {
     tasksManager = TasksManager.getManager();
     tasksManager.setPendingTasks(new HashMap<Integer, Task>());
     IDManager.getIdManager().flushIdPool();
-    addTask("First entry.", new DateTime("03/10/2015"));
+    addTask("First entry.", new DateTime("03/10/2015"), "h", "work");
   }
   
   @Test
@@ -51,13 +52,25 @@ public class EditCommandRunnerTest {
   }
 
   @Test
-  public void execute_EditTaskNameDate() throws NoSuchTaskException, UnableToExecuteCommandException {
+  public void execute_EditTaskNameDate() 
+      throws NoSuchTaskException, UnableToExecuteCommandException {
     Status returnStatus = editTask(1, "First entry changed again.", new DateTime("05/10/2015"));
     String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1);
     assertEquals(expectedStatusLine, returnStatus.getFeedback());
     assertEquals("First entry changed again.", tasksManager.getPendingTask(1).getName());
     assertEquals("2015-10-05", tasksManager.getPendingTask(1).getDateTime()
                 .getStartDate().toString());
+    assertEquals("h", tasksManager.getPendingTask(1).getPriority());
+    assertEquals("work", tasksManager.getPendingTask(1).getTags().pollFirst());
+  }
+  
+  @Test
+  public void execute_EditTaskPriorityTag() 
+      throws UnableToExecuteCommandException, NoSuchTaskException {
+    Status returnStatus = editTaskPriorityTag(1, "l", "school");
+    assertEquals(String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1), returnStatus.getFeedback());
+    assertEquals("l", tasksManager.getPendingTask(1).getPriority());
+    assertEquals("school", tasksManager.getPendingTask(1).getTags().pollFirst());
   }
   
   @Test
@@ -83,15 +96,20 @@ public class EditCommandRunnerTest {
   // Helper methods
   //===========================================================================
   
-  public Status addTask(String inputName, DateTime dateTime) throws UnableToExecuteCommandException {
-    ParsedInput parsedInput = createSpecificTask(inputName, dateTime);
+  public Status addTask(String inputName, DateTime dateTime, String priority, String tag)
+      throws UnableToExecuteCommandException {
+    ParsedInput parsedInput = createSpecificTask(inputName, dateTime, priority, tag);
     Status returnStatus = addCommandRunner.execute(parsedInput);
     return returnStatus;
   }
   
-  public ParsedInput createSpecificTask(String inputName, DateTime dateTime) {
+  public ParsedInput createSpecificTask(String inputName, DateTime dateTime, String priority,
+      String tag) {
+    TreeSet<String> tags = new TreeSet<String>();
+    tags.add(tag);
     return new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
-      name(inputName).dateTime(dateTime).createParsedInput();
+      name(inputName).dateTime(dateTime).priority(priority)
+      .tag(tags).createParsedInput();
   }
   
   public Status editTask(int id, String inputName, DateTime dateTime) 
@@ -105,6 +123,14 @@ public class EditCommandRunnerTest {
       parsedInput = modifyTaskNameDate(id, inputName, dateTime);
     }
     return editCommandRunner.execute(parsedInput);
+  }
+  
+  public Status editTaskPriorityTag(int id, String priority, String tag) 
+      throws UnableToExecuteCommandException {
+    TreeSet<String> tags = new TreeSet<String>();
+    tags.add(tag);
+    return editCommandRunner.execute(new ParsedInput.ParsedInputBuilder(Constants.Command.EDIT).
+        id(id).priority(priority).tag(tags).createParsedInput());
   }
 
   public ParsedInput modifyTaskName(int id, String inputName) {
