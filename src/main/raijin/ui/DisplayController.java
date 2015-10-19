@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import raijin.common.datatypes.DateTime;
+import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.SetCurrentTasksEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.utils.EventBus;
@@ -28,7 +29,7 @@ import com.google.common.eventbus.Subscribe;
 public class DisplayController extends BorderPane {
 
   private EventBus eventBus = EventBus.getEventBus();
-  private com.google.common.eventbus.EventBus eventbus;     //Google event bus
+  private com.google.common.eventbus.EventBus eventbus = RaijinEventBus.getEventBus();     //Google event bus
 
   private static final String DISPLAY_CONTROLLER_FXML = "resource/layout/DisplayController.fxml";
   final DateFormat dateFormatSplash = new SimpleDateFormat("EEE, d MMM ''yy");
