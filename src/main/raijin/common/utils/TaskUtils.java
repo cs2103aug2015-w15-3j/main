@@ -19,7 +19,7 @@ public class TaskUtils {
 	  }
 	  
 	  for (int i=0; i<tasks.size(); i++) {
-		  list.add(new TaskPane(tasks.get(i), "none"));
+		  list.add(new TaskPane(i+1, tasks.get(i), "none"));
 	  }
 	  
 	  return list;
@@ -29,7 +29,7 @@ public class TaskUtils {
 	  ArrayList<TaskPane> list = new ArrayList<TaskPane>();
 	  
 	  for (int i=0; i<tasks.size(); i++) {
-		  list.add(new TaskPane(tasks.get(i), "none"));
+		  list.add(new TaskPane(i+1, tasks.get(i), "none"));
 	  }
 	  
 	  return list;

@@ -70,6 +70,7 @@ public class Raijin extends Application implements NativeKeyListener {
   private static boolean isAltPressed = false;
   private static boolean isHPressed = false;
 
+
   public static void main(String[] args) {
     launch(args);
   }
@@ -85,7 +86,7 @@ public class Raijin extends Application implements NativeKeyListener {
 
     GlobalScreen.registerNativeHook();
     GlobalScreen.addNativeKeyListener(this);
-    turnOffLogger();                            //Turn off JNativeHook Logging
+    turnOffLogger(); // Turn off JNativeHook Logging
 
     this.stage.show();
     this.isVisible = true;

@@ -3,7 +3,6 @@ package raijin.common.utils;
 import java.util.TreeSet;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -14,8 +13,12 @@ import raijin.common.datatypes.Task;
 
 public class TaskPane extends StackPane {
 	
-	private String[] highPriorityColours = {"#FF9494", "#FFA366"}; 		// red, orange
-	private String[] midPriorityColours = {"#B2FFB2", "#99E6FF"}; 		// green, blue
+	//private String[] highPriorityColours = {"#FF9494", "#FFA366"}; 		// red, orange
+	//private String[] midPriorityColours = {"#B2FFB2", "#99E6FF"}; 		// green, blue
+	//private String[] lowPriorityColours = {"#E6E6E6"};					// grey
+	
+	private String[] highPriorityColours = {"#FF9494"}; 		// red, orange
+	private String[] midPriorityColours = {"#99E6FF"}; 		// green, blue
 	private String[] lowPriorityColours = {"#E6E6E6"};					// grey
 	
 	private String[] subTaskColours = {"#FFC2C2", "#FFC299", "#D1FFD1", "#C2F0FF", "#F0F0F0"};
@@ -39,21 +42,24 @@ public class TaskPane extends StackPane {
 	//|Overdue? |	tags go here											  | low       |
 	//====================================================================================//
 	
-	
-	public TaskPane (Task task, String colourOfParent) {
-		id = new Label(String.valueOf(task.getId()));
-		id.setStyle("-fx-font-weight: bold; -fx-font-size: 30px;");
-		id.setPadding(new Insets(20));
-		id.setTextAlignment(TextAlignment.LEFT); // this seems useless
+	public TaskPane() {
 		
-		taskName = new Label(task.getName());
+	}
+	
+	public TaskPane (int displayedNum, Task task, String colourOfParent) {
+		id = new Label(String.valueOf(displayedNum));
+		id.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
+		id.setPadding(new Insets(10,20,0,20));
+		id.setTextAlignment(TextAlignment.CENTER); // this seems useless
+		
+		taskName = new Label((task.getName().length() > 59 ? task.getName().substring(0,59) + "..." : task.getName()));
 		taskName.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
 		tags.setStyle("-fx-font-weight:bold;");
 		tagsValue = new Label(retrieveTags(task));
 		tagsValue.setStyle("-fx-font-style: italic;");
 		priority.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
 		
-		try {
+		
 		if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
 			priorityValue = new Label("High");
 		} else if (task.getPriority().equals(Constants.PRIORITY_MID)) {
@@ -61,9 +67,7 @@ public class TaskPane extends StackPane {
 		} else {
 			priorityValue = new Label("Low");
 		}
-		} catch (NullPointerException e) {
-			priorityValue = new Label("placeholder");
-		}
+		
 		taskType = task.getType();
 		
 		if (taskType.equals(Constants.TYPE_TASK.EVENT)) {
@@ -102,7 +106,7 @@ public class TaskPane extends StackPane {
 		idBox.getChildren().addAll(id);
 		
 		HBox fillerBox = new HBox();
-		fillerBox.setPrefWidth(30);
+		fillerBox.setPrefWidth(10);
 		
 		HBox taskBox = new HBox();
 		taskBox.setPrefHeight(30);
@@ -110,7 +114,7 @@ public class TaskPane extends StackPane {
 		
 		HBox datesBox = new HBox();
 		datesBox.getChildren().addAll(start, end);
-		datesBox.setPrefHeight(20);
+		datesBox.setPrefHeight(10);
 		
 		HBox tagsBox = new HBox();
 		tagsBox.getChildren().addAll(tags, tagsValue);
@@ -125,19 +129,20 @@ public class TaskPane extends StackPane {
 		HBox pane = new HBox();
 		
 		// TODO remove the ! after parser supports priority
-		if (!colourOfParent.equals("none")) {
+		if (colourOfParent.equals("none")) {
 			if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
-				this.setStyle("-fx-background-color: " + highPriorityColours[task.getId()%2]);
-				this.colour = highPriorityColours[task.getId()%2];
+				this.setStyle("-fx-background-color: " + highPriorityColours[task.getId()%1] + ";");
+				this.colour = highPriorityColours[task.getId()%1];
 			} else if (task.getPriority().equals(Constants.PRIORITY_MID)) {
-				this.setStyle("-fx-background-color: " + midPriorityColours[task.getId()%2]);
-				this.colour = midPriorityColours[task.getId()%2];
+				this.setStyle("-fx-background-color: " + midPriorityColours[task.getId()%1] + ";");
+				this.colour = midPriorityColours[task.getId()%1];
 			} else if(task.getPriority().equals(Constants.PRIORITY_LOW)) {
-				this.setStyle("-fx-background-color: " + lowPriorityColours[task.getId()%1]);
+				this.setStyle("-fx-background-color: " + lowPriorityColours[task.getId()%1] + ";");
 				this.colour = lowPriorityColours[task.getId()%1];
 			}
 			
-			pane.getChildren().addAll(idBox, fillerBox, centre, right);
+			//pane.getChildren().addAll(idBox, centre, right);
+			pane.getChildren().addAll(idBox, centre); //excluding priority label
 			
 		} else {
 			String colourForThis = "";
@@ -167,14 +172,14 @@ public class TaskPane extends StackPane {
 		
 		this.getChildren().addAll(pane);
 		this.setMaxHeight(20);
-		this.setStyle("-fx-background-radius: 5px");
-		this.setPadding(new Insets(2));
+		this.setStyle(this.getStyle() + "-fx-background-radius: 10px;");
+		//this.setPadding(new Insets(2));
 		
 	}
 	
 	public TaskPane (String message) {
 		Label msg = new Label(message);
-		msg.setStyle("-fx-font-size: 25px");
+		msg.setStyle("-fx-font-size: 25px;");
 		
 		this.getChildren().addAll(msg);
 		this.setStyle("-fx-background-color: white;");
