@@ -1,6 +1,7 @@
 package raijin.logic.command;
 
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.TreeSet;
 
 import raijin.common.datatypes.Constants;
@@ -15,8 +16,8 @@ import raijin.logic.parser.ParsedInput;
 public class DoneCommandRunner extends CommandRunner implements UndoableRedoable {
 	TreeSet<Integer> idsToDelete = new TreeSet<Integer>();
 	TreeSet<Integer> idsUndone = new TreeSet<Integer>();
-	Stack<Integer> idsDeleted = new Stack<Integer>();
-	Stack<Task> tasksDeleted = new Stack<Task>();
+	Queue<Integer> idsDeleted = new LinkedList<Integer>();
+	Queue<Task> tasksDeleted = new LinkedList<Task>();
 	String taskDescription;
 	Task task;
 	
@@ -25,10 +26,10 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
     
     while(!idsToDelete.isEmpty()) {
 	  int id = idsToDelete.pollFirst();
-	  idsDeleted.push(id);
+	  idsDeleted.offer(id);
 	  try {
 	    this.task = tasksManager.getPendingTask(id);
-	    tasksDeleted.push(task);
+	    tasksDeleted.offer(task);
 	  } catch (NoSuchTaskException e) {
 	    wrapLowerLevelException(e, Constants.Command.DONE);
 	  }
@@ -56,12 +57,13 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
   public void undo() throws UnableToExecuteCommandException {
     while (!idsDeleted.isEmpty()) {
       try {
-        int id = idsDeleted.pop();
-        task = tasksDeleted.pop();
-        idsUndone.add(id);
-        
+        int id = idsDeleted.poll();
+        task = tasksDeleted.poll();
+
         tasksManager.deleteCompletedTask(id);
+        
         task.setId(idManager.getId());
+        idsUndone.add(task.getId());
         tasksManager.addPendingTask(task);
       } catch (NoSuchTaskException e) {
         wrapLowerLevelException(e, Constants.Command.DONE);
@@ -72,10 +74,10 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
   public void redo() throws UnableToExecuteCommandException {
     while (!idsUndone.isEmpty()) {
       int id = idsUndone.pollFirst();
-      idsDeleted.push(id);
+      idsDeleted.offer(id);
       try {
         task = tasksManager.getPendingTask(id);
-        tasksDeleted.push(task);
+        tasksDeleted.offer(task);
       } catch (NoSuchTaskException e) {
         wrapLowerLevelException(e, Constants.Command.DONE);
       }

@@ -104,7 +104,8 @@ public class DoneCommandRunnerTest {
    }
 
    @Test
-   public void undo_DoneMultipleTasks() throws UnableToExecuteCommandException {
+   public void undo_DoneMultipleTasks() 
+       throws UnableToExecuteCommandException, NoSuchTaskException {
      addTask("Burn burn baby", new DateTime("31/08/2015"));
      addTask("Chill Chill baby", new DateTime("31/08/2015"));
      TreeSet<Integer> ids = new TreeSet<Integer>();
@@ -112,10 +113,14 @@ public class DoneCommandRunnerTest {
      doneTaskIDS(ids);
      doneCommandRunner.undo();
      assertTrue(tasksManager.isEmptyCompletedTasks());
+     assertEquals("Ice ice baby", tasksManager.getPendingTask(1).getName());
+     assertEquals("Burn burn baby", tasksManager.getPendingTask(2).getName());
+     assertEquals("Chill Chill baby", tasksManager.getPendingTask(3).getName());
    }
    
    @Test
-   public void redo_DoneMultipleTasks() throws UnableToExecuteCommandException {
+   public void redo_DoneMultipleTasks() 
+       throws UnableToExecuteCommandException, NoSuchTaskException {
      addTask("Burn burn baby", new DateTime("31/08/2015"));
      addTask("Chill Chill baby", new DateTime("31/08/2015"));
      TreeSet<Integer> ids = new TreeSet<Integer>();
@@ -124,5 +129,8 @@ public class DoneCommandRunnerTest {
      doneCommandRunner.undo();
      doneCommandRunner.redo();
      assertTrue(!tasksManager.isEmptyCompletedTasks());
+     assertEquals("Ice ice baby", tasksManager.getCompletedTasks().get(1).getName());
+     assertEquals("Burn burn baby", tasksManager.getCompletedTasks().get(2).getName());
+     assertEquals("Chill Chill baby", tasksManager.getCompletedTasks().get(3).getName());
    }
 }
