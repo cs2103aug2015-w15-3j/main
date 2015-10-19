@@ -123,6 +123,9 @@ public class Constants {
   public static final KeyCodeCombination KEY_REDO = new KeyCodeCombination(KeyCode.R,   //Redo shortcut
       KeyCombination.CONTROL_DOWN);
 
+  public static final KeyCodeCombination KEY_CLEAR = new KeyCodeCombination(KeyCode.C,   //Clear shortcut
+      KeyCombination.CONTROL_DOWN);
+
   public static final KeyCodeCombination KEY_TAB = new KeyCodeCombination(KeyCode.ENTER);
 
   public  static final KeyCodeCombination KEY_SPACE = new KeyCodeCombination(KeyCode.SPACE);

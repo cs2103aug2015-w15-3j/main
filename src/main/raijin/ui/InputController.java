@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import raijin.common.datatypes.Constants;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
@@ -57,6 +58,9 @@ public class InputController extends BorderPane {
 	
 	@FXML
 	public void onKeyPress(KeyEvent event) {
+	    if (Constants.KEY_CLEAR.match(event)) {
+	      clear();
+	    }
 		mainApp.handleKeyPress(this, event.getCode(), inputCommandBar.getText());
 	}
 	
