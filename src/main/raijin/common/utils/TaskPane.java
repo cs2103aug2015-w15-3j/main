@@ -3,7 +3,6 @@ package raijin.common.utils;
 import java.util.TreeSet;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;

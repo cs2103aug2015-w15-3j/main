@@ -7,6 +7,13 @@ import java.util.TreeSet;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import raijin.common.datatypes.Task;
