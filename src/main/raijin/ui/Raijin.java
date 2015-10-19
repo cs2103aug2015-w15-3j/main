@@ -259,4 +259,5 @@ public class Raijin extends Application {
 		  return (new ImageIcon(imageUrl)).getImage();
 	  }
   }
+  
 }

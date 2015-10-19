@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 
 import com.google.common.eventbus.Subscribe;
 
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.SetTrie;
@@ -47,6 +48,7 @@ public class AutoComplete {
     TreeSet<String> taskList  = TaskUtils.getTaskNames(tasksManager.getPendingTasks());
     setupList(tagList, taskList);
     handleKeyEvent();
+    handleTabEvent();
   }
   
   /**
@@ -79,18 +81,13 @@ public class AutoComplete {
   }
   
   void handleKeyEvent() {
-    MainSubscriber<KeyPressEvent> completeOnPress = new MainSubscriber<KeyPressEvent>(eventbus) {
+    MainSubscriber<KeyPressEvent> updateSuggestion = new MainSubscriber<KeyPressEvent>(eventbus) {
 
       @Subscribe
       @Override
       public void handleEvent(KeyPressEvent event) {
-        if (Constants.KEY_SPACE.match(event.keyEvent)) {
+        if (event.keyEvent.getCode() != KeyCode.TAB) {
           tabCount = 0;
-        } else if (Constants.KEY_TAB.match(event.keyEvent)) {
-          String suggestion = suggestions.get((tabCount++)%suggestions.size());
-          eventbus.post(new SetInputEvent(suggestion));
-          event.keyEvent.consume();
-        } else {
           String userInput = event.currentUserInput;
           updateSuggestions(userInput);
         }
@@ -116,6 +113,7 @@ public class AutoComplete {
     
     if (isCommand(tokens)) {                    //Get suggestions from commandList
       suggestions = commandList.getSuggestions(prefix);
+      logger.info("Input: " + input + " " + suggestions.toString());
     } else if (isTag(tokens)) {                 //Get suggestions from tagList
       suggestions = tagList.getSuggestions(prefix.substring(1, prefix.length()));
     } else {                                    //Get suggestions from task
@@ -132,8 +130,16 @@ public class AutoComplete {
     return tokens.length > 1 && getLastWord(tokens).substring(0, 1).equals("#");
   }
 
-  public static void main(String[] args) {
-    AutoComplete autoComplete = new AutoComplete(TasksManager.getManager());
+  public void handleTabEvent() {
+    MainSubscriber<KeyEvent> completeOnPress = new MainSubscriber<KeyEvent>(eventbus) {
+
+      @Subscribe
+      @Override
+      public void handleEvent(KeyEvent event) {
+          String result = suggestions.get((tabCount++)%suggestions.size());
+          eventbus.post(new SetInputEvent(result));
+        
+      }};
   }
 
 }

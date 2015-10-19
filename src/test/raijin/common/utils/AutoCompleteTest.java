@@ -74,9 +74,9 @@ public class AutoCompleteTest {
 
   @Test
   public void updateSuggestions_AddCommand() {
-    String input = "ad";
+    String input = "a";
     autoComplete.updateSuggestions(input);
-    assertEquals("add", autoComplete.suggestions.get(0));
+    assertEquals(1, autoComplete.suggestions.size());
   }
 
   @Test
