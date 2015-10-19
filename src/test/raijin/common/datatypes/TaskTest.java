@@ -133,4 +133,12 @@ public class TaskTest {
     
     assertEquals(Constants.TYPE_TASK.EVENT, eventTask.getType());
   }
+  
+  @Test
+  public void getPriority_LowPriority() {
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
+        priority(Constants.PRIORITY_LOW).createParsedInput();
+
+    assertEquals(Constants.PRIORITY_LOW, input.getPriority());
+  }
 }

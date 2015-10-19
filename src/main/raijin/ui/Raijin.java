@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -50,31 +52,31 @@ import raijin.logic.api.Logic;
 import raijin.storage.api.Session;
 
 public class Raijin extends Application implements NativeKeyListener {
-	private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
-	private static final String INTRO_LAYOUT_FXML_LOCATION = "resource/layout/IntroLayout.fxml";
-	private static final String TRAY_ICON_LOCATION = "resource/styles/raijin2.png";
-	
-	private static final String NO_DIRECTORY_SELECTED_FEEDBACK = "I'm sorry! You have not selected "
-															+ "a directory yet. Please try again!";
-	private boolean isVisible = false;
-	private BorderPane rootLayout, introLayout;
-	private Stage stage;
-	private Logic logic;
-	private IntroController introController;
-	private EventBus eventbus = RaijinEventBus.getEventBus();
-	private SystemTray tray;
-	final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", null);
-	private static boolean isCtrlPressed = false;
-	private static boolean isAltPressed = false;
-	private static boolean isHPressed = false;
-	
-	public static void main(String[] args) {
-	  launch(args);
-	}
-	
+  private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
+  private static final String INTRO_LAYOUT_FXML_LOCATION = "resource/layout/IntroLayout.fxml";
+  private static final String TRAY_ICON_LOCATION = "resource/styles/raijin2.png";
+
+  private static final String NO_DIRECTORY_SELECTED_FEEDBACK = "I'm sorry! You have not selected "
+      + "a directory yet. Please try again!";
+  private boolean isVisible = false;
+  private BorderPane rootLayout, introLayout;
+  private Stage stage;
+  private Logic logic;
+  private IntroController introController;
+  private EventBus eventbus = RaijinEventBus.getEventBus();
+  private SystemTray tray;
+  final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", null);
+  private static boolean isCtrlPressed = false;
+  private static boolean isAltPressed = false;
+  private static boolean isHPressed = false;
+
+  public static void main(String[] args) {
+    launch(args);
+  }
+
   @Override
   public void start(Stage stage) throws Exception {
-    /*Adding fxml */
+    /* Adding fxml */
     initPrimaryStage(stage);
     initLogic();
     decideScene();
@@ -83,112 +85,110 @@ public class Raijin extends Application implements NativeKeyListener {
 
     GlobalScreen.registerNativeHook();
     GlobalScreen.addNativeKeyListener(this);
-    
+    turnOffLogger();                            //Turn off JNativeHook Logging
+
     this.stage.show();
     this.isVisible = true;
-    
+
     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-    	public void handle(WindowEvent we) {
-    		logic.executeCommand("exit");
-    		System.exit(0);
-    	}
+      public void handle(WindowEvent we) {
+        logic.executeCommand("exit");
+        System.exit(0);
+      }
     });
-    
+
   }
 
   private void initPrimaryStage(Stage stage) {
-	this.stage = stage;
-	this.stage.setTitle("Welcome to Raijin");
+    this.stage = stage;
+    this.stage.setTitle("Welcome to Raijin");
   }
 
   private void initRootLayout() {
-	FXMLLoader loader = new FXMLLoader(getClass().getResource(ROOT_LAYOUT_FXML_LOCATION));
-	try {
-		rootLayout = loader.load();
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
+    FXMLLoader loader = new FXMLLoader(getClass().getResource(ROOT_LAYOUT_FXML_LOCATION));
+    try {
+      rootLayout = loader.load();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
- 
+
   private void initLogic() throws FileNotFoundException {
-	  logic = new Logic();
+    logic = new Logic();
   }
-  
+
   private void initIntroLayout() {
-	  FXMLLoader loader = new FXMLLoader(getClass().getResource(INTRO_LAYOUT_FXML_LOCATION));
-	  loader.setController(introController);
-	  loader.setRoot(introController);
-	  
-	  try {
-			introLayout = loader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    FXMLLoader loader = new FXMLLoader(getClass().getResource(INTRO_LAYOUT_FXML_LOCATION));
+    loader.setController(introController);
+    loader.setRoot(introController);
+
+    try {
+      introLayout = loader.load();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
-  
+
   public void initMainLayout() {
-	  initRootLayout();
-  	  addDisplayController(this);
-      addInputController(this);
-      
-      this.stage.setScene(new Scene(rootLayout));
-      ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
-      
+    initRootLayout();
+    addDisplayController(this);
+    addInputController(this);
+
+    this.stage.setScene(new Scene(rootLayout));
+    ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
+
   }
-  
+
   public void decideScene() {
-	 
-	  if (logic.isFirstTime()) {
-		  introController = new IntroController(this, logic, stage);
-		  initIntroLayout();
-	
-		  this.stage.setScene(new Scene(introLayout));
-	  } else {
-		  initMainLayout();
-	  }  
+
+    if (logic.isFirstTime()) {
+      introController = new IntroController(this, logic, stage);
+      initIntroLayout();
+
+      this.stage.setScene(new Scene(introLayout));
+    } else {
+      initMainLayout();
+    }
   }
-  
+
   /**
-   * method to put the DisplayController class that is another FXML
-   * file containing information about the display bar ONLY.
+   * method to put the DisplayController class that is another FXML file containing information
+   * about the display bar ONLY.
    * 
    * @param mainApp
    */
   private void addDisplayController(Raijin mainApp) {
-	  rootLayout.setCenter(new DisplayController());
+    rootLayout.setCenter(new DisplayController());
   }
-  
+
   /**
-   * method to put only the command bar into the main layout.
-   * InputController is also another FXML file with its own
-   * information.
+   * method to put only the command bar into the main layout. InputController is also another FXML
+   * file with its own information.
    * 
    * @param mainApp
    */
   private void addInputController(Raijin mainApp) {
-	  rootLayout.setBottom(new InputController(mainApp));
+    rootLayout.setBottom(new InputController(mainApp));
   }
-  
+
   //
   // Methods to transfer to logic
   //
-  
-  public void handleKeyPress(InputController inputController,
-		  KeyCode key,
-		  String userInput) {
-	  if (key==KeyCode.ENTER) {
-		  inputController.clear();
-		  handleEnterPress(inputController, userInput);
-	  }
+
+  public void handleKeyPress(InputController inputController, KeyCode key, String userInput) {
+    if (key == KeyCode.ENTER) {
+      inputController.clear();
+      handleEnterPress(inputController, userInput);
+    }
   }
-  
+
   private void handleEnterPress(InputController inputController, String userInput) {
-	  String response = logic.executeCommand(userInput).getFeedback();
-	  if (response.equals("Exiting")) {
-		  System.exit(0);
-	  } else {
-		  inputController.setFeedback(response);
-	  } 
+    String response = logic.executeCommand(userInput).getFeedback();
+    if (response.equals("Exiting")) {
+      System.exit(0);
+    } else {
+      inputController.setFeedback(response);
+    }
   }
 
   //
@@ -199,73 +199,79 @@ public class Raijin extends Application implements NativeKeyListener {
   // Setting up Activate and Hide
   //
   public void makeTray(final Stage stage) {
-	  if (!SystemTray.isSupported()) {
-		  System.out.println("Looks like you don't have System Tray on your Operating System!:(");
-	  }
-	  
-	  this.tray = SystemTray.getSystemTray();
-	  
-	  
-      trayIcon.setImageAutoSize(true);
+    if (!SystemTray.isSupported()) {
+      System.out.println("Looks like you don't have System Tray on your Operating System!:(");
+    }
+
+    this.tray = SystemTray.getSystemTray();
+
+
+    trayIcon.setImageAutoSize(true);
   }
-  
+
   private void hide(final Stage stage) {
-      Platform.runLater(new Runnable() {
-          @Override
-          public void run() {
-              if (SystemTray.isSupported()) {
-            	  stage.hide();
-              } else {
-            	  System.exit(0);
-              }
-          }
-      });
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        if (SystemTray.isSupported()) {
+          stage.hide();
+        } else {
+          System.exit(0);
+        }
+      }
+    });
   }
+
   protected static Image createImage(String path) {
-	  URL imageUrl = Raijin.class.getResource(path);
-	  
-	  if(imageUrl == null) {
-		  System.err.println("no image found: " + path);
-		  return null;
-	  } else {
-		  return (new ImageIcon(imageUrl)).getImage();
-	  }
+    URL imageUrl = Raijin.class.getResource(path);
+
+    if (imageUrl == null) {
+      System.err.println("no image found: " + path);
+      return null;
+    } else {
+      return (new ImageIcon(imageUrl)).getImage();
+    }
   }
-  
-@Override
-public void nativeKeyPressed(NativeKeyEvent arg0) {
-	boolean isCtrlHPressed = arg0.getKeyCode() == NativeKeyEvent.VC_H 
-			&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
-			equals("Ctrl");
-	
-	if (isCtrlHPressed && isVisible) {
-		hide(stage);
-  	  try {
-  		  tray.add(trayIcon);
-  	  } catch (AWTException e) {
-  		  System.out.println("TrayIcon could not be added.");
-  	  }
-  	  isVisible = false;
-	} else if (isCtrlHPressed) {
-		Platform.runLater(new Runnable() {
-			  @Override
-			  public void run() {
-				  stage.show();
-				  tray.remove(trayIcon);
-			  }
-		  });
-		isVisible = true;
-	}
-}
 
-@Override
-public void nativeKeyReleased(NativeKeyEvent arg0) {
-	
-}
+  @Override
+  public void nativeKeyPressed(NativeKeyEvent arg0) {
+    boolean isCtrlHPressed =
+        arg0.getKeyCode() == NativeKeyEvent.VC_H
+            && NativeInputEvent.getModifiersText(arg0.getModifiers()).equals("Ctrl");
 
-@Override
-public void nativeKeyTyped(NativeKeyEvent arg0) {
-	// TODO Auto-generated method stub
-	
-}
+    if (isCtrlHPressed && isVisible) {
+      hide(stage);
+      try {
+        tray.add(trayIcon);
+      } catch (AWTException e) {
+        System.out.println("TrayIcon could not be added.");
+      }
+      isVisible = false;
+    } else if (isCtrlHPressed) {
+      Platform.runLater(new Runnable() {
+        @Override
+        public void run() {
+          stage.show();
+          tray.remove(trayIcon);
+        }
+      });
+      isVisible = true;
+    }
+  }
+
+  @Override
+  public void nativeKeyReleased(NativeKeyEvent arg0) {
+
+  }
+
+  @Override
+  public void nativeKeyTyped(NativeKeyEvent arg0) {
+    // TODO Auto-generated method stub
+
+  }
+
+  void turnOffLogger() {
+    Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+    logger.setLevel(Level.OFF);
+  }
 }
