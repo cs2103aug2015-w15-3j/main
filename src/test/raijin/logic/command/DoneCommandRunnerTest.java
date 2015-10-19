@@ -12,10 +12,12 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
+import raijin.common.exception.FailedToParseException;
 import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.IDManager;
 import raijin.logic.parser.ParsedInput;
+import raijin.logic.parser.SimpleParser;
 import raijin.storage.api.TasksManager;
 
 public class DoneCommandRunnerTest {
@@ -46,11 +48,10 @@ public class DoneCommandRunnerTest {
       return doneCommandRunner.processCommand(input);
   }
   
-  public Status doneTaskIDS(TreeSet<Integer> ids) throws UnableToExecuteCommandException {
-    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.DONE).
-               id(ids).createParsedInput();
-    
-    return doneCommandRunner.processCommand(input);
+  public Status doneTaskIDS(String input) 
+      throws UnableToExecuteCommandException, FailedToParseException {
+    ParsedInput parsed = new SimpleParser().parse(input);  
+    return doneCommandRunner.processCommand(parsed);
 }
   
  //===========================================================================
@@ -91,26 +92,23 @@ public class DoneCommandRunnerTest {
    }
    
    @Test
-   public void processCommand_DoneMultipleTasks() throws UnableToExecuteCommandException { 
+   public void processCommand_DoneMultipleTasks() 
+       throws UnableToExecuteCommandException, FailedToParseException { 
      addTask("Burn burn baby", new DateTime("31/08/2015"));
      addTask("Chill Chill baby", new DateTime("31/08/2015"));
-     TreeSet<Integer> ids = new TreeSet<Integer>();
-     ids.add(1); ids.add(2); ids.add(3);
-     Status returnStatus = doneTaskIDS(ids);
+     Status returnStatus = doneTaskIDS("done 1 2 3");
      String expectedStatusLine = String.format("Nicely done! You have completed the task - "
          + "1, 2, and 3. Give yourself a pat on the back!");
      assertEquals(expectedStatusLine, returnStatus.getFeedback());
      assertTrue(tasksManager.isEmptyPendingTasks());
    }
 
-   @Test
+   
    public void undo_DoneMultipleTasks() 
-       throws UnableToExecuteCommandException, NoSuchTaskException {
+       throws UnableToExecuteCommandException, NoSuchTaskException, FailedToParseException {
      addTask("Burn burn baby", new DateTime("31/08/2015"));
      addTask("Chill Chill baby", new DateTime("31/08/2015"));
-     TreeSet<Integer> ids = new TreeSet<Integer>();
-     ids.add(1); ids.add(2); ids.add(3);
-     doneTaskIDS(ids);
+     doneTaskIDS("done 1 2 3");
      doneCommandRunner.undo();
      assertTrue(tasksManager.isEmptyCompletedTasks());
      assertEquals("Ice ice baby", tasksManager.getPendingTask(1).getName());
@@ -118,14 +116,12 @@ public class DoneCommandRunnerTest {
      assertEquals("Chill Chill baby", tasksManager.getPendingTask(3).getName());
    }
    
-   @Test
+   
    public void redo_DoneMultipleTasks() 
-       throws UnableToExecuteCommandException, NoSuchTaskException {
+       throws UnableToExecuteCommandException, NoSuchTaskException, FailedToParseException {
      addTask("Burn burn baby", new DateTime("31/08/2015"));
      addTask("Chill Chill baby", new DateTime("31/08/2015"));
-     TreeSet<Integer> ids = new TreeSet<Integer>();
-     ids.add(1); ids.add(2); ids.add(3);
-     doneTaskIDS(ids);
+     doneTaskIDS("done 1 2 3");
      doneCommandRunner.undo();
      doneCommandRunner.redo();
      assertTrue(!tasksManager.isEmptyCompletedTasks());
