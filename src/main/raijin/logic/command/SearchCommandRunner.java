@@ -9,6 +9,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
+import raijin.common.eventbus.events.SetCurrentTasksEvent;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
@@ -43,7 +44,8 @@ public class SearchCommandRunner extends CommandRunner {
     ArrayList<Task> tempList = new ArrayList<Task>(pendingTasks.values());
     List<Task> filtered = tempList.stream().filter(
         x -> isMatchedKeywords(keywords, x.getKeywords())).collect(Collectors.toList());
-    eventBus.setCurrentTasks(filtered);
+    //eventBus.setCurrentTasks(filtered);
+    eventbus.post(new SetCurrentTasksEvent(filtered));
     return createSuccessfulStatus(filtered.size());
   }
 
