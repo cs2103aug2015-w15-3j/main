@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
+import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.RaijinException;
 import raijin.common.exception.UnableToExecuteCommandException;
@@ -23,6 +24,7 @@ public abstract class CommandRunner {
   protected History history = History.getHistory();
   protected Session session = Session.getSession();
   protected EventBus eventBus = EventBus.getEventBus();
+  protected com.google.common.eventbus.EventBus eventbus = RaijinEventBus.getEventBus();
   protected IDManager idManager = IDManager.getIdManager();
 
   protected abstract Status processCommand(ParsedInput input) throws UnableToExecuteCommandException;
