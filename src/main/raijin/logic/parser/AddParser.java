@@ -18,6 +18,7 @@ public class AddParser {
   private String[] wordsOfInput;
   private ParsedInput.ParsedInputBuilder builder;
   private TreeSet<String> tags;
+  private TreeSet<String> names;
   private String currentTime;
   private String currentDate;
   private int parseType; // 0 for add, 1 for edit.
@@ -31,6 +32,7 @@ public class AddParser {
     this.wordsOfInput = wordsOfInput;
     this.builder = builder;
     tags = new TreeSet<String>();
+    names = new TreeSet<String>();
     parseType = type;
     currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HHmm"));
     currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -48,7 +50,8 @@ public class AddParser {
     boolean containsStartTime = false;
     boolean containsEndTime = false;
     String name = "", startDate = "", startTime = "", endDate = "", endTime = "";
-    int index = wordsOfInput.length; // (Last index of task name - 1)
+    int start = 1; // For recording starting index of the name currently being checked
+    int index = wordsOfInput.length; // (Last index of task name - 1) currently being checked
     
     for (int i = 0; i < wordsOfInput.length; i++) {
       if (wordsOfInput[i].toLowerCase().matches(Constants.DATE_START_PREPOSITION)) {
@@ -65,7 +68,8 @@ public class AddParser {
             containsStartTime = true;
             startTime = wordsOfInput[i+2];
           } else if (i < wordsOfInput.length-2 && !wordsOfInput[i+2].matches(timePattern)
-              && !wordsOfInput[i+2].matches(Constants.DATE_END_PREPOSITION)){
+              && !wordsOfInput[i+2].matches(Constants.DATE_END_PREPOSITION) 
+              && !wordsOfInput[i+2].equals(";")){
             throw new IllegalCommandArgumentException("Invalid start time format.",
                                                       Constants.CommandParam.DATETIME); 
           }
@@ -179,21 +183,42 @@ public class AddParser {
         }
       }
       
+      if (wordsOfInput[i].equals(";")) {
+        if (index == wordsOfInput.length) {
+          index = i;
+        }
+        for (int n = start; n < index; n++) {
+          name += wordsOfInput[n];
+          if (n < index-1) {
+            name += " ";
+          }
+        }
+        if (name.length() == 0 && parseType != 1) {
+          throw new IllegalCommandArgumentException("Please specify a task name!",
+                                                    Constants.CommandParam.NAME);
+        }
+        names.add(name);
+        name = "";
+        start = i+1;                    // Move on to check on next name
+        index = wordsOfInput.length;    // Reset end index to end of string
+      }
+      
     }
     
     /********** Creates objects and then ParseInputBuilders based on info. **********/  
-    for (int i = 1; i < index; i++) {
-      name += wordsOfInput[i];
-      if (i < index-1) {
+    
+    // Adds name that isn't checked by ";" (i.e. start is < wordsOfInput.length)
+    for (int n = start; n < index; n++) {
+      name += wordsOfInput[n];
+      if (n < index-1) {
         name += " ";
       }
     }
-    
-    // Name for EDIT is "", and acceptable.
     if (name.length() == 0 && parseType != 1) {
       throw new IllegalCommandArgumentException("Please specify a task name!",
                                                 Constants.CommandParam.NAME);
     }
+    names.add(name);
     
     startDate = dtFormat.formatDate(startDate,0);
     endDate = dtFormat.formatDate(endDate,0);
@@ -222,11 +247,8 @@ public class AddParser {
       dateTime = new DateTime(currentDate, startTime);
     }
     
-    if (!name.equals("")) {
-      return builder.name(name).dateTime(dateTime).tag(tags);
-    } else {
-      return builder.dateTime(dateTime).tag(tags);
-    }
+    return builder.name(names).dateTime(dateTime).tag(tags);
+
   }
   
   /**

@@ -85,6 +85,32 @@ public class AddParserTest {
     assertEquals(3, addCommand.getSubTaskOf());
   }
   
+  @Test
+  public void testBatchAdding() throws FailedToParseException {
+    addCommand = parser.parse("add finish work ; do more work ; do somemore!");
+    assertEquals("do more work", addCommand.getNames().pollFirst());
+    assertEquals("do somemore!", addCommand.getNames().pollFirst());
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+  }
+  
+  @Test
+  public void testBatchAddWithDates() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by 24/12 ; do more work ; do somemore!");
+    assertEquals("do more work", addCommand.getNames().pollFirst());
+    assertEquals("do somemore!", addCommand.getNames().pollFirst());
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals("2015-12-24", addCommand.getDateTime().getStartDate().toString());
+  }
+  
+  @Test
+  public void testBatchAddWithDatesAtEnd() throws FailedToParseException {
+    addCommand = parser.parse("add finish work ; do more work ; do somemore! by 27/12");
+    assertEquals("do more work", addCommand.getNames().pollFirst());
+    assertEquals("do somemore!", addCommand.getNames().pollFirst());
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
+  }
+  
   @Test(expected=IllegalCommandArgumentException.class)
   public void testNoNameGivenError() throws IllegalCommandArgumentException {
     new AddParser(builder, new String("add").split(" "), 0).process();
