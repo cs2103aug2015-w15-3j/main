@@ -86,8 +86,8 @@ public class Session {
     userConfigPath = storageDirectory + Constants.NAME_USER_CONFIG;
     StorageHandler.createDirectory(storageDirectory);       
     setupDataFolder();
-    setupTempPath(StorageHandler.createTempFile(Constants.NAME_TEMP_DATA));
     initTasksManager();
+    setupTempPath(StorageHandler.createTempFile(Constants.NAME_TEMP_DATA));
   }
   
   public String getPathInfo() {
@@ -109,6 +109,7 @@ public class Session {
 
   void setupTempPath(String tempPath) {
     this.tempPath = tempPath;
+    commit();                   //Populate temp file with current state
   }
 
   //===========================================================================
