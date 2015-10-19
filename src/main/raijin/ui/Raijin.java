@@ -9,6 +9,7 @@ import raijin.common.eventbus.subscribers.MainSubscriber;
 
 import java.awt.AWTException;
 import java.awt.Image;
+import java.awt.Menu;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
@@ -37,6 +38,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 
 import org.jnativehook.GlobalScreen;
@@ -59,17 +62,15 @@ public class Raijin extends Application implements NativeKeyListener {
   private static final String NO_DIRECTORY_SELECTED_FEEDBACK = "I'm sorry! You have not selected "
       + "a directory yet. Please try again!";
   private boolean isVisible = false;
-  private BorderPane rootLayout, introLayout;
+  private BorderPane rootLayout, introLayout, inputController, displayController, sidebarController;
+  private HBox hBox;
   private Stage stage;
   private Logic logic;
   private IntroController introController;
   private EventBus eventbus = RaijinEventBus.getEventBus();
   private SystemTray tray;
   final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", null);
-  private static boolean isCtrlPressed = false;
-  private static boolean isAltPressed = false;
-  private static boolean isHPressed = false;
-
+  
 
   public static void main(String[] args) {
     launch(args);
@@ -80,6 +81,7 @@ public class Raijin extends Application implements NativeKeyListener {
     /* Adding fxml */
     initPrimaryStage(stage);
     initLogic();
+    setUpVariables();
     decideScene();
     makeTray(stage); // listen out for any ctrl-h events
     Platform.setImplicitExit(false);
@@ -88,9 +90,19 @@ public class Raijin extends Application implements NativeKeyListener {
     GlobalScreen.addNativeKeyListener(this);
     turnOffLogger(); // Turn off JNativeHook Logging
 
+    changeToMinimisedView();
+   
     this.stage.show();
     this.isVisible = true;
 
+    this.stage.widthProperty().greaterThan(750).addListener((obs, oldValue, newValue) -> {
+    	if(!newValue) {
+    		changeToMinimisedView();
+    	} else {
+    		changeToMaximisedView();
+    	}
+    });
+    
     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
       public void handle(WindowEvent we) {
         logic.executeCommand("exit");
@@ -100,7 +112,7 @@ public class Raijin extends Application implements NativeKeyListener {
 
   }
 
-  private void initPrimaryStage(Stage stage) {
+private void initPrimaryStage(Stage stage) {
     this.stage = stage;
     this.stage.setTitle("Welcome to Raijin");
   }
@@ -130,16 +142,21 @@ public class Raijin extends Application implements NativeKeyListener {
     }
   }
 
-  public void initMainLayout() {
-    initRootLayout();
-    addDisplayController(this);
-    addInputController(this);
-
-    this.stage.setScene(new Scene(rootLayout));
+  public void changeToMinimisedView() {
+    rootLayout.setCenter(displayController);
+    rootLayout.setBottom(inputController);
     ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
+   }
 
+  private void changeToMaximisedView() {
+	  hBox.getChildren().clear();
+	  hBox.getChildren().addAll(sidebarController, displayController);
+	  rootLayout.setCenter(hBox);  
+	  rootLayout.setBottom(inputController);
+	  ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
+	    
   }
-
+  
   public void decideScene() {
 
     if (logic.isFirstTime()) {
@@ -148,10 +165,20 @@ public class Raijin extends Application implements NativeKeyListener {
 
       this.stage.setScene(new Scene(introLayout));
     } else {
-      initMainLayout();
+      initRootLayout();
+      changeToMinimisedView();
+      this.stage.setScene(new Scene(rootLayout));
     }
   }
 
+  private void setUpVariables() {
+	  this.hBox = new HBox();
+	  hBox.setMaxWidth(Double.MAX_VALUE);
+	  this.inputController = new InputController(this);
+	  this.displayController = new DisplayController();
+	  this.sidebarController = new SidebarController(this.logic);
+  }
+  
   /**
    * method to put the DisplayController class that is another FXML file containing information
    * about the display bar ONLY.
