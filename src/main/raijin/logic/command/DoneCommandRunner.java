@@ -17,36 +17,41 @@ import raijin.logic.api.UndoableRedoable;
 import raijin.logic.parser.ParsedInput;
 
 public class DoneCommandRunner extends CommandRunner implements UndoableRedoable {
-	TreeSet<Integer> idsToDelete = new TreeSet<Integer>();
+	TreeSet<Integer> idsToDone = new TreeSet<Integer>();
 	TreeSet<Integer> idsUndone = new TreeSet<Integer>();
-	Queue<Integer> idsDeleted = new LinkedList<Integer>();
-	Queue<Task> tasksDeleted = new LinkedList<Task>();
+	Queue<Integer> idsDone = new LinkedList<Integer>();
+	Queue<Task> tasksDone = new LinkedList<Task>();
 	String taskDescription;
 	Task task;
+	static final String FEEDBACK_DONE_FAILURE = "Failed to mark task(s) as done - It doesn't exist!";
 	
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {   
-	idsToDelete = input.getIds();
+	idsToDone = input.getIds();
     
-	if (idsToDelete.isEmpty()) {       //If no id specified, use tags
-	  idsToDelete = getIdsFromTags(input.getTags());
+	if (idsToDone.isEmpty()) {       //If no id specified, use tags
+	  idsToDone = getIdsFromTags(input.getTags());
 	}
+	
+	if (idsToDone.isEmpty()) {
+      return new Status(FEEDBACK_DONE_FAILURE);
+    }
 
-	logger.debug(idsToDelete.toString());
-    while(!idsToDelete.isEmpty()) {
-	  int id = idsToDelete.pollFirst();
-	  idsDeleted.offer(id);
+	logger.debug(idsToDone.toString());
+    while(!idsToDone.isEmpty()) {
+	  int id = idsToDone.pollFirst();
+	  idsDone.offer(id);
 	  try {
 	    this.task = tasksManager.getPendingTask(id);
-	    tasksDeleted.offer(task);
+	    tasksDone.offer(task);
 	  } catch (NoSuchTaskException e) {
 	    wrapLowerLevelException(e, Constants.Command.DONE);
 	  }
 	  
-	  if (taskDescription == null && idsToDelete.isEmpty()) {
+	  if (taskDescription == null && idsToDone.isEmpty()) {
 	    taskDescription = "\""+ task.getName() +"\"";
-	  } else if (taskDescription == null && !idsToDelete.isEmpty()) {
+	  } else if (taskDescription == null && !idsToDone.isEmpty()) {
         taskDescription = id +", ";
-      } else if (taskDescription != null && !idsToDelete.isEmpty()) {
+      } else if (taskDescription != null && !idsToDone.isEmpty()) {
 	    taskDescription += id +", ";
 	  } else {
 	    taskDescription += "and " +id+ ".";
@@ -64,10 +69,10 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
   }
 
   public void undo() throws UnableToExecuteCommandException {
-    while (!idsDeleted.isEmpty()) {
+    while (!idsDone.isEmpty()) {
       try {
-        int id = idsDeleted.poll();
-        task = tasksDeleted.poll();
+        int id = idsDone.poll();
+        task = tasksDone.poll();
 
         tasksManager.deleteCompletedTask(id);
         
@@ -83,10 +88,10 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
   public void redo() throws UnableToExecuteCommandException {
     while (!idsUndone.isEmpty()) {
       int id = idsUndone.pollFirst();
-      idsDeleted.offer(id);
+      idsDone.offer(id);
       try {
         task = tasksManager.getPendingTask(id);
-        tasksDeleted.offer(task);
+        tasksDone.offer(task);
       } catch (NoSuchTaskException e) {
         wrapLowerLevelException(e, Constants.Command.DONE);
       }

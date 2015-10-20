@@ -1,5 +1,8 @@
 package raijin.common.utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.TreeSet;
 
 import javafx.geometry.Insets;
@@ -23,6 +26,8 @@ public class TaskPane extends StackPane {
 	
 	//private String[] subTaskColours = {"#FFC2C2", "#FFC299", "#D1FFD1", "#C2F0FF", "#F0F0F0"};
 	private String[] subTaskColours = {"#FFC2C2", "#D1FFD1", "#F0F0F0"};
+	
+	final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
 	
 	private Label id;
 	private Label taskName;
@@ -82,11 +87,11 @@ public class TaskPane extends StackPane {
 		HBox datesBox = new HBox();
 		
 		if (taskType.equals(Constants.TYPE_TASK.EVENT)) {
-			String startDate = task.getDateTime().getStartDate().toString();
+			String startDate = task.getDateTime().getStartDate().format(dateFormat);
 			String startTime = task.getDateTime().getStartTime() == null ? "" 
 								: " @ " + task.getDateTime().getStartTime().toString();
 			
-			String endDate = task.getDateTime().getEndDate().toString();
+			String endDate = task.getDateTime().getEndDate().format(dateFormat);
 			String endTime = task.getDateTime().getEndTime() == null ? "" 
 								: " @ " + task.getDateTime().getEndTime().toString();
 			
@@ -97,8 +102,7 @@ public class TaskPane extends StackPane {
 			datesBox.getChildren().addAll(start, startValue, end, endValue);
 			
 		} else if (taskType.equals(Constants.TYPE_TASK.SPECIFIC)) {
-			// TODO may need better formatting.
-			String endDate = task.getDateTime().getEndDate().toString();
+			String endDate = task.getDateTime().getEndDate().format(dateFormat);
 			String startTime = task.getDateTime().getStartTime() == null ? "" 
 					: " @ " + task.getDateTime().getStartTime().toString();
 			String endTime = task.getDateTime().getEndTime() == null ? "" 
@@ -109,7 +113,7 @@ public class TaskPane extends StackPane {
 			datesBox.getChildren().addAll(startByOn, startValue);
 			
 		} else if (taskType.equals(Constants.TYPE_TASK.FLOATING)) {
-			startValue = new Label("No deadlines for this! :)");
+			startValue = new Label("~");
 			datesBox.getChildren().addAll(startValue);
 		}
 		

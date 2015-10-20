@@ -18,41 +18,41 @@ import raijin.common.utils.TaskUtils;
 
 public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoable {
 
-  TreeSet<Integer> idsToDone = new TreeSet<Integer>();
+  TreeSet<Integer> idsToDelete = new TreeSet<Integer>();
   TreeSet<Integer> idsUndone = new TreeSet<Integer>();
-  Queue<Integer> idsDone = new LinkedList<Integer>();
-  Queue<Task> tasksDone = new LinkedList<Task>();
+  Queue<Integer> idsDeleted = new LinkedList<Integer>();
+  Queue<Task> tasksDeleted = new LinkedList<Task>();
   String taskDescription;
   Task task;
-  static final String FEEDBACK_DELETE_FAILURE = "Failed to delete task without id";
+  static final String FEEDBACK_DELETE_FAILURE = "Failed to delete task(s) - It doesn't exist!";
 
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
-    idsToDone = input.getIds();
+    idsToDelete = input.getIds();
     
-    if (idsToDone.isEmpty()) {
-      idsToDone = getIdsFromTags(input.getTags());
+    if (idsToDelete.isEmpty()) {
+      idsToDelete = getIdsFromTags(input.getTags());
     }
 
-    if (idsToDone.isEmpty()) {
+    if (idsToDelete.isEmpty()) {
       return new Status(FEEDBACK_DELETE_FAILURE);
     }
 
-    while(!idsToDone.isEmpty()) {
-      int id = idsToDone.pollFirst();
+    while(!idsToDelete.isEmpty()) {
+      int id = idsToDelete.pollFirst();
       try {
         this.task = tasksManager.getPendingTask(id);
-        tasksDone.offer(task);
+        tasksDeleted.offer(task);
             
         tasksManager.deletePendingTask(id);
       } catch (NoSuchTaskException e) {
         wrapLowerLevelException(e, Constants.Command.DELETE);
       }
       
-      if (taskDescription == null && idsToDone.isEmpty()) {
+      if (taskDescription == null && idsToDelete.isEmpty()) {
         taskDescription = "\""+ task.getName() +"\"";
-      } else if (taskDescription == null && !idsToDone.isEmpty()) {
+      } else if (taskDescription == null && !idsToDelete.isEmpty()) {
         taskDescription = id +", ";
-      } else if (taskDescription != null && !idsToDone.isEmpty()) {
+      } else if (taskDescription != null && !idsToDelete.isEmpty()) {
         taskDescription += id +", ";
       } else {
         taskDescription += "and " +id+ ".";
@@ -66,8 +66,8 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
   }
 
   public void undo() {
-    while (!tasksDone.isEmpty()) {
-      task = tasksDone.poll();
+    while (!tasksDeleted.isEmpty()) {
+      task = tasksDeleted.poll();
       
       task.setId(idManager.getId());  
       idsUndone.add(task.getId());
@@ -78,10 +78,10 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
   public void redo() throws UnableToExecuteCommandException {
     while (!idsUndone.isEmpty()) {
       int id = idsUndone.pollFirst();
-      idsDone.offer(id);
+      idsDeleted.offer(id);
       try {
         task = tasksManager.getPendingTask(id);
-        tasksDone.offer(task);
+        tasksDeleted.offer(task);
         tasksManager.deletePendingTask(id);
       } catch (NoSuchTaskException e) {
         wrapLowerLevelException(e, Constants.Command.DELETE);

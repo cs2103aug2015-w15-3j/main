@@ -13,6 +13,13 @@ import raijin.common.datatypes.Task;
 
 public class TaskUtils {
 
+  public static List<Task> initSort(List<Task> tasks) {
+	  ArrayList<Task> list = new ArrayList<Task>(tasks);
+	  Collections.sort(list);
+	  
+	  return list;
+  }
+
   public static List<TaskPane> initTasks(List<Task> tasks) {
     ArrayList<TaskPane> list = new ArrayList<TaskPane>();
 
@@ -29,6 +36,10 @@ public class TaskUtils {
 
   public static List<TaskPane> convertToTaskPane(List<Task> tasks) {
     ArrayList<TaskPane> list = new ArrayList<TaskPane>();
+    
+    if (tasks.isEmpty()) {
+        return displayMessage("You have no pending tasks!");
+    }
 
     for (int i = 0; i < tasks.size(); i++) {
       list.add(new TaskPane(i + 1, tasks.get(i), "none"));
