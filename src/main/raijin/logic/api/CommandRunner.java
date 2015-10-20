@@ -1,6 +1,10 @@
 package raijin.logic.api;
 
 
+import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 
 import raijin.common.datatypes.Constants;
@@ -35,14 +39,26 @@ public abstract class CommandRunner {
   
   public Status handleCommandException(ParsedInput input) {
     try {
-      if (input.getId() != 0) {
-        int taskId = getRealId(input.getId());
-        input.setId(taskId);
-      }
+      translateIds(input);
       return processCommand(input);
     } catch (UnableToExecuteCommandException e) {
       logger.debug(e.getMessage(), e);
       return new Status(e.getMessage());
+    }
+  }
+
+  /**
+   * Translate virtual id on view to real task id 
+   * @param input
+   * @throws UnableToExecuteCommandException
+   */
+  public void translateIds(ParsedInput input) throws UnableToExecuteCommandException {
+    TreeSet<Integer> translated = new TreeSet<Integer>();
+    if (input.getId() != 0) {
+      for (int id : input.getIds()) {
+        translated.add(getRealId(id));
+      }
+      input.setId(translated);
     }
   }
   

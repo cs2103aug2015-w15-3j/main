@@ -31,6 +31,7 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
 	  idsToDelete = getIdsFromTags(input.getTags());
 	}
 
+	logger.debug(idsToDelete.toString());
     while(!idsToDelete.isEmpty()) {
 	  int id = idsToDelete.pollFirst();
 	  idsDeleted.offer(id);
@@ -96,7 +97,6 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
   TreeSet<Integer> getIdsFromTags(TreeSet<String> tags) {
     List<Task> filtered = TaskUtils.filterTaskWithTags(tasksManager.getPendingTasks(), 
         tags);
-    System.out.println(filtered.toString());
     return new TreeSet<Integer>(filtered.stream().map(
         t -> t.getId()).collect(Collectors.toList()));
   }

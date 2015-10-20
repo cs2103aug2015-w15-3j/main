@@ -77,9 +77,8 @@ public class ParsedInput {
     return id;
   }
 
-  public void setId(int id) {
-    this.id.clear();
-    this.id.add(id);
+  public void setId(TreeSet<Integer> ids) {
+    this.id = ids;
   }
 
   public String getName() {
