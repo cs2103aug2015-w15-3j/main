@@ -13,6 +13,13 @@ import raijin.common.datatypes.Task;
 
 public class TaskUtils {
 
+  public static List<Task> initSort(List<Task> tasks) {
+	  ArrayList<Task> list = new ArrayList<Task>(tasks);
+	  Collections.sort(list);
+	  
+	  return list;
+  }
+
   public static List<TaskPane> initTasks(List<Task> tasks) {
     ArrayList<TaskPane> list = new ArrayList<TaskPane>();
 

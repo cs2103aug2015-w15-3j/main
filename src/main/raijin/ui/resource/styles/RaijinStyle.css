@@ -1,0 +1,7 @@
+.tasksPane {
+	-fx-background-color: white;
+}
+
+.tasksPane-cell:even, .tasksPane-cell:odd {
+	-fx-background-color: white;
+}

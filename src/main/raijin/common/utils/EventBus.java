@@ -96,10 +96,11 @@ public class EventBus {
   }
 
   private void initCurrentTasks(HashMap<Integer, Task> pendingTasks) {
-    displayedTasks = new ArrayList<Task>(pendingTasks.values());
-    displayedTasksPane = initTasks(displayedTasks);
-    updateDisplay();
-    currentTasks.setAll(filterName(displayedTasks));
+    displayedTasks = initSort(new ArrayList<Task>(pendingTasks.values()));
+    setCurrentTasks(displayedTasks);
+    //displayedTasksPane = initTasks(displayedTasks);
+    //updateDisplay();
+    //currentTasks.setAll(filterName(displayedTasks));
   }
 
   void handleSetCurrentTasksEvent() {

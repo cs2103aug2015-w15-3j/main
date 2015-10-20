@@ -58,6 +58,7 @@ public class Raijin extends Application implements NativeKeyListener {
   private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
   private static final String INTRO_LAYOUT_FXML_LOCATION = "resource/layout/IntroLayout.fxml";
   private static final String TRAY_ICON_LOCATION = "resource/styles/raijin2.png";
+  private static final String CSS_LOCATION = "resource/styles/RaijinStyle.css";
 
   private static final String NO_DIRECTORY_SELECTED_FEEDBACK = "I'm sorry! You have not selected "
       + "a directory yet. Please try again!";
@@ -187,6 +188,8 @@ private void initPrimaryStage(Stage stage) {
    */
   private void addDisplayController(Raijin mainApp) {
     rootLayout.setCenter(new DisplayController());
+    String CSS = getClass().getResource(CSS_LOCATION).toExternalForm();
+    rootLayout.getStylesheets().add(CSS);
   }
 
   /**
