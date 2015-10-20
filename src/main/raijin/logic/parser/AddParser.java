@@ -22,6 +22,7 @@ public class AddParser {
   private String currentTime;
   private String currentDate;
   private int parseType; // 0 for add, 1 for edit.
+  private boolean containsPriority;
   
   private static final String datePattern = Constants.DATE_PATTERN;
   private static final String dateOperator = Constants.DATE_OPERATOR;
@@ -33,6 +34,7 @@ public class AddParser {
     this.builder = builder;
     tags = new TreeSet<String>();
     names = new TreeSet<String>();
+    containsPriority = false;
     parseType = type;
     currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HHmm"));
     currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -148,6 +150,7 @@ public class AddParser {
         if (index > i) {
           index = i;
         }
+        containsPriority = true;
         String priority = wordsOfInput[i].substring(1);
         if (priority.matches("h|high")) {
           builder.priority(Constants.PRIORITY_HIGH);
@@ -159,8 +162,12 @@ public class AddParser {
           throw new IllegalCommandArgumentException("Invalid priority input.",
                                                     Constants.CommandParam.PRIORITY);
         }
-        
       }
+      
+      if (!containsPriority && parseType == 1) {
+        builder.priority(null);
+      }
+      
       
       if (wordsOfInput[i].indexOf('#') == 0) {
         if (index > i) {
