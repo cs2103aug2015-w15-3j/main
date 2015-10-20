@@ -38,7 +38,7 @@ public class TaskUtils {
     ArrayList<TaskPane> list = new ArrayList<TaskPane>();
     
     if (tasks.isEmpty()) {
-        return displayMessage("You have no more tasks!");
+        return displayMessage("You have no pending tasks!");
     }
 
     for (int i = 0; i < tasks.size(); i++) {
