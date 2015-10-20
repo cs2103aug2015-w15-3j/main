@@ -30,6 +30,7 @@ public class DoneCommandRunnerTest {
  // Helper methods
  //===========================================================================
 
+  // All of these test cases are based on testing use cases and combining multiple inputs
   public Status addTask(String inputName, DateTime dateTime) throws UnableToExecuteCommandException {
          ParsedInput parsedInput = createSpecificTask(inputName, dateTime);
          Status returnStatus = addCommandRunner.processCommand(parsedInput);
