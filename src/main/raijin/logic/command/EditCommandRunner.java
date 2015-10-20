@@ -20,7 +20,7 @@ public class EditCommandRunner extends CommandRunner implements UndoableRedoable
   
   Task modifyTask(ParsedInput input) {
     String name = (input.getName() == "") ? taskBeforeChange.getName() : input.getName();
-    String priority = (!input.getPriority().equals(Constants.PRIORITY_MID)) 
+    String priority = (input.getPriority() != null) 
         ? input.getPriority() : taskBeforeChange.getPriority();
     TreeSet<String> tags = (input.getTags().isEmpty()) 
         ? taskBeforeChange.getTags() : input.getTags();

@@ -17,18 +17,24 @@ import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.TaskUtils;
 
 public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoable {
+
   TreeSet<Integer> idsToDone = new TreeSet<Integer>();
   TreeSet<Integer> idsUndone = new TreeSet<Integer>();
   Queue<Integer> idsDone = new LinkedList<Integer>();
   Queue<Task> tasksDone = new LinkedList<Task>();
   String taskDescription;
   Task task;
+  static final String FEEDBACK_DELETE_FAILURE = "Failed to delete task without id";
 
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
     idsToDone = input.getIds();
     
     if (idsToDone.isEmpty()) {
       idsToDone = getIdsFromTags(input.getTags());
+    }
+
+    if (idsToDone.isEmpty()) {
+      return new Status(FEEDBACK_DELETE_FAILURE);
     }
 
     while(!idsToDone.isEmpty()) {
