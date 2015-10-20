@@ -65,10 +65,11 @@ public class InputController extends BorderPane {
 	    if (Constants.KEY_CLEAR.match(event)) {
 	      clear();
 	    } else if (event.getCode() == KeyCode.UP) {
-	      System.out.println(commandHistory);
+	      event.consume();
 	      getPreviousCommands();
+	    } else {
+	      upCount = 0;
 	    }
-	    upCount = 0;
 		mainApp.handleKeyPress(this, event.getCode(), inputCommandBar.getText());
 	}
 	
@@ -139,7 +140,7 @@ public class InputController extends BorderPane {
 	
 	void getPreviousCommands() {
 	  if (!commandHistory.isEmpty()) {
-	    int index = (commandHistory.size() - (upCount++))%commandHistory.size();
+	    int index = Math.floorMod((commandHistory.size() - (++upCount)),commandHistory.size());
 	    setInput(commandHistory.get(index));
 	  }
 	}
