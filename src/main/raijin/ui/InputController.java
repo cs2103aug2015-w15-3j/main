@@ -3,6 +3,7 @@ package raijin.ui;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -33,6 +34,9 @@ public class InputController extends BorderPane {
 	
 	private Raijin mainApp;
 	private EventBus eventbus = RaijinEventBus.getEventBus();
+	/*Stores previously entered command*/
+	private ArrayList<String> commandHistory = new ArrayList<String>();    
+	private static int upCount = 0;            //Count number of UP pressed
 	
 	public InputController(Raijin mainApp) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(INPUT_COMMAND_BAR_LAYOUT_FXML));
@@ -60,7 +64,11 @@ public class InputController extends BorderPane {
 	public void onKeyPress(KeyEvent event) {
 	    if (Constants.KEY_CLEAR.match(event)) {
 	      clear();
+	    } else if (event.getCode() == KeyCode.UP) {
+	      System.out.println(commandHistory);
+	      getPreviousCommands();
 	    }
+	    upCount = 0;
 		mainApp.handleKeyPress(this, event.getCode(), inputCommandBar.getText());
 	}
 	
@@ -123,5 +131,16 @@ public class InputController extends BorderPane {
 	  handleSetFeedbackEvent();
 	  handleSetInputEvent();
 	  handleKeyReleaseEvent();
+	}
+	
+	public void updateCommandHistory(String command) {
+	  commandHistory.add(command);
+	}
+	
+	void getPreviousCommands() {
+	  if (!commandHistory.isEmpty()) {
+	    int index = (commandHistory.size() - (upCount++))%commandHistory.size();
+	    setInput(commandHistory.get(index));
+	  }
 	}
 }	

@@ -14,6 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.SetTrie;
+import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetInputEvent;
@@ -38,6 +39,7 @@ public class AutoComplete {
   private TreeSet<String> taskNames;
   private TreeSet<String> tags;
   public List<String> suggestions;
+  public List<Task> selectedTasks;
 
   public AutoComplete(TasksManager tasksManager) {
     commandList = new SetTrie();
@@ -49,6 +51,7 @@ public class AutoComplete {
     this.eventbus = RaijinEventBus.getEventBus();
     this.logger = RaijinLogger.getLogger();
     suggestions = new ArrayList<String>();
+    selectedTasks = new ArrayList<Task>();
 
     updateWithStorage();
     handleKeyEvent();
@@ -141,6 +144,8 @@ public class AutoComplete {
     String command = tokens[0];
 
     if (isValidCommand(command)) {
+      selectedTasks = TaskUtils.filterTaskWithName(tasksManager.getPendingTasks(), 
+          getArguments(input));
       suggestions = taskList.getSuggestions(getArguments(input)).stream().map(
           str -> command + " " + str).collect(Collectors.toList());
     }

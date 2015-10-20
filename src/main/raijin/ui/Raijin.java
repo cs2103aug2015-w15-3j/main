@@ -205,6 +205,7 @@ private void initPrimaryStage(Stage stage) {
 
   public void handleKeyPress(InputController inputController, KeyCode key, String userInput) {
     if (key == KeyCode.ENTER) {
+      inputController.updateCommandHistory(userInput);      // Update list of user input
       inputController.clear();
       handleEnterPress(inputController, userInput);
     }

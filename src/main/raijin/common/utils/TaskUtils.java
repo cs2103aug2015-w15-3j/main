@@ -121,4 +121,16 @@ public class TaskUtils {
     }
     return tag;
   }
+  
+  public static List<Task> filterTaskWithName(HashMap<Integer, Task> pendingTasks, 
+      String name) {
+    List<Task> filtered = pendingTasks.values().stream().filter(
+        t -> t.getName().equals(name)).collect(Collectors.toList());
+    return filtered;
+  }
+
+  TreeSet<Integer> getIdsFromTasks(List<Task> filtered) {
+    return new TreeSet<Integer>(filtered.stream().map(
+        t -> t.getId()).collect(Collectors.toList()));
+  }
 }

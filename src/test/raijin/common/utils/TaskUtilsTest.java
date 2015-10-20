@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
+import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
 import raijin.logic.parser.ParsedInput;
 import raijin.logic.parser.ParsedInputTest;
@@ -23,6 +24,12 @@ public class TaskUtilsTest {
   public Task createTagTask(String[] tags) {
     ParsedInput input = new ParsedInput.ParsedInputBuilder(null).name("me no more").
         tag(new TreeSet<String>(Arrays.asList(tags))).createParsedInput();
+    return new Task(input.getName(), 1, input);
+  }
+
+  public Task createSpecificTask(String name, DateTime dateTime) {
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(null).name(name).
+        dateTime(dateTime).createParsedInput();
     return new Task(input.getName(), 1, input);
   }
 
@@ -46,4 +53,15 @@ public class TaskUtilsTest {
     assertEquals(2, result.size());
   }
 
+  @Test
+  public void filterTaskWithNames() {
+    HashMap<Integer, Task> pendingTasks = new HashMap<Integer, Task>();
+    pendingTasks.put(1, createSpecificTask("I am me", new DateTime("19/09/2011")));
+    pendingTasks.put(2, createSpecificTask("I am me", new DateTime("21/09/2011")));
+    pendingTasks.put(3, createSpecificTask("I am me", new DateTime("01/08/2011")));
+    
+    List<Task> result = TaskUtils.filterTaskWithName(pendingTasks, "I am me");
+    
+    assertEquals(3, result.size());
+  }
 }
