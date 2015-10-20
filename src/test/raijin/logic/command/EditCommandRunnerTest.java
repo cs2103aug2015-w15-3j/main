@@ -12,20 +12,24 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
+import raijin.common.exception.FailedToParseException;
 import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.IDManager;
 import raijin.logic.parser.ParsedInput;
+import raijin.logic.parser.SimpleParser;
 import raijin.storage.api.TasksManager;
 
 public class EditCommandRunnerTest {
 
+  private SimpleParser parser;
   private AddCommandRunner addCommandRunner;
   private EditCommandRunner editCommandRunner;
   private TasksManager tasksManager;
   
   @Before
   public void setUp() throws Exception {
+    parser = new SimpleParser();
     addCommandRunner = new AddCommandRunner();
     editCommandRunner = new EditCommandRunner();
     tasksManager = TasksManager.getManager();
@@ -53,12 +57,13 @@ public class EditCommandRunnerTest {
 
   @Test
   public void execute_EditTaskNameDate() 
-      throws NoSuchTaskException, UnableToExecuteCommandException {
-    Status returnStatus = editTask(1, "First entry changed again.", new DateTime("05/10/2015"));
+      throws NoSuchTaskException, UnableToExecuteCommandException, FailedToParseException {
+    Status returnStatus = editCommandRunner.execute
+        (parser.parse("edit 1 First entry changed again. by 5/10"));
     String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1);
     assertEquals(expectedStatusLine, returnStatus.getFeedback());
     assertEquals("First entry changed again.", tasksManager.getPendingTask(1).getName());
-    assertEquals("2015-10-05", tasksManager.getPendingTask(1).getDateTime()
+    assertEquals("2016-10-05", tasksManager.getPendingTask(1).getDateTime()
                 .getStartDate().toString());
     assertEquals("h", tasksManager.getPendingTask(1).getPriority());
     assertEquals("work", tasksManager.getPendingTask(1).getTags().pollFirst());
@@ -66,8 +71,8 @@ public class EditCommandRunnerTest {
   
   @Test
   public void execute_EditTaskPriorityTag() 
-      throws UnableToExecuteCommandException, NoSuchTaskException {
-    Status returnStatus = editTaskPriorityTag(1, "l", "school");
+      throws UnableToExecuteCommandException, NoSuchTaskException, FailedToParseException {
+    Status returnStatus = editCommandRunner.execute(parser.parse("edit 1 !l #school"));
     assertEquals(String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1), returnStatus.getFeedback());
     assertEquals("l", tasksManager.getPendingTask(1).getPriority());
     assertEquals("school", tasksManager.getPendingTask(1).getTags().pollFirst());
@@ -123,14 +128,6 @@ public class EditCommandRunnerTest {
       parsedInput = modifyTaskNameDate(id, inputName, dateTime);
     }
     return editCommandRunner.execute(parsedInput);
-  }
-  
-  public Status editTaskPriorityTag(int id, String priority, String tag) 
-      throws UnableToExecuteCommandException {
-    TreeSet<String> tags = new TreeSet<String>();
-    tags.add(tag);
-    return editCommandRunner.execute(new ParsedInput.ParsedInputBuilder(Constants.Command.EDIT).
-        id(id).priority(priority).tag(tags).createParsedInput());
   }
 
   public ParsedInput modifyTaskName(int id, String inputName) {
