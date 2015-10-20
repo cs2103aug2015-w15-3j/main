@@ -129,4 +129,5 @@ public class DoneCommandRunnerTest {
      assertEquals("Burn burn baby", tasksManager.getCompletedTasks().get(2).getName());
      assertEquals("Chill Chill baby", tasksManager.getCompletedTasks().get(3).getName());
    }
+   
 }

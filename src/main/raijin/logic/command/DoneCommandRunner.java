@@ -1,14 +1,17 @@
 package raijin.logic.command;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
 import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.UnableToExecuteCommandException;
+import raijin.common.utils.TaskUtils;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.api.UndoableRedoable;
 import raijin.logic.parser.ParsedInput;
@@ -24,6 +27,10 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {   
 	idsToDelete = input.getIds();
     
+	if (idsToDelete.isEmpty()) {       //If no id specified, use tags
+	  idsToDelete = getIdsFromTags(input.getTags());
+	}
+
     while(!idsToDelete.isEmpty()) {
 	  int id = idsToDelete.pollFirst();
 	  idsDeleted.offer(id);
@@ -47,6 +54,7 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
 	  tasksManager.addCompletedTask(task);
 	  
 	}
+    
 	history.pushCommand(this);
     
     return new Status("Nicely done! You have completed the task - " 
@@ -84,4 +92,12 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
 	  tasksManager.addCompletedTask(task);
     }
   }
+  
+  TreeSet<Integer> getIdsFromTags(TreeSet<String> tags) {
+    List<Task> filtered = TaskUtils.filterTaskWithTags(tasksManager.getPendingTasks(), 
+        tags);
+    return new TreeSet<Integer>(filtered.stream().map(
+        t -> t.getId()).collect(Collectors.toList()));
+  }
+
 }
