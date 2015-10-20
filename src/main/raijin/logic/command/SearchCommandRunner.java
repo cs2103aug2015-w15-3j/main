@@ -36,8 +36,15 @@ public class SearchCommandRunner extends CommandRunner {
     return false;
   }
 
+  boolean isInvalidInput(ParsedInput input) {
+    return input.getNames().isEmpty() && input.getTags().isEmpty();
+  }
+
   @Override
   protected Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
+    if (isInvalidInput(input)) {
+      return new Status("No argument given to search");
+    }
     HashMap<Integer, Task> pendingTasks = tasksManager.getPendingTasks();
     createTask(input);
     ArrayList<String> keywords = currentTask.getKeywords();
