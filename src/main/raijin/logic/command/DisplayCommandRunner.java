@@ -51,7 +51,7 @@ public class DisplayCommandRunner extends CommandRunner {
 
 	private EventBus eventBus = EventBus.getEventBus();
 
-	final DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM ''yy");
+	final DateFormat dateFormat = new SimpleDateFormat("EEEEEEEE, d MMM yyyy");
 
 	public Status processCommand(ParsedInput cmd) {
 

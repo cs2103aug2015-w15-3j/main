@@ -8,7 +8,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
-import raijin.common.datatypes.DateTime;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.SetCurrentTasksEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
@@ -17,12 +16,8 @@ import raijin.common.utils.TaskPane;
 import raijin.common.utils.TaskUtils;
 import raijin.storage.api.TasksManager;
 
-import java.util.Date;
 import java.util.List;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -32,10 +27,6 @@ public class DisplayController extends BorderPane {
   private com.google.common.eventbus.EventBus eventbus = RaijinEventBus.getEventBus();     //Google event bus
 
   private static final String DISPLAY_CONTROLLER_FXML = "resource/layout/DisplayController.fxml";
-  final DateFormat dateFormatSplash = new SimpleDateFormat("EEE, d MMM ''yy");
-
-  @FXML
-  Date date;
 
   @FXML
   private Label headMessage;
@@ -53,8 +44,6 @@ public class DisplayController extends BorderPane {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    date = new Date();
     
     headMessage = new Label("All pending tasks");
     headMessage.setStyle("-fx-font-size: 20px; -fx-padding: 10px;");
@@ -80,7 +69,6 @@ public class DisplayController extends BorderPane {
       
     });
     
-    //eventBus.initDisplayTasks(TasksManager.getManager());
     eventBus.initDisplayTasks(TasksManager.getManager());
     tasksPane.setItems(eventBus.currentTasksPropertyPane());
 
