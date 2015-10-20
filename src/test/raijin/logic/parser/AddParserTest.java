@@ -86,6 +86,14 @@ public class AddParserTest {
   }
   
   @Test
+  public void testAddWithTagsPriorityAtEnd() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by 27/12 !h #work");
+    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
+    assertEquals(Constants.PRIORITY_HIGH, addCommand.getPriority());
+    assertEquals("work", addCommand.getTags().pollFirst());
+  }
+  
+  @Test
   public void testBatchAdding() throws FailedToParseException {
     addCommand = parser.parse("add finish work ; do more work ; do somemore!");
     assertEquals("do more work", addCommand.getNames().pollFirst());

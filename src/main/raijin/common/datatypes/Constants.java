@@ -79,6 +79,9 @@ public class Constants {
   
   // Regex for recognizing a date operator. Used for splitting into String array.
   public static final String DATE_OPERATOR = "(\\/|-|\\.)";
+  
+  // Regex for recognizing priority/subtask/tag operator.
+  public static final String PREFIXES = "^[!|@|#].*";
 
   // Regex for recognizing 24hr time patterns. Available test cases at: http://fiddle.re/bc9mj6
   public static final String TIME_PATTERN = "^([01]?[0-9]|2[0-3])[0-5][0-9]$";

@@ -71,7 +71,7 @@ public class AddParser {
             startTime = wordsOfInput[i+2];
           } else if (i < wordsOfInput.length-2 && !wordsOfInput[i+2].matches(timePattern)
               && !wordsOfInput[i+2].matches(Constants.DATE_END_PREPOSITION) 
-              && !wordsOfInput[i+2].equals(";")){
+              && !wordsOfInput[i+2].equals(";") && !wordsOfInput[i+2].matches(Constants.PREFIXES)){
             throw new IllegalCommandArgumentException("Invalid start time format.",
                                                       Constants.CommandParam.DATETIME); 
           }
