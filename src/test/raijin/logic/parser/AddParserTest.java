@@ -34,10 +34,11 @@ public class AddParserTest {
   
   @Test
   public void testAddWithInformalDate() throws FailedToParseException {
-    addCommand = parser.parse("add finish something by 27/12");
+    /* This is a boundary case for the ‘exact value’ partition */
+    addCommand = parser.parse("add finish something by 28/2");
     assertEquals("finish something", addCommand.getName());
-    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
-    
+    assertEquals("2016-02-28", addCommand.getDateTime().getStartDate().toString());
+
     addCommand = parser.parse("add finish something at 1-1");
     assertEquals("finish something", addCommand.getName());
     assertEquals("2016-01-01", addCommand.getDateTime().getStartDate().toString());
@@ -55,11 +56,12 @@ public class AddParserTest {
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
     assertEquals("2015-12-28", addCommand.getDateTime().getEndDate().toString());
     
-    addCommand = parser.parse("add attend something from 27.dec 0800 till 900");
+    /* This is a boundary case for the ‘exact value’ partition */
+    addCommand = parser.parse("add attend something from 27.dec 000 till 2359");
     assertEquals("attend something", addCommand.getName());
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
-    assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
-    assertEquals("09:00", addCommand.getDateTime().getEndTime().toString());
+    assertEquals("00:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("23:59", addCommand.getDateTime().getEndTime().toString());
     
     addCommand = parser.parse("add finish something from 0800 to 0900");
     assertEquals("finish something", addCommand.getName());
@@ -134,20 +136,23 @@ public class AddParserTest {
     new AddParser(builder, new String("add work !a").split(" "), 0).process();
   }
   
+  /* This is a boundary case for the ‘negative value’ partition */
   @Test(expected=IllegalCommandArgumentException.class)
   public void testInvalidStartTimeFormat() throws IllegalCommandArgumentException {
     new AddParser(builder, new String("add finish something by 27-DEC 0").split(" "), 0).process();
   }
   
+  /* This is a boundary case for the ‘negative value’ partition */
   @Test(expected=IllegalCommandArgumentException.class)
   public void testInvalidEndDateAfterStartDate() throws IllegalCommandArgumentException {
     String[] wordsOfInput = new String("add finish something from 27-DEC to 0/1").split(" ");
     new AddParser(builder, wordsOfInput, 0).process();
   }
   
+  /* This is a boundary case for the ‘positive value’ partition */
   @Test(expected=IllegalCommandArgumentException.class)
   public void testInvalidEndTimeAfterStartTime() throws IllegalCommandArgumentException {
-    String[] wordsOfInput = new String("add finish something from 1800 to 00").split(" ");
+    String[] wordsOfInput = new String("add finish something from 1800 to 2500").split(" ");
     new AddParser(builder, wordsOfInput, 0).process();
   }
   
@@ -157,12 +162,14 @@ public class AddParserTest {
     new AddParser(builder, wordsOfInput, 0).process();
   }
   
+  /* This is a boundary case for the ‘negative value’ partition */
   @Test(expected=IllegalCommandArgumentException.class)
   public void testInvalidEndTimeAfterStartDateTime() throws IllegalCommandArgumentException {
     String[] wordsOfInput = new String("add finish something from 27-DEC 1800 to 00").split(" ");
     new AddParser(builder, wordsOfInput, 0).process();
   }
   
+  /* This is a boundary case for the ‘negative value’ partition */
   @Test(expected=IllegalCommandArgumentException.class)
   public void testInvalidEndTimeAfterStartDateTimeEndDate() throws IllegalCommandArgumentException {
     String[] wordsOfInput = new String
@@ -170,11 +177,13 @@ public class AddParserTest {
     new AddParser(builder, wordsOfInput, 0).process();
   }
   
+  /* This is a boundary case for the ‘positive value’ partition */
   @Test(expected=IllegalCommandArgumentException.class)
   public void testCheckStartDate() throws IllegalCommandArgumentException {
     addParser.checkStartDate("30/02/2015", new DateTime("30/02/2015"));
   }
   
+  /* This is a boundary case for the ‘positive value’ partition */
   @Test(expected=IllegalCommandArgumentException.class)
   public void testCheckStartEndDate() throws IllegalCommandArgumentException {
     addParser.checkStartEndDate("29/02/2015", "30/02/2015", 
