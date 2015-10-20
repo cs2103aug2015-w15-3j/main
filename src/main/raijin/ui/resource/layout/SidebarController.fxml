@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<fx:root type="BorderPane" maxWidth="-Infinity" prefHeight="-1.0" prefWidth="100.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <center>
+    <VBox prefHeight="-1.0" prefWidth="100.0">
+      <children>
+        <Button fx:id="today" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTodayButtonAction" text="Today" wrapText="true" VBox.vgrow="ALWAYS" />
+        <Button fx:id="tomorrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTomorrowButtonAction" text="Tomorrow" wrapText="true" VBox.vgrow="ALWAYS" />
+        <Button fx:id="nextWeek" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleNextWeekButtonAction" text="Next Week" wrapText="true" VBox.vgrow="ALWAYS" />
+        <Button fx:id="projects" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleProjectsButtonAction" text="Projects" wrapText="true" VBox.vgrow="ALWAYS" />
+        <Button fx:id="completed" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleCompletedButtonAction" text="Completed" wrapText="true" VBox.vgrow="ALWAYS" />
+      </children>
+    </VBox>
+  </center>
+</fx:root>
