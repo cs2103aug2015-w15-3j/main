@@ -29,6 +29,10 @@ public class TaskUtils {
 
   public static List<TaskPane> convertToTaskPane(List<Task> tasks) {
     ArrayList<TaskPane> list = new ArrayList<TaskPane>();
+    
+    if (tasks.isEmpty()) {
+        return displayMessage("You have no more tasks!");
+    }
 
     for (int i = 0; i < tasks.size(); i++) {
       list.add(new TaskPane(i + 1, tasks.get(i), "none"));
