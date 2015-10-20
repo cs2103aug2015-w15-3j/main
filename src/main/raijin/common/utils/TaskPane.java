@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
@@ -113,7 +114,7 @@ public class TaskPane extends StackPane {
 			datesBox.getChildren().addAll(startByOn, startValue);
 			
 		} else if (taskType.equals(Constants.TYPE_TASK.FLOATING)) {
-			startValue = new Label("~");
+			startValue = new Label("");
 			datesBox.getChildren().addAll(startValue);
 		}
 		
@@ -136,7 +137,7 @@ public class TaskPane extends StackPane {
 		
 		HBox tagsBox = new HBox();
 		tagsBox.setPadding(new Insets(3, 0, 5, 0));
-		tagsBox.getChildren().addAll(tags, tagsValue);
+		tagsBox.getChildren().addAll(tagsValue);
 		
 		VBox centre = new VBox();
 		centre.setPrefWidth(500);
@@ -152,12 +153,15 @@ public class TaskPane extends StackPane {
 			if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
 				this.setStyle("-fx-background-color: " + highPriorityColours[task.getId()%1] + ";");
 				this.colour = highPriorityColours[task.getId()%1];
+				tagsValue.setTextFill(Color.rgb(178, 36, 0));
 			} else if (task.getPriority().equals(Constants.PRIORITY_MID)) {
 				this.setStyle("-fx-background-color: " + midPriorityColours[task.getId()%1] + ";");
 				this.colour = midPriorityColours[task.getId()%1];
+				tagsValue.setTextFill(Color.rgb(32, 129, 160));
 			} else if(task.getPriority().equals(Constants.PRIORITY_LOW)) {
 				this.setStyle("-fx-background-color: " + lowPriorityColours[task.getId()%1] + ";");
 				this.colour = lowPriorityColours[task.getId()%1];
+				tagsValue.setTextFill(Color.rgb(110, 110, 110));
 			}
 			
 			//pane.getChildren().addAll(idBox, centre, right);
@@ -218,6 +222,7 @@ public class TaskPane extends StackPane {
 		
 		while (!tagsTree.isEmpty()) {
 			hasTags = true;
+			//tagString += "#";
 			tagString += tagsTree.pollFirst();
 			tagString += ", ";
 		}
@@ -225,7 +230,7 @@ public class TaskPane extends StackPane {
 		if (hasTags) {
 			tagString = tagString.substring(0, tagString.length() -  2);
 		} else {
-			tagString = "none";
+			//tagString = "none";
 		}
 		
 		return tagString;
