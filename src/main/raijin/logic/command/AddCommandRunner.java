@@ -15,6 +15,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
 
   private Task currentTask;                                        //First task 
   private ArrayList<Task> listOfTasks = new ArrayList<Task>();
+  private boolean isSuccess = false;                              //Determinse success of operation
 
   void createTasks(ParsedInput input) {
     listOfTasks.clear();
@@ -32,6 +33,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
         strBuilder.append(String.format(Constants.FEEDBACK_ADD_FAILURE, taskName) + "\n");
       } else {
         strBuilder.append(String.format(Constants.FEEDBACK_ADD_SUCCESS, taskName) + "\n");
+        isSuccess = true;
       }
     }
     String output = strBuilder.toString();
@@ -42,9 +44,15 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
     createTasks(input);
     Status feedback = createStatus();
     for (Task task : listOfTasks) {
-      tasksManager.addPendingTask(task);
+      if (!tasksManager.getPendingTasks().containsValue(task)) {
+        tasksManager.addPendingTask(task);
+      }
     }
-    history.pushCommand(this);
+
+    if (isSuccess) {
+      history.pushCommand(this);
+    }
+
     return feedback;
   }
 
