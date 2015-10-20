@@ -9,11 +9,21 @@
   <center>
     <VBox prefHeight="-1.0" prefWidth="100.0">
       <children>
-        <Button fx:id="today" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTodayButtonAction" text="Today" wrapText="true" VBox.vgrow="ALWAYS" />
-        <Button fx:id="tomorrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTomorrowButtonAction" text="Tomorrow" wrapText="true" VBox.vgrow="ALWAYS" />
-        <Button fx:id="nextWeek" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleNextWeekButtonAction" text="Next Week" wrapText="true" VBox.vgrow="ALWAYS" />
-        <Button fx:id="projects" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleProjectsButtonAction" text="Projects" wrapText="true" VBox.vgrow="ALWAYS" />
-        <Button fx:id="completed" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleCompletedButtonAction" text="Completed" wrapText="true" VBox.vgrow="ALWAYS" />
+        <Button fx:id="today" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" 
+        onAction="#handleTodayButtonAction" text="Today" wrapText="true" VBox.vgrow="ALWAYS" 
+        onKeyPressed="#handleTodayButtonKeyAction" />
+        <Button fx:id="tomorrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" 
+        onAction="#handleTomorrowButtonAction" text="Tomorrow" wrapText="true" VBox.vgrow="ALWAYS" 
+        onKeyPressed="#handleTomorrowButtonKeyAction"/>
+        <Button fx:id="nextWeek" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" 
+        onAction="#handleNextWeekButtonAction" text="Next Week" wrapText="true" VBox.vgrow="ALWAYS" 
+        onKeyPressed="#handleNextWeekButtonKeyAction"/>
+        <Button fx:id="projects" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" 
+        onAction="#handleProjectsButtonAction" text="Projects" wrapText="true" VBox.vgrow="ALWAYS" 
+        onKeyPressed="#handleProjectsButtonKeyAction"/>
+        <Button fx:id="completed" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" 
+        onAction="#handleCompletedButtonAction" text="Completed" wrapText="true" VBox.vgrow="ALWAYS" 
+        onKeyPressed="#handleCompletedButtonKeyAction"/>
       </children>
     </VBox>
   </center>
