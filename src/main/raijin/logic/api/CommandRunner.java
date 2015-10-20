@@ -70,7 +70,7 @@ public abstract class CommandRunner {
   int getRealId(int displayedId) throws UnableToExecuteCommandException {
     try {
       return eventBus.getDisplayedTasks().get(displayedId-1).getId();
-    } catch (ArrayIndexOutOfBoundsException e) {
+    } catch (IndexOutOfBoundsException e) {
       throw new UnableToExecuteCommandException("Does not match displayed task", e);
     }
   }
