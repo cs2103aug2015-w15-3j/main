@@ -107,9 +107,18 @@ public class TaskUtils {
  
   public static List<Task> filterTaskWithTags(HashMap<Integer, Task> pendingTasks,
       TreeSet<String> tags) {
+      
+      List<String> sanitizedTags = tags.stream().map(tag -> removeHashTag(tag)).collect(Collectors.toList());
       List<Task> filtered = pendingTasks.values().stream().filter(
-            t -> !CollectionUtils.intersection(t.getTags(), tags).isEmpty())
+            t -> !CollectionUtils.intersection(t.getTags(), sanitizedTags).isEmpty())
             .collect(Collectors.toList());
       return filtered;
+  }
+  
+  static String removeHashTag(String tag) {
+    if (tag.startsWith("#")) {
+      return tag.substring(1);
+    }
+    return tag;
   }
 }
