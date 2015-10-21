@@ -21,7 +21,7 @@ public class AddParserTest {
   public void setUp() throws IllegalCommandArgumentException {
     parser = new SimpleParser();
     builder = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD);
-    String[] wordsOfInput = new String("").split(" ");
+    String[] wordsOfInput = new String("add testing").split(" ");
     addParser = new AddParser(builder, wordsOfInput, 0);
   }
   
