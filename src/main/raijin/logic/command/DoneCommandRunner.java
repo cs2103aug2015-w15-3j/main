@@ -27,7 +27,8 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
 	
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {   
 	idsToDone = input.getIds();
-    
+	taskDescription = "";
+	
 	if (idsToDone.isEmpty()) {       //If no id specified, use tags
 	  idsToDone = getIdsFromTags(input.getTags());
 	}
@@ -47,15 +48,13 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
 	    wrapLowerLevelException(e, Constants.Command.DONE);
 	  }
 	  
-	  if (taskDescription == null && idsToDone.isEmpty()) {
-	    taskDescription = "\""+ task.getName() +"\"";
-	  } else if (taskDescription == null && !idsToDone.isEmpty()) {
-        taskDescription = id +", ";
-      } else if (taskDescription != null && !idsToDone.isEmpty()) {
-	    taskDescription += id +", ";
-	  } else {
-	    taskDescription += "and " +id+ ".";
-	  }
+	  if (taskDescription == "" && idsToDone.isEmpty()) {
+        taskDescription = "\""+ task.getName() + "\"";
+      } else if (!idsToDone.isEmpty()) {
+        taskDescription += "\""+ task.getName() +"\", ";
+      } else {
+        taskDescription += "& \""+ task.getName() +"\"";
+      }
 
 	  tasksManager.addCompletedTask(task);
 	  
@@ -65,7 +64,7 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
     
     return new Status("Nicely done! You have completed the task - " 
     					+ taskDescription + 
-    					" Give yourself a pat on the back!");
+    					". Give yourself a pat on the back!");
   }
 
   public void undo() throws UnableToExecuteCommandException {
