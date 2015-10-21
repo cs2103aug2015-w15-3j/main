@@ -117,7 +117,8 @@ public class ParsedInputTest {
   @Test
   public void testBasicSearch() throws FailedToParseException {
     ParsedInput searchCommand = parser.parse("search everything including 1 is included 4");
-    assertEquals(4, searchCommand.getId());
+    assertEquals(1, searchCommand.getIds().pollFirst().intValue());
+    assertEquals(4, searchCommand.getIds().pollFirst().intValue());
     assertEquals("everything including 1 is included 4", searchCommand.getName());
   }
   
