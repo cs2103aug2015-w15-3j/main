@@ -29,7 +29,8 @@ public class AddParser {
   private static final String timePattern = Constants.TIME_PATTERN;
   private static final DateTimeFormat dtFormat = new DateTimeFormat();
   
-  public AddParser(ParsedInput.ParsedInputBuilder builder, String[] wordsOfInput, int type) {
+  public AddParser(ParsedInput.ParsedInputBuilder builder, String[] wordsOfInput, int type) 
+      throws IllegalCommandArgumentException {
     this.wordsOfInput = wordsOfInput;
     this.builder = builder;
     tags = new TreeSet<String>();
@@ -38,6 +39,11 @@ public class AddParser {
     parseType = type;
     currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HHmm"));
     currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    
+    if (wordsOfInput.length < 2) {
+      throw new IllegalCommandArgumentException("Please specify a task name!",
+          Constants.CommandParam.NAME);
+    }
   }
   
   /**
@@ -54,6 +60,7 @@ public class AddParser {
     String name = "", startDate = "", startTime = "", endDate = "", endTime = "";
     int start = 1; // For recording starting index of the name currently being checked
     int index = wordsOfInput.length; // (Last index of task name - 1) currently being checked
+    int tpsIndex = wordsOfInput.length; // Latest index of tag/priority/subtask inputs
     
     for (int i = 0; i < wordsOfInput.length; i++) {
       if (wordsOfInput[i].toLowerCase().matches(Constants.DATE_START_PREPOSITION)) {
@@ -62,7 +69,7 @@ public class AddParser {
         if (i < wordsOfInput.length-1 && wordsOfInput[i+1].toLowerCase().matches(datePattern)) {
           
           containsStartDate = true;
-          index = i;
+          index = tpsIndex > i ? i : tpsIndex ;
           startDate = wordsOfInput[i+1];
           
           // startDate {startTime}
@@ -128,7 +135,7 @@ public class AddParser {
           
           // Checks for format of {startTime}. If doesn't exist, ignore.
           containsStartTime = true;
-          index = i;
+          index = tpsIndex > i ? i : tpsIndex ;
           startTime = wordsOfInput[i+1];
           
           // startTime {endTime}
@@ -147,8 +154,9 @@ public class AddParser {
       }
       
       if (wordsOfInput[i].indexOf("!") == 0) {
-        if (index > i) {
+        if ((!containsStartDate || !containsStartTime) && index > i) {
           index = i;
+          tpsIndex = i;
         }
         containsPriority = true;
         String priority = wordsOfInput[i].substring(1);
@@ -170,16 +178,18 @@ public class AddParser {
       
       
       if (wordsOfInput[i].indexOf('#') == 0) {
-        if (index > i) {
+        if ((!containsStartDate || !containsStartTime) && index > i) {
           index = i;
+          tpsIndex = i;
         }
         String tag = wordsOfInput[i].substring(1);
         tags.add(tag);
       }
       
       if (wordsOfInput[i].indexOf('@') == 0) {
-        if (index > i) {
+        if ((!containsStartDate || !containsStartTime) && index > i) {
           index = i;
+          tpsIndex = i;
         }
         String id = wordsOfInput[i].substring(1);
         try {
@@ -221,10 +231,11 @@ public class AddParser {
         name += " ";
       }
     }
+    
     if (name.length() == 0 && parseType != 1) {
       throw new IllegalCommandArgumentException("Please specify a task name!",
                                                 Constants.CommandParam.NAME);
-    }
+    } 
     names.add(name);
     
     startDate = dtFormat.formatDate(startDate,0);

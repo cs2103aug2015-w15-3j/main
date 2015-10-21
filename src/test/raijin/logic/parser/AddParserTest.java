@@ -18,10 +18,10 @@ public class AddParserTest {
   private ParsedInput.ParsedInputBuilder builder;
   
   @Before
-  public void setUp() {
+  public void setUp() throws IllegalCommandArgumentException {
     parser = new SimpleParser();
     builder = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD);
-    String[] wordsOfInput = new String("").split(" ");
+    String[] wordsOfInput = new String("add testing").split(" ");
     addParser = new AddParser(builder, wordsOfInput, 0);
   }
   
@@ -70,8 +70,19 @@ public class AddParserTest {
   }
   
   @Test
-  public void testAddWithPriorityAndTags() throws FailedToParseException {
+  public void testAddWithPriorityAndTagsAfterDate() throws FailedToParseException {
     addCommand = parser.parse("add finish work from 0800 to 0900 !h #work #school");
+    assertEquals("finish work", addCommand.getName());
+    assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("09:00", addCommand.getDateTime().getEndTime().toString());
+    assertEquals(Constants.PRIORITY_HIGH, addCommand.getPriority());
+    assertEquals("school", addCommand.getTags().pollFirst());
+    assertEquals("work", addCommand.getTags().pollFirst());
+  }
+  
+  @Test
+  public void testAddWithPriorityAndTagsBeforeDate() throws FailedToParseException {
+    addCommand = parser.parse("add finish work !h #work #school from 0800 to 0900");
     assertEquals("finish work", addCommand.getName());
     assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
     assertEquals("09:00", addCommand.getDateTime().getEndTime().toString());
