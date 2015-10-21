@@ -211,6 +211,8 @@ private void initPrimaryStage(Stage stage) {
       inputController.updateCommandHistory(userInput);      // Update list of user input
       inputController.clear();
       handleEnterPress(inputController, userInput);
+    } else if (key == KeyCode.ESCAPE) {
+      logic.loadCustomData(inputController.inputCommandBar.getText().trim());
     }
   }
 

@@ -118,4 +118,9 @@ public class Logic {
     }
   }
   
+  public void loadCustomData(String fileName) {
+    String dataPath = session.programDirectory + "/" + fileName + ".json";
+    session.loadCustomJSON(dataPath);
+  }
+  
 }

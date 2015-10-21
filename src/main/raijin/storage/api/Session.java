@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import org.slf4j.Logger;
 
@@ -13,6 +14,9 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
 import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.Task;
+import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.SetCurrentTasksEvent;
 import raijin.common.exception.StorageFailureException;
 import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
@@ -24,24 +28,24 @@ public class Session {
   private Logger logger;
   private TasksManager tasksManager;
 
-  String programDirectory;      
   String userConfigPath;
   String dataPath;
   String tempPath;
 
+  public String programDirectory;
   public String storageDirectory;
   public String baseConfigPath;
-  public boolean isFirstTime;           //Verify if user has used this application before
-  
+  public boolean isFirstTime; // Verify if user has used this application before
+
   private Session() {
     init();
-  } 
-  
+  }
+
   public static Session getSession() {
     return session;
   }
-  
-  /*Needed to run regardless of user's choice of storage location*/
+
+  /* Needed to run regardless of user's choice of storage location */
   void init() {
     logger = RaijinLogger.getLogger();
     tasksManager = TasksManager.getManager();
@@ -51,17 +55,17 @@ public class Session {
       setupStorage();
     } catch (UnsupportedEncodingException e) {
       throw new StorageFailureException("Unsupported Encoding while getting program path", e);
-    } 
+    }
   }
-  
+
   public void setupBase(String basePath) {
     programDirectory = basePath;
-    isFirstTime = StorageHandler.createDirectory(programDirectory);   //Create working folder 
+    isFirstTime = StorageHandler.createDirectory(programDirectory); // Create working folder
     baseConfigPath = programDirectory + Constants.NAME_BASE_CONFIG;
     setupBaseConfig(baseConfigPath);
   }
 
-  /*Checks if this is the first time a user use the program*/
+  /* Checks if this is the first time a user use the program */
   public boolean isFirstTime() {
     return !StorageHandler.isDirectory(programDirectory);
   }
@@ -69,30 +73,30 @@ public class Session {
   public void setStorageDirectory(String desiredPath, String baseConfigPath) {
     String sanitizedPath = StorageHandler.sanitizePath(desiredPath);
     writeToFile(sanitizedPath, baseConfigPath);
-    setupStorage();                             //trigger setup of storage after deciding storage path
+    setupStorage(); // trigger setup of storage after deciding storage path
   }
-  
-  /*Commit changes to tasks to a temp file*/
+
+  /* Commit changes to tasks to a temp file */
   public void commit() {
     writeToFile(StorageHandler.convertToJson(TasksManager.getManager()), tempPath);
   }
-  
 
-  /*Needed to be separated from init to ensure user has chosen a storage location*/
+
+  /* Needed to be separated from init to ensure user has chosen a storage location */
   public void setupStorage() {
-    /*Always read from baseConfigPath to get path to ensure consistency*/
+    /* Always read from baseConfigPath to get path to ensure consistency */
     storageDirectory = getStorageDirectory(baseConfigPath);
     dataPath = storageDirectory + Constants.NAME_USER_DATA;
     userConfigPath = storageDirectory + Constants.NAME_USER_CONFIG;
-    StorageHandler.createDirectory(storageDirectory);       
+    StorageHandler.createDirectory(storageDirectory);
     setupDataFolder();
     initTasksManager();
     setupTempPath(StorageHandler.createTempFile(Constants.NAME_TEMP_DATA));
   }
-  
+
   public String getPathInfo() {
-    return programDirectory + "\n" + storageDirectory + "\n" 
-        + baseConfigPath + "\n" + dataPath + "\n" + userConfigPath;
+    return programDirectory + "\n" + storageDirectory + "\n" + baseConfigPath + "\n" + dataPath
+        + "\n" + userConfigPath;
   }
 
   void setupBaseConfig(String baseConfigPath) {
@@ -103,20 +107,20 @@ public class Session {
   }
 
   void setupDataFolder() {
-    createNewFile(userConfigPath);                              
-    createNewFile(dataPath);                                    
+    createNewFile(userConfigPath);
+    createNewFile(dataPath);
   }
 
   void setupTempPath(String tempPath) {
     this.tempPath = tempPath;
-    commit();                   //Populate temp file with current state
   }
 
-  //===========================================================================
-  // IOException Handling 
-  //===========================================================================
-  
+  // ===========================================================================
+  // IOException Handling
+  // ===========================================================================
+
   public void writeOnExit() {
+    commit();
     Path source = Paths.get(tempPath);
     Path target = Paths.get(dataPath);
     try {
@@ -131,21 +135,20 @@ public class Session {
     try {
       StorageHandler.writeToFile(output, filePath);
     } catch (IOException e) {
-      throw new StorageFailureException(String.format(
-          "Failed to write \"%s\" to %s", output, filePath), e);
+      throw new StorageFailureException(String.format("Failed to write \"%s\" to %s", output,
+          filePath), e);
     }
   }
 
-  /*Create new file with exception handling*/
+  /* Create new file with exception handling */
   boolean createNewFile(String filePath) {
     try {
       return StorageHandler.createFile(filePath);
     } catch (IOException e) {
-      throw new StorageFailureException(String.format("Cannot create file %s",
-          filePath), e);
+      throw new StorageFailureException(String.format("Cannot create file %s", filePath), e);
     }
   }
-  
+
   String getStorageDirectory(String baseConfigPath) {
     try {
       return StorageHandler.getStorageDirectory(baseConfigPath);
@@ -154,20 +157,20 @@ public class Session {
           baseConfigPath), e);
     }
   }
-  
+
   @SuppressWarnings("serial")
   TasksManager getDataFromJson(String dataPath) throws StorageFailureException {
     JsonReader reader = StorageHandler.getJsonReaderFromFile(dataPath);
     try {
-      TasksManager retrievedData = StorageHandler.readFromJson(reader, 
-        new TypeToken<TasksManager>() {}.getType());
+      TasksManager retrievedData =
+          StorageHandler.readFromJson(reader, new TypeToken<TasksManager>() {}.getType());
       return retrievedData;
 
-    } catch (JsonParseException e) {          //JSON file is corrupted
-      generateNewFile(dataPath);              //Recreate empty file
+    } catch (JsonParseException e) { // JSON file is corrupted
+      generateNewFile(dataPath); // Recreate empty file
       throw new StorageFailureException("Corrupted JSON file.New JSON file created", e);
 
-    } catch (NullPointerException e) {  //JSON file is missing
+    } catch (NullPointerException e) { // JSON file is missing
       createNewFile(dataPath);
       throw new StorageFailureException("Missing JSON file.New JSON file created", e);
 
@@ -177,17 +180,28 @@ public class Session {
   }
 
   void initTasksManager() {
-      TasksManager retrievedData = getDataFromJson(dataPath);
-      if (retrievedData != null) {
-        tasksManager.sync(retrievedData);
-        IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
-      }
-      /*@TODO replace with backup*/
-      generateNewFile(dataPath);              //Recreate empty file
+    TasksManager retrievedData = getDataFromJson(dataPath);
+    if (retrievedData != null) {
+      tasksManager.sync(retrievedData);
+      IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
+    }
+    /* @TODO replace with backup */
+    generateNewFile(dataPath); // Recreate empty file
   }
-  
+
   void generateNewFile(String filePath) {
     StorageHandler.deleteFile(filePath);
     createNewFile(filePath);
   }
+
+  public void loadCustomJSON(String dataPath) {
+    TasksManager retrievedData = getDataFromJson(dataPath);
+    if (retrievedData != null) {
+      tasksManager.sync(retrievedData);
+      IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
+      ArrayList<Task> result = new ArrayList<Task>(tasksManager.getPendingTasks().values());
+      RaijinEventBus.getEventBus().post(new SetCurrentTasksEvent(result));
+    }
+  }
+
 }
