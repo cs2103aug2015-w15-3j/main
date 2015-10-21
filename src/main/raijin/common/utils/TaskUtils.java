@@ -119,7 +119,7 @@ public class TaskUtils {
   public static List<Task> filterTaskWithTags(HashMap<Integer, Task> pendingTasks,
       TreeSet<String> tags) {
       
-      List<String> sanitizedTags = tags.stream().map(tag -> removeHashTag(tag)).collect(Collectors.toList());
+      List<String> sanitizedTags = getSanitizedTags(tags);
       List<Task> filtered = pendingTasks.values().stream().filter(
             t -> !CollectionUtils.intersection(t.getTags(), sanitizedTags).isEmpty())
             .collect(Collectors.toList());
@@ -131,6 +131,10 @@ public class TaskUtils {
       return tag.substring(1);
     }
     return tag;
+  }
+  
+  public static List<String> getSanitizedTags(TreeSet<String> tags) {
+    return tags.stream().map(tag -> removeHashTag(tag)).collect(Collectors.toList());
   }
   
   public static List<Task> filterTaskWithName(HashMap<Integer, Task> pendingTasks, 
