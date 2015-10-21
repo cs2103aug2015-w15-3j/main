@@ -7,8 +7,8 @@
  - with tag(s)
  - with priority 
  - multiple tasks with similar deadline 
- - task to a parent task
- 
+ - task to a parent task. (Not shown on display)
+
 2. ``Edit`` 
  - task's time only 
  - priority
@@ -27,7 +27,7 @@
  - multiple ids support
  
 6. ``Search`` 
- - with tag 
+ - with partial keyword
  
 7. ``Set``
 
