@@ -1,0 +1,39 @@
+add submit OP1 #cs2101 #cs2103
+add submit OP2 #cs2101
+add meet mr galileo by 19/9 !l
+add meet Johann from Denmark on 4/12 !h 
+//test addition of multiple priorities. choose latest priority
+add meet Big Daddy at Mt Sinai on 6/11 1000 !h !l
+add read Mockingbird ; cook with Bucky ; walk the dog on 11/11 
+//Can we specify tag also and priority
+add visit Prof Oak ; practice karate on 5/12 #important !h
+//Not shown on display
+add join a karate club in NUS @8
+
+edit 3 !h
+//Will set date to today's date when date is not given
+edit 4 on 1200
+edit 4 on 12/12 1100 to 1700
+
+display 12/12
+display a
+add overdue task 1000
+//Show today's pending tasks. By right all can be associated with a
+display all
+display f
+
+done #cs2101
+done 10 11 12
+done hello
+
+delete #cs2103
+delete 1 2 3
+
+search meet
+
+//Will not overwrite existing data in the folder
+set /home/papa/Desktop
+set 1 2 3
+
+//Ctrl+H will trigger other program functionality won't appear frontmost
+
