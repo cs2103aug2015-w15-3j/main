@@ -4,7 +4,7 @@
 	<groupId>Raijin</groupId>
 	<artifactId>Raijin</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<description>A desktop todo manager application </description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
