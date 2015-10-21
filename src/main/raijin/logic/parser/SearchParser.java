@@ -24,13 +24,13 @@ public class SearchParser {
     
     for (int i = 1; i < wordsOfInput.length; i++) {
       try {
-        id = Integer.parseInt(wordsOfInput[i]);
+        builder.id(Integer.parseInt(wordsOfInput[i]));
         keywords += wordsOfInput[i] + " ";
       } catch (NumberFormatException e) {
         keywords += wordsOfInput[i] + " ";
       }
     }
     
-    return builder.id(id).name(keywords.trim());
+    return builder.name(keywords.trim());
   }
 }
