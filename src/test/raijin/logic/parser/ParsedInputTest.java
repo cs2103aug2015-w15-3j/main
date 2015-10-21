@@ -64,28 +64,6 @@ public class ParsedInputTest {
     assertEquals("school", doneCommand.getTags().pollFirst());
     assertEquals("work", doneCommand.getTags().pollFirst());
   }
-  
-  @Test
-  public void parseDisplayCommandInSimpleParser() throws FailedToParseException {
-    ParsedInput displayCommand = parser.parse("display a");
-    assertEquals("a", displayCommand.getDisplayOptions());
-    
-    displayCommand = parser.parse("display c 19/9");
-    assertEquals("c", displayCommand.getDisplayOptions());
-    assertEquals("2015-09-19", displayCommand.getDateTime().getStartDate().toString());
-    
-    displayCommand = parser.parse("display 1.1");
-    assertEquals("p", displayCommand.getDisplayOptions());
-    assertEquals("2015-01-01", displayCommand.getDateTime().getStartDate().toString());
-    
-    displayCommand = parser.parse("display 30/10");
-    assertEquals("p", displayCommand.getDisplayOptions());
-    assertEquals("2015-10-30", displayCommand.getDateTime().getStartDate().toString());
-    
-    displayCommand = parser.parse("display 30/2");
-    assertEquals("p", displayCommand.getDisplayOptions());
-    assertEquals("2015-02-28", displayCommand.getDateTime().getStartDate().toString());
-  }
 
   @Test
   public void getPriority_ReturnPriority() {
