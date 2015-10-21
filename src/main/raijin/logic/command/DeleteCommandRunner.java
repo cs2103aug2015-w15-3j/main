@@ -24,7 +24,6 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
   Queue<Task> tasksDeleted = new LinkedList<Task>();
   String taskDescription;
   Task task;
-  static final String FEEDBACK_DELETE_FAILURE = "Failed to delete task(s) - It doesn't exist!";
 
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
     idsToDelete = input.getIds();
@@ -35,7 +34,7 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
     }
 
     if (idsToDelete.isEmpty()) {
-      return new Status(FEEDBACK_DELETE_FAILURE);
+      return new Status(Constants.FEEDBACK_DELETE_FAILURE);
     }
 
     while(!idsToDelete.isEmpty()) {
@@ -48,20 +47,21 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
       } catch (NoSuchTaskException e) {
         wrapLowerLevelException(e, Constants.Command.DELETE);
       }
-      
+      /*
       if (taskDescription == "" && idsToDelete.isEmpty()) {
         taskDescription = "\""+ task.getName() + "\"";
       } else if (!idsToDelete.isEmpty()) {
         taskDescription += "\""+ task.getName() +"\", ";
       } else {
         taskDescription += "& \""+ task.getName() +"\"";
-      }
+      }*/
       
+      taskDescription += String.format(Constants.FEEDBACK_DELETE_SUCCESS, task.getName())+"\n";
     }
     
     history.pushCommand(this);
     
-    return new Status(String.format(Constants.FEEDBACK_DELETE_SUCCESS, taskDescription));
+    return new Status(taskDescription);
   }
 
   public void undo() {

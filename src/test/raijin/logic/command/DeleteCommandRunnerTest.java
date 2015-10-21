@@ -71,7 +71,7 @@ public class DeleteCommandRunnerTest {
 	  public void processCommand_DeleteTask() throws UnableToExecuteCommandException {
 	    Status returnStatus = deleteTask(1);
 	    String expectedStatusLine = String.format
-	        (Constants.FEEDBACK_DELETE_SUCCESS, "\"Ice ice baby\"");
+	        (Constants.FEEDBACK_DELETE_SUCCESS, "Ice ice baby") +"\n";
 	    assertEquals(expectedStatusLine, returnStatus.getFeedback());
 	  }
 	  
@@ -97,8 +97,9 @@ public class DeleteCommandRunnerTest {
 	     TreeSet<Integer> ids = new TreeSet<Integer>();
 	     ids.add(1); ids.add(2); ids.add(3);
 	     Status returnStatus = deleteTaskIDS(ids);
-	     String expectedStatusLine = String.format(Constants.FEEDBACK_DELETE_SUCCESS,
-	         "\"Ice ice baby\", \"Burn burn baby\", & \"Chill Chill baby\"");
+	     String expectedStatusLine = String.format(Constants.FEEDBACK_DELETE_SUCCESS, "Ice ice "
+	         + "baby") +"\n"+ String.format(Constants.FEEDBACK_DELETE_SUCCESS, "Burn burn baby") 
+	         +"\n"+ String.format(Constants.FEEDBACK_DELETE_SUCCESS, "Chill Chill baby") +"\n";
 	     assertEquals(expectedStatusLine, returnStatus.getFeedback());
 	     assertTrue(tasksManager.isEmptyPendingTasks());
 	   }
