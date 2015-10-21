@@ -63,7 +63,8 @@ public class Raijin extends Application implements NativeKeyListener {
   private static final String NO_DIRECTORY_SELECTED_FEEDBACK = "I'm sorry! You have not selected "
       + "a directory yet. Please try again!";
   private boolean isVisible = false;
-  private BorderPane rootLayout, introLayout, inputController, displayController, sidebarController;
+  private BorderPane rootLayout, introLayout, inputController, displayController,
+      sidebarController;
   private HBox hBox;
   private Stage stage;
   private Logic logic;
@@ -71,7 +72,7 @@ public class Raijin extends Application implements NativeKeyListener {
   private EventBus eventbus = RaijinEventBus.getEventBus();
   private SystemTray tray;
   final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", null);
-  
+
 
   public static void main(String[] args) {
     launch(args);
@@ -92,18 +93,18 @@ public class Raijin extends Application implements NativeKeyListener {
     turnOffLogger(); // Turn off JNativeHook Logging
 
     changeToMinimisedView();
-   
+
     this.stage.show();
     this.isVisible = true;
 
     this.stage.widthProperty().greaterThan(750).addListener((obs, oldValue, newValue) -> {
-    	if(!newValue) {
-    		changeToMinimisedView();
-    	} else {
-    		changeToMaximisedView();
-    	}
+      if (!newValue) {
+        changeToMinimisedView();
+      } else {
+        changeToMaximisedView();
+      }
     });
-    
+
     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
       public void handle(WindowEvent we) {
         logic.executeCommand("exit");
@@ -113,7 +114,7 @@ public class Raijin extends Application implements NativeKeyListener {
 
   }
 
-private void initPrimaryStage(Stage stage) {
+  private void initPrimaryStage(Stage stage) {
     this.stage = stage;
     this.stage.setTitle("Welcome to Raijin");
   }
@@ -147,39 +148,38 @@ private void initPrimaryStage(Stage stage) {
     rootLayout.setCenter(displayController);
     rootLayout.setBottom(inputController);
     ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
-   }
+  }
 
   private void changeToMaximisedView() {
-	  hBox.getChildren().clear();
-	  hBox.getChildren().addAll(sidebarController, displayController);
-	  rootLayout.setCenter(hBox);  
-	  rootLayout.setBottom(inputController);
-	  ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
-	    
+    hBox.getChildren().clear();
+    hBox.getChildren().addAll(sidebarController, displayController);
+    rootLayout.setCenter(hBox);
+    rootLayout.setBottom(inputController);
+    ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
+
   }
-  
+
   public void decideScene() {
 
-    if (logic.isFirstTime()) {
-      introController = new IntroController(this, logic, stage);
-      initIntroLayout();
-
-      this.stage.setScene(new Scene(introLayout));
-    } else {
-      initRootLayout();
-      changeToMinimisedView();
-      this.stage.setScene(new Scene(rootLayout));
-    }
+    /*
+     * if (logic.isFirstTime()) { introController = new IntroController(this, logic, stage);
+     * initIntroLayout();
+     * 
+     * this.stage.setScene(new Scene(introLayout)); } else {
+     */
+    initRootLayout();
+    changeToMinimisedView();
+    this.stage.setScene(new Scene(rootLayout));
   }
 
   private void setUpVariables() {
-	  this.hBox = new HBox();
-	  hBox.setMaxWidth(Double.MAX_VALUE);
-	  this.inputController = new InputController(this);
-	  this.displayController = new DisplayController();
-	  this.sidebarController = new SidebarController(this.logic);
+    this.hBox = new HBox();
+    hBox.setMaxWidth(Double.MAX_VALUE);
+    this.inputController = new InputController(this);
+    this.displayController = new DisplayController();
+    this.sidebarController = new SidebarController(this.logic);
   }
-  
+
   /**
    * method to put the DisplayController class that is another FXML file containing information
    * about the display bar ONLY.
@@ -208,7 +208,7 @@ private void initPrimaryStage(Stage stage) {
 
   public void handleKeyPress(InputController inputController, KeyCode key, String userInput) {
     if (key == KeyCode.ENTER) {
-      inputController.updateCommandHistory(userInput);      // Update list of user input
+      inputController.updateCommandHistory(userInput); // Update list of user input
       inputController.clear();
       handleEnterPress(inputController, userInput);
     } else if (key == KeyCode.ESCAPE) {
