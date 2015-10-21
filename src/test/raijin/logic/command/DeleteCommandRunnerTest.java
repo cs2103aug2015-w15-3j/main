@@ -97,8 +97,8 @@ public class DeleteCommandRunnerTest {
 	     TreeSet<Integer> ids = new TreeSet<Integer>();
 	     ids.add(1); ids.add(2); ids.add(3);
 	     Status returnStatus = deleteTaskIDS(ids);
-	     String expectedStatusLine = String.format
-	         (Constants.FEEDBACK_DELETE_SUCCESS, "1, 2, and 3.");
+	     String expectedStatusLine = String.format(Constants.FEEDBACK_DELETE_SUCCESS,
+	         "\"Ice ice baby\", \"Burn burn baby\", & \"Chill Chill baby\"");
 	     assertEquals(expectedStatusLine, returnStatus.getFeedback());
 	     assertTrue(tasksManager.isEmptyPendingTasks());
 	   }

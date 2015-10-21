@@ -28,6 +28,7 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
 
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
     idsToDelete = input.getIds();
+    taskDescription = "";
     
     if (idsToDelete.isEmpty()) {
       idsToDelete = getIdsFromTags(input.getTags());
@@ -48,14 +49,12 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
         wrapLowerLevelException(e, Constants.Command.DELETE);
       }
       
-      if (taskDescription == null && idsToDelete.isEmpty()) {
-        taskDescription = "\""+ task.getName() +"\"";
-      } else if (taskDescription == null && !idsToDelete.isEmpty()) {
-        taskDescription = id +", ";
-      } else if (taskDescription != null && !idsToDelete.isEmpty()) {
-        taskDescription += id +", ";
+      if (taskDescription == "" && idsToDelete.isEmpty()) {
+        taskDescription = "\""+ task.getName() + "\"";
+      } else if (!idsToDelete.isEmpty()) {
+        taskDescription += "\""+ task.getName() +"\", ";
       } else {
-        taskDescription += "and " +id+ ".";
+        taskDescription += "& \""+ task.getName() +"\"";
       }
       
     }
