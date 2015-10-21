@@ -29,7 +29,8 @@ public class AddParser {
   private static final String timePattern = Constants.TIME_PATTERN;
   private static final DateTimeFormat dtFormat = new DateTimeFormat();
   
-  public AddParser(ParsedInput.ParsedInputBuilder builder, String[] wordsOfInput, int type) {
+  public AddParser(ParsedInput.ParsedInputBuilder builder, String[] wordsOfInput, int type) 
+      throws IllegalCommandArgumentException {
     this.wordsOfInput = wordsOfInput;
     this.builder = builder;
     tags = new TreeSet<String>();
@@ -38,6 +39,11 @@ public class AddParser {
     parseType = type;
     currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HHmm"));
     currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    
+    if (wordsOfInput.length < 2) {
+      throw new IllegalCommandArgumentException("Please specify a task name!",
+          Constants.CommandParam.NAME);
+    }
   }
   
   /**
@@ -225,10 +231,11 @@ public class AddParser {
         name += " ";
       }
     }
+    
     if (name.length() == 0 && parseType != 1) {
       throw new IllegalCommandArgumentException("Please specify a task name!",
                                                 Constants.CommandParam.NAME);
-    }
+    } 
     names.add(name);
     
     startDate = dtFormat.formatDate(startDate,0);
