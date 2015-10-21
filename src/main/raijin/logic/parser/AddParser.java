@@ -153,6 +153,7 @@ public class AddParser {
         }
       }
       
+      /************* PRIORITY ADDING **************/
       if (wordsOfInput[i].indexOf("!") == 0) {
         if ((!containsStartDate || !containsStartTime) && index > i) {
           index = i;
@@ -176,7 +177,17 @@ public class AddParser {
         builder.priority(null);
       }
       
+      /************* PROJECT ADDING **************/
+      if (wordsOfInput[i].indexOf('$') == 0) {
+        if ((!containsStartDate || !containsStartTime) && index > i) {
+          index = i;
+          tpsIndex = i;
+        }
+        String project = wordsOfInput[i].substring(1);
+        builder.project(project);
+      }
       
+      /************* TAGS ADDING **************/
       if (wordsOfInput[i].indexOf('#') == 0) {
         if ((!containsStartDate || !containsStartTime) && index > i) {
           index = i;
@@ -186,6 +197,7 @@ public class AddParser {
         tags.add(tag);
       }
       
+      /************* SUBTASKS ADDING **************/
       if (wordsOfInput[i].indexOf('@') == 0) {
         if ((!containsStartDate || !containsStartTime) && index > i) {
           index = i;
@@ -200,6 +212,7 @@ public class AddParser {
         }
       }
       
+      /************* BATCH NAME ADDING **************/
       if (wordsOfInput[i].equals(";")) {
         if (index == wordsOfInput.length) {
           index = i;
