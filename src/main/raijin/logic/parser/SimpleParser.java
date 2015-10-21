@@ -28,7 +28,7 @@ public class SimpleParser implements ParserInterface {
    * @throws Exception  When invalid input is detected.
    */
   public ParsedInput parse(String userInput) throws FailedToParseException {
-    wordsOfInput = userInput.split(" ");
+    wordsOfInput = userInput.split("\\s+");
     
     try {
       if (isFirstWord("add")) {
