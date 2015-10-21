@@ -89,6 +89,11 @@ public class TasksManager {
     IDManager.getIdManager().returnId(id);
   }
   
+  public void editPendingTask(int id) throws NoSuchTaskException {
+    handleUnknownTask(pendingTasks, id);
+    pendingTasks.remove(id);
+  }
+
   public void deleteCompletedTask(int id) throws NoSuchTaskException {
     handleUnknownTask(completedTasks, id);
     completedTasks.remove(id);

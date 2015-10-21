@@ -32,7 +32,7 @@ public class SearchCommandRunner extends CommandRunner {
     List<String> tags = TaskUtils.getSanitizedTags(currentTask.getTags());
 
     System.out.println("Keywords: " + currentTask.getName());
-    if (source.isEmpty()) {
+    if (isEmptyTaskName(source)) {
       return matchOnlyTags(task, tags);
     } else if (currentTask.getTags().isEmpty()){
       return matchOnlyKeyword(source, task);
@@ -43,7 +43,6 @@ public class SearchCommandRunner extends CommandRunner {
   }
 
   public boolean matchOnlyTags(Task task, List<String> tags) {
-    System.out.println("MATCHING TAG");
     System.out.println(task.getTags().toString());
     System.out.println(tags.toString());
     return !CollectionUtils.intersection(tags, task.getTags()).isEmpty();
@@ -86,4 +85,8 @@ public class SearchCommandRunner extends CommandRunner {
     return filtered;
   }
 
+  boolean isEmptyTaskName(ArrayList<String> names) {
+    return names.stream().filter(str -> !str.contains("#")).collect(
+        Collectors.toList()).isEmpty();
+  }
 }

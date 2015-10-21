@@ -43,7 +43,7 @@ public class EditCommandRunner extends CommandRunner implements UndoableRedoable
     try {
       inputBeforeChange = input;
       taskBeforeChange = tasksManager.getPendingTask(input.getId());
-      tasksManager.deletePendingTask(taskBeforeChange.getId());
+      tasksManager.editPendingTask(taskBeforeChange.getId());
     } catch (NoSuchTaskException e) {
       wrapLowerLevelException(e, Constants.Command.EDIT);
     }
@@ -55,7 +55,7 @@ public class EditCommandRunner extends CommandRunner implements UndoableRedoable
 
   public void undo() throws UnableToExecuteCommandException  {
     try {
-      tasksManager.deletePendingTask(taskAfterChange.getId());
+      tasksManager.editPendingTask(taskAfterChange.getId());
     } catch (NoSuchTaskException e) {
       wrapLowerLevelException(e, Constants.Command.EDIT);
     }
