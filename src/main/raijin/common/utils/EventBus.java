@@ -11,7 +11,7 @@ import com.google.common.eventbus.Subscribe;
 
 import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
-import raijin.common.eventbus.events.SetCurrentTasksEvent;
+import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.storage.api.TasksManager;
 import javafx.beans.property.SimpleStringProperty;
@@ -104,12 +104,12 @@ public class EventBus {
   }
 
   void handleSetCurrentTasksEvent() {
-    MainSubscriber<SetCurrentTasksEvent> setCurrentHandler = new MainSubscriber<
-        SetCurrentTasksEvent>(RaijinEventBus.getEventBus()) {
+    MainSubscriber<SetCurrentDisplayEvent> setCurrentHandler = new MainSubscriber<
+        SetCurrentDisplayEvent>(RaijinEventBus.getEventBus()) {
 
           @Subscribe
           @Override
-          public void handleEvent(SetCurrentTasksEvent event) {
+          public void handleEvent(SetCurrentDisplayEvent event) {
             displayedTasks = event.tasks;
           }};
   }

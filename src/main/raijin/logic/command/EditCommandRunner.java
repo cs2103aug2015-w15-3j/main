@@ -26,12 +26,12 @@ public class EditCommandRunner extends CommandRunner implements UndoableRedoable
         ? taskBeforeChange.getTags() : input.getTags();
     DateTime date = (input.getDateTime() == null) 
         ? taskBeforeChange.getDateTime() : input.getDateTime();
-    int id = idManager.getId();    
+    //int id = idManager.getId();    
         
     ParsedInput modifiedInput = new ParsedInput.ParsedInputBuilder(Constants.Command.EDIT)
         .name(name).dateTime(date).priority(priority).tag(tags).createParsedInput();
     
-    return new Task(name, id, modifiedInput);
+    return new Task(name, taskBeforeChange.getId(), modifiedInput);
   }
   
   Status editSuccessfulStatus() {

@@ -4,11 +4,17 @@ import java.util.List;
 
 import raijin.common.datatypes.Task;
 
-public class SetCurrentTasksEvent {
+public class SetCurrentDisplayEvent {
 
   public List<Task> tasks;
+  public String headMessage;
   
-  public SetCurrentTasksEvent(List<Task> tasks) {
+  public SetCurrentDisplayEvent(List<Task> tasks) {
     this.tasks = tasks;
+  }
+
+  public SetCurrentDisplayEvent(List<Task> tasks, String headMessage) {
+    this.tasks = tasks;
+    this.headMessage = headMessage;
   }
 }

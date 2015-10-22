@@ -163,8 +163,8 @@ public class AddCommandRunnerTest {
         name(testNames).priority("h").createParsedInput();
     
     Status status = addCommandRunner.execute(input);
-    String expected = "Task \"I am cute\" already exists\nAdded wash batu successfully"
-        + "\nAdded watch monty successfully";
+    String expected = "Task \"I am cute\" already exists\nAdded \"wash batu\" "
+        + "successfully\nAdded \"watch monty\" successfully";
     assertEquals(expected, status.getFeedback());
   }
   

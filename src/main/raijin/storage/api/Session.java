@@ -16,7 +16,7 @@ import com.google.gson.stream.JsonReader;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
-import raijin.common.eventbus.events.SetCurrentTasksEvent;
+import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.exception.StorageFailureException;
 import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
@@ -200,7 +200,7 @@ public class Session {
       tasksManager.sync(retrievedData);
       IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
       ArrayList<Task> result = new ArrayList<Task>(tasksManager.getPendingTasks().values());
-      RaijinEventBus.getEventBus().post(new SetCurrentTasksEvent(result));
+      RaijinEventBus.getEventBus().post(new SetCurrentDisplayEvent(result));
     }
   }
 

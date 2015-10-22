@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import raijin.common.eventbus.RaijinEventBus;
-import raijin.common.eventbus.events.SetCurrentTasksEvent;
+import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.utils.EventBus;
 import raijin.common.utils.TaskPane;
@@ -72,22 +72,25 @@ public class DisplayController extends BorderPane {
     eventBus.initDisplayTasks(TasksManager.getManager());
     tasksPane.setItems(eventBus.currentTasksPropertyPane());
 
-    handleSetCurrentTasksEvent();
+    handleSetCurrentDisplayEvent();
   }
   
   private void setHeadMessage(String newVal) {
-    headMessage.setText(newVal);
+    if (newVal != null) {
+      headMessage.setText(newVal);
+    }
   }
   
-  void handleSetCurrentTasksEvent() {
-    MainSubscriber<SetCurrentTasksEvent> setCurrentHandler = new MainSubscriber<
-        SetCurrentTasksEvent>(eventbus) {
+  void handleSetCurrentDisplayEvent() {
+    MainSubscriber<SetCurrentDisplayEvent> setCurrentHandler = new MainSubscriber<
+        SetCurrentDisplayEvent>(eventbus) {
 
           @Subscribe
           @Override
-          public void handleEvent(SetCurrentTasksEvent event) {
+          public void handleEvent(SetCurrentDisplayEvent event) {
             List<TaskPane> currentTask = TaskUtils.convertToTaskPane(event.tasks);
             tasksPane.setItems(FXCollections.observableArrayList(currentTask));
+            setHeadMessage(event.headMessage);
           }};
   }
   
