@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 
@@ -17,6 +18,7 @@ import raijin.common.datatypes.SetTrie;
 import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.KeyPressEvent;
+import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.events.SetInputEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.storage.api.TasksManager;
@@ -94,14 +96,34 @@ public class AutoComplete {
       @Subscribe
       @Override
       public void handleEvent(KeyPressEvent event) {
-        if (event.keyEvent.getCode() != KeyCode.TAB) {
+        if (event.keyEvent.getCode() != KeyCode.TAB && event.keyEvent.getCode() != KeyCode.SPACE) {
           tabCount = 0;
           String userInput = event.currentUserInput;
           updateSuggestions(userInput);
+          if (isCommandWithID(userInput)) {
+            updateDisplayWithTasks(userInput);
+          }
         }
 
       }
+
     };
+  }
+
+  void updateDisplayWithTasks(String userInput) {
+    String command = userInput.trim().split(" ")[0];
+    String prefix = getArguments(userInput);
+    List<Task> filtered =
+        tasksManager.getPendingTasks().values().stream()
+            .filter(t -> t.getName().startsWith(prefix)).collect(Collectors.toList());
+    if (!filtered.isEmpty()) {
+      suggestions = IntStream.rangeClosed(1, filtered.size()).mapToObj(
+          i -> command + " " + Integer.toString(i)).collect(Collectors.toList());
+      eventbus.post(new SetCurrentDisplayEvent(filtered, "Search results:"));
+    } else {
+      List<Task> pendingTasks = new ArrayList<Task>(tasksManager.getPendingTasks().values());
+      eventbus.post(new SetCurrentDisplayEvent(pendingTasks, "All pending tasks"));
+    }
   }
 
   String getLastWord(String[] tokens) {
@@ -131,6 +153,20 @@ public class AutoComplete {
 
   }
 
+  /**
+   * Checks if the given user input contains command that needs ID field
+   * 
+   * @return true if command uses ID field
+   */
+  public boolean isCommandWithID(String userInput) {
+    String[] tokens = userInput.trim().split(" ");
+    if (isValidCommand(tokens[0])) {
+      return tokens[0].equals("done") || tokens[0].equals("edit") || tokens[0].equals("delete");
+    }
+    return false;
+
+  }
+
   boolean isCommand(String[] tokens) {
     return tokens.length == 1;
   }
@@ -144,10 +180,11 @@ public class AutoComplete {
     String command = tokens[0];
 
     if (isValidCommand(command)) {
-      selectedTasks = TaskUtils.filterTaskWithName(tasksManager.getPendingTasks(), 
-          getArguments(input));
-      suggestions = taskList.getSuggestions(getArguments(input)).stream().map(
-          str -> command + " " + str).collect(Collectors.toList());
+      selectedTasks =
+          TaskUtils.filterTaskWithName(tasksManager.getPendingTasks(), getArguments(input));
+      suggestions =
+          taskList.getSuggestions(getArguments(input)).stream().map(str -> command + " " + str)
+              .collect(Collectors.toList());
     }
   }
 
@@ -155,12 +192,13 @@ public class AutoComplete {
     String[] tokens = getTokens(input);
     String prefix = getLastWord(tokens);
     int lastTagIndex = input.lastIndexOf("#");
-    String previousString = input.substring(0, lastTagIndex-1);
-    String tag = prefix.substring(1, prefix.length());      //Get tag from last word
-    
+    String previousString = input.substring(0, lastTagIndex - 1);
+    String tag = prefix.substring(1, prefix.length()); // Get tag from last word
+
     System.out.println(tag);
-    suggestions = tagList.getSuggestions(tag).stream().map(
-        str -> previousString + " #" + str).collect(Collectors.toList());
+    suggestions =
+        tagList.getSuggestions(tag).stream().map(str -> previousString + " #" + str)
+            .collect(Collectors.toList());
     System.out.println(suggestions.toString());
   }
 
@@ -178,21 +216,28 @@ public class AutoComplete {
     return input.substring(index + 1, input.length());
   }
 
-  /*Update to latest pending task names*/
+  /* Update to latest pending task names */
   void updateTasks() {
     taskNames = TaskUtils.getTaskNames(tasksManager.getPendingTasks());
   }
 
-  /*Update any to any recently updated tags*/
+  /* Update any to any recently updated tags */
   void updateTags() {
     tags = TaskUtils.getTags(tasksManager.getPendingTasks());
   }
 
-  /*Overall update with states of application*/
+  /* Overall update with states of application */
   void updateWithStorage() {
     updateTags();
     updateTasks();
     setupList(tags, taskNames);
+  }
+
+  /**
+   * Real time update of display view with suggestions to current pending tasks
+   */
+  void updateDisplayWithSuggestions() {
+
   }
 
   public void handleTabEvent() {

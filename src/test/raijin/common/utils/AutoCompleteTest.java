@@ -106,5 +106,18 @@ public class AutoCompleteTest {
     autoComplete.updateSuggestions(input);
     assertEquals(3, autoComplete.suggestions.size());
   }
+  
+  @Test
+  public void isCommandWithID_EmptyString() {
+    String input = "";
+    assertFalse(autoComplete.isCommandWithID(input));
+  }
+  
+  @Test
+  public void isCommandWithID_DoneCommand() {
+    String input = "done something wrong";
+    assertTrue(autoComplete.isCommandWithID(input));
+  }
+
 }
 
