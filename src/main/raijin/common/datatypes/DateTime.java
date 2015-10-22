@@ -13,7 +13,16 @@ public class DateTime {
   private LocalTime startTime;
   private LocalTime endTime;
   
-  //@TODO remove multiple overloaded constructors
+  public DateTime(LocalDate startDate, LocalDate endDate) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
+
+  public DateTime(LocalTime startTime, LocalTime endTime) {
+    this.startTime = startTime;
+    this.endTime = endTime;
+  }
+
   /*Create deadline with specific date*/
   public DateTime(String startDate){
     this.startDate = LocalDate.parse(startDate, dateFormatter);
