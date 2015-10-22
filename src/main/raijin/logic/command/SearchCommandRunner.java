@@ -21,7 +21,7 @@ public class SearchCommandRunner extends CommandRunner {
   private Task currentTask;
 
   void createTask(ParsedInput input) {
-    currentTask = new Task(input.getName(), idManager.getId());
+    currentTask = new Task(input.getName(), idManager.getId(), input);
   }
 
   Status createSuccessfulStatus(int numberOfMatched) {
@@ -29,34 +29,23 @@ public class SearchCommandRunner extends CommandRunner {
   }
 
   boolean isMatchedKeywords(ArrayList<String> source, Task task) {
-    List<String> tags = TaskUtils.getSanitizedTags(currentTask.getTags());
-
-    System.out.println("Keywords: " + currentTask.getName());
-    if (isEmptyTaskName(source)) {
-      return matchOnlyTags(task, tags);
+    if (source.get(0) == "") {                          //Check if keyword is empty   
+      return matchOnlyTags(task, currentTask.getTags());
     } else if (currentTask.getTags().isEmpty()){
       return matchOnlyKeyword(source, task);
     } else {
-      return matchOnlyKeyword(source, task) && matchOnlyTags(task, tags);
+      return matchOnlyKeyword(source, task) && matchOnlyTags(task, currentTask.getTags());
     }
 
   }
 
-  public boolean matchOnlyTags(Task task, List<String> tags) {
-    System.out.println(task.getTags().toString());
-    System.out.println(tags.toString());
+  public boolean matchOnlyTags(Task task, TreeSet<String> tags) {
     return !CollectionUtils.intersection(tags, task.getTags()).isEmpty();
   }
 
   public boolean matchOnlyKeyword(ArrayList<String> source, Task task) {
     ArrayList<String> target = task.getKeywords();
-    String targetKeywords = target.toString();
-    for (String keyword : source) {
-      if (targetKeywords.contains(keyword)) {
-        return true;
-      }
-    }
-    return false;
+    return CollectionUtils.intersection(target,source).size() == source.size();
   }
 
   boolean isInvalidInput(ParsedInput input) {
@@ -85,8 +74,4 @@ public class SearchCommandRunner extends CommandRunner {
     return filtered;
   }
 
-  boolean isEmptyTaskName(ArrayList<String> names) {
-    return names.stream().filter(str -> !str.contains("#")).collect(
-        Collectors.toList()).isEmpty();
-  }
 }

@@ -33,7 +33,7 @@ public class SearchCommandRunnerTest {
   @Test
   public void processCommand_PositiveMatched_NumberOfMatched() throws UnableToExecuteCommandException, NoSuchTaskException {
     ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.SEARCH).
-        name("OP1 is my only ba").createParsedInput();
+        name("OP1").createParsedInput();
     tasksManager.addPendingTask(new Task("submit OP1 to Kuma", 1));
     tasksManager.addPendingTask(new Task("play OP1 with Djinn", 2));
     Status output = searchCommandRunner.execute(input);
@@ -44,7 +44,7 @@ public class SearchCommandRunnerTest {
   @Test
   public void processCommand_PartialMatched_NumberOfMatched() throws UnableToExecuteCommandException {
     ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.SEARCH).
-        name("su").createParsedInput();
+        name("submit Kuma").createParsedInput();
     tasksManager.addPendingTask(new Task("submit OP1 to Kuma", 1));
     tasksManager.addPendingTask(new Task("play OP1 with Djinn", 2));
     Status output = searchCommandRunner.execute(input);
