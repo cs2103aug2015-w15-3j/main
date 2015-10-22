@@ -97,8 +97,6 @@ public class Raijin extends Application implements NativeKeyListener {
     this.stage.show();
     this.isVisible = true;
 
-    System.out.println(this.stage.widthProperty());
-    
     this.stage.widthProperty().greaterThan(750).addListener((obs, oldValue, newValue) -> {
       if (!newValue) {
         changeToMinimisedView();
@@ -183,27 +181,6 @@ public class Raijin extends Application implements NativeKeyListener {
     this.inputController = new InputController(this);
     this.displayController = new DisplayController();
     this.sidebarController = new SidebarController(this.logic);
-  }
-
-  /**
-   * method to put the DisplayController class that is another FXML file containing information
-   * about the display bar ONLY.
-   * 
-   * @param mainApp
-   */
-  private void addDisplayController(Raijin mainApp) {
-    rootLayout.setCenter(new DisplayController());
-    
-  }
-
-  /**
-   * method to put only the command bar into the main layout. InputController is also another FXML
-   * file with its own information.
-   * 
-   * @param mainApp
-   */
-  private void addInputController(Raijin mainApp) {
-    rootLayout.setBottom(new InputController(mainApp));
   }
 
   //
