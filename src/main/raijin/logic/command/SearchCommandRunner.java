@@ -10,7 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
-import raijin.common.eventbus.events.SetCurrentTasksEvent;
+import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.TaskUtils;
 import raijin.logic.api.CommandRunner;
@@ -19,13 +19,24 @@ import raijin.logic.parser.ParsedInput;
 public class SearchCommandRunner extends CommandRunner {
 
   private Task currentTask;
+  private static final int MAX_TAGS = 3;            //Maximum amount of tags displayed
+  private static final int MAX_KEYWORDS = 6;        //Maximum keyword of tags displayed
+  private static final String DISPLAY_MESSAGE = "Search results: %d found";
+  private static final String INITIAL_FEEDBACK_MESSAGE = "Search keywords: ";
+  private static final String MESSAGE_TEMPLATE = "\"%s\", ";
 
   void createTask(ParsedInput input) {
     currentTask = new Task(input.getName(), idManager.getId(), input);
   }
 
-  Status createSuccessfulStatus(int numberOfMatched) {
-    return new Status(String.format("Result(%d) matched found", numberOfMatched));
+  Status createSuccessfulStatus(ArrayList<String> keywords) {
+    StringBuilder strBuilder = new StringBuilder(INITIAL_FEEDBACK_MESSAGE);
+    for (String keyword : keywords) {
+      strBuilder.append(String.format(MESSAGE_TEMPLATE, keyword));
+    }
+    String feedback = strBuilder.toString();
+    feedback = feedback.substring(0, feedback.length()-2);
+    return new Status(feedback);
   }
 
   boolean isMatchedKeywords(ArrayList<String> source, Task task) {
@@ -40,7 +51,7 @@ public class SearchCommandRunner extends CommandRunner {
   }
 
   public boolean matchOnlyTags(Task task, TreeSet<String> tags) {
-    return !CollectionUtils.intersection(tags, task.getTags()).isEmpty();
+    return CollectionUtils.intersection(tags, task.getTags()).size() == tags.size();
   }
 
   public boolean matchOnlyKeyword(ArrayList<String> source, Task task) {
@@ -62,8 +73,9 @@ public class SearchCommandRunner extends CommandRunner {
     createTask(input);
     ArrayList<Task> tempList = new ArrayList<Task>(pendingTasks.values());
     filtered = getTasksWithMatchedKeyword(tempList);
-    eventbus.post(new SetCurrentTasksEvent(filtered));
-    return createSuccessfulStatus(filtered.size());
+    eventbus.post(new SetCurrentDisplayEvent(filtered, 
+        String.format(DISPLAY_MESSAGE,filtered.size())));
+    return createSuccessfulStatus(currentTask.getKeywords());
   }
 
 
