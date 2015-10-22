@@ -128,6 +128,9 @@ public class Raijin extends Application implements NativeKeyListener {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    
+    String CSS = getClass().getResource(CSS_LOCATION).toExternalForm();
+    rootLayout.getStylesheets().add(CSS);
   }
 
   private void initLogic() throws FileNotFoundException {
@@ -190,8 +193,7 @@ public class Raijin extends Application implements NativeKeyListener {
    */
   private void addDisplayController(Raijin mainApp) {
     rootLayout.setCenter(new DisplayController());
-    String CSS = getClass().getResource(CSS_LOCATION).toExternalForm();
-    rootLayout.getStylesheets().add(CSS);
+    
   }
 
   /**

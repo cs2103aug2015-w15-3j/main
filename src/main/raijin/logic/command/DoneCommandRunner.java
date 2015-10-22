@@ -23,7 +23,6 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
 	Queue<Task> tasksDone = new LinkedList<Task>();
 	String taskDescription;
 	Task task;
-	static final String FEEDBACK_DONE_FAILURE = "Failed to mark task(s) as done - It doesn't exist!";
 	
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {   
 	idsToDone = input.getIds();
@@ -34,11 +33,12 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
 	}
 	
 	if (idsToDone.isEmpty()) {
-      return new Status(FEEDBACK_DONE_FAILURE);
+      return new Status(Constants.FEEDBACK_DONE_FAILURE);
     }
 
 	logger.debug(idsToDone.toString());
-    while(!idsToDone.isEmpty()) {
+    
+	while(!idsToDone.isEmpty()) {
 	  int id = idsToDone.pollFirst();
 	  idsDone.offer(id);
 	  try {
@@ -48,23 +48,24 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
 	    wrapLowerLevelException(e, Constants.Command.DONE);
 	  }
 	  
+	  /*
 	  if (taskDescription == "" && idsToDone.isEmpty()) {
         taskDescription = "\""+ task.getName() + "\"";
       } else if (!idsToDone.isEmpty()) {
         taskDescription += "\""+ task.getName() +"\", ";
       } else {
         taskDescription += "& \""+ task.getName() +"\"";
-      }
+      } */
 
+	  taskDescription += String.format(Constants.FEEDBACK_DONE_SUCCESS, task.getName())+"\n";
+	  
 	  tasksManager.addCompletedTask(task);
 	  
 	}
     
 	history.pushCommand(this);
     
-    return new Status("Nicely done! You have completed the task - " 
-    					+ taskDescription + 
-    					". Give yourself a pat on the back!");
+    return new Status(taskDescription);
   }
 
   public void undo() throws UnableToExecuteCommandException {

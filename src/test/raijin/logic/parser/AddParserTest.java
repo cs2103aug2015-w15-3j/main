@@ -132,6 +132,14 @@ public class AddParserTest {
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
   }
   
+  @Test
+  public void testAddWithProject() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by 27/12 $cs2103t");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
+    assertEquals("cs2103t", addCommand.getProject());
+  }
+  
   @Test(expected=IllegalCommandArgumentException.class)
   public void testNoNameGivenError() throws IllegalCommandArgumentException {
     new AddParser(builder, new String("add").split(" "), 0).process();

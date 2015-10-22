@@ -33,8 +33,16 @@ public class DisplayParser {
     for (int i = 1; i < wordsOfInput.length; i++) {
       if (wordsOfInput[i].matches(datePattern)) {
         builder.dateTime(new DateTime(dtFormat.formatDate(wordsOfInput[i], 1)));
-      } else if (wordsOfInput[i].matches("p|c|a|o|f")){
-        displayType = wordsOfInput[i];
+      } else if (wordsOfInput[i].matches("pending|p|today")) {
+        displayType = "p";
+      } else if (wordsOfInput[i].matches("completed|done|c")) {
+        displayType = "c";
+      } else if (wordsOfInput[i].matches("all|everything|a")) {
+        displayType = "a";
+      } else if (wordsOfInput[i].matches("due|expired|o|overdue")) {
+        displayType = "o";
+      } else if (wordsOfInput[i].matches("floating|f")) {
+        displayType = "f";
       }
     }
     return builder.displayOptions(displayType);

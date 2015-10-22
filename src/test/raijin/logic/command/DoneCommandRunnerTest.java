@@ -72,8 +72,8 @@ public class DoneCommandRunnerTest {
   @Test
    public void processCommand_DoneTask() throws UnableToExecuteCommandException {
      Status returnStatus = doneTask(1);
-     String expectedStatusLine = String.format("Nicely done! You have completed the task - "
-         + "\"Ice ice baby\". Give yourself a pat on the back!");
+     String expectedStatusLine = String.format("Nicely done! You have completed the task "
+         + "\"Ice ice baby\". Give yourself a pat on the back!\n");
      assertEquals(expectedStatusLine, returnStatus.getFeedback());
    }
    
@@ -98,9 +98,9 @@ public class DoneCommandRunnerTest {
      addTask("Burn burn baby", new DateTime("31/08/2015"));
      addTask("Chill Chill baby", new DateTime("31/08/2015"));
      Status returnStatus = doneTaskIDS("done 1 2 3");
-     String expectedStatusLine = String.format("Nicely done! You have completed the task - "
-         + "\"Ice ice baby\", \"Burn burn baby\", "
-         + "& \"Chill Chill baby\". Give yourself a pat on the back!");
+     String expectedStatusLine = String.format(Constants.FEEDBACK_DONE_SUCCESS, "Ice ice baby")
+         +"\n"+ String.format(Constants.FEEDBACK_DONE_SUCCESS, "Burn burn baby") +"\n"+
+         String.format(Constants.FEEDBACK_DONE_SUCCESS, "Chill Chill baby") +"\n";
      assertEquals(expectedStatusLine, returnStatus.getFeedback());
      assertTrue(tasksManager.isEmptyPendingTasks());
    }

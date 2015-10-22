@@ -27,14 +27,18 @@ public class Constants {
   }
 
   public static final String FEEDBACK_INFO_SUCCESS = "Operation is successful.";
-  public static final String FEEDBACK_ADD_SUCCESS = "Added %s successfully";
+  public static final String FEEDBACK_ADD_SUCCESS = "Added \"%s\" successfully";
   public static final String FEEDBACK_ADD_FAILURE = "Task \"%s\" already exists";
   public static final String FEEDBACK_EDIT_SUCCESS = "Task ID %d edited successfully.";
-  public static final String FEEDBACK_DELETE_SUCCESS = "You have just deleted %s !";
+  public static final String FEEDBACK_DELETE_SUCCESS = "You have just deleted \"%s\" !";
+  public static final String FEEDBACK_DELETE_FAILURE = "Failed to delete. Task(s) don't exist!";
+  public static final String FEEDBACK_DONE_FAILURE = "Failed to mark as done. Task(s) don't exist!";
   public static final String FEEDBACK_UNDO_SUCCESS = "Undo successfully";
   public static final String FEEDBACK_REDO_SUCCESS = "Redo successfully";
   public static final String FEEDBACK_ERROR_FAILEDPARSING = "Failed to parse \"%s\"";
-  public static final String FEEDBACK_ERROR_FAILEDCOMMAND = "Failed to execute %s command";
+  public static final String FEEDBACK_ERROR_FAILEDCOMMAND = "Failed to execute \"%s\" command";
+  public static final String FEEDBACK_DONE_SUCCESS = "Nicely done! You have completed the task "
+      + "\"%s\". Give yourself a pat on the back!";
   
   //===========================================================================
   // Datatypes Constants
@@ -81,7 +85,7 @@ public class Constants {
   public static final String DATE_OPERATOR = "(\\/|-|\\.)";
   
   // Regex for recognizing priority/subtask/tag operator.
-  public static final String PREFIXES = "^[!|@|#].*";
+  public static final String PREFIXES = "^[!|@|#|$].*";
 
   // Regex for recognizing 24hr time patterns. Available test cases at: http://fiddle.re/bc9mj6
   public static final String TIME_PATTERN = "^([01]?[0-9]|2[0-3])[0-5][0-9]$";
