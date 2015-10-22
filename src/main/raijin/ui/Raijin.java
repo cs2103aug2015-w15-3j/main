@@ -97,6 +97,8 @@ public class Raijin extends Application implements NativeKeyListener {
     this.stage.show();
     this.isVisible = true;
 
+    System.out.println(this.stage.widthProperty());
+    
     this.stage.widthProperty().greaterThan(750).addListener((obs, oldValue, newValue) -> {
       if (!newValue) {
         changeToMinimisedView();
