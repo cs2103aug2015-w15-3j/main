@@ -66,14 +66,9 @@ public class Logic {
       ParsedInput parsed = parser.parse(userInput);
       CommandRunner cmdRunner = CommandRunnerFactory.getCommandRunner(parsed.getCommand());
       return cmdRunner.execute(parsed);
-    } catch (FailedToParseException e) {
+    } catch (UnableToExecuteCommandException | FailedToParseException e) {
       logger.error(e.getMessage(), e);
-      return new Status(String.format(Constants.FEEDBACK_ERROR_FAILEDPARSING,
-          e.getUserInput()));
-    } catch (UnableToExecuteCommandException e) {
-      logger.error(e.getMessage(), e);
-      return new Status(String.format(Constants.FEEDBACK_ERROR_FAILEDCOMMAND,
-          e.getCommand()));
+      return new Status(e.getMessage());
     } 
   }
   
