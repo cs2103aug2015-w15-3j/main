@@ -10,6 +10,8 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
+import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.utils.EventBus;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
@@ -45,6 +47,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	private ArrayList<Task> relevant;
 
 	private EventBus eventBus = EventBus.getEventBus();
+	private com.google.common.eventbus.EventBus eventbus = RaijinEventBus.getEventBus();
 
 	final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
 
@@ -63,6 +66,10 @@ public class DisplayCommandRunner extends CommandRunner {
 
 		switch (cmd.getDisplayOptions()) {
 		case TYPE_PENDING:
+			message = "Tasks pending for " 
+					   + (cmdDateTime.getStartDate().isEqual(now) ? "today, " : "")
+					   + dateForDisplay;
+
 			feedbackMessage = FEEDBACK_PENDING;
 			for (Task currentTask : pending) {
 				taskDateTime = currentTask.getDateTime();
@@ -76,35 +83,35 @@ public class DisplayCommandRunner extends CommandRunner {
 			}
 
 			if (isEmpty) {
-				eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
+				//eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
+			    eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
 			} else {
 				Collections.sort(relevant);
-				eventBus.setCurrentTasks(relevant);
+				//eventBus.setCurrentTasks(relevant);
+			    eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
-
-			message = "Tasks pending for " 
-					   + (cmdDateTime.getStartDate().isEqual(now) ? "today, " : "")
-					   + dateForDisplay;
 
 			break;
 
 		case TYPE_ALL:
 			feedbackMessage = FEEDBACK_ALL_PENDING;
+			message = "All pending tasks";
 
 			if (pending.isEmpty()) {
-				eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
+				//eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
+			    eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
 			} else {
 				relevant = new ArrayList<Task>(pending);
 				Collections.sort(relevant);
-				eventBus.setCurrentTasks(relevant);
+				//eventBus.setCurrentTasks(relevant);
+			    eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
-
-			message = "All pending tasks";
 
 			break;
 
 		case TYPE_FLOATING:
 			feedbackMessage = FEEDBACK_FLOATING;
+			message = "All floating tasks";
 
 			for (Task currentTask : pending) {
 
@@ -115,17 +122,19 @@ public class DisplayCommandRunner extends CommandRunner {
 			}
 
 			if (isEmpty) {
-				eventBus.setCurrentTasks(MESSAGE_NO_FLOATING);
+				//eventBus.setCurrentTasks(MESSAGE_NO_FLOATING);
+			    eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_FLOATING, message));
 			} else {
-				eventBus.setCurrentTasks(relevant);
+				//eventBus.setCurrentTasks(relevant);
+			    eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
 
-			message = "All floating tasks";
 
 			break;
 
 		case TYPE_COMPLETED:
 			feedbackMessage = FEEDBACK_COMPLETED;
+			message = "Tasks completed as of today, " + dateForDisplay;
 
 			for (Task currentTask : completed) {
 				relevant.add(currentTask);
@@ -133,18 +142,20 @@ public class DisplayCommandRunner extends CommandRunner {
 			}
 
 			if (isEmpty) {
-				eventBus.setCurrentTasks(MESSAGE_NO_COMPLETED);
+				//eventBus.setCurrentTasks(MESSAGE_NO_COMPLETED);
+			    eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_COMPLETED, message));
 			} else {
 				Collections.sort(relevant);
-				eventBus.setCurrentTasks(relevant);
+				//eventBus.setCurrentTasks(relevant);
+			    eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
 
-			message = "Tasks completed as of today, " + dateForDisplay;
 
 			break;
 
 		case TYPE_OVERDUE:
 			feedbackMessage = FEEDBACK_OVERDUE;
+			message = "All overdue tasks";
 
 			for (Task currentTask : pending) {
 				DateTime currentTaskDateTime;
@@ -162,18 +173,17 @@ public class DisplayCommandRunner extends CommandRunner {
 			}
 
 			if (isEmpty) {
-				eventBus.setCurrentTasks(MESSAGE_NO_OVERDUE);
+				//eventBus.setCurrentTasks(MESSAGE_NO_OVERDUE);
+			    eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_OVERDUE, message));
 			} else {
 				Collections.sort(relevant);
-				eventBus.setCurrentTasks(relevant);
+				//eventBus.setCurrentTasks(relevant);
+			    eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
 
-			message = "All overdue tasks";
 
 			break;
 		}
-
-		eventBus.setHeadMessage(message);
 
 		return new Status(FEEDBACK_DISPLAY + feedbackMessage, MESSAGE_SUCCESS);
 	}

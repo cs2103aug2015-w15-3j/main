@@ -90,7 +90,12 @@ public class DisplayController extends BorderPane {
           @Subscribe
           @Override
           public void handleEvent(SetCurrentDisplayEvent event) {
-            List<TaskPane> currentTask = TaskUtils.convertToTaskPane(event.tasks);
+            List<TaskPane> currentTask;
+            if (event.bodyMessage != null) {
+              currentTask = TaskUtils.displayMessage(event.bodyMessage);
+            } else {
+              currentTask = TaskUtils.convertToTaskPane(event.tasks);
+            }
             tasksPane.setItems(FXCollections.observableArrayList(currentTask));
             setHeadMessage(event.headMessage);
           }};
