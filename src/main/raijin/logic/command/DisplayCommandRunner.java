@@ -3,6 +3,7 @@ package raijin.logic.command;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,14 +12,12 @@ import java.util.Date;
 //import java.util.Collections;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
-//import raijin.common.datatypes.ListDisplayContainer;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.EventBus;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.TasksManager;
-//import raijin.ui.DisplayController;
 
 public class DisplayCommandRunner extends CommandRunner {
 
@@ -90,7 +89,7 @@ public class DisplayCommandRunner extends CommandRunner {
 				eventBus.setCurrentTasks(relevant);
 			}
 
-			message = "Tasks pending for " + dateFormat.format(dateForDisplay);
+			message = "Tasks pending for today, " + dateFormat.format(dateForDisplay);
 
 			break;
 
@@ -265,17 +264,25 @@ public class DisplayCommandRunner extends CommandRunner {
 	 * @return
 	 */
 	public boolean isOverdue(DateTime taskDateTime) {
-		LocalDate taskEnd;
+		LocalDate taskEndDate;
+		LocalTime taskEndTime;
+		
+		LocalDate nowDate = LocalDate.now();
+		LocalTime nowTime = LocalTime.now();
 
 		try {
-			taskEnd = taskDateTime.getEndDate();
+			taskEndDate = taskDateTime.getEndDate();
+			taskEndTime = taskDateTime.getEndTime();
 		} catch (NullPointerException e) {
 			return false;
 		}
 
-		if (taskEnd.isBefore(now)) {
+		if (taskEndDate.isBefore(nowDate)) {
 			return true;
 		} else {
+			if (taskEndTime.isBefore(nowTime)) {
+				return true;
+			}
 			return false;
 		}
 	}
