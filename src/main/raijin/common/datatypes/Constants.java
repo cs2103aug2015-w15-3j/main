@@ -146,9 +146,9 @@ public class Constants {
 
   public  static final KeyCodeCombination KEY_SPACE = new KeyCodeCombination(KeyCode.SPACE);
 
-  public  static final KeyCodeCombination KEY_VIEW_DOWN = new KeyCodeCombination(KeyCode.F1);
+  public  static final KeyCodeCombination KEY_VIEW_DOWN = new KeyCodeCombination(KeyCode.F2);
 
-  public  static final KeyCodeCombination KEY_VIEW_UP = new KeyCodeCombination(KeyCode.F2);
+  public  static final KeyCodeCombination KEY_VIEW_UP = new KeyCodeCombination(KeyCode.F1);
 
   //===========================================================================
   // Autcomplete 

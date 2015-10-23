@@ -30,6 +30,9 @@ public class DateFilter extends TaskFilter {
 
   @Override
   public List<Task> filter(List<Task> tasks) {
+    if (limit == null) {
+      return inputTasks;
+    }
     tasks = TaskUtils.getOnlyNormalTasks(tasks);
     return tasks.stream().filter(task -> isMatched(task.getDateTime())).
         collect(Collectors.toList());
