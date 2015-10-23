@@ -53,7 +53,7 @@ public class DisplayCommandRunner extends CommandRunner {
 
 	final DateFormat dateFormat = new SimpleDateFormat("EEEEEEEE, d MMM yyyy");
 	//TODO change to localdate
-	//final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
+	final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
 
 	public Status processCommand(ParsedInput cmd) {
 
@@ -63,6 +63,7 @@ public class DisplayCommandRunner extends CommandRunner {
 		cmdDateTime = getQueriedDate(cmd);
 
 		Date dateForDisplay = Date.from(cmdDateTime.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+		String dateForDisplay2 = cmdDateTime.getStartDate().format(dateFormatter);
 		String message = "";
 		String feedbackMessage = "";
 
@@ -89,7 +90,7 @@ public class DisplayCommandRunner extends CommandRunner {
 				eventBus.setCurrentTasks(relevant);
 			}
 
-			message = "Tasks pending for " + (cmdDateTime.getStartDate().isEqual(now) ? "today, " : "") + dateFormat.format(dateForDisplay);
+			message = "Tasks pending for " + (cmdDateTime.getStartDate().isEqual(now) ? "today, " : "") + dateForDisplay2;
 
 			break;
 
@@ -144,7 +145,7 @@ public class DisplayCommandRunner extends CommandRunner {
 				eventBus.setCurrentTasks(relevant);
 			}
 
-			message = "Tasks completed as of " + dateFormat.format(dateForDisplay);
+			message = "Tasks completed as of today, " + dateForDisplay2;
 
 			break;
 
@@ -269,19 +270,26 @@ public class DisplayCommandRunner extends CommandRunner {
 
 		try {
 			taskEndDate = taskDateTime.getEndDate();
-			taskEndTime = taskDateTime.getEndTime();
+			//taskEndTime = taskDateTime.getEndTime();
 		} catch (NullPointerException e) {
 			return false;
 		}
 
 		if (taskEndDate.isBefore(nowDate)) {
 			return true;
-		} else {
-			if (taskEndTime.isBefore(nowTime)) {
-				return true;
+		} else if (taskEndDate.isEqual(nowDate)) {
+			try {
+				taskEndTime = taskDateTime.getEndTime(); 
+				if (taskEndTime.isBefore(nowTime)) {
+					return true;
+				}
+			} catch (NullPointerException e) {
+				
 			}
-			return false;
+			
 		}
+		
+		return false;
 	}
 
 }
