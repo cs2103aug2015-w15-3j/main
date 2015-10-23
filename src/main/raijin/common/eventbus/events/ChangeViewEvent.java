@@ -37,7 +37,8 @@ public class ChangeViewEvent {
         break;
 
       case NEXT_WEEK:
-        dateFilter.setDateTime(new DateTime(today.plusWeeks(1L), null));
+        dateFilter.setDateTime(new DateTime(today.plusDays(2), 
+            today.plusWeeks(1L)));
         typeOfView = view.getMessage();
         break;
 
