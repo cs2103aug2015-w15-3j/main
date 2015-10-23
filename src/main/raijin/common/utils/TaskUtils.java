@@ -8,6 +8,11 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.ImmutableMultiset;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.TreeMultiset;
+
 import edu.emory.mathcs.backport.java.util.Collections;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
@@ -103,6 +108,18 @@ public class TaskUtils {
     return tags;
   }
 
+  /**
+   * Keep track of tasks associated with a tag
+   * @param pendingTasks
+   * @return
+   */
+  public static Multiset<String> getTagMultiSet(List<Task> pendingTasks) {
+    Multiset<String> tags = HashMultiset.create();
+    for (Task task : pendingTasks) {
+      tags.addAll(task.getTags());
+    }
+    return tags;
+  }
 
   /**
    * Retrieves set of task names
