@@ -11,6 +11,7 @@ import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.TaskUtils;
 import raijin.common.utils.filter.DateFilter;
+import raijin.storage.api.Session;
 import raijin.storage.api.TasksManager;
 
 public class TasksChangedEvent {
@@ -20,6 +21,7 @@ public class TasksChangedEvent {
   public List<Task> pendingNextWeek;              
   public List<Task> overdue;                     
   public Multiset<String> tags;        //Stores number of pending tasks associated with a tag
+  public String storageDirectory;
   DateFilter dateFilter;
   
   public List<Task> pendingTasks;
@@ -41,6 +43,7 @@ public class TasksChangedEvent {
     dateFilter.setDateTime(current);
     overdue = dateFilter.filter(pendingTasks);
     tags = TaskUtils.getTagMultiSet(pendingTasks);
+    storageDirectory = Session.getSession().storageDirectory;
   }
 
 }

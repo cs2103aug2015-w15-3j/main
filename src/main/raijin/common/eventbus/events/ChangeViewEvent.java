@@ -1,6 +1,7 @@
 package raijin.common.eventbus.events;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import raijin.common.datatypes.Constants;
@@ -14,6 +15,8 @@ public class ChangeViewEvent {
   LocalDate today;
   public List<Task> focusView; // View that will be displayed to user
   public String typeOfView;
+  private static final String HEAD_FORMAT = "%s (%s)";
+  private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
 
   public ChangeViewEvent(List<Task> pendingTasks, Constants.View view) {
 
@@ -28,23 +31,27 @@ public class ChangeViewEvent {
 
       case TODAY:
         dateFilter.setDateTime(new DateTime(today, null));
-        typeOfView = view.getMessage();
+        typeOfView = String.format(HEAD_FORMAT, view.getMessage(), view
+            .getDateTime().getStartDate().format(dateFormatter));
         break;
 
       case TOMORROW:
         dateFilter.setDateTime(new DateTime(today.plusDays(1), null));
-        typeOfView = view.getMessage();
+        typeOfView = String.format(HEAD_FORMAT, view.getMessage(), view
+            .getDateTime().getStartDate().format(dateFormatter));
         break;
 
       case NEXT_WEEK:
         dateFilter.setDateTime(new DateTime(today.plusDays(2), 
             today.plusWeeks(1L)));
-        typeOfView = view.getMessage();
+        typeOfView = String.format(HEAD_FORMAT, view.getMessage(), view
+            .getDateTime().getStartDate().format(dateFormatter));
         break;
 
       default:
         dateFilter.setDateTime(new DateTime(today, null));
-        typeOfView = view.getMessage();
+        typeOfView = String.format(HEAD_FORMAT, view.getMessage(), view
+            .getDateTime().getStartDate().format(dateFormatter));
         break;
 
     }

@@ -105,9 +105,6 @@ public class AutoComplete {
           updateSuggestions(userInput);
           if (isCommandWithID(userInput)) {
             updateDisplayWithTasks(userInput);
-          } else {
-            List<Task> pendingTasks = new ArrayList<Task>(tasksManager.getPendingTasks().values());
-            eventbus.post(new SetCurrentDisplayEvent(pendingTasks, "All pending tasks"));
           }
         }
 
@@ -241,8 +238,14 @@ public class AutoComplete {
    * Real time update of display view with suggestions to current pending tasks
    */
   void updateDisplayView(KeyEvent event) {
+    int next = 0;
     if (Constants.KEY_VIEW_DOWN.match(event)) {
-      int next = Math.floorMod((viewCount++), Constants.View.values().length);
+      next = Math.floorMod((++viewCount), Constants.View.values().length);
+      Constants.View view = Constants.View.values()[next];
+      eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(tasksManager.getPendingTasks()),
+          view));
+    } else if (Constants.KEY_VIEW_UP.match(event)) {
+      next = Math.floorMod((--viewCount), Constants.View.values().length);
       Constants.View view = Constants.View.values()[next];
       eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(tasksManager.getPendingTasks()),
           view));
