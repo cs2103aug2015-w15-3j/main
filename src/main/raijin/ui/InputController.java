@@ -69,9 +69,9 @@ public class InputController extends BorderPane {
   public void onKeyPress(KeyEvent event) {
     if (Constants.KEY_CLEAR.match(event)) {
       clear();
-    } else if (event.getCode() == KeyCode.UP) {
+    } else if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN) {
+      getPreviousCommands(event);
       event.consume();
-      getPreviousCommands();
     } else {
       if (Constants.KEY_PASTE.match(event)) {
         getClipboardContent();
@@ -147,9 +147,14 @@ public class InputController extends BorderPane {
     commandHistory.add(command);
   }
 
-  void getPreviousCommands() {
+  void getPreviousCommands(KeyEvent event) {
+    int index;
     if (!commandHistory.isEmpty()) {
-      int index = Math.floorMod((commandHistory.size() - (++upCount)), commandHistory.size());
+      if (event.getCode() == KeyCode.UP) {
+        index = Math.floorMod((commandHistory.size() - (++upCount)), commandHistory.size());
+      } else {
+        index = Math.floorMod((commandHistory.size() - (--upCount)), commandHistory.size());
+      }
       setInput(commandHistory.get(index));
     }
   }

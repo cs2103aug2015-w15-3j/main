@@ -240,7 +240,7 @@ public class AutoComplete {
    * Real time update of display view with suggestions to current pending tasks
    */
   void updateDisplayView(KeyEvent event) {
-    if (event.getCode() == KeyCode.DOWN) {
+    if (Constants.KEY_VIEW_DOWN.match(event)) {
       int next = Math.floorMod((viewCount++), Constants.View.values().length);
       Constants.View view = Constants.View.values()[next];
       eventbus.post(new ChangeViewEvent(
