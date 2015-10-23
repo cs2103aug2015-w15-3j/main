@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
 import edu.emory.mathcs.backport.java.util.Collections;
+import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 
 public class TaskUtils {
@@ -147,5 +148,15 @@ public class TaskUtils {
   TreeSet<Integer> getIdsFromTasks(List<Task> filtered) {
     return new TreeSet<Integer>(filtered.stream().map(
         t -> t.getId()).collect(Collectors.toList()));
+  }
+  
+  public static List<Task> getTasksList(HashMap<Integer, Task> tasks) {
+    return new ArrayList<Task>(tasks.values());
+  }
+
+  /*Exclude floating tasks*/
+  public static List<Task> getOnlyNormalTasks(List<Task> tasks) {
+    return tasks.stream().filter(t -> t.getType() != Constants.TYPE_TASK.FLOATING).
+        collect(Collectors.toList());
   }
 }

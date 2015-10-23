@@ -1,10 +1,13 @@
 package raijin.common.utils.filter;
 
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
+import raijin.common.utils.TaskUtils;
+import raijin.storage.api.TasksManager;
 
 public class DateFilter extends TaskFilter {
 
@@ -15,14 +18,26 @@ public class DateFilter extends TaskFilter {
     this.limit = limit;
   }
 
+  public DateFilter(List<Task> tasks) {
+    inputTasks = tasks;
+  }
+
+  public void setDateTime(DateTime dateTime) {
+    limit = dateTime;
+  }
+
   @Override
   public List<Task> filter(List<Task> tasks) {
+    tasks = TaskUtils.getOnlyNormalTasks(tasks);
     return tasks.stream().filter(task -> isMatched(task.getDateTime())).
         collect(Collectors.toList());
   }
   
   boolean isMatched(DateTime target) {
-    if (limit.getStartTime() == null) {
+    //To return all pending tasks
+    if (limit == null) {
+      return true;
+    } else if (limit.getStartTime() == null) {
       return isMatchedDate(target);
     } else if (limit.getStartDate() == null) {
       return isMatchedTime(target);

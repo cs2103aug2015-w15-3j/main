@@ -140,4 +140,25 @@ public class Constants {
 
   public  static final KeyCodeCombination KEY_SPACE = new KeyCodeCombination(KeyCode.SPACE);
 
+  //===========================================================================
+  // Autcomplete 
+  //===========================================================================
+  
+  /*Different default views supported*/
+  public static enum View {
+
+    INBOX("Inbox"), TODAY("Today"), TOMORROW("Tomorrow"), NEXT_WEEK("Next week");
+
+    private String message;
+    
+    private View(String message) {
+      this.message = message;
+    }
+    
+    public String getMessage() {
+      return message;
+    }
+
+  }
+
 }

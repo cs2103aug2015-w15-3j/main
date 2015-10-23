@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.ChangeViewEvent;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.utils.EventBus;
@@ -73,6 +74,7 @@ public class DisplayController extends BorderPane {
     tasksPane.setItems(eventBus.currentTasksPropertyPane());
 
     handleSetCurrentDisplayEvent();
+    handleChangeViewEvent();
   }
   
   private void setHeadMessage(String newVal) {
@@ -94,4 +96,16 @@ public class DisplayController extends BorderPane {
           }};
   }
   
+  void handleChangeViewEvent() {
+    MainSubscriber<ChangeViewEvent> changeViewHandler = new MainSubscriber<
+        ChangeViewEvent>(eventbus) {
+
+          @Subscribe
+          @Override
+          public void handleEvent(ChangeViewEvent event) {
+            List<TaskPane> currentTask = TaskUtils.convertToTaskPane(event.focusView);
+            tasksPane.setItems(FXCollections.observableArrayList(currentTask));
+            setHeadMessage(event.typeOfView);
+          }};
+  }
 }

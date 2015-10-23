@@ -17,6 +17,7 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.SetTrie;
 import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.ChangeViewEvent;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.events.SetInputEvent;
@@ -32,6 +33,7 @@ import raijin.storage.api.TasksManager;
 public class AutoComplete {
 
   private int tabCount = 0;
+  private int viewCount = 1;
   private SetTrie commandList; // List of commands
   private SetTrie tagList; // List of tags
   private SetTrie taskList; // List of task names
@@ -96,6 +98,7 @@ public class AutoComplete {
       @Subscribe
       @Override
       public void handleEvent(KeyPressEvent event) {
+        updateDisplayView(event.keyEvent);
         if (event.keyEvent.getCode() != KeyCode.TAB && event.keyEvent.getCode() != KeyCode.SPACE) {
           tabCount = 0;
           String userInput = event.currentUserInput;
@@ -236,8 +239,13 @@ public class AutoComplete {
   /**
    * Real time update of display view with suggestions to current pending tasks
    */
-  void updateDisplayWithSuggestions() {
-
+  void updateDisplayView(KeyEvent event) {
+    if (event.getCode() == KeyCode.DOWN) {
+      int next = Math.floorMod((viewCount++), Constants.View.values().length);
+      Constants.View view = Constants.View.values()[next];
+      eventbus.post(new ChangeViewEvent(
+          TaskUtils.getTasksList(tasksManager.getPendingTasks()), view));
+    }
   }
 
   public void handleTabEvent() {
