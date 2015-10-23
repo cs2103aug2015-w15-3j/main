@@ -13,6 +13,14 @@ public class DateTime implements Comparable<DateTime> {
   private LocalTime startTime;
   private LocalTime endTime;
   
+  public DateTime(LocalDate startDate, LocalTime startTime, LocalDate endDate, 
+      LocalTime endTime) {
+    this.startDate = startDate;
+    this.startTime = startTime;
+    this.endDate = endDate;
+    this.endTime = endTime;
+  }
+
   public DateTime(LocalDate startDate, LocalDate endDate) {
     this.startDate = startDate;
     this.endDate = endDate;

@@ -49,7 +49,7 @@ public class Constants {
   }
 
   public enum TYPE_TASK {
-    FLOATING, EVENT, SPECIFIC
+    FLOATING, EVENT, SPECIFIC, OVERDUE
   }
   
   /*Levels of priority supported*/
