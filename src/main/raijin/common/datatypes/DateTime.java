@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class DateTime {
+public class DateTime implements Comparable<DateTime> {
 
   private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(Constants.FORMAT_DATE);
   private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(Constants.FORMAT_TIME);
@@ -82,11 +82,84 @@ public class DateTime {
     return false;
   }
 
+
+  /**
+   * Compare only start date, if same start date is the same
+   * Compare time using the same manner 
+   * Compare end date, null is sorted first  
+   * @param DateTime compared
+   * @return
+   */
+
+  @Override
+  public int compareTo(DateTime compared) {
+    int result = getStartDate().compareTo(compared.getStartDate());
+
+    //When both start dates are different
+    if (result != 0) {
+      return result;
+    } else {
+      result = compareEndDate(getEndDate(), compared.getEndDate());
+      
+      //When both end dates are different
+      if (result != 0) {
+        return result;
+      } else {
+        result = getStartTime().compareTo(compared.getStartTime());
+        
+        //When both start times are different 
+        if (result != 0) {
+          return result;
+        } else {
+          return compareEndTime(getEndTime(), compared.getEndTime());
+        }
+      }
+    }
+      
+    
+  }
+
   boolean compare(Object source, Object target) {
     if (source == null) {
       return target == null;
     } else {
       return source.equals(target);
+    }
+  }
+  
+  /**
+   * Compare time when both shared the same start time
+   * @param source
+   * @param target
+   * @return
+   */
+  int compareEndTime(LocalTime source, LocalTime target) {
+    if (source == null && target == null) {
+      return 0;
+    } else if (source == null) {
+      return -1;
+    } else if (target == null) {
+      return 1;
+    } else {
+      return source.compareTo(target);
+    }
+  }
+
+  /**
+   * Compare date when both shared the same start date 
+   * @param source
+   * @param target
+   * @return
+   */
+  int compareEndDate(LocalDate source, LocalDate target) {
+    if (source == null && target == null) {
+      return 0;
+    } else if (source == null) {
+      return -1;
+    } else if (target == null) {
+      return 1;
+    } else {
+      return source.compareTo(target);
     }
   }
 
