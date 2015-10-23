@@ -25,6 +25,13 @@
 		<testSourceDirectory>src/test/</testSourceDirectory>
 		<resources>
 			<resource>
+			<targetPath>raijin/common/utils/resource</targetPath>
+				<directory>src/main/raijin/common/utils/resource</directory>
+				<includes>
+					<include>*.xml</include>
+				</includes>
+			</resource>
+			<resource>
 			<targetPath>raijin/ui/resource/layout</targetPath>
 				<directory>src/main/raijin/ui/resource/layout</directory>
 				<includes>

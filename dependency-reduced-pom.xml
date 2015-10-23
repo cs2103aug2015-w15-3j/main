@@ -11,6 +11,13 @@
     <testSourceDirectory>src/test/</testSourceDirectory>
     <resources>
       <resource>
+        <targetPath>raijin/common/utils/resource</targetPath>
+        <directory>src/main/raijin/common/utils/resource</directory>
+        <includes>
+          <include>*.xml</include>
+        </includes>
+      </resource>
+      <resource>
         <targetPath>raijin/ui/resource/layout</targetPath>
         <directory>src/main/raijin/ui/resource/layout</directory>
         <includes>
@@ -111,6 +118,16 @@
       </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots />
+      <id>snapshots-repo</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+  </repositories>
   <properties>
     <skipTests>false</skipTests>
     <skipUTs>${skipTests}</skipUTs>
