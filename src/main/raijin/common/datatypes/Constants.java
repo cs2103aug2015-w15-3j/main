@@ -44,6 +44,10 @@ public class Constants {
   // Datatypes Constants
   //===========================================================================
 
+  public enum SORT_CRITERIA {
+    DEADLINE, PRIORITY, NAME, TAG
+  }
+
   public enum TYPE_TASK {
     FLOATING, EVENT, SPECIFIC
   }
