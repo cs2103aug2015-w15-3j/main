@@ -105,6 +105,9 @@ public class AutoComplete {
           updateSuggestions(userInput);
           if (isCommandWithID(userInput)) {
             updateDisplayWithTasks(userInput);
+          } else {
+            List<Task> pendingTasks = new ArrayList<Task>(tasksManager.getPendingTasks().values());
+            eventbus.post(new SetCurrentDisplayEvent(pendingTasks, "All pending tasks"));
           }
         }
 
@@ -120,12 +123,10 @@ public class AutoComplete {
         tasksManager.getPendingTasks().values().stream()
             .filter(t -> t.getName().startsWith(prefix)).collect(Collectors.toList());
     if (!filtered.isEmpty()) {
-      suggestions = IntStream.rangeClosed(1, filtered.size()).mapToObj(
-          i -> command + " " + Integer.toString(i)).collect(Collectors.toList());
+      suggestions =
+          IntStream.rangeClosed(1, filtered.size())
+              .mapToObj(i -> command + " " + Integer.toString(i)).collect(Collectors.toList());
       eventbus.post(new SetCurrentDisplayEvent(filtered, "Search results:"));
-    } else {
-      List<Task> pendingTasks = new ArrayList<Task>(tasksManager.getPendingTasks().values());
-      eventbus.post(new SetCurrentDisplayEvent(pendingTasks, "All pending tasks"));
     }
   }
 
@@ -243,8 +244,8 @@ public class AutoComplete {
     if (Constants.KEY_VIEW_DOWN.match(event)) {
       int next = Math.floorMod((viewCount++), Constants.View.values().length);
       Constants.View view = Constants.View.values()[next];
-      eventbus.post(new ChangeViewEvent(
-          TaskUtils.getTasksList(tasksManager.getPendingTasks()), view));
+      eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(tasksManager.getPendingTasks()),
+          view));
     }
   }
 
