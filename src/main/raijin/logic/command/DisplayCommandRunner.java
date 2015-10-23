@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -51,6 +52,8 @@ public class DisplayCommandRunner extends CommandRunner {
 	private EventBus eventBus = EventBus.getEventBus();
 
 	final DateFormat dateFormat = new SimpleDateFormat("EEEEEEEE, d MMM yyyy");
+	//TODO change to localdate
+	//final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
 
 	public Status processCommand(ParsedInput cmd) {
 
@@ -86,7 +89,7 @@ public class DisplayCommandRunner extends CommandRunner {
 				eventBus.setCurrentTasks(relevant);
 			}
 
-			message = "Tasks pending for today, " + dateFormat.format(dateForDisplay);
+			message = "Tasks pending for " + (cmdDateTime.getStartDate().isEqual(now) ? "today, " : "") + dateFormat.format(dateForDisplay);
 
 			break;
 
