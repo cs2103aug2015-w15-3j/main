@@ -51,8 +51,6 @@ public class DisplayCommandRunner extends CommandRunner {
 
 	private EventBus eventBus = EventBus.getEventBus();
 
-	final DateFormat dateFormat = new SimpleDateFormat("EEEEEEEE, d MMM yyyy");
-	//TODO change to localdate
 	final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
 
 	public Status processCommand(ParsedInput cmd) {
@@ -62,8 +60,7 @@ public class DisplayCommandRunner extends CommandRunner {
 		retrieveLists();
 		cmdDateTime = getQueriedDate(cmd);
 
-		Date dateForDisplay = Date.from(cmdDateTime.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-		String dateForDisplay2 = cmdDateTime.getStartDate().format(dateFormatter);
+		String dateForDisplay = cmdDateTime.getStartDate().format(dateFormatter);
 		String message = "";
 		String feedbackMessage = "";
 
@@ -90,7 +87,9 @@ public class DisplayCommandRunner extends CommandRunner {
 				eventBus.setCurrentTasks(relevant);
 			}
 
-			message = "Tasks pending for " + (cmdDateTime.getStartDate().isEqual(now) ? "today, " : "") + dateForDisplay2;
+			message = "Tasks pending for " 
+					   + (cmdDateTime.getStartDate().isEqual(now) ? "today, " : "")
+					   + dateForDisplay;
 
 			break;
 
@@ -145,7 +144,7 @@ public class DisplayCommandRunner extends CommandRunner {
 				eventBus.setCurrentTasks(relevant);
 			}
 
-			message = "Tasks completed as of today, " + dateForDisplay2;
+			message = "Tasks completed as of today, " + dateForDisplay;
 
 			break;
 
