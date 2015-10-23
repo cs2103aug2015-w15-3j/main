@@ -268,7 +268,7 @@ public class AddParser {
       checkStartDate(startDate, dateTime);
     } else if (containsStartDate && containsEndDate) {
       dateTime = new DateTime(startDate, currentTime, endDate, "2359");
-      checkStartDate(startDate, dateTime);
+      checkStartEndDate(startDate, endDate, dateTime);
     } else if (containsStartDate) {
       dateTime = new DateTime(startDate);
       checkStartDate(startDate, dateTime);
