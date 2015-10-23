@@ -1,9 +1,11 @@
 package raijin.common.utils.filter;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.TaskUtils;
@@ -33,6 +35,19 @@ public class DateFilter extends TaskFilter {
         collect(Collectors.toList());
   }
   
+  /**
+   * Returns commonly used view 
+   * @param tasks
+   * @param view
+   * @return
+   */
+  public List<Task> filter(List<Task> tasks, Constants.View view) {
+    limit = view.getDateTime();
+    tasks = TaskUtils.getOnlyNormalTasks(tasks);
+    return tasks.stream().filter(task -> isMatched(task.getDateTime())).
+        collect(Collectors.toList());
+  }
+
   boolean isMatched(DateTime target) {
     //To return all pending tasks
     if (limit == null) {
@@ -69,5 +84,5 @@ public class DateFilter extends TaskFilter {
           && limit.getEndTime().compareTo(target.getEndTime()) >= 0;
     }
   }
-
+  
 }

@@ -1,5 +1,7 @@
 package raijin.common.datatypes;
 
+import java.time.LocalDate;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -148,21 +150,31 @@ public class Constants {
   // Autcomplete 
   //===========================================================================
   
+  private static final LocalDate today = LocalDate.now();
+
   /*Different default views supported*/
   public static enum View {
 
-    INBOX("Inbox"), TODAY("Today"), TOMORROW("Tomorrow"), NEXT_WEEK("Next week");
+    INBOX("Inbox", null), 
+    TODAY("Today", new DateTime(today, null)), 
+    TOMORROW("Tomorrow", new DateTime(today.plusDays(1L), null)),
+    NEXT_WEEK("Next week", new DateTime(today.plusDays(2L), today.plusWeeks(1L)));
 
     private String message;
+    private DateTime dateTime;
     
-    private View(String message) {
+    private View(String message, DateTime dateTime) {
       this.message = message;
+      this.dateTime = dateTime;
     }
     
     public String getMessage() {
       return message;
     }
 
+    public DateTime getDateTime() {
+      return dateTime;
+    }
   }
 
 }
