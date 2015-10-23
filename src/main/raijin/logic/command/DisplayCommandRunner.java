@@ -64,14 +64,11 @@ public class DisplayCommandRunner extends CommandRunner {
 		String feedbackMessage = "";
 
 		boolean isEmpty = true;
-		Task currentTask;
 
 		switch (cmd.getDisplayOptions()) {
 		case TYPE_PENDING:
 			feedbackMessage = FEEDBACK_PENDING;
-			for (int i=0; i<pending.size(); i++) {
-				currentTask = pending.get(i);
-
+			for (Task currentTask : pending) {
 				taskDateTime = currentTask.getDateTime();
 
 				if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
@@ -111,8 +108,7 @@ public class DisplayCommandRunner extends CommandRunner {
 		case TYPE_FLOATING:
 			feedbackMessage = FEEDBACK_FLOATING;
 
-			for(int i=0; i<pending.size(); i++) {
-				currentTask = pending.get(i);
+			for (Task currentTask : pending) {
 
 				if (currentTask.getType().equals(Constants.TYPE_TASK.FLOATING)) {
 					relevant.add(currentTask);
@@ -133,8 +129,7 @@ public class DisplayCommandRunner extends CommandRunner {
 		case TYPE_COMPLETED:
 			feedbackMessage = FEEDBACK_COMPLETED;
 
-			for (int i=0; i<completed.size(); i++) {
-				currentTask = completed.get(i);
+			for (Task currentTask : completed) {
 				relevant.add(currentTask);
 				isEmpty = false;
 			}
@@ -153,8 +148,7 @@ public class DisplayCommandRunner extends CommandRunner {
 		case TYPE_OVERDUE:
 			feedbackMessage = FEEDBACK_OVERDUE;
 
-			for(int i=0; i<pending.size(); i++) {
-				currentTask = pending.get(i);
+			for (Task currentTask : pending) {
 				DateTime currentTaskDateTime;
 
 				try {
