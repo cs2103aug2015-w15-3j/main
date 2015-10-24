@@ -12,12 +12,16 @@ import java.util.ArrayList;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import edu.cmu.sphinx.api.SpeechResult;
+import edu.cmu.sphinx.result.Result;
+import edu.cmu.sphinx.result.WordResult;
 import raijin.common.datatypes.Constants;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.common.eventbus.events.SetInputEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
+import raijin.common.utils.SpeechRecognizer;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,8 +46,9 @@ public class InputController extends BorderPane {
   /* Stores previously entered command */
   private ArrayList<String> commandHistory = new ArrayList<String>();
   private static int upCount = 0; // Count number of UP pressed
+  private SpeechRecognizer recognizer;
 
-  public InputController(Raijin mainApp) {
+  public InputController(Raijin mainApp) throws IOException {
     FXMLLoader loader = new FXMLLoader(getClass().getResource(INPUT_COMMAND_BAR_LAYOUT_FXML));
     loader.setController(this);
     loader.setRoot(this);
@@ -54,6 +59,7 @@ public class InputController extends BorderPane {
     }
 
     this.mainApp = mainApp;
+    recognizer = SpeechRecognizer.getRecognizer();
     handleAllEvents();
   }
 
@@ -67,6 +73,7 @@ public class InputController extends BorderPane {
 
   @FXML
   public void onKeyPress(KeyEvent event) {
+    handleSpeechRecognition(event);
     if (Constants.KEY_CLEAR.match(event)) {
       clear();
     } else if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN) {
@@ -168,6 +175,19 @@ public class InputController extends BorderPane {
     } catch (HeadlessException | UnsupportedFlavorException | IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
+    }
+  }
+  
+  void handleSpeechRecognition(KeyEvent event) {
+    if (Constants.KEY_PLAY.match(event)) {
+      System.out.println("Start recording");
+      recognizer.startRecording(true);
+    } else if (Constants.KEY_STOP.match(event)) {
+      System.out.println("Stop recording");
+      SpeechResult result = recognizer.getResult();
+      for (WordResult word : result.getWords()) {
+        System.out.println(word);
+      }
     }
   }
 

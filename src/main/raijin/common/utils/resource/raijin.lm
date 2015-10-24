@@ -1,0 +1,24 @@
+Language model created by QuickLM on Fri Oct 23 20:55:22 EDT 2015
+Carnegie Mellon University (c) 1996
+
+This model based on a corpus of 6 sentences and 7 words
+The (fixed) discount mass is 0.5
+
+\data\
+ngram 1=7
+ngram 2=1
+
+\1-grams:
+-1.1461 help -0.3010
+-1.1461 next -0.2688
+-1.1461 redo -0.3010
+-1.1461 today -0.3010
+-1.1461 tomorrow -0.3010
+-1.1461 undo -0.3010
+-1.1461 week -0.3010
+
+\2-grams:
+-0.3010 next week -0.3010
+
+\end\
+

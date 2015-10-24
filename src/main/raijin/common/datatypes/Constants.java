@@ -150,6 +150,12 @@ public class Constants {
 
   public  static final KeyCodeCombination KEY_VIEW_UP = new KeyCodeCombination(KeyCode.F1);
 
+  public  static final KeyCodeCombination KEY_PLAY = new KeyCodeCombination(KeyCode.P, 
+      KeyCodeCombination.CONTROL_DOWN);
+
+  public  static final KeyCodeCombination KEY_STOP = new KeyCodeCombination(KeyCode.S, 
+      KeyCodeCombination.CONTROL_DOWN);
+
   //===========================================================================
   // Autcomplete 
   //===========================================================================

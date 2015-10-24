@@ -175,7 +175,7 @@ public class Raijin extends Application implements NativeKeyListener {
     this.stage.setScene(new Scene(rootLayout));
   }
 
-  private void setUpVariables() {
+  private void setUpVariables() throws IOException {
     this.hBox = new HBox();
     hBox.setMaxWidth(Double.MAX_VALUE);
     this.inputController = new InputController(this);
