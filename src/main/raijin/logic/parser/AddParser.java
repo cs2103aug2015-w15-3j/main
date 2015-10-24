@@ -21,7 +21,7 @@ public class AddParser {
   private TreeSet<String> names;
   private String currentTime;
   private String currentDate;
-  private int parseType; // 0 for add, 1 for edit.
+  private int parseType; // 0 for add, 1 for edit, 2 for display.
   private boolean containsPriority;
   
   private static final String datePattern = Constants.DATE_PATTERN;
@@ -245,14 +245,22 @@ public class AddParser {
       }
     }
     
-    if (name.length() == 0 && parseType != 1) {
+    if (name.length() == 0 && parseType == 0) {
       throw new IllegalCommandArgumentException("Please specify a task name!",
                                                 Constants.CommandParam.NAME);
     } 
     names.add(name);
     
-    startDate = dtFormat.formatDate(startDate,0);
-    endDate = dtFormat.formatDate(endDate,0);
+    // Check if type of parsing is for display or not. 
+    // If it is for display, no need to check if date has already passed.
+    if (parseType != 2) {
+      startDate = dtFormat.formatDate(startDate,0);
+      endDate = dtFormat.formatDate(endDate,0);
+    } else {
+      startDate = dtFormat.formatDate(startDate,1);
+      endDate = dtFormat.formatDate(endDate,1);
+    }
+    
     startTime = dtFormat.formatTime(startTime);
     endTime = dtFormat.formatTime(endTime);
     
