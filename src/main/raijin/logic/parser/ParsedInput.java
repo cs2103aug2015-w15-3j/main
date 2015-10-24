@@ -137,7 +137,7 @@ public class ParsedInput {
     private String displayOptions;
     private TreeSet<String> tags = new TreeSet<String>();
     private int subTaskOf;
-    private String priority;
+    private String priority = Constants.PRIORITY_MID;
     private String helperOption;
     private String project;
     
