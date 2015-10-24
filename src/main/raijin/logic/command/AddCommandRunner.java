@@ -26,18 +26,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
   }
 
   Status createStatus() {
-    StringBuilder strBuilder = new StringBuilder();
-    for (Task task : listOfTasks) {
-      String taskName = task.getName();
-      if (tasksManager.getPendingTasks().containsValue(task)) {
-        strBuilder.append(String.format(Constants.FEEDBACK_ADD_FAILURE, taskName) + "\n");
-      } else {
-        strBuilder.append(String.format(Constants.FEEDBACK_ADD_SUCCESS, taskName) + "\n");
-        isSuccess = true;
-      }
-    }
-    String output = strBuilder.toString();
-    return new Status(output.substring(0, output.length()-1));
+    return new Status("You have added the task(s) successfully");
   }
 
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {

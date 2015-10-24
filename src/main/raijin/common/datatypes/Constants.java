@@ -133,7 +133,7 @@ public class Constants {
   public static final KeyCodeCombination KEY_UNDO = new KeyCodeCombination(KeyCode.Z,   //Undo shortcut
       KeyCombination.CONTROL_DOWN);
 
-  public static final KeyCodeCombination KEY_REDO = new KeyCodeCombination(KeyCode.R,   //Redo shortcut
+  public static final KeyCodeCombination KEY_REDO = new KeyCodeCombination(KeyCode.Y,   //Redo shortcut
       KeyCombination.CONTROL_DOWN);
 
   public static final KeyCodeCombination KEY_CLEAR = new KeyCodeCombination(KeyCode.C,  //Clear shortcut
