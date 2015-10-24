@@ -10,6 +10,7 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
+import raijin.common.eventbus.events.TasksChangedEvent;
 import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.EventBus;
@@ -20,6 +21,7 @@ import raijin.logic.api.UndoableRedoable;
 
 public class History {
 
+  private com.google.common.eventbus.EventBus eventbus;
   private static History history = new History();
   private TasksManager tasksManager;
   private Stack<UndoableRedoable> undoStack;   //Stores commandRunner created via user input
@@ -31,6 +33,7 @@ public class History {
     redoStack = new Stack<UndoableRedoable>();
     tasksManager = TasksManager.getManager();
     logger = RaijinLogger.getLogger();
+    eventbus = RaijinEventBus.getEventBus();
   }
   
   /*Helper to write changes to file and trigger view change*/
@@ -40,8 +43,10 @@ public class History {
     EventBus.getEventBus().setCurrentTasks(new ArrayList<Task>(
         tasksManager.getPendingTasks().values()));
         */
-    RaijinEventBus.getEventBus().post(new SetCurrentDisplayEvent(TaskUtils
+    eventbus.post(new SetCurrentDisplayEvent(TaskUtils
         .getTasksList(tasksManager.getPendingTasks())));
+    //Notify tasks changed
+    eventbus.post(new TasksChangedEvent());
     Session.getSession().commit();
   }
 
