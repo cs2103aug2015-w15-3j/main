@@ -59,6 +59,7 @@ public class InputController extends BorderPane {
     }
 
     this.mainApp = mainApp;
+    this.setStyle("-fx-background-color:white;");
     recognizer = SpeechRecognizer.getRecognizer();
     handleAllEvents();
   }
