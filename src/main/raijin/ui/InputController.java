@@ -4,7 +4,10 @@ import javafx.scene.layout.BorderPane;
 
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
@@ -46,7 +50,8 @@ public class InputController extends BorderPane {
   /* Stores previously entered command */
   private ArrayList<String> commandHistory = new ArrayList<String>();
   private static int upCount = 0; // Count number of UP pressed
-  private SpeechRecognizer recognizer;
+  private Clipboard clipboard; // System clipboard
+  private javafx.scene.input.Clipboard fxClipboard;
 
   public InputController(Raijin mainApp) throws IOException {
     FXMLLoader loader = new FXMLLoader(getClass().getResource(INPUT_COMMAND_BAR_LAYOUT_FXML));
@@ -60,7 +65,8 @@ public class InputController extends BorderPane {
 
     this.mainApp = mainApp;
     this.setStyle("-fx-background-color:white;");
-    recognizer = SpeechRecognizer.getRecognizer();
+    clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    fxClipboard = javafx.scene.input.Clipboard.getSystemClipboard();
     handleAllEvents();
   }
 
@@ -74,16 +80,13 @@ public class InputController extends BorderPane {
 
   @FXML
   public void onKeyPress(KeyEvent event) {
-    handleSpeechRecognition(event);
+    handleIOEvent(event);
     if (Constants.KEY_CLEAR.match(event)) {
       clear();
     } else if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN) {
       getPreviousCommands(event);
       event.consume();
     } else {
-      if (Constants.KEY_PASTE.match(event)) {
-        getClipboardContent();
-      }
       upCount = 0;
     }
     mainApp.handleKeyPress(this, event.getCode(), inputCommandBar.getText());
@@ -167,28 +170,44 @@ public class InputController extends BorderPane {
     }
   }
 
-  void getClipboardContent() {
-    try {
-      String data = (String) Toolkit.getDefaultToolkit().getSystemClipboard()
-              .getData(DataFlavor.stringFlavor);
-      int caretPosition = inputCommandBar.getCaretPosition();
-      inputCommandBar.insertText(caretPosition, data);
-    } catch (HeadlessException | UnsupportedFlavorException | IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+  /**
+   * Handles copy, cut, and paste operation 
+   * @param event
+   */
+  void handleIOEvent(KeyEvent event) {
+    if (Constants.KEY_COPY.match(event)) {
+      copyToClipboard(false);
+    } else if (Constants.KEY_PASTE.match(event)) {
+      getClipboardContent();
+      event.consume();
+    } else if (Constants.KEY_CUT.match(event)) {
+      
     }
   }
-  
-  void handleSpeechRecognition(KeyEvent event) {
-    if (Constants.KEY_PLAY.match(event)) {
-      System.out.println("Start recording");
-      recognizer.startRecording(true);
-    } else if (Constants.KEY_STOP.match(event)) {
-      System.out.println("Stop recording");
-      SpeechResult result = recognizer.getResult();
-      for (WordResult word : result.getWords()) {
-        System.out.println(word);
-      }
+
+  /**
+   * Handles cut and copy operation
+   * @param isCut determines whether selected text will be removed
+   */
+  public void copyToClipboard(boolean isCut) {
+    /*
+    ClipboardContent content = new ClipboardContent();
+    content.putString(inputCommandBar.getSelectedText());
+    fxClipboard.setContent(content);
+    */
+    if (isCut) {
+      inputCommandBar.cut();
+    } else {
+      inputCommandBar.copy();
+    }
+  }
+
+  void getClipboardContent() {
+    String data; // To be displayed message
+    if (fxClipboard.hasString()) {
+      data = fxClipboard.getString();
+      int caretPosition = inputCommandBar.getCaretPosition();
+      inputCommandBar.insertText(caretPosition, data);
     }
   }
 

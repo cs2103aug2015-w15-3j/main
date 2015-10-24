@@ -146,7 +146,13 @@ public class Constants {
   public static final KeyCodeCombination KEY_REDO = new KeyCodeCombination(KeyCode.Y,   //Redo shortcut
       KeyCombination.CONTROL_DOWN);
 
-  public static final KeyCodeCombination KEY_CLEAR = new KeyCodeCombination(KeyCode.C,  //Clear shortcut
+  public static final KeyCodeCombination KEY_CLEAR = new KeyCodeCombination(KeyCode.R,  //Clear shortcut
+      KeyCombination.CONTROL_DOWN);
+
+  public static final KeyCodeCombination KEY_COPY = new KeyCodeCombination(KeyCode.C,  //Copy shortcut
+      KeyCombination.CONTROL_DOWN);
+
+  public static final KeyCodeCombination KEY_CUT = new KeyCodeCombination(KeyCode.X,  //Cut shortcut
       KeyCombination.CONTROL_DOWN);
 
   public static final KeyCodeCombination KEY_PASTE = new KeyCodeCombination(KeyCode.V,  //Paste shortcut
