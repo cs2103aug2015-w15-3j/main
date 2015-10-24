@@ -4,7 +4,7 @@
   <groupId>Raijin</groupId>
   <artifactId>Raijin</artifactId>
   <name>Raijin</name>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.2.5</version>
   <description>A desktop todo manager application</description>
   <build>
     <sourceDirectory>src/main/</sourceDirectory>
@@ -120,16 +120,6 @@
       </plugin>
     </plugins>
   </build>
-  <repositories>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots />
-      <id>snapshots-repo</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
-  </repositories>
   <properties>
     <skipTests>false</skipTests>
     <skipUTs>${skipTests}</skipUTs>
