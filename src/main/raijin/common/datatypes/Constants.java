@@ -31,7 +31,7 @@ public class Constants {
   public static final String FEEDBACK_INFO_SUCCESS = "Operation is successful.";
   public static final String FEEDBACK_ADD_SUCCESS = "You have added the task(s) successfully";
   public static final String FEEDBACK_ADD_FAILURE = "Some task(s) already exist";
-  public static final String FEEDBACK_EDIT_SUCCESS = "Task ID %d edited successfully.";
+  public static final String FEEDBACK_EDIT_SUCCESS = "Task \"%s\" edited successfully.";
   public static final String FEEDBACK_DELETE_SUCCESS = "You have just deleted \"%s\" !";
   public static final String FEEDBACK_DELETE_FAILURE = "Failed to delete. Task(s) don't exist!";
   public static final String FEEDBACK_DONE_FAILURE = "Failed to mark as done. Task(s) don't exist!";
@@ -44,6 +44,10 @@ public class Constants {
   
   public static final String FEEDBACK_NO_TASK_NAME = "Error: Please specify a name for your task!";
   public static final String FEEDBACK_NO_TASK_ID = "Error: Please specify a task ID!";
+  public static final String FEEDBACK_NO_KEYWORDS = "Error: Please specify keywords to search!";
+  public static final String FEEDBACK_NO_FILEPATH = "Error: Please specify a file path!";
+  public static final String FEEDBACK_INVALID_CMD = "Error: Please use a valid command!";
+  public static final String FEEDBACK_INVALID_ID = "Error: Please specify a number for the task ID!";
   public static final String FEEDBACK_INVALID_DATE = "Error: The date you gave doesn't exist!";
   public static final String FEEDBACK_INVALID_SUBTASK = "Error: Subtask ID needs to be a number!";
   public static final String FEEDBACK_INVALID_PRIORITY = "Error: Invalid priority type!";
@@ -83,16 +87,6 @@ public class Constants {
   // Regex for recognizing date patterns. Available test cases at: http://fiddle.re/56t2j6
   public static final String DATE_PATTERN = "^(0?[1-9]|[12][0-9]|3[01])(\\/|-|\\.)((0?[1-9]|1[012])"
       + "|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)((\\/|-|\\.)(\\d{4}|\\d{2}))?$";
-
-  /*  // Loopholes: 28/29/30 October. Tried to account for leap year.
-  public static final String DATE_PATTERN = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]"
-      + "|(?:jan|mar|may|jul|aug|oct|dec)))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2]"
-      + "|(?:jan|mar|apr|may|jun|jul|aug|sep|oct|nov|dec))\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$"
-      + "|^(?:29(\\/|-|\\.)(?:0?2|(?:feb))\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]"
-      + "|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$"
-      + "|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9]|(?:jan|feb|mar|apr|may|jun|jul|aug|sep))"
-      + "|(?:1[0-2]|(?:oct|nov|dec)))(\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2}))?$";
-      */
   
   public static final String DATE_START_PREPOSITION = "by|at|on|during|from";
   public static final String DATE_END_PREPOSITION = "to|till|until";
@@ -123,19 +117,36 @@ public class Constants {
   
   public static final String HELP_MESSAGE = "\n<----==== Raijin to the Rescue! ====---->"
       + "\nADD <Task Name>\nAdds a task with a specified name.\n"
-      + "ADD <Task Name> <DateTime>\nAdds a task with a specified name and timeline*.\n"
+      + "ADD <Task Name> <DateTime*>\nAdds a task with specified name and timeline.\n"
+      + "ADD <Task Name> <DateTime*> <Tag*> <Priority*>"
+      + "\nAdds a task with specified name, timeline, tag and priority.\n"
       + "\nEDIT <Task ID> <Task Name>\nEdits a task's name based on its associated ID.\n"
-      + "EDIT <Task ID> <DateTime>\nEdits a task's timeline* based on its associated ID.\n"
-      + "EDIT <Task ID> <Task Name> <DateTime>\nEdits both the task's name and timeline*.\n"
+      + "EDIT <Task ID> <DateTime*>\nEdits a task's timeline* based on its associated ID.\n"
+      + "EDIT <Task ID> <Task Name> <DateTime*>\nEdits both the task's name and timeline.\n"
+      + "EDIT <Task ID> <Task Name> <DateTime*> <Tag*> <Priority*>"
+      + "\nEdits the task's name, timeline, tag and priority.\n"
+      + "\nDELETE <Task ID> or <Tag*>\nDelete a task.\n"
+      + "\nDISPLAY <DateTime*> or <Type>"
+      + "\nDisplay list of tasks depending on type or timeline specified.\n"
+      + "Types: \"c\" for completed tasks, \"o\" for overdue tasks,"
+      + " \"f\" for floating tasks and \"a\" for all tasks.\n" 
+      + "Default: Pending tasks.\n"
+      + "\nDONE <Task ID> or <Tag*>\nMark a task as done.\n"
+      + "\nSEARCH <Keywords> <Tag*> <Priority*>"
+      + "\nSearches for tasks based on keywords, tags or priorities.\n"
+      + "\nSET <File path>\nSets a directory as the destination for the storage file.\n"
+      + "\nUNDO/REDO\nUndo a command you previously did (CTRL+Z),"
+      + " or redo a command you undid (CTRL+Y).\n"
       + "\n*DateTime: Can be input in flexible formats. Below are relevant examples:\n"
       + "by 18/3\ton 18/3 1800\tfrom 18/3 1800 to 2000\tfrom 18/3 1800 till 19/3 2000\n"
-      + "\nDONE <Task ID>\nMark a task as done.\n"
-      + "\nDELETE <Task ID>\nDelete a task.\n"
-      + "\nDISPLAY <Date> or <Type>\nDisplay list of tasks depending on type or date specified.\n"
-      + "Type: \"c\" for completed tasks, \"p\" for pending tasks. Default: Pending tasks.\n"
-      + "\nUNDO/REDO\nUndo a command you previously did, or redo a command you undid.";
+      + "*Tag: Tags need to include a \"#\" in front of them. Examples: #work #school\n"
+      + "*Priority: Priorities have 3 options: !l, !m, and !h, which means !low,"
+      + " !medium and !high respectively.\n"
+      + "\n***** KEYBOARD SHORTCUTS *****\nCTRL+SPACE: Hide/Unhiding."
+      + "\nF1/F2: Toggle between display views."
+      + "\nTAB: Autocomplete names, or changes names to ID for EDIT/DELETE/DONE."
+      + "\nUP/DOWN: Cycles through previously executed commands.\n";
 
-  
   //===========================================================================
   // Keyboard shortcuts
   //===========================================================================

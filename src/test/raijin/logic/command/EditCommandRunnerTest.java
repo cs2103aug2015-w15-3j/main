@@ -41,7 +41,8 @@ public class EditCommandRunnerTest {
   @Test
   public void execute_EditTaskName() throws UnableToExecuteCommandException, NoSuchTaskException {
     Status returnStatus = editTask(1, "First entry changed.", null);
-    String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1);
+    String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 
+        "First entry changed.");
     assertEquals(expectedStatusLine, returnStatus.getFeedback());
     assertEquals("First entry changed.", tasksManager.getPendingTask(1).getName());
   }
@@ -49,7 +50,8 @@ public class EditCommandRunnerTest {
   @Test
   public void execute_EditTaskDate() throws NoSuchTaskException, UnableToExecuteCommandException {
     Status returnStatus = editTask(1, null, new DateTime("05/10/2015"));
-    String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1);
+    String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 
+        "First entry.");
     assertEquals(expectedStatusLine, returnStatus.getFeedback());
     assertEquals("2015-10-05", tasksManager.getPendingTask(1).getDateTime()
                 .getStartDate().toString());
@@ -60,7 +62,8 @@ public class EditCommandRunnerTest {
       throws NoSuchTaskException, UnableToExecuteCommandException, FailedToParseException {
     Status returnStatus = editCommandRunner.execute
         (parser.parse("edit 1 First entry changed again. by 5/10"));
-    String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1);
+    String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 
+        "First entry changed again.");
     assertEquals(expectedStatusLine, returnStatus.getFeedback());
     assertEquals("First entry changed again.", tasksManager.getPendingTask(1).getName());
     assertEquals("2016-10-05", tasksManager.getPendingTask(1).getDateTime()
@@ -73,7 +76,8 @@ public class EditCommandRunnerTest {
   public void execute_EditTaskPriorityTag() 
       throws UnableToExecuteCommandException, NoSuchTaskException, FailedToParseException {
     Status returnStatus = editCommandRunner.execute(parser.parse("edit 1 !l #school"));
-    assertEquals(String.format(Constants.FEEDBACK_EDIT_SUCCESS, 1), returnStatus.getFeedback());
+    assertEquals(String.format(Constants.FEEDBACK_EDIT_SUCCESS, "First entry.")
+        , returnStatus.getFeedback());
     assertEquals("l", tasksManager.getPendingTask(1).getPriority());
     assertEquals("school", tasksManager.getPendingTask(1).getTags().pollFirst());
   }
