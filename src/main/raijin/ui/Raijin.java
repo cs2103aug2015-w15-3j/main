@@ -6,6 +6,8 @@ import com.google.common.eventbus.Subscribe;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.subscribers.MainSubscriber;
+import raijin.common.eventbus.events.SetFeedbackEvent;
+import raijin.common.eventbus.events.SetFailureEvent;
 
 import java.awt.AWTException;
 import java.awt.Image;
@@ -49,6 +51,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
 import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.Status;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.Logic;
@@ -198,11 +201,16 @@ public class Raijin extends Application implements NativeKeyListener {
   }
 
   private void handleEnterPress(InputController inputController, String userInput) {
-    String response = logic.executeCommand(userInput).getFeedback();
+      Status result = logic.executeCommand(userInput);
+      Boolean isSuccessful = result.isSuccess();
+	  String response = result.getFeedback();
     if (response.equals("Exiting")) {
       System.exit(0);
-    } else {
-      inputController.setFeedback(response);
+    } else if (!isSuccessful){
+    	System.out.println("yeaup");
+    	eventbus.post(new SetFailureEvent(response));
+	} else {
+    	eventbus.post(new SetFeedbackEvent(response));
     }
   }
 

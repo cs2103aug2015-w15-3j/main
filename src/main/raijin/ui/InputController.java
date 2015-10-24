@@ -1,6 +1,7 @@
 package raijin.ui;
 
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -14,6 +15,7 @@ import raijin.common.datatypes.Constants;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
+import raijin.common.eventbus.events.SetFailureEvent;
 import raijin.common.eventbus.events.SetInputEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import javafx.event.EventHandler;
@@ -82,7 +84,8 @@ public class InputController extends BorderPane {
   }
 
   public void setFeedback(String text) {
-    feedbackBar.setText(text);
+	 // feedbackBar.setTextFill(Color.BLACK);
+	  feedbackBar.setText(text);
   }
 
   public void setInput(String text) {
@@ -97,12 +100,29 @@ public class InputController extends BorderPane {
           @Subscribe
           @Override
           public void handleEvent(SetFeedbackEvent event) {
-            setFeedback(event.output);
-
+              feedbackBar.setTextFill(Color.BLACK);
+        	  setFeedback(event.output);
           }
         };
   }
 
+  public void setFailureFeedback(String text) {
+	 // feedbackBar.setTextFill(Color.RED);
+	  setFeedback(text);
+  }
+  
+  void handleSetFailureEvent() {
+	  MainSubscriber<SetFailureEvent> failureSubscriber =
+	    new MainSubscriber<SetFailureEvent>(eventbus) {
+		 
+		@Subscribe
+		@Override
+		public void handleEvent(SetFailureEvent event) {
+			feedbackBar.setTextFill(Color.RED);
+			setFailureFeedback(event.output);
+		}
+	  };
+  }
   void handleSetInputEvent() {
     MainSubscriber<SetInputEvent> inputSubscriber = new MainSubscriber<SetInputEvent>(eventbus) {
 
@@ -138,6 +158,7 @@ public class InputController extends BorderPane {
 
   void handleAllEvents() {
     handleTabEvent();
+    handleSetFailureEvent();
     handleSetFeedbackEvent();
     handleSetInputEvent();
     handleKeyReleaseEvent();
