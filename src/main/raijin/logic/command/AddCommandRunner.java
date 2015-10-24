@@ -15,7 +15,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
 
   private Task currentTask;                                        //First task 
   private ArrayList<Task> listOfTasks = new ArrayList<Task>();
-  private boolean isSuccess = false;                              //Determinse success of operation
+  private int addedTasks = 0;
 
   void createTasks(ParsedInput input) {
     listOfTasks.clear();
@@ -26,23 +26,27 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
   }
 
   Status createStatus() {
-    return new Status("You have added the task(s) successfully");
+    if (addedTasks > 0) {
+      return new Status("You have added the task(s) successfully");
+    } else {
+      return new Status("Some task(s) already exist");
+    }
   }
 
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
     createTasks(input);
-    Status feedback = createStatus();
     for (Task task : listOfTasks) {
       if (!tasksManager.getPendingTasks().containsValue(task)) {
+        addedTasks++;
         tasksManager.addPendingTask(task);
       }
     }
 
-    if (isSuccess) {
+    if (addedTasks > 0) {
       history.pushCommand(this);
     }
 
-    return feedback;
+    return createStatus();
   }
 
   public void undo() throws UnableToExecuteCommandException {
