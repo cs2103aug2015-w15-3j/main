@@ -29,7 +29,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
     if (addedTasks > 0) {
       return new Status("You have added the task(s) successfully");
     } else {
-      return new Status("Some task(s) already exist");
+      return new Status("Some task(s) already exist", false);
     }
   }
 

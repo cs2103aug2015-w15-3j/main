@@ -33,7 +33,7 @@ public class DoneCommandRunner extends CommandRunner implements UndoableRedoable
 	}
 	
 	if (idsToDone.isEmpty()) {
-      return new Status(Constants.FEEDBACK_DONE_FAILURE);
+      return new Status(Constants.FEEDBACK_DONE_FAILURE, false);
     }
 
 	logger.debug(idsToDone.toString());

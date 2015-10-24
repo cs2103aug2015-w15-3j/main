@@ -71,7 +71,7 @@ public class SearchCommandRunner extends CommandRunner {
     inputPriority = input.getPriority();            //Update priority
     List<Task> filtered = new ArrayList<Task>();
     if (isInvalidInput(input)) {
-      return new Status("No argument given to search");
+      return new Status("No argument given to search", false);
     }
     HashMap<Integer, Task> pendingTasks = tasksManager.getPendingTasks();
     createTask(input);

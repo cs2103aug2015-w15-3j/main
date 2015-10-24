@@ -2,7 +2,7 @@ package raijin.common.datatypes;
 
 public class Status {
   
-  private boolean isSuccess = false;    //Indicates success of an operation
+  private boolean isSuccess = true;    //Indicates success of an operation
   private String result;                //To be displayed in Display View
   private String feedback;              //Message feedback to user 
 
@@ -11,10 +11,16 @@ public class Status {
     this.feedback = feedback;
   }
 
-  /*Alternative for those commands that require display*/
+  /*Alternative for those commands to show error*/
   public Status(String feedback, String result){
     this.feedback = feedback;
     this.result = result;
+  }
+
+  /*Alternative for those commands to show error*/
+  public Status(String feedback, boolean isSuccess) {
+    this.feedback = feedback;
+    this.isSuccess = isSuccess;
   }
 
   public String getResult() {

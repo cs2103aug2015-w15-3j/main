@@ -34,7 +34,7 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
     }
 
     if (idsToDelete.isEmpty()) {
-      return new Status(Constants.FEEDBACK_DELETE_FAILURE);
+      return new Status(Constants.FEEDBACK_DELETE_FAILURE, false);
     }
 
     while(!idsToDelete.isEmpty()) {
