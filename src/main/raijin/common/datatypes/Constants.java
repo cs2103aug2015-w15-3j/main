@@ -39,8 +39,7 @@ public class Constants {
   public static final String FEEDBACK_REDO_SUCCESS = "Redo successfully";
   public static final String FEEDBACK_ERROR_FAILEDPARSING = "Failed to parse \"%s\"";
   public static final String FEEDBACK_ERROR_FAILEDCOMMAND = "Failed to execute \"%s\" command";
-  public static final String FEEDBACK_DONE_SUCCESS = "Nicely done! You have completed the task "
-      + "\"%s\". Give yourself a pat on the back!";
+  public static final String FEEDBACK_DONE_SUCCESS = "Nicely done! Give yourself a pat on the back!";
   
   public static final String FEEDBACK_NO_TASK_NAME = "Error: Please specify a name for your task!";
   public static final String FEEDBACK_NO_TASK_ID = "Error: Please specify a task ID!";
