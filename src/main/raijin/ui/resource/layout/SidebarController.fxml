@@ -1,30 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<fx:root type="BorderPane" maxWidth="-Infinity" prefHeight="-1.0" prefWidth="100.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<fx:root maxWidth="-Infinity" prefHeight="-1.0" prefWidth="150.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <center>
-    <VBox prefHeight="-1.0" prefWidth="100.0">
+    <VBox prefHeight="125.0" prefWidth="200.0" spacing="4.0" style="-fx-background-color: #ffffff;">
       <children>
-        <Button fx:id="today" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" 
-        onAction="#handleTodayButtonAction" text="Today" wrapText="true" VBox.vgrow="ALWAYS" 
-        onKeyPressed="#handleTodayButtonKeyAction" />
-        <Button fx:id="tomorrow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" 
-        onAction="#handleTomorrowButtonAction" text="Tomorrow" wrapText="true" VBox.vgrow="ALWAYS" 
-        onKeyPressed="#handleTomorrowButtonKeyAction"/>
-        <Button fx:id="nextWeek" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" 
-        onAction="#handleNextWeekButtonAction" text="Next Week" wrapText="true" VBox.vgrow="ALWAYS" 
-        onKeyPressed="#handleNextWeekButtonKeyAction"/>
-        <Button fx:id="projects" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" 
-        onAction="#handleProjectsButtonAction" text="Projects" wrapText="true" VBox.vgrow="ALWAYS" 
-        onKeyPressed="#handleProjectsButtonKeyAction"/>
-        <Button fx:id="completed" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" 
-        onAction="#handleCompletedButtonAction" text="Completed" wrapText="true" VBox.vgrow="ALWAYS" 
-        onKeyPressed="#handleCompletedButtonKeyAction"/>
+        <Button fx:id="today" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTodayButtonAction" onKeyPressed="#handleTodayButtonKeyAction" prefHeight="25.0" prefWidth="136.0" style="-fx-background-color: #ffffff;" text="today" wrapText="true" VBox.vgrow="NEVER">
+               <font>
+                  <Font name="Droid Sans Mono" size="18.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets></Button>
+        <Button fx:id="tomorrow" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTomorrowButtonAction" onKeyPressed="#handleTomorrowButtonKeyAction" style="-fx-background-color: #ffffff;" text="tomorrow" wrapText="true" VBox.vgrow="NEVER">
+               <font>
+                  <Font name="Droid Sans Mono" size="18.0" />
+               </font></Button>
+        <Button fx:id="nextWeek" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleNextWeekButtonAction" onKeyPressed="#handleNextWeekButtonKeyAction" style="-fx-background-color: #ffffff;" text="next week" wrapText="true" VBox.vgrow="NEVER">
+               <font>
+                  <Font name="Droid Sans Mono" size="18.0" />
+               </font></Button>
+        <Button fx:id="projects" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleProjectsButtonAction" onKeyPressed="#handleProjectsButtonKeyAction" style="-fx-background-color: #ffffff;" text="overdue" wrapText="true" VBox.vgrow="NEVER">
+               <font>
+                  <Font name="Droid Sans Mono" size="18.0" />
+               </font></Button>
+        <Button fx:id="completed" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleCompletedButtonAction" onKeyPressed="#handleCompletedButtonKeyAction" style="-fx-background-color: #ffffff;" text="completed" wrapText="true" VBox.vgrow="NEVER">
+               <font>
+                  <Font name="Droid Sans Mono" size="18.0" />
+               </font></Button>
       </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
     </VBox>
   </center>
 </fx:root>
