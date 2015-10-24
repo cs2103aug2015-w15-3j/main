@@ -29,11 +29,11 @@ public class EditParser {
     try {
       id = Integer.parseInt(wordsOfInput[1]);
     } catch (NumberFormatException e) {
-      throw new IllegalCommandArgumentException("Invalid task number format.",
-                                                Constants.CommandParam.ID);
+      throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ID,
+          Constants.CommandParam.ID);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalCommandArgumentException("Please specify task to edit!",
-                                                Constants.CommandParam.ID);
+      throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_TASK_ID,
+          Constants.CommandParam.ID);
     }
     
     // Deletes taskID from wordsOfInput and makes use of parseAddTask() method.

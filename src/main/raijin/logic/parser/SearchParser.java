@@ -23,8 +23,8 @@ public class SearchParser {
   
   public ParsedInput.ParsedInputBuilder process() throws IllegalCommandArgumentException {
     if (wordsOfInput.length < 2) {
-      throw new IllegalCommandArgumentException("Please specify keywords to search!",
-                                                Constants.CommandParam.NAME);
+      throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_KEYWORDS,
+          Constants.CommandParam.NAME);
     }
     
     for (int i = 1; i < wordsOfInput.length; i++) {

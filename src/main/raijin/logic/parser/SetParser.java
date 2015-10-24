@@ -17,7 +17,7 @@ public class SetParser {
     try {
       return builder.helperOption(wordsOfInput[1]);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalCommandArgumentException("Please specify file path!",
+      throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_FILEPATH,
           Constants.CommandParam.HELPEROPTION);
     }
   }

@@ -14,9 +14,6 @@ import raijin.common.exception.FailedToParseException;
 
 public class SimpleParser implements ParserInterface {
   
-  private static final String datePattern = Constants.DATE_PATTERN;
-  private static final DateTimeFormat dtFormat = new DateTimeFormat();
-  
   private String[] wordsOfInput;
   private ParsedInput.ParsedInputBuilder builder;
   
@@ -56,7 +53,7 @@ public class SimpleParser implements ParserInterface {
       } else if (isFirstWord("search")) {
         builder = new SearchParser(wordsOfInput).process();
       } else {
-        throw new IllegalCommandException("Invalid command input.", wordsOfInput[0]);
+        throw new IllegalCommandException(Constants.FEEDBACK_INVALID_CMD, wordsOfInput[0]);
       }
     } catch (IllegalCommandException e1) {
       throw new FailedToParseException(e1.getMessage(), userInput, e1);

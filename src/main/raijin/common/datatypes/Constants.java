@@ -44,6 +44,10 @@ public class Constants {
   
   public static final String FEEDBACK_NO_TASK_NAME = "Error: Please specify a name for your task!";
   public static final String FEEDBACK_NO_TASK_ID = "Error: Please specify a task ID!";
+  public static final String FEEDBACK_NO_KEYWORDS = "Error: Please specify keywords to search!";
+  public static final String FEEDBACK_NO_FILEPATH = "Error: Please specify a file path!";
+  public static final String FEEDBACK_INVALID_CMD = "Error: Please use a valid command!";
+  public static final String FEEDBACK_INVALID_ID = "Error: Please specify a number for the task ID!";
   public static final String FEEDBACK_INVALID_DATE = "Error: The date you gave doesn't exist!";
   public static final String FEEDBACK_INVALID_SUBTASK = "Error: Subtask ID needs to be a number!";
   public static final String FEEDBACK_INVALID_PRIORITY = "Error: Invalid priority type!";
