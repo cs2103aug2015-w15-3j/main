@@ -40,10 +40,10 @@ public class AddParser {
     currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HHmm"));
     currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     
-    if (wordsOfInput.length < 2) {
+    if (type == 0 && wordsOfInput.length < 2) {
       throw new IllegalCommandArgumentException("Please specify a task name!",
           Constants.CommandParam.NAME);
-    }
+    }  
   }
   
   /**
@@ -223,7 +223,7 @@ public class AddParser {
             name += " ";
           }
         }
-        if (name.length() == 0 && parseType != 1) {
+        if (name.length() == 0 && parseType == 0) {
           throw new IllegalCommandArgumentException("Please specify a task name!",
                                                     Constants.CommandParam.NAME);
         }

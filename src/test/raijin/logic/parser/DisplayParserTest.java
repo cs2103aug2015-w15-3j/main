@@ -18,6 +18,12 @@ public class DisplayParserTest {
   }
   
   @Test
+  public void testDefaultDisplay() throws FailedToParseException {
+    displayCommand = parser.parse("display");
+    assertEquals("p", displayCommand.getDisplayOptions());
+  }
+  
+  @Test
   public void parseDisplayDate() throws FailedToParseException {
     displayCommand = parser.parse("display 1.1");
     assertEquals("p", displayCommand.getDisplayOptions());
