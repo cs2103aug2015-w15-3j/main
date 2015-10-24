@@ -31,7 +31,7 @@ public class Constants {
   public static final String FEEDBACK_INFO_SUCCESS = "Operation is successful.";
   public static final String FEEDBACK_ADD_SUCCESS = "You have added the task(s) successfully";
   public static final String FEEDBACK_ADD_FAILURE = "Some task(s) already exist";
-  public static final String FEEDBACK_EDIT_SUCCESS = "Task ID %d edited successfully.";
+  public static final String FEEDBACK_EDIT_SUCCESS = "Task \"%s\" edited successfully.";
   public static final String FEEDBACK_DELETE_SUCCESS = "You have just deleted \"%s\" !";
   public static final String FEEDBACK_DELETE_FAILURE = "Failed to delete. Task(s) don't exist!";
   public static final String FEEDBACK_DONE_FAILURE = "Failed to mark as done. Task(s) don't exist!";
