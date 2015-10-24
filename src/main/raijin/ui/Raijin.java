@@ -251,7 +251,7 @@ public class Raijin extends Application implements NativeKeyListener {
   @Override
   public void nativeKeyPressed(NativeKeyEvent arg0) {
     boolean isCtrlHPressed =
-        arg0.getKeyCode() == NativeKeyEvent.VC_H
+        arg0.getKeyCode() == NativeKeyEvent.VC_SPACE
             && NativeInputEvent.getModifiersText(arg0.getModifiers()).equals("Ctrl");
 
     if (isCtrlHPressed && isVisible) {
