@@ -1,6 +1,7 @@
 package raijin.common.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
@@ -168,7 +169,9 @@ public class TaskUtils {
   }
   
   public static List<Task> getTasksList(HashMap<Integer, Task> tasks) {
-    return new ArrayList<Task>(tasks.values());
+    List<Task> result = new ArrayList<Task>(tasks.values());
+    Collections.sort(result);
+    return result;
   }
 
   /*Exclude floating tasks*/

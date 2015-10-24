@@ -71,7 +71,7 @@ public class SearchCommandRunner extends CommandRunner {
     }
     HashMap<Integer, Task> pendingTasks = tasksManager.getPendingTasks();
     createTask(input);
-    ArrayList<Task> tempList = new ArrayList<Task>(pendingTasks.values());
+    ArrayList<Task> tempList = (ArrayList<Task>) TaskUtils.getTasksList(pendingTasks);
     filtered = getTasksWithMatchedKeyword(tempList);
     eventbus.post(new SetCurrentDisplayEvent(filtered, 
         String.format(DISPLAY_MESSAGE,filtered.size())));

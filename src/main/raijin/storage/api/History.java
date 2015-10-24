@@ -14,6 +14,7 @@ import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.EventBus;
 import raijin.common.utils.RaijinLogger;
+import raijin.common.utils.TaskUtils;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.api.UndoableRedoable;
 
@@ -39,8 +40,8 @@ public class History {
     EventBus.getEventBus().setCurrentTasks(new ArrayList<Task>(
         tasksManager.getPendingTasks().values()));
         */
-    RaijinEventBus.getEventBus().post(new SetCurrentDisplayEvent(new ArrayList<Task>(
-        tasksManager.getPendingTasks().values())));
+    RaijinEventBus.getEventBus().post(new SetCurrentDisplayEvent(TaskUtils
+        .getTasksList(tasksManager.getPendingTasks())));
     Session.getSession().commit();
   }
 
