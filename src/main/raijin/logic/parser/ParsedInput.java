@@ -24,7 +24,7 @@ public class ParsedInput {
   private String displayOptions;                  
   private TreeSet<String> tags = new TreeSet<String>();
   private int subTaskOf = 0;                                     //Default to sentinel value 0
-  private String priority = Constants.PRIORITY_MID;              //Default to medium priority
+  private String priority;              
   private String helperOption;                                   //Stores argument for helper command
   private String project;
 
@@ -137,7 +137,7 @@ public class ParsedInput {
     private String displayOptions;
     private TreeSet<String> tags = new TreeSet<String>();
     private int subTaskOf;
-    private String priority = Constants.PRIORITY_MID;
+    private String priority;
     private String helperOption;
     private String project;
     

@@ -19,6 +19,7 @@ import raijin.logic.parser.ParsedInput;
 public class SearchCommandRunner extends CommandRunner {
 
   private Task currentTask;
+  private String inputPriority;
   private static final int MAX_TAGS = 3;            //Maximum amount of tags displayed
   private static final int MAX_KEYWORDS = 6;        //Maximum keyword of tags displayed
   private static final String DISPLAY_MESSAGE = "Search results: %d found";
@@ -51,12 +52,14 @@ public class SearchCommandRunner extends CommandRunner {
   }
 
   public boolean matchOnlyTags(Task task, TreeSet<String> tags) {
-    return CollectionUtils.intersection(tags, task.getTags()).size() == tags.size();
+    return handlePriority(task) && CollectionUtils.intersection(
+        tags, task.getTags()).size() == tags.size();
   }
 
   public boolean matchOnlyKeyword(ArrayList<String> source, Task task) {
     ArrayList<String> target = task.getKeywords();
-    return CollectionUtils.intersection(target,source).size() == source.size();
+    return handlePriority(task) && CollectionUtils.intersection(
+        target,source).size() == source.size();
   }
 
   boolean isInvalidInput(ParsedInput input) {
@@ -65,6 +68,7 @@ public class SearchCommandRunner extends CommandRunner {
 
   @Override
   protected Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
+    inputPriority = input.getPriority();            //Update priority
     List<Task> filtered = new ArrayList<Task>();
     if (isInvalidInput(input)) {
       return new Status("No argument given to search");
@@ -85,5 +89,14 @@ public class SearchCommandRunner extends CommandRunner {
         x -> isMatchedKeywords(keywords, x)).collect(Collectors.toList());
     return filtered;
   }
+
+  boolean handlePriority(Task task) {
+    if (inputPriority == null) {
+      return true;
+    } else {
+      return task.getPriority().equals(inputPriority);
+    }
+  }
+
 
 }
