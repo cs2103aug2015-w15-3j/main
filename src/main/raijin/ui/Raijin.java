@@ -27,6 +27,8 @@ import javax.swing.ImageIcon;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -97,6 +99,7 @@ public class Raijin extends Application implements NativeKeyListener {
     this.stage.show();
     this.isVisible = true;
 
+    /*
     this.stage.widthProperty().greaterThan(750).addListener((obs, oldValue, newValue) -> {
       if (!newValue) {
         changeToMinimisedView();
@@ -104,7 +107,9 @@ public class Raijin extends Application implements NativeKeyListener {
         changeToMaximisedView();
       }
     });
+    */
 
+    handleMaximized();                          //Handle simple & advanced mode
     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
       public void handle(WindowEvent we) {
         logic.executeCommand("exit");
@@ -288,5 +293,19 @@ public class Raijin extends Application implements NativeKeyListener {
   void turnOffLogger() {
     Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
     logger.setLevel(Level.OFF);
+  }
+  
+  void handleMaximized() {
+    stage.maximizedProperty().addListener(new ChangeListener<Boolean>() {
+
+    @Override
+    public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
+        if (t1.booleanValue()) {    //If maximized
+          changeToMaximisedView();
+        } else {
+          changeToMinimisedView();
+        }
+    }
+});
   }
 }
