@@ -11,7 +11,7 @@ public class Status {
     this.feedback = feedback;
   }
 
-  /*Alternative for those commands to show error*/
+  /*Alternative for those commands to show error or for help command*/
   public Status(String feedback, String result){
     this.feedback = feedback;
     this.result = result;
