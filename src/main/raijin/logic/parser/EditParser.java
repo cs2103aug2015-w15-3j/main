@@ -37,13 +37,17 @@ public class EditParser {
     }
     
     // Deletes taskID from wordsOfInput and makes use of parseAddTask() method.
+    extractID();
+    return new AddParser(builder, wordsOfInput, 1).process().id(id);
+  }
+
+  public void extractID() {
     String[] newWordsOfInput = new String[wordsOfInput.length-1];
     newWordsOfInput[0] = "edit";
     for (int i = 1; i < newWordsOfInput.length; i++) {
       newWordsOfInput[i] = wordsOfInput[i+1];
     }
     wordsOfInput = newWordsOfInput;
-    return new AddParser(builder, wordsOfInput, 1).process().id(id);
   }
   
 }

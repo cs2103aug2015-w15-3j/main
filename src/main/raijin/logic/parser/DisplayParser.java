@@ -28,13 +28,16 @@ public class DisplayParser {
    * @returns   ParsedInputBuilder                  Appropriate ParsedInputBuilders accordingly.
    * @throws    IllegalCommandArgumentException
    */
-  public ParsedInput.ParsedInputBuilder process() throws IllegalCommandArgumentException {
+  public ParsedInput.ParsedInputBuilder process() throws IllegalCommandArgumentException {  
+
+    int indexOfDate = 0;
     String displayType = "p";
-    for (int i = 1; i < wordsOfInput.length; i++) {
-      if (wordsOfInput[i].matches(datePattern)) {
-        builder.dateTime(new DateTime(dtFormat.formatDate(wordsOfInput[i], 1)));
-      } else if (wordsOfInput[i].matches("pending|p|today")) {
-        displayType = "p";
+    boolean containsDate = false;
+    
+    for (int i = 0; i < wordsOfInput.length; i++) {   
+      if (wordsOfInput[i].matches(datePattern) && !containsDate) {
+        indexOfDate = i;
+        containsDate = true;
       } else if (wordsOfInput[i].matches("completed|done|c")) {
         displayType = "c";
       } else if (wordsOfInput[i].matches("all|everything|a")) {
@@ -43,8 +46,31 @@ public class DisplayParser {
         displayType = "o";
       } else if (wordsOfInput[i].matches("floating|f")) {
         displayType = "f";
-      }
+      } 
     }
-    return builder.displayOptions(displayType);
+    
+    // If date input exists, add date preposition inside so as to make use of AddParser's parsing.
+    if (indexOfDate > 0) {
+      addDateStartPreposition(indexOfDate);
+    }
+    
+    ParsedInput parsed = new AddParser(builder, wordsOfInput, 2).process().createParsedInput();
+    
+    return builder.displayOptions(displayType).dateTime(parsed.getDateTime());
+  }
+  
+  public void addDateStartPreposition(int indexOfDate) {
+    String[] newWordsOfInput = new String[wordsOfInput.length+1];
+    newWordsOfInput[0] = "display";
+    for (int i = 1; i < indexOfDate; i++) {
+      newWordsOfInput[i] = wordsOfInput[i];
+    }
+    
+    newWordsOfInput[indexOfDate] = "by";
+    
+    for (int i = indexOfDate+1; i < newWordsOfInput.length; i++) {
+      newWordsOfInput[i] = wordsOfInput[i-1];
+    }
+    wordsOfInput = newWordsOfInput;
   }
 }

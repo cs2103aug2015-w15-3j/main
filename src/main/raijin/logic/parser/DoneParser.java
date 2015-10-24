@@ -29,7 +29,7 @@ public class DoneParser {
    */
   public ParsedInput.ParsedInputBuilder process() throws IllegalCommandArgumentException {
     if (wordsOfInput.length < 2) {
-      throw new IllegalCommandArgumentException("Please specify task to delete!",
+      throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_TASK_ID,
           Constants.CommandParam.ID);
     }
     

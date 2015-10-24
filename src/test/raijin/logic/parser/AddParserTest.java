@@ -192,7 +192,7 @@ public class AddParserTest {
   @Test(expected=IllegalCommandArgumentException.class)
   public void testInvalidEndTimeAfterStartDateTimeEndDate() throws IllegalCommandArgumentException {
     String[] wordsOfInput = new String
-                            ("add finish something from 27-DEC 1800 to 28.12 00").split(" ");
+        ("add finish something from 27-DEC 1800 to 28.12 00").split(" ");
     new AddParser(builder, wordsOfInput, 0).process();
   }
   

@@ -21,7 +21,7 @@ public class AddParser {
   private TreeSet<String> names;
   private String currentTime;
   private String currentDate;
-  private int parseType; // 0 for add, 1 for edit.
+  private int parseType; // 0 for add, 1 for edit, 2 for display.
   private boolean containsPriority;
   
   private static final String datePattern = Constants.DATE_PATTERN;
@@ -40,10 +40,10 @@ public class AddParser {
     currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HHmm"));
     currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     
-    if (wordsOfInput.length < 2) {
-      throw new IllegalCommandArgumentException("Please specify a task name!",
+    if (type == 0 && wordsOfInput.length < 2) {
+      throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_TASK_NAME,
           Constants.CommandParam.NAME);
-    }
+    }  
   }
   
   /**
@@ -79,8 +79,8 @@ public class AddParser {
           } else if (i < wordsOfInput.length-2 && !wordsOfInput[i+2].matches(timePattern)
               && !wordsOfInput[i+2].matches(Constants.DATE_END_PREPOSITION) 
               && !wordsOfInput[i+2].equals(";") && !wordsOfInput[i+2].matches(Constants.PREFIXES)){
-            throw new IllegalCommandArgumentException("Invalid start time format.",
-                                                      Constants.CommandParam.DATETIME); 
+            throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_STARTTIME,
+                Constants.CommandParam.DATETIME); 
           }
 
           
@@ -91,8 +91,8 @@ public class AddParser {
               containsEndDate = true;
               endDate = wordsOfInput[i+3];
             } else {
-              throw new IllegalCommandArgumentException("Invalid end date format.",
-                                                        Constants.CommandParam.DATETIME); 
+              throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDDATE,
+                  Constants.CommandParam.DATETIME); 
             }
           }
           
@@ -105,8 +105,8 @@ public class AddParser {
               containsEndDate = true;
               endDate = wordsOfInput[i+4];
             } else {
-              throw new IllegalCommandArgumentException("Invalid end date format.",
-                                                        Constants.CommandParam.DATETIME); 
+              throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDDATE,
+                  Constants.CommandParam.DATETIME); 
             }
             
             // startDate startTime endDate {endTime}
@@ -114,8 +114,8 @@ public class AddParser {
               containsEndTime = true;
               endTime = wordsOfInput[i+5];
             } else {
-              throw new IllegalCommandArgumentException("Invalid end time format.",
-                                                        Constants.CommandParam.DATETIME); 
+              throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
+                  Constants.CommandParam.DATETIME); 
             } 
             
           } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && 
@@ -126,8 +126,8 @@ public class AddParser {
               containsEndTime = true;
               endTime = wordsOfInput[i+4];
             } else {
-              throw new IllegalCommandArgumentException("Invalid end time format.",
-                                                        Constants.CommandParam.DATETIME); 
+              throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
+                  Constants.CommandParam.DATETIME); 
             } 
             
           }
@@ -145,8 +145,8 @@ public class AddParser {
               containsEndTime = true;
               endTime = wordsOfInput[i+3];
             } else {
-              throw new IllegalCommandArgumentException("Invalid end time format.",
-                                                        Constants.CommandParam.DATETIME); 
+              throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
+                  Constants.CommandParam.DATETIME); 
             } 
           }
           
@@ -168,8 +168,8 @@ public class AddParser {
         } else if (priority.matches("l|low")) {
           builder.priority(Constants.PRIORITY_LOW);
         } else {
-          throw new IllegalCommandArgumentException("Invalid priority input.",
-                                                    Constants.CommandParam.PRIORITY);
+          throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_PRIORITY,
+              Constants.CommandParam.PRIORITY);
         }
       }
       
@@ -207,8 +207,8 @@ public class AddParser {
         try {
           builder.subTaskOf(Integer.parseInt(id));
         } catch (NumberFormatException e) {
-          throw new IllegalCommandArgumentException("Invalid subtask input",
-                                                    Constants.CommandParam.SUBTASKOF);
+          throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_SUBTASK,
+              Constants.CommandParam.SUBTASKOF);
         }
       }
       
@@ -223,9 +223,9 @@ public class AddParser {
             name += " ";
           }
         }
-        if (name.length() == 0 && parseType != 1) {
-          throw new IllegalCommandArgumentException("Please specify a task name!",
-                                                    Constants.CommandParam.NAME);
+        if (name.length() == 0 && parseType == 0) {
+          throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_TASK_NAME,
+              Constants.CommandParam.NAME);
         }
         names.add(name);
         name = "";
@@ -245,14 +245,22 @@ public class AddParser {
       }
     }
     
-    if (name.length() == 0 && parseType != 1) {
-      throw new IllegalCommandArgumentException("Please specify a task name!",
-                                                Constants.CommandParam.NAME);
+    if (name.length() == 0 && parseType == 0) {
+      throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_TASK_NAME, 
+          Constants.CommandParam.NAME);
     } 
     names.add(name);
     
-    startDate = dtFormat.formatDate(startDate,0);
-    endDate = dtFormat.formatDate(endDate,0);
+    // Check if type of parsing is for display or not. 
+    // If it is for display, no need to check if date has already passed.
+    if (parseType != 2) {
+      startDate = dtFormat.formatDate(startDate,0);
+      endDate = dtFormat.formatDate(endDate,0);
+    } else {
+      startDate = dtFormat.formatDate(startDate,1);
+      endDate = dtFormat.formatDate(endDate,1);
+    }
+    
     startTime = dtFormat.formatTime(startTime);
     endTime = dtFormat.formatTime(endTime);
     
@@ -297,7 +305,7 @@ public class AddParser {
     if (dateTime.getStartDate().getDayOfMonth() != startDay ||
         dateTime.getEndDate().getDayOfMonth() != endDay) {
       throw new IllegalCommandArgumentException(
-                "Date doesn't exist.", Constants.CommandParam.DATETIME);
+          Constants.FEEDBACK_INVALID_DATE, Constants.CommandParam.DATETIME);
     }
   }
   
@@ -313,7 +321,7 @@ public class AddParser {
     int startDay = Integer.parseInt(startDate.split(dateOperator)[0]);
     if (dateTime.getStartDate().getDayOfMonth() != startDay) {
       throw new IllegalCommandArgumentException(
-          "Date doesn't exist.", Constants.CommandParam.DATETIME);
+          Constants.FEEDBACK_INVALID_DATE, Constants.CommandParam.DATETIME);
     }
   }
 }

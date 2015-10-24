@@ -42,6 +42,16 @@ public class Constants {
   public static final String FEEDBACK_DONE_SUCCESS = "Nicely done! You have completed the task "
       + "\"%s\". Give yourself a pat on the back!";
   
+  public static final String FEEDBACK_NO_TASK_NAME = "Error: Please specify a name for your task!";
+  public static final String FEEDBACK_NO_TASK_ID = "Error: Please specify a task ID!";
+  public static final String FEEDBACK_INVALID_DATE = "Error: The date you gave doesn't exist!";
+  public static final String FEEDBACK_INVALID_SUBTASK = "Error: Subtask ID needs to be a number!";
+  public static final String FEEDBACK_INVALID_PRIORITY = "Error: Invalid priority type!";
+  public static final String FEEDBACK_INVALID_STARTTIME = "Error: Invalid start time format!";
+  public static final String FEEDBACK_INVALID_ENDDATE = "Error: Invalid end date format!";
+  public static final String FEEDBACK_INVALID_ENDTIME = "Error: Invalid end time format!";
+  
+  
   //===========================================================================
   // Datatypes Constants
   //===========================================================================
