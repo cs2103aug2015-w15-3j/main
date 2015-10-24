@@ -173,8 +173,9 @@ public class Task implements Comparable<Task> {
       type = Constants.TYPE_TASK.FLOATING;
     } else {
       
-      if (dateTime.getEndTime() == null
-          || dateTime.getStartTime().equals(dateTime.getEndTime())) {
+      if (dateTime.getStartTime() == null || dateTime.getStartTime().equals(
+          dateTime.getEndTime())
+        && dateTime.getStartDate().equals(dateTime.getEndDate())) {
         type = Constants.TYPE_TASK.SPECIFIC;
       } else {
         type = Constants.TYPE_TASK.EVENT;
@@ -207,23 +208,7 @@ public int compareTo(Task other) {
 		
 		// Case #4: both tasks are not floating.
 		else {
-			LocalDate thisDate = this.getDateTime().getEndDate();
-			LocalDate otherDate = other.getDateTime().getEndDate();
-			
-			// Case #5: both tasks have same end date.
-			if (thisDate.compareTo(otherDate) == 0) {
-				// TODO change these back to getEndTime once parser is finalised.
-				LocalTime thisTime = this.getDateTime().getStartTime();
-				LocalTime otherTime = other.getDateTime().getStartTime();
-				
-				return thisTime.compareTo(otherTime);
-				
-			} 
-			
-			// Case #6: both tasks have different dates.
-			else {
-				return thisDate.compareTo(otherDate);
-			}
+		  return this.getDateTime().compareTo(other.getDateTime());
 		}
 	}
 }

@@ -55,9 +55,9 @@ public class DateFilter extends TaskFilter {
     //To return all pending tasks
     if (limit == null) {
       return true;
-    } else if (limit.getStartTime() == null) {
+    } else if (limit.getEndTime() == null) {
       return isMatchedDate(target);
-    } else if (limit.getStartDate() == null) {
+    } else if (limit.getEndDate() == null) {
       return isMatchedTime(target);
     } else {
       return isMatchedDate(target) && isMatchedTime(target);
@@ -65,24 +65,24 @@ public class DateFilter extends TaskFilter {
   }
 
   boolean isMatchedDate(DateTime target) {
-    if (limit.getEndDate() == null) {
-      //Compares start of deadline date
-      return limit.getStartDate().equals(target.getStartDate());
+    if (limit.getStartDate() == null) {
+      //Compares specific date
+      return limit.getEndDate().equals(target.getEndDate());
     } else {
       //Compare for bounded period of date
-      return target.getEndDate() != null 
+      return target.getStartDate() != null 
           && limit.getStartDate().compareTo(target.getStartDate()) <= 0
           && limit.getEndDate().compareTo(target.getEndDate()) >= 0;
     }
   }
   
   boolean isMatchedTime(DateTime target) {
-    if (limit.getEndTime() == null) {
-      //Compares start of deadline time
-      return limit.getStartTime().equals(target.getStartTime());
+    if (limit.getStartTime() == null) {
+      //Compares specific time 
+      return limit.getEndTime().equals(target.getEndTime());
     } else {
       //Compare for bounded period of time
-      return target.getEndTime() != null 
+      return target.getStartTime() != null 
           && limit.getStartTime().compareTo(target.getStartTime()) <= 0
           && limit.getEndTime().compareTo(target.getEndTime()) >= 0;
     }

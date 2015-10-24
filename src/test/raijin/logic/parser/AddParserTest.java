@@ -49,7 +49,7 @@ public class AddParserTest {
     addCommand = parser.parse("add finish something by 27/12/15 000");
     assertEquals("finish something", addCommand.getName());
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
-    assertEquals("00:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("00:00", addCommand.getDateTime().getEndTime().toString());
     
     addCommand = parser.parse("add finish something from 27.deC to 28-12");
     assertEquals("finish something", addCommand.getName());

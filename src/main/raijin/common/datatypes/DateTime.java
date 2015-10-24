@@ -13,6 +13,10 @@ public class DateTime implements Comparable<DateTime> {
   private LocalTime startTime;
   private LocalTime endTime;
   
+  //===========================================================================
+  // Uses Java Time API for construction
+  //===========================================================================
+  
   public DateTime(LocalDate startDate, LocalTime startTime, LocalDate endDate, 
       LocalTime endTime) {
     this.startDate = startDate;
@@ -31,25 +35,32 @@ public class DateTime implements Comparable<DateTime> {
     this.endTime = endTime;
   }
 
+  //===========================================================================
+  // Specific deadlin
+  //===========================================================================
+
   /*Create deadline with specific date*/
-  public DateTime(String startDate){
-    this.startDate = LocalDate.parse(startDate, dateFormatter);
-    this.endDate = LocalDate.parse(startDate, dateFormatter);   //When no end date provided, same as start date
-    this.startTime = LocalTime.of(23,59);                       //Default to 2359 when no time specified
+  public DateTime(String endDate){
+    this.startDate = LocalDate.parse(endDate, dateFormatter);
+    this.endDate = LocalDate.parse(endDate, dateFormatter);   //When no end date provided, same as start date
+    this.endTime = LocalTime.of(23,59);                       //Default to 2359 when no time specified
   }
 
   /*Create deadline with specific date and time*/
-  public DateTime(String startDate, String startTime){
-    this.startDate = LocalDate.parse(startDate, dateFormatter);
-    this.endDate = LocalDate.parse(startDate, dateFormatter);   //When no end date provided, same as start date
-    this.startTime = LocalTime.parse(startTime, timeFormatter);               
+  public DateTime(String endDate, String endTime){
+    this.startDate = LocalDate.parse(endDate, dateFormatter);
+    this.endDate = LocalDate.parse(endDate, dateFormatter);   //When no end date provided, same as start date
+    this.endTime = LocalTime.parse(endTime, timeFormatter);               
   }
 
-  //@TODO must provide date input 
+  //===========================================================================
+  // Event
+  //===========================================================================
+
   /*Create event deadline*/
-  public DateTime(String startDate, String startTime, String endTime){
-    this.startDate = LocalDate.parse(startDate, dateFormatter);
-    this.endDate = LocalDate.parse(startDate, dateFormatter);   
+  public DateTime(String endDate, String startTime, String endTime){
+    this.startDate = LocalDate.parse(endDate, dateFormatter);
+    this.endDate = LocalDate.parse(endDate, dateFormatter);   
     this.startTime = LocalTime.parse(startTime, timeFormatter);               
     this.endTime = LocalTime.parse(endTime, timeFormatter);               
   }
@@ -101,25 +112,25 @@ public class DateTime implements Comparable<DateTime> {
 
   @Override
   public int compareTo(DateTime compared) {
-    int result = getStartDate().compareTo(compared.getStartDate());
+    int result = getEndDate().compareTo(compared.getEndDate());
 
-    //When both start dates are different
+    //When both end dates are different
     if (result != 0) {
       return result;
     } else {
-      result = compareEndDate(getEndDate(), compared.getEndDate());
+      result = compareStartDate(getStartDate(), compared.getStartDate());
       
-      //When both end dates are different
+      //When both start dates are different
       if (result != 0) {
         return result;
       } else {
-        result = getStartTime().compareTo(compared.getStartTime());
+        result = getEndTime().compareTo(compared.getEndTime());
         
         //When both start times are different 
         if (result != 0) {
           return result;
         } else {
-          return compareEndTime(getEndTime(), compared.getEndTime());
+          return compareStartTime(getStartTime(), compared.getStartTime());
         }
       }
     }
@@ -141,7 +152,7 @@ public class DateTime implements Comparable<DateTime> {
    * @param target
    * @return
    */
-  int compareEndTime(LocalTime source, LocalTime target) {
+  int compareStartTime(LocalTime source, LocalTime target) {
     if (source == null && target == null) {
       return 0;
     } else if (source == null) {
@@ -159,7 +170,7 @@ public class DateTime implements Comparable<DateTime> {
    * @param target
    * @return
    */
-  int compareEndDate(LocalDate source, LocalDate target) {
+  int compareStartDate(LocalDate source, LocalDate target) {
     if (source == null && target == null) {
       return 0;
     } else if (source == null) {

@@ -32,7 +32,7 @@ public class TypeFilter extends TaskFilter {
   
   List<Task> getOverdue(List<Task> tasks) {
     //Generates date time object for comparison
-    DateTime current = new DateTime(LocalDate.now(), LocalTime.now(), null, null);
+    DateTime current = new DateTime(null, null, LocalDate.now(), LocalTime.now());
 
     return tasks.stream().filter(t -> t.getType() != Constants.TYPE_TASK.FLOATING
         && t.getDateTime().compareTo(current) < 0)

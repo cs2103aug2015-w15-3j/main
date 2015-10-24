@@ -34,7 +34,7 @@ public class DateFilterTest {
   //===========================================================================
   
   @Test
-  public void isMatchedTime_SameStartTime_ReturnTrue() {
+  public void isMatchedTime_SameEndTime_ReturnTrue() {
     DateTime limit = new DateTime("19/10/2015", "1000");
     
     //Not end time. 
@@ -45,10 +45,9 @@ public class DateFilterTest {
   }
 
   @Test
-  public void isMatchedTime_DifferentStartTime_ReturnFalse() {
+  public void isMatchedTime_DifferentEndTime_ReturnFalse() {
     DateTime limit = new DateTime("19/10/2015", "1000");
     
-    //Not end time. 
     DateTime target = new DateTime("19/10/2015", "1200");
     dateFilter = getFilter(new ArrayList<Task>(), limit); 
     
@@ -145,9 +144,9 @@ public class DateFilterTest {
   
   @Test
   public void isMatched_OnlyDate_ReturnTrue() {
-    DateTime limit = new DateTime(LocalDate.of(2015, 9, 19), null);
+    DateTime limit = new DateTime(null, LocalDate.of(2015, 9, 19));
     
-    DateTime target = new DateTime("19/09/2015", "1000", "23/10/2015", "1200");
+    DateTime target = new DateTime("15/09/2015", "1000", "19/09/2015", "1200");
     dateFilter = getFilter(new ArrayList<Task>(), limit); 
     
     assertTrue(dateFilter.isMatched(target));
@@ -155,9 +154,9 @@ public class DateFilterTest {
 
   @Test
   public void isMatched_OnlyTime_ReturnTrue() {
-    DateTime limit = new DateTime(LocalTime.of(12, 0), null);
+    DateTime limit = new DateTime(null, LocalTime.of(12, 0));
     
-    DateTime target = new DateTime("19/09/2015", "1200", "23/10/2015", "1200");
+    DateTime target = new DateTime("19/09/2015", "1000", "23/10/2015", "1200");
     dateFilter = getFilter(new ArrayList<Task>(), limit); 
     
     assertTrue(dateFilter.isMatched(target));

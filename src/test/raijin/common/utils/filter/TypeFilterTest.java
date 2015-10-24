@@ -70,8 +70,9 @@ public class TypeFilterTest {
 
   @Test
   public void filter_OverdueTime() {
-    DateTime late = new DateTime(LocalDate.now(), LocalTime.now().minusMinutes(
-        2L), null, null);
+    DateTime late = new DateTime(null, null, LocalDate.now(), 
+        LocalTime.now().minusMinutes(2L));
+
     tasks.add(createTask("I am late", late));
 
     TypeFilter type = new TypeFilter(Constants.TYPE_TASK.OVERDUE);

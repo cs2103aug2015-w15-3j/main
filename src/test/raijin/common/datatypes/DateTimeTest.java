@@ -20,14 +20,14 @@ public class DateTimeTest {
   @Test
   public void testSpecificDate() {
     assertEquals(date.getStartDate().toString(), "2015-09-19");
-    assertEquals("23:59", date.getStartTime().toString());
+    assertEquals("23:59", date.getEndTime().toString());
   }
 
   @Test
   public void testSpecificDateAndTime() {
     DateTime date = new DateTime("19/09/2013", "1900");
-    assertEquals(date.getStartDate().toString(), "2013-09-19");
-    assertEquals("19:00", date.getStartTime().toString());
+    assertEquals(date.getEndDate().toString(), "2013-09-19");
+    assertEquals("19:00", date.getEndTime().toString());
   }
 
   @Test
@@ -52,51 +52,51 @@ public class DateTimeTest {
   //===========================================================================
   
   @Test
-  public void compareEndDate_EqualDates() {
+  public void compareStartDate_EqualDates() {
     //Same start date, same end date
     LocalDate sourceEnd = LocalDate.of(2015, 10, 19);
     LocalDate targetEnd = LocalDate.of(2015, 10, 19);
     DateTime source = new DateTime(null, sourceEnd);
     
-    assertEquals(0, source.compareEndDate(sourceEnd, targetEnd));
+    assertEquals(0, source.compareStartDate(sourceEnd, targetEnd));
   }
 
   @Test
-  public void compareEndDate_EarlierThan() {
+  public void compareStartDate_EarlierThan() {
     //Same start date, earlier end date
     LocalDate sourceEnd = LocalDate.of(2015, 10, 18);
     LocalDate targetEnd = LocalDate.of(2015, 10, 19);
-    DateTime source = new DateTime(null, sourceEnd);
+    DateTime source = new DateTime(sourceEnd, null);
     
-    assertEquals(-1, source.compareEndDate(sourceEnd, targetEnd));
+    assertEquals(-1, source.compareStartDate(sourceEnd, targetEnd));
   }
 
   @Test
-  public void compareEndDate_LaterThan() {
+  public void compareStartDate_LaterThan() {
     //Same start date, same end date
     LocalDate sourceEnd = LocalDate.of(2015, 10, 19);
     LocalDate targetEnd = LocalDate.of(2015, 10, 18);
-    DateTime source = new DateTime(null, sourceEnd);
+    DateTime source = new DateTime(sourceEnd, null);
     
-    assertEquals(1, source.compareEndDate(sourceEnd, targetEnd));
+    assertEquals(1, source.compareStartDate(sourceEnd, targetEnd));
   }
 
   @Test
-  public void compareEndDate_SourceNull() {
+  public void compareStartDate_SourceNull() {
     //Same start date, no end date
     LocalDate targetEnd = LocalDate.of(2015, 10, 19);
-    DateTime source = new DateTime(targetEnd, null);
+    DateTime source = new DateTime(null, targetEnd);
     
-    assertEquals(-1, source.compareEndDate(null, targetEnd));
+    assertEquals(-1, source.compareStartDate(null, targetEnd));
   }
 
   @Test
-  public void compareEndDate_TargetNull() {
+  public void compareStartDate_TargetNull() {
     //Same start date, no end date
     LocalDate sourceEnd = LocalDate.of(2015, 10, 19);
-    DateTime source = new DateTime(null, sourceEnd);
+    DateTime source = new DateTime(sourceEnd, null);
     
-    assertEquals(1, source.compareEndDate(sourceEnd, null));
+    assertEquals(1, source.compareStartDate(sourceEnd, null));
   }
 
   //===========================================================================
@@ -104,51 +104,51 @@ public class DateTimeTest {
   //===========================================================================
   
   @Test
-  public void compareEndTime_EqualTimes() {
+  public void compareStartTime_EqualTimes() {
     //Same start time, same end time
     LocalTime sourceEnd = LocalTime.of(12, 0);
     LocalTime targetEnd = LocalTime.of(12, 0);
-    DateTime source = new DateTime(null, sourceEnd);
+    DateTime source = new DateTime(sourceEnd, null);
     
-    assertEquals(0, source.compareEndTime(sourceEnd, targetEnd));
+    assertEquals(0, source.compareStartTime(sourceEnd, targetEnd));
   }
   
   @Test
-  public void compareEndTime_EarlierThan() {
+  public void compareStartTime_EarlierThan() {
     //Same start time, earlier end time
     LocalTime sourceEnd = LocalTime.of(11, 59);
     LocalTime targetEnd = LocalTime.of(12, 0);
-    DateTime source = new DateTime(null, sourceEnd);
+    DateTime source = new DateTime(sourceEnd, null);
     
-    assertEquals(-1, source.compareEndTime(sourceEnd, targetEnd));
+    assertEquals(-1, source.compareStartTime(sourceEnd, targetEnd));
   }
 
   @Test
-  public void compareEndTime_LaterThan() {
+  public void compareStartTime_LaterThan() {
     //Same start time, earlier end time
     LocalTime sourceEnd = LocalTime.of(11, 1);
     LocalTime targetEnd = LocalTime.of(11, 0);
-    DateTime source = new DateTime(null, sourceEnd);
+    DateTime source = new DateTime(sourceEnd, null);
     
-    assertEquals(1, source.compareEndTime(sourceEnd, targetEnd));
+    assertEquals(1, source.compareStartTime(sourceEnd, targetEnd));
   }
 
   @Test
-  public void compareEndTime_NullSource() {
+  public void compareStartTime_NullSource() {
     //Same start time, no end time
     LocalTime targetEnd = LocalTime.of(12, 0);
-    DateTime source = new DateTime(targetEnd, null);
+    DateTime source = new DateTime(null, targetEnd);
     
-    assertEquals(-1, source.compareEndTime(null, targetEnd));
+    assertEquals(-1, source.compareStartTime(null, targetEnd));
   }
 
   @Test
-  public void compareEndTime_NullTarget() {
+  public void compareStartTime_NullTarget() {
     //Same start time, no end time
     LocalTime sourceEnd = LocalTime.of(12, 0);
     DateTime source = new DateTime(null, sourceEnd);
     
-    assertEquals(1, source.compareEndTime(sourceEnd, null));
+    assertEquals(1, source.compareStartTime(sourceEnd, null));
   }
   
   //===========================================================================
