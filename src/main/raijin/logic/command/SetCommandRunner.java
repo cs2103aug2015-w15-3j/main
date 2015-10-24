@@ -21,7 +21,7 @@ public class SetCommandRunner extends CommandRunner {
       session.setStorageDirectory(storagePath, session.baseConfigPath);
       return new Status(String.format(SUCCESS_MESSAGE, storagePath));
     }
-    return new Status(FAIL_MESSAGE);            
+    return new Status(FAIL_MESSAGE, false);            
   }
 
 }
