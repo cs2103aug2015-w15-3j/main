@@ -33,7 +33,7 @@ import raijin.storage.api.TasksManager;
 public class AutoComplete {
 
   private int tabCount = 0;
-  private int viewCount = 1;
+  private int viewCount = 0;
   private SetTrie commandList; // List of commands
   private SetTrie tagList; // List of tags
   private SetTrie taskList; // List of task names
