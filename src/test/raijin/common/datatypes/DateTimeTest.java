@@ -87,7 +87,7 @@ public class DateTimeTest {
     LocalDate targetEnd = LocalDate.of(2015, 10, 19);
     DateTime source = new DateTime(null, targetEnd);
     
-    assertEquals(-1, source.compareStartDate(null, targetEnd));
+    assertEquals(1, source.compareStartDate(null, targetEnd));
   }
 
   @Test
@@ -96,7 +96,7 @@ public class DateTimeTest {
     LocalDate sourceEnd = LocalDate.of(2015, 10, 19);
     DateTime source = new DateTime(sourceEnd, null);
     
-    assertEquals(1, source.compareStartDate(sourceEnd, null));
+    assertEquals(-1, source.compareStartDate(sourceEnd, null));
   }
 
   //===========================================================================
@@ -139,7 +139,7 @@ public class DateTimeTest {
     LocalTime targetEnd = LocalTime.of(12, 0);
     DateTime source = new DateTime(null, targetEnd);
     
-    assertEquals(-1, source.compareStartTime(null, targetEnd));
+    assertEquals(1, source.compareStartTime(null, targetEnd));
   }
 
   @Test
@@ -148,7 +148,7 @@ public class DateTimeTest {
     LocalTime sourceEnd = LocalTime.of(12, 0);
     DateTime source = new DateTime(null, sourceEnd);
     
-    assertEquals(1, source.compareStartTime(sourceEnd, null));
+    assertEquals(-1, source.compareStartTime(sourceEnd, null));
   }
   
   //===========================================================================
@@ -182,5 +182,15 @@ public class DateTimeTest {
     DateTime source = new DateTime("18/10/2015", "1000", "20/10/2015", "1200");
     DateTime target = new DateTime("18/10/2015", "1000", "20/10/2015", "1159");
     assertEquals(1, source.compareTo(target));
+  }
+
+  @Test
+  public void compareTo_SameDate_EarlierEndTime() {
+    DateTime source = new DateTime("25/10/2015", "1200");
+    System.out.println(source.getEndDate().toString());
+    System.out.println(source.getEndTime().toString());
+    System.out.println(source.getStartDate().toString());
+    DateTime target = new DateTime(null, null, LocalDate.now(), LocalTime.now());
+    assertEquals(-1, source.compareTo(target));
   }
 }

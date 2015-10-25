@@ -136,7 +136,7 @@ public class Task implements Comparable<Task> {
   /*Init non-mandatory fields for task*/
   void initExtra(ParsedInput input) {
     dateTime = input.getDateTime();
-    priority = input.getPriority();
+    priority = input.getPriority() == null ? "m" : input.getPriority();
     project = input.getProject();
     extractTags(input);
   }

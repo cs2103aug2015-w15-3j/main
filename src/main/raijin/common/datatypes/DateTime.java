@@ -156,9 +156,9 @@ public class DateTime implements Comparable<DateTime> {
     if (source == null && target == null) {
       return 0;
     } else if (source == null) {
-      return -1;
-    } else if (target == null) {
       return 1;
+    } else if (target == null) {
+      return -1;
     } else {
       return source.compareTo(target);
     }
@@ -174,9 +174,9 @@ public class DateTime implements Comparable<DateTime> {
     if (source == null && target == null) {
       return 0;
     } else if (source == null) {
-      return -1;
-    } else if (target == null) {
       return 1;
+    } else if (target == null) {
+      return -1;
     } else {
       return source.compareTo(target);
     }
