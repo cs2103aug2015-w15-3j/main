@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.*?>
 <?import javafx.geometry.*?>
@@ -13,6 +14,14 @@
   <center>
     <VBox prefHeight="185.0" prefWidth="200.0" spacing="4.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff #eeeeee  #ffffff #ffffff; -fx-border-width: 2px;">
       <children>
+            <ImageView fitHeight="40.0" fitWidth="104.0" pickOnBounds="true" preserveRatio="true" translateX="30.0">
+               <image>
+                  <Image url="@../styles/RaijinLogo.png" />
+               </image>
+               <VBox.margin>
+                  <Insets bottom="25.0" />
+               </VBox.margin>
+            </ImageView>
             <HBox fx:id="inboxHBox">
                <children>
                   <Button fx:id="inbox" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleInboxButtonAction" style="-fx-background-color: #ccf8ff;" text="inbox" underline="true" wrapText="true" VBox.vgrow="NEVER">
@@ -20,7 +29,7 @@
                         <Font name="Droid Sans Mono" size="18.0" />
                      </font>
                   </Button>
-                  <Label fx:id="numOfPending" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 18;" text="0" textFill="#797d7f" translateX="48.0">
+                  <Label fx:id="numOfPending" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 16;" text="0" textFill="#797d7f" translateX="48.0">
                      <font>
                         <Font name="Droid Sans Georgian" size="18.0" />
                      </font>
@@ -37,7 +46,7 @@
                         <Insets />
                      </opaqueInsets>
                   </Button>
-                  <Label fx:id="numOfToday" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 18;" text="0" textFill="#797d7f" translateX="48.0">
+                  <Label fx:id="numOfToday" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 16;" text="0" textFill="#797d7f" translateX="48.0">
                      <font>
                         <Font name="Droid Sans Georgian" size="18.0" />
                      </font>
@@ -51,7 +60,7 @@
                         <Font name="Droid Sans Mono" size="18.0" />
                      </font>
                   </Button>
-                  <Label fx:id="numOfTomorrow" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 18;" text="0" textFill="#797d7f" translateX="16.0">
+                  <Label fx:id="numOfTomorrow" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 16;" text="0" textFill="#797d7f" translateX="16.0">
                      <font>
                         <Font name="Droid Sans Georgian" size="16.0" />
                      </font>
@@ -65,7 +74,7 @@
                         <Font name="Droid Sans Mono" size="18.0" />
                      </font>
                   </Button>
-                  <Label fx:id="numOfNextWeek" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 18;" text="0" textFill="#797d7f" translateX="5.0">
+                  <Label fx:id="numOfNextWeek" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 16;" text="0" textFill="#797d7f" translateX="5.0">
                      <font>
                         <Font name="Droid Sans Georgian" size="16.0" />
                      </font>
@@ -80,7 +89,7 @@
                         <Font name="Droid Sans Mono" size="18.0" />
                      </font>
                   </Button>
-                  <Label fx:id="numOfOverdue" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 18;" text="0" textFill="#e16363" translateX="27.0">
+                  <Label fx:id="numOfOverdue" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 16;" text="0" textFill="#e16363" translateX="27.0">
                      <font>
                         <Font name="Droid Sans Georgian" size="16.0" />
                      </font>
@@ -94,7 +103,7 @@
                         <Font name="Droid Sans Mono" size="18.0" />
                      </font>
                   </Button>
-                  <Label fx:id="numOfCompleted" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 18;" text="0" textFill="#797d7f" translateX="5.0">
+                  <Label fx:id="numOfCompleted" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 16;" text="0" textFill="#797d7f" translateX="5.0">
                      <font>
                         <Font name="Droid Sans Georgian" size="16.0" />
                      </font>
