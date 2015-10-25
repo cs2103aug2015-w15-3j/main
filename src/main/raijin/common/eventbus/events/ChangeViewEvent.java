@@ -14,7 +14,8 @@ public class ChangeViewEvent {
   static int count = 0; // Counter used to cycle through different views
   LocalDate today;
   public List<Task> focusView; // View that will be displayed to user
-  public String typeOfView;
+  public Constants.View typeOfView;
+  public String viewMessage;
   private static final String HEAD_FORMAT = "%s (%s)";
   private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
 
@@ -22,22 +23,23 @@ public class ChangeViewEvent {
 
     DateFilter dateFilter = new DateFilter(pendingTasks);
     today = LocalDate.now();
+    typeOfView = view;
 
     switch (view) {
 
       case INBOX:
-        typeOfView = view.getMessage();
+        viewMessage = view.getMessage();
         break;
 
       case TODAY:
         dateFilter.setDateTime(new DateTime(null, today));
-        typeOfView = String.format(HEAD_FORMAT, view.getMessage(), view
+        viewMessage = String.format(HEAD_FORMAT, view.getMessage(), view
             .getDateTime().getEndDate().format(dateFormatter));
         break;
 
       case TOMORROW:
         dateFilter.setDateTime(new DateTime(null, today.plusDays(1)));
-        typeOfView = String.format(HEAD_FORMAT, view.getMessage(), view
+        viewMessage = String.format(HEAD_FORMAT, view.getMessage(), view
             .getDateTime().getEndDate().format(dateFormatter));
         break;
 
@@ -46,12 +48,12 @@ public class ChangeViewEvent {
             today.plusWeeks(1L)));
         String date = view.getDateTime().getStartDate().format(dateFormatter)
             + " ~ " + view.getDateTime().getEndDate().format(dateFormatter);
-        typeOfView = String.format(HEAD_FORMAT, view.getMessage(), date);
+        viewMessage = String.format(HEAD_FORMAT, view.getMessage(), date);
         break;
 
       default:
         dateFilter.setDateTime(new DateTime(null, today));
-        typeOfView = String.format(HEAD_FORMAT, view.getMessage(), view
+        viewMessage = String.format(HEAD_FORMAT, view.getMessage(), view
             .getDateTime().getEndDate().format(dateFormatter));
         break;
 

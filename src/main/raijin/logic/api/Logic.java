@@ -11,6 +11,8 @@ import javafx.application.Application;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
+import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.TasksChangedEvent;
 import raijin.common.exception.FailedToParseException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.AutoComplete;
@@ -38,6 +40,7 @@ public class Logic {
   private Logger logger;
   private AutoComplete autoComplete;
   private HashMap<Constants.Command, CommandRunner> commandRunners;
+  private com.google.common.eventbus.EventBus eventbus;
   
   public Logic() throws FileNotFoundException {
     initAssets();                               //Initialize required components
@@ -49,7 +52,10 @@ public class Logic {
     logger = RaijinLogger.getLogger();
     autoComplete = new AutoComplete(TasksManager.getManager());
     commandRunners = new HashMap<Constants.Command, CommandRunner>();
+    eventbus = RaijinEventBus.getEventBus();
+    eventbus.post(new TasksChangedEvent());    //Update UI
     setupCommandRunners();
+
   }
 
   /*Initialize list of tasks*/

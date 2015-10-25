@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 
@@ -20,6 +21,7 @@ import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.exception.StorageFailureException;
 import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
+import raijin.common.utils.TaskUtils;
 import raijin.storage.handler.StorageHandler;
 
 public class Session {
@@ -199,7 +201,7 @@ public class Session {
     if (retrievedData != null) {
       tasksManager.sync(retrievedData);
       IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
-      ArrayList<Task> result = new ArrayList<Task>(tasksManager.getPendingTasks().values());
+      List<Task> result = TaskUtils.getTasksList(tasksManager.getPendingTasks());
       RaijinEventBus.getEventBus().post(new SetCurrentDisplayEvent(result));
     }
   }

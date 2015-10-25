@@ -72,8 +72,7 @@ public class DoneCommandRunnerTest {
   @Test
    public void processCommand_DoneTask() throws UnableToExecuteCommandException {
      Status returnStatus = doneTask(1);
-     String expectedStatusLine = String.format("Nicely done! You have completed the task "
-         + "\"Ice ice baby\". Give yourself a pat on the back!\n");
+     String expectedStatusLine = "Nicely done! Give yourself a pat on the back!\n";
      assertEquals(expectedStatusLine, returnStatus.getFeedback());
    }
    
