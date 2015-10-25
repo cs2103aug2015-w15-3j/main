@@ -65,7 +65,8 @@ public class DisplayController extends BorderPane {
 
       @Override
       public void onChanged(javafx.collections.ListChangeListener.Change<? extends String> c) {
-        tasksPane.setItems(eventBus.currentTasksPropertyPane());
+        //tasksPane.setItems(eventBus.currentTasksPropertyPane());
+    	  // TODO deprecated?
       }
       
     });
@@ -94,7 +95,11 @@ public class DisplayController extends BorderPane {
             if (event.bodyMessage != null) {
               currentTask = TaskUtils.displayMessage(event.bodyMessage);
             } else {
-              currentTask = TaskUtils.convertToTaskPane(event.tasks);
+            	if (event.headMessage.equals("Tasks pending for...")) {
+            		currentTask = TaskUtils.convertToTaskPaneDefaultView(event.tasks);
+            	} else {
+            		currentTask = TaskUtils.convertToTaskPane(event.tasks);
+            	}
             }
             tasksPane.setItems(FXCollections.observableArrayList(currentTask));
             setHeadMessage(event.headMessage);

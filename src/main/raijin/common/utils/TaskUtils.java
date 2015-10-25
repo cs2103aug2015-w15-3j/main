@@ -1,5 +1,7 @@
 package raijin.common.utils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,9 +18,12 @@ import com.google.common.collect.TreeMultiset;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
+import raijin.logic.command.DisplayCommandRunner;
 
 public class TaskUtils {
+	final static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
 
   public static List<Task> initSort(List<Task> tasks) {
 	  ArrayList<Task> list = new ArrayList<Task>(tasks);
@@ -47,12 +52,46 @@ public class TaskUtils {
     if (tasks.isEmpty()) {
         return displayMessage("You have no pending tasks!");
     }
-
+    
     for (int i = 0; i < tasks.size(); i++) {
-      list.add(new TaskPane(i + 1, tasks.get(i), "none"));
+    	Task task = tasks.get(i);
+    	list.add(new TaskPane(i + 1, task, "none"));
     }
-
+    
     return list;
+  }
+  
+  public static List<TaskPane> convertToTaskPaneDefaultView (List<Task> tasks) {
+	  ArrayList<TaskPane> list = new ArrayList<TaskPane>();
+	  LocalDate today = LocalDate.now();
+	  String todayString = today.format(dateFormat);
+	  LocalDate tomorrow = today.plusDays(1);
+	  String tomorrowString = tomorrow.format(dateFormat);
+	  
+	  list.add(new TaskPane ("Today - " + todayString + "")); //TodayPane
+	  
+	  boolean insertedTomorrowPane = false;
+	  
+	  for (int i = 0; i < tasks.size(); i++) {
+	    	Task task = tasks.get(i);
+	    	if (task.getDateTime().getStartDate().isAfter(today) && !insertedTomorrowPane) {
+	    		// If list only has TodayPane
+	    		if (list.size() == 1) {
+	    			list.add(new TaskPane ("No pending tasks!"));
+	    		}
+	    		list.add(new TaskPane ("Tomorrow - " + tomorrowString + ""));
+	    		insertedTomorrowPane = true;
+	    	}
+	    	list.add(new TaskPane(i + 1, task, "none"));
+	  }
+	  
+	  // If list only contains TodayPane & TomorrowPane
+	  if (list.size() == 2) {
+		  list.add(new TaskPane ("No pending tasks!"));
+	  }
+	  
+	  return list;
+	  
   }
 
   public static List<TaskPane> displayMessage(String message) {

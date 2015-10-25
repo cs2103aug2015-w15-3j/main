@@ -41,6 +41,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	private DateTime cmdDateTime;
 	private DateTime taskDateTime;
 	private LocalDate now;
+	private LocalDate tomorrowDate;
 
 	private ArrayList<Task> pending;
 	private ArrayList<Task> completed;
@@ -54,6 +55,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	public Status processCommand(ParsedInput cmd) {
 
 		now = LocalDate.now();
+		tomorrowDate = now.plusDays(1);
 
 		retrieveLists();
 		cmdDateTime = getQueriedDate(cmd);
@@ -65,30 +67,82 @@ public class DisplayCommandRunner extends CommandRunner {
 		boolean isEmpty = true;
 
 		switch (cmd.getDisplayOptions()) {
+
 		case TYPE_PENDING:
-			message = "Tasks pending for " 
-					   + (cmdDateTime.getStartDate().isEqual(now) ? "today, " : "")
-					   + dateForDisplay;
+			if (!cmdDateTime.getStartDate().isEqual(now)) {
+				message = "Tasks pending for " 
+						+ dateForDisplay;
 
-			feedbackMessage = FEEDBACK_PENDING;
-			for (Task currentTask : pending) {
-				taskDateTime = currentTask.getDateTime();
+				feedbackMessage = FEEDBACK_PENDING;
+				for (Task currentTask : pending) {
+					taskDateTime = currentTask.getDateTime();
 
-				if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
-						isRelevantDate(cmdDateTime, taskDateTime)) {
+					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
+							isRelevantDate(cmdDateTime, taskDateTime)) {
 
-					isEmpty = false;
-					relevant.add(currentTask);
+						isEmpty = false;
+						relevant.add(currentTask);
+					}
 				}
-			}
 
-			if (isEmpty) {
-				//eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
-			    eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+				if (isEmpty) {
+					//eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
+					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+				} else {
+					Collections.sort(relevant);
+					//eventBus.setCurrentTasks(relevant);
+					eventbus.post(new SetCurrentDisplayEvent(relevant, message));
+				}
 			} else {
-				Collections.sort(relevant);
-				//eventBus.setCurrentTasks(relevant);
-			    eventbus.post(new SetCurrentDisplayEvent(relevant, message));
+				message = "Tasks pending for...";
+
+				feedbackMessage = FEEDBACK_PENDING + " for today & tomorrow";
+				ArrayList<Task> today = new ArrayList<Task>();
+				ArrayList<Task> tomorrow = new ArrayList<Task>();
+				
+				boolean isTodayEmpty = true;
+				
+				for (Task currentTask : pending) {
+					taskDateTime = currentTask.getDateTime();
+
+					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
+							isRelevantDate(new DateTime(now, now), taskDateTime)) {
+
+						isTodayEmpty = false;
+						today.add(currentTask);
+					}
+				}
+				
+				if (isTodayEmpty) {
+					
+				} else {
+					Collections.sort(today);
+				}
+				
+				boolean isTomorrowEmpty = true;
+				
+				for (Task currentTask : pending) {
+					taskDateTime = currentTask.getDateTime();
+
+					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
+							isRelevantDate(new DateTime(tomorrowDate, tomorrowDate), taskDateTime)) {
+
+						isTomorrowEmpty = false;
+						tomorrow.add(currentTask);
+					}
+				}
+				
+				if (isTodayEmpty && isTomorrowEmpty) {
+					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+				} else {
+					if (!isTomorrowEmpty) {
+						Collections.sort(tomorrow);
+						today.addAll(tomorrow);
+					}
+					
+					eventbus.post(new SetCurrentDisplayEvent(today, message));
+				}
+				
 			}
 
 			break;
@@ -99,12 +153,12 @@ public class DisplayCommandRunner extends CommandRunner {
 
 			if (pending.isEmpty()) {
 				//eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
-			    eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+				eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
 			} else {
 				relevant = new ArrayList<Task>(pending);
 				Collections.sort(relevant);
 				//eventBus.setCurrentTasks(relevant);
-			    eventbus.post(new SetCurrentDisplayEvent(relevant, message));
+				eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
 
 			break;
@@ -123,12 +177,11 @@ public class DisplayCommandRunner extends CommandRunner {
 
 			if (isEmpty) {
 				//eventBus.setCurrentTasks(MESSAGE_NO_FLOATING);
-			    eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_FLOATING, message));
+				eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_FLOATING, message));
 			} else {
 				//eventBus.setCurrentTasks(relevant);
-			    eventbus.post(new SetCurrentDisplayEvent(relevant, message));
+				eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
-
 
 			break;
 
@@ -143,11 +196,11 @@ public class DisplayCommandRunner extends CommandRunner {
 
 			if (isEmpty) {
 				//eventBus.setCurrentTasks(MESSAGE_NO_COMPLETED);
-			    eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_COMPLETED, message));
+				eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_COMPLETED, message));
 			} else {
 				Collections.sort(relevant);
 				//eventBus.setCurrentTasks(relevant);
-			    eventbus.post(new SetCurrentDisplayEvent(relevant, message));
+				eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
 
 
@@ -174,11 +227,11 @@ public class DisplayCommandRunner extends CommandRunner {
 
 			if (isEmpty) {
 				//eventBus.setCurrentTasks(MESSAGE_NO_OVERDUE);
-			    eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_OVERDUE, message));
+				eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_OVERDUE, message));
 			} else {
 				Collections.sort(relevant);
 				//eventBus.setCurrentTasks(relevant);
-			    eventbus.post(new SetCurrentDisplayEvent(relevant, message));
+				eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
 
 
@@ -268,7 +321,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	public boolean isOverdue(DateTime taskDateTime) {
 		LocalDate taskEndDate;
 		LocalTime taskEndTime;
-		
+
 		LocalDate nowDate = LocalDate.now();
 		LocalTime nowTime = LocalTime.now();
 
@@ -288,11 +341,11 @@ public class DisplayCommandRunner extends CommandRunner {
 					return true;
 				}
 			} catch (NullPointerException e) {
-				
+
 			}
-			
+
 		}
-		
+
 		return false;
 	}
 
