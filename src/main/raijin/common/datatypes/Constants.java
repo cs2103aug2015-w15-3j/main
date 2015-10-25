@@ -192,8 +192,8 @@ public class Constants {
   public static enum View {
 
     INBOX("Inbox", null), 
-    TODAY("Today", new DateTime(today, null)), 
-    TOMORROW("Tomorrow", new DateTime(today.plusDays(1L), null)),
+    TODAY("Today", new DateTime(null, today)), 
+    TOMORROW("Tomorrow", new DateTime(null, today.plusDays(1L))),
     NEXT_WEEK("Next week", new DateTime(today.plusDays(2L), today.plusWeeks(1L)));
 
     private String message;

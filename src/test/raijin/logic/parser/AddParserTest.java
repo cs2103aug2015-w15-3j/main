@@ -199,7 +199,7 @@ public class AddParserTest {
   /* This is a boundary case for the ‘positive value’ partition */
   @Test(expected=IllegalCommandArgumentException.class)
   public void testCheckStartDate() throws IllegalCommandArgumentException {
-    addParser.checkStartDate("30/02/2015", new DateTime("30/02/2015"));
+    addParser.checkEndDate("30/02/2015", new DateTime("30/02/2015"));
   }
   
   /* This is a boundary case for the ‘positive value’ partition */

@@ -60,14 +60,14 @@ public class EditCommandRunnerTest {
   @Test
   public void execute_EditTaskNameDate() 
       throws NoSuchTaskException, UnableToExecuteCommandException, FailedToParseException {
-    Status returnStatus = editCommandRunner.execute
-        (parser.parse("edit 1 First entry changed again. by 5/10"));
+    ParsedInput input = parser.parse("edit 1 First entry changed again. by 5/10");
+    Status returnStatus = editCommandRunner.execute(input);
     String expectedStatusLine = String.format(Constants.FEEDBACK_EDIT_SUCCESS, 
         "First entry changed again.");
     assertEquals(expectedStatusLine, returnStatus.getFeedback());
     assertEquals("First entry changed again.", tasksManager.getPendingTask(1).getName());
     assertEquals("2016-10-05", tasksManager.getPendingTask(1).getDateTime()
-                .getStartDate().toString());
+                .getEndDate().toString());
     assertEquals("h", tasksManager.getPendingTask(1).getPriority());
     assertEquals("work", tasksManager.getPendingTask(1).getTags().pollFirst());
   }

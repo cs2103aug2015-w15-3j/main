@@ -30,15 +30,15 @@ public class ChangeViewEvent {
         break;
 
       case TODAY:
-        dateFilter.setDateTime(new DateTime(today, null));
+        dateFilter.setDateTime(new DateTime(null, today));
         typeOfView = String.format(HEAD_FORMAT, view.getMessage(), view
-            .getDateTime().getStartDate().format(dateFormatter));
+            .getDateTime().getEndDate().format(dateFormatter));
         break;
 
       case TOMORROW:
-        dateFilter.setDateTime(new DateTime(today.plusDays(1), null));
+        dateFilter.setDateTime(new DateTime(null, today.plusDays(1)));
         typeOfView = String.format(HEAD_FORMAT, view.getMessage(), view
-            .getDateTime().getStartDate().format(dateFormatter));
+            .getDateTime().getEndDate().format(dateFormatter));
         break;
 
       case NEXT_WEEK:
@@ -50,9 +50,9 @@ public class ChangeViewEvent {
         break;
 
       default:
-        dateFilter.setDateTime(new DateTime(today, null));
+        dateFilter.setDateTime(new DateTime(null, today));
         typeOfView = String.format(HEAD_FORMAT, view.getMessage(), view
-            .getDateTime().getStartDate().format(dateFormatter));
+            .getDateTime().getEndDate().format(dateFormatter));
         break;
 
     }

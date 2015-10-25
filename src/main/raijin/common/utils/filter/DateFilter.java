@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
+import raijin.common.utils.RaijinLogger;
 import raijin.common.utils.TaskUtils;
 import raijin.storage.api.TasksManager;
 

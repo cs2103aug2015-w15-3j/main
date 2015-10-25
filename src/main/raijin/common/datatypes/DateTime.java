@@ -36,7 +36,7 @@ public class DateTime implements Comparable<DateTime> {
   }
 
   //===========================================================================
-  // Specific deadlin
+  // Specific deadline
   //===========================================================================
 
   /*Create deadline with specific date*/

@@ -39,7 +39,7 @@ public class TasksChangedEvent {
     pendingTomorrow = dateFilter.filter(pendingTasks, Constants.View.TOMORROW);
     pendingNextWeek= dateFilter.filter(pendingTasks, Constants.View.NEXT_WEEK);
     //Changes limit for overdue task
-    DateTime current = new DateTime(LocalDate.now(), LocalTime.now(), null, null);
+    DateTime current = new DateTime(null, null, LocalDate.now(), LocalTime.now());
     dateFilter.setDateTime(current);
     overdue = dateFilter.filter(pendingTasks);
     tags = TaskUtils.getTagMultiSet(pendingTasks);
