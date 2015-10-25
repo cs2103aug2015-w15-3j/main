@@ -14,6 +14,7 @@ import java.awt.Image;
 import java.awt.Menu;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
+import java.awt.Robot;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
@@ -103,16 +104,11 @@ public class Raijin extends Application implements NativeKeyListener {
     this.isVisible = true;
 
     /*
-    this.stage.widthProperty().greaterThan(750).addListener((obs, oldValue, newValue) -> {
-      if (!newValue) {
-        changeToMinimisedView();
-      } else {
-        changeToMaximisedView();
-      }
-    });
-    */
+     * this.stage.widthProperty().greaterThan(750).addListener((obs, oldValue, newValue) -> { if
+     * (!newValue) { changeToMinimisedView(); } else { changeToMaximisedView(); } });
+     */
 
-    handleMaximized();                          //Handle simple & advanced mode
+    handleMaximized(); // Handle simple & advanced mode
     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
       public void handle(WindowEvent we) {
         logic.executeCommand("exit");
@@ -134,7 +130,7 @@ public class Raijin extends Application implements NativeKeyListener {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    
+
     String CSS = getClass().getResource(CSS_LOCATION).toExternalForm();
     rootLayout.getStylesheets().add(CSS);
   }
@@ -158,7 +154,7 @@ public class Raijin extends Application implements NativeKeyListener {
   public void changeToMinimisedView() {
     rootLayout.setCenter(displayController);
     rootLayout.setBottom(inputController);
-    ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
+    setFocusAtCommandBar();
   }
 
   private void changeToMaximisedView() {
@@ -166,8 +162,7 @@ public class Raijin extends Application implements NativeKeyListener {
     hBox.getChildren().addAll(sidebarController, displayController);
     rootLayout.setCenter(hBox);
     rootLayout.setBottom(inputController);
-    ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
-
+    setFocusAtCommandBar();
   }
 
   public void decideScene() {
@@ -206,16 +201,16 @@ public class Raijin extends Application implements NativeKeyListener {
   }
 
   private void handleEnterPress(InputController inputController, String userInput) {
-      Status result = logic.executeCommand(userInput);
-      Boolean isSuccessful = result.isSuccess();
-	  String response = result.getFeedback();
+    Status result = logic.executeCommand(userInput);
+    Boolean isSuccessful = result.isSuccess();
+    String response = result.getFeedback();
     if (response.equals("Exiting")) {
       System.exit(0);
-    } else if (!isSuccessful){
-    	System.out.println("yeaup");
-    	eventbus.post(new SetFailureEvent(response));
-	} else {
-    	eventbus.post(new SetFeedbackEvent(response));
+    } else if (!isSuccessful) {
+      System.out.println("yeaup");
+      eventbus.post(new SetFailureEvent(response));
+    } else {
+      eventbus.post(new SetFeedbackEvent(response));
     }
   }
 
@@ -263,6 +258,17 @@ public class Raijin extends Application implements NativeKeyListener {
 
   @Override
   public void nativeKeyPressed(NativeKeyEvent arg0) {
+
+    // Enable user to start typing whenever the application is open
+    if (isVisible) {
+      Platform.runLater(new Runnable() {
+        @Override
+        public void run() {
+          setFocusAtCommandBar();
+        }
+      });
+    }
+
     boolean isCtrlHPressed =
         arg0.getKeyCode() == NativeKeyEvent.VC_SPACE
             && NativeInputEvent.getModifiersText(arg0.getModifiers()).equals("Ctrl");
@@ -302,18 +308,23 @@ public class Raijin extends Application implements NativeKeyListener {
     Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
     logger.setLevel(Level.OFF);
   }
-  
+
   void handleMaximized() {
     stage.maximizedProperty().addListener(new ChangeListener<Boolean>() {
 
-    @Override
-    public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
-        if (t1.booleanValue()) {    //If maximized
+      @Override
+      public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
+        if (t1.booleanValue()) { // If maximized
           changeToMaximisedView();
         } else {
           changeToMinimisedView();
         }
-    }
-});
+      }
+    });
   }
+
+  void setFocusAtCommandBar() {
+    ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
+  }
+  
 }

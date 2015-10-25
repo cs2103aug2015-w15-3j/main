@@ -11,11 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.InputEvent;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
@@ -23,6 +19,7 @@ import raijin.common.eventbus.events.ChangeViewEvent;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.events.TasksChangedEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
+import raijin.common.utils.filter.DateFilter;
 import raijin.common.utils.filter.TypeFilter;
 import raijin.logic.api.Logic;
 
@@ -91,39 +88,43 @@ public class SidebarController extends BorderPane {
     
     this.logic = logic;
     eventbus = RaijinEventBus.getEventBus();
-    handleTaskChanged();
-    handleChangeView();
-    currentFocusedButton = inbox;
+    init();
   }
 
   @FXML
   protected void handleInboxButtonAction(ActionEvent event) {
     triggerViewChange(Constants.View.INBOX);
+    setNewFocus(inbox);
   }
 
   @FXML
   protected void handleOverdueButtonAction(ActionEvent event) {
     triggerOverdueViewChange();
+    setNewFocus(overdue);
   }
 
   @FXML
   protected void handleCompletedButtonAction(ActionEvent event) {
     logic.executeCommand("display c");
+    setNewFocus(completed);
   }
 
   @FXML
-  protected void handleTodayButtonAction(final InputEvent event) {
+  protected void handleTodayButtonAction(ActionEvent event) {
     triggerViewChange(Constants.View.TODAY);
+    setNewFocus(today);
   }
 
   @FXML
-  protected void handleTomorrowButtonAction(final InputEvent event) {
+  protected void handleTomorrowButtonAction(ActionEvent event) {
     triggerViewChange(Constants.View.TOMORROW);
+    setNewFocus(tomorrow);
   }
 
   @FXML
-  protected void handleNextWeekButtonAction(final InputEvent event) {
+  protected void handleNextWeekButtonAction(ActionEvent event) {
     triggerViewChange(Constants.View.NEXT_WEEK);
+    setNewFocus(nextWeek);
   }
 
 
@@ -198,6 +199,32 @@ public class SidebarController extends BorderPane {
   //===========================================================================
   
   /**
+   * Update before any commits or made
+   */
+  void init() {
+    //Initialize states
+    pendingTasks = logic.getPendingTasks();
+    pendingToday = new DateFilter(pendingTasks, Constants.View.TODAY.getDateTime()).
+        filter(pendingTasks);
+    pendingTomorrow = new DateFilter(pendingTasks, Constants.View.TOMORROW.getDateTime()).
+        filter(pendingTasks);
+    pendingNextWeek = new DateFilter(pendingTasks, Constants.View.NEXT_WEEK.getDateTime()).
+        filter(pendingTasks);
+    overdueTasks = new TypeFilter(Constants.TYPE_TASK.OVERDUE).filter(pendingTasks);
+    completedTasks = logic.getCompletedTasks();
+    
+    //Initialize labels
+    updateLabels();
+    
+    //Initialize handlers
+    handleTaskChanged();
+    handleChangeView();
+    
+    //Set current focused button
+    currentFocusedButton = inbox;
+  }
+
+  /**
    * Update number of pending tasks when change occur to application 
    */
   void updateLabels() {
@@ -221,7 +248,6 @@ public class SidebarController extends BorderPane {
   //Set button color when view changes
   void setNewFocus(Button newFocusedButton) {
     if (!newFocusedButton.equals(currentFocusedButton)) {
-      System.out.println("Diff");
       currentFocusedButton.setStyle("-fx-background-color: #ffffff;");
       newFocusedButton.setStyle("-fx-background-color: #ccf8ff;");
       currentFocusedButton = newFocusedButton;

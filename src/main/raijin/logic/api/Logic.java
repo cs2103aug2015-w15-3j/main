@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.slf4j.Logger;
 
@@ -19,6 +20,7 @@ import raijin.common.utils.AutoComplete;
 import raijin.common.utils.EventBus;
 import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
+import raijin.common.utils.TaskUtils;
 import raijin.logic.parser.ParsedInput;
 import raijin.logic.parser.ParserInterface;
 import raijin.logic.parser.SimpleParser;
@@ -52,8 +54,6 @@ public class Logic {
     logger = RaijinLogger.getLogger();
     autoComplete = new AutoComplete(TasksManager.getManager());
     commandRunners = new HashMap<Constants.Command, CommandRunner>();
-    eventbus = RaijinEventBus.getEventBus();
-    eventbus.post(new TasksChangedEvent());    //Update UI
     setupCommandRunners();
 
   }
@@ -119,6 +119,14 @@ public class Logic {
     }
   }
   
+  public List<Task> getPendingTasks() {
+    return TaskUtils.getTasksList(TasksManager.getManager().getPendingTasks());
+  }
+
+  public List<Task> getCompletedTasks() {
+    return TaskUtils.getTasksList(TasksManager.getManager().getCompletedTasks());
+  }
+
   public void loadCustomData(String fileName) {
     String dataPath = session.programDirectory + "/" + fileName + ".json";
     session.loadCustomJSON(dataPath);
