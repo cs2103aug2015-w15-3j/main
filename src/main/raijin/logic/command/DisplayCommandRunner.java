@@ -13,6 +13,7 @@ import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.utils.EventBus;
+import raijin.common.utils.filter.SortFilter;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.TasksManager;
@@ -180,6 +181,7 @@ public class DisplayCommandRunner extends CommandRunner {
 				eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_FLOATING, message));
 			} else {
 				//eventBus.setCurrentTasks(relevant);
+			    relevant = (ArrayList<Task>) new SortFilter(Constants.SORT_CRITERIA.PRIORITY).filter(relevant);
 				eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
 

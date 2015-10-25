@@ -43,12 +43,9 @@ public class ChangeViewEvent {
             .getDateTime().getEndDate().format(dateFormatter));
         break;
 
-      case NEXT_WEEK:
-        dateFilter.setDateTime(new DateTime(today.plusDays(2), 
-            today.plusWeeks(1L)));
-        String date = view.getDateTime().getStartDate().format(dateFormatter)
-            + " ~ " + view.getDateTime().getEndDate().format(dateFormatter);
-        viewMessage = String.format(HEAD_FORMAT, view.getMessage(), date);
+      case FUTURE:
+        dateFilter.setDateTime(new DateTime(today.plusDays(2), null));
+        viewMessage = view.getMessage();
         break;
 
       default:

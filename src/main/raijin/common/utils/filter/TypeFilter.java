@@ -40,8 +40,9 @@ public class TypeFilter extends TaskFilter {
   }
 
   List<Task> getType(List<Task> tasks) {
-    return tasks.stream().filter(t -> t.getType() == limit).collect(Collectors
+    List<Task> floating = tasks.stream().filter(t -> t.getType() == limit).collect(Collectors
         .toList());
+    return new SortFilter(Constants.SORT_CRITERIA.PRIORITY).filter(floating);
   }
 
 }

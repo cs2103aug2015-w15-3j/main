@@ -69,12 +69,12 @@
             </HBox>
             <HBox fx:id="nextWeekHBox">
                <children>
-              <Button fx:id="nextWeek" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleNextWeekButtonAction" style="-fx-background-color: #ffffff;" text="next week" wrapText="true" VBox.vgrow="NEVER">
+              <Button fx:id="future" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleFutureButtonAction" style="-fx-background-color: #ffffff;" text="future" wrapText="true" VBox.vgrow="NEVER">
                      <font>
                         <Font name="Droid Sans Mono" size="18.0" />
                      </font>
                   </Button>
-                  <Label fx:id="numOfNextWeek" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 16;" text="0" textFill="#797d7f" translateX="5.0">
+                  <Label fx:id="numOfNextTasks" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 16;" text="0" textFill="#797d7f" translateX="38.0">
                      <font>
                         <Font name="Droid Sans Georgian" size="16.0" />
                      </font>
@@ -103,7 +103,21 @@
                         <Font name="Droid Sans Mono" size="18.0" />
                      </font>
                   </Button>
-                  <Label fx:id="numOfCompleted" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 16;" text="0" textFill="#797d7f" translateX="5.0">
+                  <Label fx:id="numOfCompleted" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 16;" text="0" textFill="#0ba9f2" translateX="5.0">
+                     <font>
+                        <Font name="Droid Sans Georgian" size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox fx:id="completedHBox1">
+               <children>
+                  <Button fx:id="floating" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleFloatingButtonAction" style="-fx-background-color: #ffffff;" text="floating" wrapText="true" VBox.vgrow="NEVER">
+                     <font>
+                        <Font name="Droid Sans Mono" size="18.0" />
+                     </font>
+                  </Button>
+                  <Label fx:id="numOfFloating" alignment="BASELINE_LEFT" prefHeight="33.0" prefWidth="45.0" style="-fx-font-weight: bold; -fx-font-size: 16;" text="0" textFill="#797d7f" translateX="16.0">
                      <font>
                         <Font name="Droid Sans Georgian" size="16.0" />
                      </font>

@@ -35,6 +35,9 @@ public class DateFilter extends TaskFilter {
       return inputTasks;
     }
     tasks = TaskUtils.getOnlyNormalTasks(tasks);
+    if (limit.getEndDate() == null) {
+      return getFutureTasks(tasks, Constants.MAX_TASKS);
+    }
     return tasks.stream().filter(task -> isMatched(task.getDateTime())).
         collect(Collectors.toList());
   }
@@ -48,6 +51,9 @@ public class DateFilter extends TaskFilter {
   public List<Task> filter(List<Task> tasks, Constants.View view) {
     limit = view.getDateTime();
     tasks = TaskUtils.getOnlyNormalTasks(tasks);
+    if (view == Constants.View.FUTURE) {
+      return getFutureTasks(tasks, Constants.MAX_TASKS);
+    }
     return tasks.stream().filter(task -> isMatched(task.getDateTime())).
         collect(Collectors.toList());
   }
@@ -89,4 +95,22 @@ public class DateFilter extends TaskFilter {
     }
   }
   
+  boolean isMatchedFutureTasks(DateTime target) {
+    return target.getEndDate().compareTo(limit.getStartDate()) >= 0;
+  }
+  
+  /**
+   * Returns N number of tasks after tomorrow 
+   * @param pendingTasks
+   * @return
+   */
+  List<Task> getFutureTasks(List<Task> pendingTasks, int MAX) {
+     List<Task> result = pendingTasks.stream().filter(t -> isMatchedFutureTasks(
+         t.getDateTime())).collect(Collectors.toList());
+     if (result.size() > MAX) {
+       return result.subList(0, MAX);
+     } else {
+       return result;
+     }
+  }
 }

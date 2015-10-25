@@ -79,6 +79,9 @@ public class Constants {
   /*Initial number of IDs created*/
   public static final int MAX_ID = 200;
   
+  /*Max number of tasks displayed for a specific view*/
+  public static final int MAX_TASKS = 20;
+
   //===========================================================================
   // Parser Constants
   //===========================================================================
@@ -197,7 +200,7 @@ public class Constants {
     INBOX("Inbox", null), 
     TODAY("Today", new DateTime(null, today)), 
     TOMORROW("Tomorrow", new DateTime(null, today.plusDays(1L))),
-    NEXT_WEEK("Next week", new DateTime(today.plusDays(2L), today.plusWeeks(1L)));
+    FUTURE("Future", new DateTime(today.plusDays(2L), null));
 
     private String message;
     private DateTime dateTime;
