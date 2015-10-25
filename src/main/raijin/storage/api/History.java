@@ -44,7 +44,7 @@ public class History {
         tasksManager.getPendingTasks().values()));
         */
     eventbus.post(new SetCurrentDisplayEvent(TaskUtils
-        .getTasksList(tasksManager.getPendingTasks())));
+        .getTasksList(tasksManager.getPendingTasks()), "All pending tasks"));
     //Notify tasks changed
     eventbus.post(new TasksChangedEvent());
     Session.getSession().commit();

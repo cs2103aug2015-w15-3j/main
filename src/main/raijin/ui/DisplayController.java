@@ -95,7 +95,7 @@ public class DisplayController extends BorderPane {
             if (event.bodyMessage != null) {
               currentTask = TaskUtils.displayMessage(event.bodyMessage);
             } else {
-            	if (event.headMessage.equals("Tasks pending for...")) {
+            	if (event.headMessage != null && event.headMessage.equals("Tasks pending for...")) {
             		currentTask = TaskUtils.convertToTaskPaneDefaultView(event.tasks);
             	} else {
             		currentTask = TaskUtils.convertToTaskPane(event.tasks);
