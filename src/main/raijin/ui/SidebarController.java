@@ -164,5 +164,4 @@ public class SidebarController extends BorderPane {
     completed.setText(String.format(COMPLETED, event.completedTasks.size()));
   }
   
-
 }
