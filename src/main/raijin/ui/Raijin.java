@@ -327,4 +327,13 @@ public class Raijin extends Application implements NativeKeyListener {
     ((InputController) rootLayout.getBottom()).getCommandBar().requestFocus();
   }
   
+  //Toggle between minimize and maximize mode
+  public void resizeWindow() {
+    if (stage.isMaximized()) {
+      stage.setMaximized(false);
+    } else {
+      stage.setMaximized(true);
+    }
+  }
+  
 }

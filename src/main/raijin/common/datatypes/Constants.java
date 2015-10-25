@@ -182,6 +182,9 @@ public class Constants {
   public  static final KeyCodeCombination KEY_STOP = new KeyCodeCombination(KeyCode.S, 
       KeyCodeCombination.CONTROL_DOWN);
 
+  public  static final KeyCodeCombination KEY_MINMAX = new KeyCodeCombination(KeyCode.ESCAPE, 
+      KeyCodeCombination.ALT_DOWN);
+
   //===========================================================================
   // Autcomplete 
   //===========================================================================

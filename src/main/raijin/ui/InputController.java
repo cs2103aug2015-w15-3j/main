@@ -72,7 +72,9 @@ public class InputController extends BorderPane {
   @FXML
   public void onKeyPress(KeyEvent event) {
     handleIOEvent(event);
-    if (Constants.KEY_CLEAR.match(event)) {
+    if (Constants.KEY_MINMAX.match(event)) {
+      mainApp.resizeWindow();
+    } else if (Constants.KEY_CLEAR.match(event)) {
       clear();
     } else if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN) {
       getPreviousCommands(event);
