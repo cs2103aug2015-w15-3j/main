@@ -1,6 +1,7 @@
 package raijin.ui;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -15,48 +16,64 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.ChangeViewEvent;
+import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.events.TasksChangedEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
+import raijin.common.utils.filter.TypeFilter;
 import raijin.logic.api.Logic;
 
 public class SidebarController extends BorderPane {
   
-  private static final Color numberOfTasks = Color.rgb(213,102,102);
+  //===========================================================================
+  // UI elements
+  //===========================================================================
 
+  @FXML
+  private Button inbox;
+  @FXML
+  private Label numOfPending;
+  @FXML
+  private Button overdue;
+  @FXML
+  private Label numOfOverdue;
+  @FXML
+  private Button completed;
+  @FXML
+  private Label numOfCompleted;
   @FXML
   private Button today;
-
   @FXML
   private Label numOfToday;
-
   @FXML
   private Button tomorrow;
-
   @FXML
   private Label numOfTomorrow;
-
   @FXML
   private Button nextWeek;
-
   @FXML
   private Label numOfNextWeek;
 
-  @FXML
-  private Button overdue;
+  private Button currentFocusedButton;                //Determines current view
 
-  @FXML
-  private Label numOfOverdue;
-
-  @FXML
-  private Button completed;
-
-  @FXML
-  private Label numOfCompleted;
 
   private static final String SIDEBAR_LAYOUT_FXML = "resource/layout/SidebarController.fxml";
-  private Logic logic;
   private com.google.common.eventbus.EventBus eventbus;
+  
+  //===========================================================================
+  // Domain objects
+  //===========================================================================
+  
+  private Logic logic;
+  private List<Task> pendingTasks;
+  private List<Task> overdueTasks;
+  private List<Task> completedTasks;
+  private List<Task> pendingToday;
+  private List<Task> pendingTomorrow;
+  private List<Task> pendingNextWeek;
 
   public SidebarController(Logic logic) {
     FXMLLoader loader = new FXMLLoader(getClass().getResource(SIDEBAR_LAYOUT_FXML));
@@ -75,26 +92,18 @@ public class SidebarController extends BorderPane {
     this.logic = logic;
     eventbus = RaijinEventBus.getEventBus();
     handleTaskChanged();
+    handleChangeView();
+    currentFocusedButton = inbox;
   }
 
   @FXML
-  protected void handleTodayButtonAction(ActionEvent event) {
-    logic.executeCommand("display");
+  protected void handleInboxButtonAction(ActionEvent event) {
+    triggerViewChange(Constants.View.INBOX);
   }
 
   @FXML
-  protected void handleTomorrowButtonAction(ActionEvent event) {
-    logic.executeCommand("display");
-  }
-
-  @FXML
-  protected void handleNextWeekButtonAction(ActionEvent event) {
-
-  }
-
-  @FXML
-  protected void handleProjectsButtonAction(ActionEvent event) {
-
+  protected void handleOverdueButtonAction(ActionEvent event) {
+    triggerOverdueViewChange();
   }
 
   @FXML
@@ -103,58 +112,36 @@ public class SidebarController extends BorderPane {
   }
 
   @FXML
-  protected void handleTodayButtonKeyAction(final InputEvent event) {
-    if (event instanceof KeyEvent) {
-      final KeyEvent keyEvent = (KeyEvent) event;
-      if (keyEvent.getCode() == KeyCode.ENTER) {
-        logic.executeCommand("display p");
-      }
-    }
+  protected void handleTodayButtonAction(final InputEvent event) {
+    triggerViewChange(Constants.View.TODAY);
   }
 
   @FXML
-  protected void handleTomorrowButtonKeyAction(final InputEvent event) {
-    if (event instanceof KeyEvent) {
-      final KeyEvent keyEvent = (KeyEvent) event;
-      if (keyEvent.getCode() == KeyCode.ENTER) {
-        // TODO
-      }
-    }
+  protected void handleTomorrowButtonAction(final InputEvent event) {
+    triggerViewChange(Constants.View.TOMORROW);
   }
 
   @FXML
-  protected void handleNextWeekButtonKeyAction(final InputEvent event) {
-    if (event instanceof KeyEvent) {
-      final KeyEvent keyEvent = (KeyEvent) event;
-      if (keyEvent.getCode() == KeyCode.ENTER) {
-        // TODO
-      }
-    }
+  protected void handleNextWeekButtonAction(final InputEvent event) {
+    triggerViewChange(Constants.View.NEXT_WEEK);
   }
 
-  @FXML
-  protected void handleProjectsButtonKeyAction(final InputEvent event) {
-    if (event instanceof KeyEvent) {
-      final KeyEvent keyEvent = (KeyEvent) event;
-      if (keyEvent.getCode() == KeyCode.ENTER) {
-        // TODO
-      }
-    }
-  }
-
-  @FXML
-  protected void handleCompletedButtonKeyAction(final InputEvent event) {
-    if (event instanceof KeyEvent) {
-      final KeyEvent keyEvent = (KeyEvent) event;
-      if (keyEvent.getCode() == KeyCode.ENTER) {
-        logic.executeCommand("display c");
-      }
-    }
-  }
 
   // =========================================================================
   // Handlers
   // =========================================================================
+
+  public void handleChangeView() {
+    MainSubscriber<ChangeViewEvent> changeViewHandler =
+        new MainSubscriber<ChangeViewEvent>(eventbus) {
+
+          @Subscribe
+          @Override
+          public void handleEvent(ChangeViewEvent event) {
+            updateFocus(event);
+          }
+    };
+  }
 
   public void handleTaskChanged() {
     MainSubscriber<TasksChangedEvent> tasksChangedHandler =
@@ -163,17 +150,82 @@ public class SidebarController extends BorderPane {
           @Subscribe
           @Override
           public void handleEvent(TasksChangedEvent event) {
-            updateButtons(event);
+            updateState(event);
           }
     };
   }
   
-  void updateButtons(TasksChangedEvent event) {
-    numOfToday.setText(Integer.toString(event.pendingToday.size()));
-    numOfTomorrow.setText(Integer.toString(event.pendingTomorrow.size()));
-    numOfNextWeek.setText(Integer.toString(event.pendingNextWeek.size()));
-    numOfOverdue.setText(Integer.toString(event.overdue.size()));
-    numOfCompleted.setText(Integer.toString(event.completedTasks.size()));
+  void updateState(TasksChangedEvent event) {
+    pendingTasks = event.pendingTasks;
+    overdueTasks = event.overdue;
+    completedTasks = event.completedTasks;
+
+    pendingToday = event.pendingToday;
+    pendingTomorrow = event.pendingTomorrow;
+    pendingNextWeek = event.pendingNextWeek;
+    
+    updateLabels();
   }
   
+
+  void updateFocus(ChangeViewEvent event) {
+    switch (event.typeOfView) {
+
+      case INBOX:
+        setNewFocus(inbox);
+        break;
+
+      case NEXT_WEEK:
+        setNewFocus(nextWeek);
+        break;
+
+      case TODAY:
+        setNewFocus(today);
+        break;
+
+      case TOMORROW:
+        setNewFocus(tomorrow);
+        break;
+
+      default:
+        break;
+      
+    }
+  }
+
+  //===========================================================================
+  // Helper methods
+  //===========================================================================
+  
+  /**
+   * Update number of pending tasks when change occur to application 
+   */
+  void updateLabels() {
+    numOfPending.setText(Integer.toString(pendingTasks.size()));
+    numOfOverdue.setText(Integer.toString(overdueTasks.size()));
+    numOfCompleted.setText(Integer.toString(completedTasks.size()));
+
+    numOfToday.setText(Integer.toString(pendingToday.size()));
+    numOfTomorrow.setText(Integer.toString(pendingTomorrow.size()));
+    numOfNextWeek.setText(Integer.toString(pendingNextWeek.size()));
+  }
+  
+  void triggerViewChange(Constants.View view) {
+    eventbus.post(new ChangeViewEvent(pendingTasks, view));
+  }
+  
+  void triggerOverdueViewChange() {
+    eventbus.post(new SetCurrentDisplayEvent(overdueTasks, "Overdue"));
+  }
+
+  //Set button color when view changes
+  void setNewFocus(Button newFocusedButton) {
+    if (!newFocusedButton.equals(currentFocusedButton)) {
+      System.out.println("Diff");
+      currentFocusedButton.setStyle("-fx-background-color: #ffffff;");
+      newFocusedButton.setStyle("-fx-background-color: #ccf8ff;");
+      currentFocusedButton = newFocusedButton;
+    }
+  }
+
 }

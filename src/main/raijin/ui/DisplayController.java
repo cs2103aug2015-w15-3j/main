@@ -110,7 +110,7 @@ public class DisplayController extends BorderPane {
           public void handleEvent(ChangeViewEvent event) {
             List<TaskPane> currentTask = TaskUtils.convertToTaskPane(event.focusView);
             tasksPane.setItems(FXCollections.observableArrayList(currentTask));
-            setHeadMessage(event.typeOfView);
+            setHeadMessage(event.viewMessage);
           }};
   }
 }
