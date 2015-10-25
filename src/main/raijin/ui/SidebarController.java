@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -21,27 +22,37 @@ import raijin.logic.api.Logic;
 
 public class SidebarController extends BorderPane {
   
-  private static final String TODAY = "Today %d";
-  private static final String TOMORROW = "Tomorrow %d";
-  private static final String NEXT_WEEK = "Next week %d";
-  private static final String OVERDUE = "Overdue %d";
-  private static final String COMPLETED = "Completed %d";
   private static final Color numberOfTasks = Color.rgb(213,102,102);
 
   @FXML
   private Button today;
 
   @FXML
+  private Label numOfToday;
+
+  @FXML
   private Button tomorrow;
+
+  @FXML
+  private Label numOfTomorrow;
 
   @FXML
   private Button nextWeek;
 
   @FXML
+  private Label numOfNextWeek;
+
+  @FXML
   private Button overdue;
 
   @FXML
+  private Label numOfOverdue;
+
+  @FXML
   private Button completed;
+
+  @FXML
+  private Label numOfCompleted;
 
   private static final String SIDEBAR_LAYOUT_FXML = "resource/layout/SidebarController.fxml";
   private Logic logic;
@@ -149,6 +160,7 @@ public class SidebarController extends BorderPane {
     MainSubscriber<TasksChangedEvent> tasksChangedHandler =
         new MainSubscriber<TasksChangedEvent>(eventbus) {
 
+          @Subscribe
           @Override
           public void handleEvent(TasksChangedEvent event) {
             updateButtons(event);
@@ -157,11 +169,11 @@ public class SidebarController extends BorderPane {
   }
   
   void updateButtons(TasksChangedEvent event) {
-    today.setText(String.format(TODAY, event.pendingToday.size()));
-    tomorrow.setText(String.format(TOMORROW, event.pendingTomorrow.size()));
-    nextWeek.setText(String.format(NEXT_WEEK, event.pendingNextWeek.size()));
-    overdue.setText(String.format(OVERDUE, event.overdue.size()));
-    completed.setText(String.format(COMPLETED, event.completedTasks.size()));
+    numOfToday.setText(Integer.toString(event.pendingToday.size()));
+    numOfTomorrow.setText(Integer.toString(event.pendingTomorrow.size()));
+    numOfNextWeek.setText(Integer.toString(event.pendingNextWeek.size()));
+    numOfOverdue.setText(Integer.toString(event.overdue.size()));
+    numOfCompleted.setText(Integer.toString(event.completedTasks.size()));
   }
   
 }
