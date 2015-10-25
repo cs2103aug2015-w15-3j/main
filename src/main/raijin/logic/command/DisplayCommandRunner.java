@@ -102,6 +102,7 @@ public class DisplayCommandRunner extends CommandRunner {
 				
 				boolean isTodayEmpty = true;
 				
+				// Getting today's tasks
 				for (Task currentTask : pending) {
 					taskDateTime = currentTask.getDateTime();
 
@@ -113,14 +114,13 @@ public class DisplayCommandRunner extends CommandRunner {
 					}
 				}
 				
-				if (isTodayEmpty) {
-					
-				} else {
+				if (!isTodayEmpty) {
 					Collections.sort(today);
 				}
 				
 				boolean isTomorrowEmpty = true;
 				
+				// Getting tomorrow's tasks
 				for (Task currentTask : pending) {
 					taskDateTime = currentTask.getDateTime();
 
@@ -132,14 +132,25 @@ public class DisplayCommandRunner extends CommandRunner {
 					}
 				}
 				
+				if (!isTomorrowEmpty) {
+					Collections.sort(tomorrow);
+					today.addAll(tomorrow);
+				}
+				
+				ArrayList<Task> temp = new ArrayList<Task>(pending);
+				Collections.sort(temp);
+				for (Task task : today) {
+					temp.remove(task);
+				}
+				int i = 0;
+				for (int size=today.size(); size < 20 && i < temp.size(); size++) {
+					today.add(temp.get(i++));
+				}
+				
+				
 				if (isTodayEmpty && isTomorrowEmpty) {
 					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
 				} else {
-					if (!isTomorrowEmpty) {
-						Collections.sort(tomorrow);
-						today.addAll(tomorrow);
-					}
-					
 					eventbus.post(new SetCurrentDisplayEvent(today, message));
 				}
 				

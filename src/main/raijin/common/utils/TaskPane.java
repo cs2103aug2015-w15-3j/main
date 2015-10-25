@@ -7,6 +7,7 @@ import java.util.TreeSet;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -202,8 +203,15 @@ public class TaskPane extends StackPane {
 	
 	public TaskPane (String message) {
 		Label msg = new Label(message);
+		DropShadow dropShadow = new DropShadow();
+		 dropShadow.setRadius(3.0);
+		 dropShadow.setOffsetX(2.0);
+		 dropShadow.setOffsetY(2.0);
+		 dropShadow.setColor(Color.color(0.4, 0.5, 0.5, 0.3));
+		 
 		if (!message.equals("No pending tasks!")) {
-			msg.setStyle("-fx-font-size: 20px; -fx-padding: 7px;");
+			msg.setStyle("-fx-font-size: 17px; -fx-padding: 7px;");
+			msg.setEffect(dropShadow);
 		} else {
 			msg.setStyle("-fx-font-size: 15px; -fx-padding: 5px;");
 		}
