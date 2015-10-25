@@ -69,7 +69,7 @@ public class ParsedInputTest {
   public void getPriority_ReturnPriority() {
     ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
         name("I am cute").createParsedInput();
-    assertEquals(Constants.PRIORITY_MID, input.getPriority());
+    assertEquals(null, input.getPriority());
   }
   
   @Test(expected=FailedToParseException.class)
