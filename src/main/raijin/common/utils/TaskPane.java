@@ -105,9 +105,9 @@ public class TaskPane extends StackPane {
 		} else if (taskType.equals(Constants.TYPE_TASK.SPECIFIC)) {
 			String endDate = task.getDateTime().getEndDate().format(dateFormat);
 			String startTime = task.getDateTime().getStartTime() == null ? "" 
-					: " @ " + task.getDateTime().getStartTime().toString();
+					: " @ " + task.getDateTime().getStartTime().toString() + " to";
 			String endTime = task.getDateTime().getEndTime() == null ? "" 
-					: " to " + task.getDateTime().getEndTime().toString();
+					:  ", " + task.getDateTime().getEndTime().toString();
 			
 			startValue = new Label(endDate + startTime + endTime);
 			
@@ -202,7 +202,11 @@ public class TaskPane extends StackPane {
 	
 	public TaskPane (String message) {
 		Label msg = new Label(message);
-		msg.setStyle("-fx-font-size: 25px;");
+		if (!message.equals("No pending tasks!")) {
+			msg.setStyle("-fx-font-size: 20px; -fx-padding: 7px;");
+		} else {
+			msg.setStyle("-fx-font-size: 15px; -fx-padding: 5px;");
+		}
 		
 		this.getChildren().addAll(msg);
 		this.setStyle("-fx-background-color: white;");
@@ -222,15 +226,12 @@ public class TaskPane extends StackPane {
 		
 		while (!tagsTree.isEmpty()) {
 			hasTags = true;
-			//tagString += "#";
 			tagString += tagsTree.pollFirst();
 			tagString += ", ";
 		}
 		
 		if (hasTags) {
 			tagString = tagString.substring(0, tagString.length() -  2);
-		} else {
-			//tagString = "none";
 		}
 		
 		return tagString;
