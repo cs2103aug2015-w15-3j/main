@@ -97,7 +97,7 @@ public class DisplayCommandRunner extends CommandRunner {
 			} else {
 				message = "Tasks pending for...";
 
-				feedbackMessage = FEEDBACK_PENDING + " for today & tomorrow";
+				feedbackMessage = FEEDBACK_PENDING + " for today, tomorrow and future";
 				ArrayList<Task> today = new ArrayList<Task>();
 				ArrayList<Task> tomorrow = new ArrayList<Task>();
 				
@@ -144,12 +144,14 @@ public class DisplayCommandRunner extends CommandRunner {
 					temp.remove(task);
 				}
 				int i = 0;
+				boolean isRestEmpty = true;
 				for (int size=today.size(); size < 20 && i < temp.size(); size++) {
 					today.add(temp.get(i++));
+					isRestEmpty = false;
 				}
 				
 				
-				if (isTodayEmpty && isTomorrowEmpty) {
+				if (isTodayEmpty && isTomorrowEmpty && isRestEmpty) {
 					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
 				} else {
 					eventbus.post(new SetCurrentDisplayEvent(today, message));
