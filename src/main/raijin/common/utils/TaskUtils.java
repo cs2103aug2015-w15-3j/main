@@ -105,7 +105,7 @@ public class TaskUtils {
 	    	list.add(new TaskPane(i + 1, task, "none"));
 	  }
 	  
-	  if (!todayIsEmpty && tomorrowIsEmpty) {
+	  if (tomorrowIsEmpty) {
 		  list.add(new TaskPane ("No pending tasks!"));
 	  }
 	  
