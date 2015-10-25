@@ -22,8 +22,8 @@ public class SortFilter extends TaskFilter {
       t2.getName().toLowerCase());
 
   //Sort by priority
-  Comparator<Task> byPriority = (t1, t2) -> comparePriority(t1.getPriority()
-      , t2.getPriority());
+  Comparator<Task> byPriority = (t1, t2) -> comparePriority(t2.getPriority()
+      , t1.getPriority());
 
 
   Comparator<Task> sortCriteria;

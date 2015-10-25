@@ -27,7 +27,7 @@ public class TypeFilterTest {
   
   static Task createTask(String name, DateTime dateTime) {
     ParsedInput input = new ParsedInput.ParsedInputBuilder(null).name(name)
-        .dateTime(dateTime).createParsedInput();
+        .dateTime(dateTime).priority("m").createParsedInput();
     return new Task(name, 1, input);
   }
 
@@ -38,10 +38,12 @@ public class TypeFilterTest {
   @BeforeClass
   public static void setUpClass() {
     tasks = new ArrayList<Task>();
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(null).priority("m")
+        .createParsedInput();
     tasks.add(createTask("I am weird", new DateTime("23/10/2010", "2300")));
     tasks.add(createTask("I am weird", new DateTime("23/10/2010", "2300", "2340")));
-    tasks.add(new Task("I am floating", 1));
-    tasks.add(new Task("I am flying", 1));
+    tasks.add(new Task("I am floating", 1, input));
+    tasks.add(new Task("I am flying", 1, input));
   }
 
   @Test

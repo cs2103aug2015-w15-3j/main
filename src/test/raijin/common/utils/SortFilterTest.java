@@ -94,9 +94,9 @@ public class SortFilterTest {
     SortFilter sort = new SortFilter(Constants.SORT_CRITERIA.PRIORITY);
     List<Task> result = sort.filter(tasks);
     
-    assertEquals(1, result.get(0).getId());
+    assertEquals(2, result.get(0).getId());
     assertEquals(3, result.get(1).getId());
-    assertEquals(2, result.get(2).getId());
+    assertEquals(1, result.get(2).getId());
   }
 
   @Test

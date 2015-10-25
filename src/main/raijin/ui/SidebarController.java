@@ -42,6 +42,10 @@ public class SidebarController extends BorderPane {
   @FXML
   private Label numOfCompleted;
   @FXML
+  private Button floating;
+  @FXML
+  private Label numOfFloating;
+  @FXML
   private Button today;
   @FXML
   private Label numOfToday;
@@ -50,9 +54,9 @@ public class SidebarController extends BorderPane {
   @FXML
   private Label numOfTomorrow;
   @FXML
-  private Button nextWeek;
+  private Button future;
   @FXML
-  private Label numOfNextWeek;
+  private Label numOfNextTasks;
 
   private Button currentFocusedButton;                //Determines current view
 
@@ -68,9 +72,11 @@ public class SidebarController extends BorderPane {
   private List<Task> pendingTasks;
   private List<Task> overdueTasks;
   private List<Task> completedTasks;
+  private List<Task> floatingTasks;
   private List<Task> pendingToday;
   private List<Task> pendingTomorrow;
   private List<Task> pendingNextWeek;
+  private TypeFilter floatingFilter;
 
   public SidebarController(Logic logic) {
     FXMLLoader loader = new FXMLLoader(getClass().getResource(SIDEBAR_LAYOUT_FXML));
@@ -122,11 +128,17 @@ public class SidebarController extends BorderPane {
   }
 
   @FXML
-  protected void handleNextWeekButtonAction(ActionEvent event) {
-    triggerViewChange(Constants.View.NEXT_WEEK);
-    setNewFocus(nextWeek);
+  protected void handleFutureButtonAction(ActionEvent event) {
+    triggerViewChange(Constants.View.FUTURE);
+    setNewFocus(future);
   }
 
+
+  @FXML
+  protected void handleFloatingButtonAction(ActionEvent event) {
+    logic.executeCommand("display f");
+    setNewFocus(floating);
+  }
 
   // =========================================================================
   // Handlers
@@ -160,10 +172,12 @@ public class SidebarController extends BorderPane {
     pendingTasks = event.pendingTasks;
     overdueTasks = event.overdue;
     completedTasks = event.completedTasks;
+    floatingTasks = floatingFilter.filter(pendingTasks);
 
     pendingToday = event.pendingToday;
     pendingTomorrow = event.pendingTomorrow;
     pendingNextWeek = event.pendingNextWeek;
+
     
     updateLabels();
   }
@@ -176,8 +190,8 @@ public class SidebarController extends BorderPane {
         setNewFocus(inbox);
         break;
 
-      case NEXT_WEEK:
-        setNewFocus(nextWeek);
+      case FUTURE:
+        setNewFocus(future);
         break;
 
       case TODAY:
@@ -208,10 +222,12 @@ public class SidebarController extends BorderPane {
         filter(pendingTasks);
     pendingTomorrow = new DateFilter(pendingTasks, Constants.View.TOMORROW.getDateTime()).
         filter(pendingTasks);
-    pendingNextWeek = new DateFilter(pendingTasks, Constants.View.NEXT_WEEK.getDateTime()).
-        filter(pendingTasks);
+    pendingNextWeek = new DateFilter(pendingTasks, Constants.View.FUTURE.getDateTime()).
+        filter(pendingTasks, Constants.View.FUTURE);
     overdueTasks = new TypeFilter(Constants.TYPE_TASK.OVERDUE).filter(pendingTasks);
     completedTasks = logic.getCompletedTasks();
+    floatingFilter = new TypeFilter(Constants.TYPE_TASK.FLOATING);
+    floatingTasks = floatingFilter.filter(pendingTasks);
     
     //Initialize labels
     updateLabels();
@@ -231,10 +247,11 @@ public class SidebarController extends BorderPane {
     numOfPending.setText(Integer.toString(pendingTasks.size()));
     numOfOverdue.setText(Integer.toString(overdueTasks.size()));
     numOfCompleted.setText(Integer.toString(completedTasks.size()));
+    numOfFloating.setText(Integer.toString(floatingTasks.size()));
 
     numOfToday.setText(Integer.toString(pendingToday.size()));
     numOfTomorrow.setText(Integer.toString(pendingTomorrow.size()));
-    numOfNextWeek.setText(Integer.toString(pendingNextWeek.size()));
+    numOfNextTasks.setText(Integer.toString(pendingNextWeek.size()));
   }
   
   void triggerViewChange(Constants.View view) {
