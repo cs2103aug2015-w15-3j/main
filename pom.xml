@@ -199,5 +199,10 @@
 			<artifactId>jnativehook</artifactId>
 			<version>2.0.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.fxmisc.richtext</groupId>
+			<artifactId>richtextfx</artifactId>
+			<version>0.6.10</version>
+		</dependency>
 	</dependencies>
 </project>
