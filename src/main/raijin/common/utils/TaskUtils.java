@@ -5,7 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -63,6 +65,8 @@ public class TaskUtils {
   
   public static List<TaskPane> convertToTaskPaneDefaultView (List<Task> tasks) {
 	  ArrayList<TaskPane> list = new ArrayList<TaskPane>();
+	  ArrayList<Task> addedTasks = new ArrayList<Task>();
+	  Queue<Task> skippedTasks = new LinkedList<Task>();
 	  LocalDate today = LocalDate.now();
 	  String todayString = today.format(dateFormat);
 	  LocalDate tomorrow = today.plusDays(1);
@@ -70,9 +74,8 @@ public class TaskUtils {
 	  
 	  list.add(new TaskPane ("Today - " + todayString + "")); //TodayPane
 	  
-	  boolean todayIsEmpty = false;
+	  boolean todayIsEmpty = true;
 	  boolean tomorrowIsEmpty = true;
-	  boolean insertedTomorrowPane = false;
 	  LocalDate taskStartDate;
 	  
 	  int i = 0;
@@ -85,29 +88,59 @@ public class TaskUtils {
 	    		taskStartDate = today.plusDays(2);
 	    	}
 	    	
-	    	if (taskStartDate.isAfter(today) && !insertedTomorrowPane) {
-	    		// If list only has TodayPane
-	    		if (list.size() == 1) {
-	    			todayIsEmpty = true;
-	    			list.add(new TaskPane ("No pending tasks!"));
-	    		}
-	    		list.add(new TaskPane ("Tomorrow - " + tomorrowString + ""));
-	    		insertedTomorrowPane = true;
-	    	}
-	    	
-	    	if (taskStartDate.isAfter(tomorrow)) {
+	    	if (taskStartDate.isAfter(today)) {
 	    		break;
 	    	}
 	    	
-	    	if (insertedTomorrowPane == true) {
-	    		tomorrowIsEmpty = false;
+	    	if (!addedTasks.contains(task)) {
+	    		list.add(new TaskPane(i + 1, task, "none"));
+	    		addedTasks.add(task);
+	    		todayIsEmpty = false;
+	    	} else {
+	    		skippedTasks.add(task);
 	    	}
-	    	list.add(new TaskPane(i + 1, task, "none"));
+	    	
 	  }
 	  
-	  if (!insertedTomorrowPane) {
-		  list.add(new TaskPane ("Tomorrow - " + tomorrowString + ""));
-  		  insertedTomorrowPane = true;
+	  if (todayIsEmpty) {
+			list.add(new TaskPane ("No pending tasks!"));
+	  }
+	  
+	  list.add(new TaskPane ("Tomorrow - " + tomorrowString + ""));
+	  addedTasks.clear();
+	  
+	  while (!skippedTasks.isEmpty()) {
+		  Task task = skippedTasks.poll();
+		  
+		  if (!addedTasks.contains(task)) {
+			  list.add(new TaskPane (i, task, "none"));
+			  tomorrowIsEmpty = false;
+			  addedTasks.add(task);
+		  } else {
+			  skippedTasks.offer(task); //put it back
+			  break;
+		  }
+		  
+	  }
+	  
+	  
+	  int j;
+	  for (j=i; j<tasks.size(); j++) {
+		  Task task = tasks.get(j);
+		  
+		  try {
+	    		taskStartDate = task.getDateTime().getStartDate();
+	      } catch (NullPointerException e) {
+	    		taskStartDate = today.plusDays(2);
+	      }
+	    	
+	      if (taskStartDate.isAfter(tomorrow)) {
+	      	  break;
+	      }
+	      
+	      list.add(new TaskPane (j+1, task, "none"));
+	      tomorrowIsEmpty = false;
+		  
 	  }
 	  
 	  if (tomorrowIsEmpty) {
@@ -117,9 +150,9 @@ public class TaskUtils {
 	  list.add(new TaskPane ("Future"));
 	  
 	  boolean futureIsEmpty = true;
-	  for (int j=i; j<tasks.size(); j++) {
-		  Task task = tasks.get(j);
-		  list.add(new TaskPane (j + 1, task, "none"));
+	  for (int k=j; k<tasks.size(); k++) {
+		  Task task = tasks.get(k);
+		  list.add(new TaskPane (k + 1, task, "none"));
 		  futureIsEmpty = false;
 	  }
 	  
