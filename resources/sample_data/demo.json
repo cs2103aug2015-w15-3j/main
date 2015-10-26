@@ -1,0 +1,131 @@
+{
+  "pendingTasks": {
+    "1": {
+      "id": 1,
+      "name": "Collect passport at ICA",
+      "dateTime": {
+        "startDate": {
+          "year": 2015,
+          "month": 10,
+          "day": 24
+        },
+        "endDate": {
+          "year": 2015,
+          "month": 10,
+          "day": 24
+        },
+        "endTime": {
+          "hour": 12,
+          "minute": 0,
+          "second": 0,
+          "nano": 0
+        }
+      },
+      "priority": "h",
+      "tags": [],
+      "subTasks": [],
+      "keywords": [
+        "Collect",
+        "passport",
+        "at",
+        "ICA"
+      ],
+      "type": "SPECIFIC"
+    },
+    "2": {
+      "id": 2,
+      "name": "Finish CS2010 tutorial",
+      "dateTime": {
+        "startDate": {
+          "year": 2015,
+          "month": 10,
+          "day": 25
+        },
+        "endDate": {
+          "year": 2015,
+          "month": 10,
+          "day": 25
+        },
+        "endTime": {
+          "hour": 23,
+          "minute": 59,
+          "second": 0,
+          "nano": 0
+        }
+      },
+      "priority": "m",
+      "tags": [
+        "cs2010",
+        "school"
+      ],
+      "subTasks": [],
+      "keywords": [
+        "Finish",
+        "CS2010",
+        "tutorial"
+      ],
+      "type": "SPECIFIC"
+    },
+    "3": {
+      "id": 3,
+      "name": "Update user guide",
+      "dateTime": {
+        "startDate": {
+          "year": 2015,
+          "month": 10,
+          "day": 23
+        },
+        "endDate": {
+          "year": 2015,
+          "month": 11,
+          "day": 1
+        },
+        "startTime": {
+          "hour": 19,
+          "minute": 56,
+          "second": 0,
+          "nano": 0
+        },
+        "endTime": {
+          "hour": 23,
+          "minute": 59,
+          "second": 0,
+          "nano": 0
+        }
+      },
+      "priority": "m",
+      "tags": [
+        "cs2101",
+        "cs2103",
+        "school"
+      ],
+      "subTasks": [],
+      "keywords": [
+        "Update",
+        "user",
+        "guide"
+      ],
+      "type": "EVENT"
+    },
+    "4": {
+      "id": 4,
+      "name": "Become a Pokemon master",
+      "priority": "l",
+      "tags": [
+        "iWannaBeTheVeryBest",
+        "thatNoOneEverWas",
+        "toCatchThemIsMyRealTest",
+        "toTrainThemIsMyCause"
+      ],
+      "subTasks": [],
+      "keywords": [
+        "Become",
+        "a",
+        "Pokemon",
+        "master"
+      ],
+      "type": "FLOATING"
+    }
+  },
+  "completedTasks": {}
+}

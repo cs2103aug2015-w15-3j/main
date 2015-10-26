@@ -1,0 +1,22 @@
+display o
+edit 1 by 30/10
+display o 
+done 1 
+add learn guitar
+add mop the floor on 28/10
+add do laundry on 28/10 #housework 
+add bathe meowmeow on 28/10 #housework
+add Jamie's wedding on 20/12 1800 to 2200 
+edit 6 by 22/12 1800 to 2200 
+edit 6 by 21/12 1800 to 2200 
+display
+search Jamie's wedding 
+search #housework
+search !h
+delete 1
+delete 1 2
+add feed meowmeow ; hug meowmeow ; love meowmeow by 31/10
+done 1 2 3 
+display a
+add Invilgilate Practical Exam for CS1010J
+
