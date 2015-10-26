@@ -105,19 +105,25 @@ public class TaskUtils {
 	    	list.add(new TaskPane(i + 1, task, "none"));
 	  }
 	  
+	  if (!insertedTomorrowPane) {
+		  list.add(new TaskPane ("Tomorrow - " + tomorrowString + ""));
+  		  insertedTomorrowPane = true;
+	  }
+	  
 	  if (tomorrowIsEmpty) {
 		  list.add(new TaskPane ("No pending tasks!"));
 	  }
 	  
 	  list.add(new TaskPane ("Future"));
 	  
+	  boolean futureIsEmpty = true;
 	  for (int j=i; j<tasks.size(); j++) {
 		  Task task = tasks.get(j);
 		  list.add(new TaskPane (j + 1, task, "none"));
+		  futureIsEmpty = false;
 	  }
 	  
-	  // If list only contains TodayPane & TomorrowPane
-	  if (list.size() == 2) {
+	  if (futureIsEmpty) {
 		  list.add(new TaskPane ("No pending tasks!"));
 	  }
 	  
