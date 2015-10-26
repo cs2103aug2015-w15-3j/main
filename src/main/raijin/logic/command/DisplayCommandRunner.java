@@ -146,8 +146,11 @@ public class DisplayCommandRunner extends CommandRunner {
 				int i = 0;
 				boolean isRestEmpty = true;
 				for (int size=today.size(); size < 20 && i < temp.size(); size++) {
-					today.add(temp.get(i++));
-					isRestEmpty = false;
+					Task task = temp.get(i++);
+					if (!isOverdue(task.getDateTime())) {
+						today.add(task);
+						isRestEmpty = false;
+					}
 				}
 				
 				
