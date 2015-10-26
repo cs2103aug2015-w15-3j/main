@@ -136,7 +136,7 @@ public class AutoComplete {
   }
 
   String[] getTokens(String userInput) {
-    return userInput.toLowerCase().trim().split(" ");
+    return userInput.trim().split(" ");
   }
 
   void updateSuggestions(String input) {
