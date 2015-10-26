@@ -193,14 +193,15 @@ public class Constants {
   //===========================================================================
   
   private static final LocalDate today = LocalDate.now();
+  private static final LocalDate tomorrow = LocalDate.now().plusDays(1L);
 
   /*Different default views supported*/
   public static enum View {
 
     INBOX("Inbox", null), 
-    TODAY("Today", new DateTime(null, today)), 
-    TOMORROW("Tomorrow", new DateTime(null, today.plusDays(1L))),
-    FUTURE("Future", new DateTime(today.plusDays(2L), null));
+    TODAY("Today", new DateTime(today, today)), 
+    TOMORROW("Tomorrow", new DateTime(tomorrow, tomorrow)),
+    FUTURE("Future", new DateTime(today.plusDays(2L), today.plusYears(1L)));
 
     private String message;
     private DateTime dateTime;

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+import raijin.common.utils.RaijinLogger;
+
 public class DateTime implements Comparable<DateTime> {
 
   private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(Constants.FORMAT_DATE);
@@ -118,15 +120,15 @@ public class DateTime implements Comparable<DateTime> {
     if (result != 0) {
       return result;
     } else {
-      result = compareStartDate(getStartDate(), compared.getStartDate());
+      result = getStartDate().compareTo(compared.getStartDate());
       
       //When both start dates are different
       if (result != 0) {
         return result;
       } else {
         result = getEndTime().compareTo(compared.getEndTime());
-        
-        //When both start times are different 
+
+        //When both end times are different 
         if (result != 0) {
           return result;
         } else {
@@ -164,22 +166,5 @@ public class DateTime implements Comparable<DateTime> {
     }
   }
 
-  /**
-   * Compare date when both shared the same start date 
-   * @param source
-   * @param target
-   * @return
-   */
-  int compareStartDate(LocalDate source, LocalDate target) {
-    if (source == null && target == null) {
-      return 0;
-    } else if (source == null) {
-      return 1;
-    } else if (target == null) {
-      return -1;
-    } else {
-      return source.compareTo(target);
-    }
-  }
 
 }
