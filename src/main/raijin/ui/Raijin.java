@@ -1,64 +1,43 @@
 package raijin.ui;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 
-import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.RaijinEventBus;
-import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.common.eventbus.events.SetFailureEvent;
 
 import java.awt.AWTException;
 import java.awt.Image;
-import java.awt.Menu;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.Robot;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
-import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 
 import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
-import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
-import raijin.common.eventbus.subscribers.MainSubscriber;
-import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.Logic;
-import raijin.storage.api.Session;
 
 public class Raijin extends Application implements NativeKeyListener {
   private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
