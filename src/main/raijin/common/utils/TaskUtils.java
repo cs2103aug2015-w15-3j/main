@@ -65,8 +65,6 @@ public class TaskUtils {
   
   public static List<TaskPane> convertToTaskPaneDefaultView (List<Task> tasks) {
 	  ArrayList<TaskPane> list = new ArrayList<TaskPane>();
-	  ArrayList<Task> addedTasks = new ArrayList<Task>();
-	  Queue<Task> skippedTasks = new LinkedList<Task>();
 	  LocalDate today = LocalDate.now();
 	  String todayString = today.format(dateFormat);
 	  LocalDate tomorrow = today.plusDays(1);
@@ -92,14 +90,9 @@ public class TaskUtils {
 	    		break;
 	    	}
 	    	
-	    	if (!addedTasks.contains(task)) {
-	    		list.add(new TaskPane(i + 1, task, "none"));
-	    		addedTasks.add(task);
-	    		todayIsEmpty = false;
-	    	} else {
-	    		skippedTasks.add(task);
-	    	}
-	    	
+	    	list.add(new TaskPane(i + 1, task, "none"));
+	    	todayIsEmpty = false;
+	    
 	  }
 	  
 	  if (todayIsEmpty) {
@@ -107,22 +100,6 @@ public class TaskUtils {
 	  }
 	  
 	  list.add(new TaskPane ("Tomorrow - " + tomorrowString + ""));
-	  addedTasks.clear();
-	  
-	  while (!skippedTasks.isEmpty()) {
-		  Task task = skippedTasks.poll();
-		  
-		  if (!addedTasks.contains(task)) {
-			  list.add(new TaskPane (i, task, "none"));
-			  tomorrowIsEmpty = false;
-			  addedTasks.add(task);
-		  } else {
-			  skippedTasks.offer(task); //put it back
-			  break;
-		  }
-		  
-	  }
-	  
 	  
 	  int j;
 	  for (j=i; j<tasks.size(); j++) {
