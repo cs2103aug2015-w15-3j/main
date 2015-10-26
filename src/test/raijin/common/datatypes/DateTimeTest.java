@@ -48,59 +48,7 @@ public class DateTimeTest {
   }
   
   //===========================================================================
-  // Compare end date
-  //===========================================================================
-  
-  @Test
-  public void compareStartDate_EqualDates() {
-    //Same start date, same end date
-    LocalDate sourceEnd = LocalDate.of(2015, 10, 19);
-    LocalDate targetEnd = LocalDate.of(2015, 10, 19);
-    DateTime source = new DateTime(null, sourceEnd);
-    
-    assertEquals(0, source.compareStartDate(sourceEnd, targetEnd));
-  }
-
-  @Test
-  public void compareStartDate_EarlierThan() {
-    //Same start date, earlier end date
-    LocalDate sourceEnd = LocalDate.of(2015, 10, 18);
-    LocalDate targetEnd = LocalDate.of(2015, 10, 19);
-    DateTime source = new DateTime(sourceEnd, null);
-    
-    assertEquals(-1, source.compareStartDate(sourceEnd, targetEnd));
-  }
-
-  @Test
-  public void compareStartDate_LaterThan() {
-    //Same start date, same end date
-    LocalDate sourceEnd = LocalDate.of(2015, 10, 19);
-    LocalDate targetEnd = LocalDate.of(2015, 10, 18);
-    DateTime source = new DateTime(sourceEnd, null);
-    
-    assertEquals(1, source.compareStartDate(sourceEnd, targetEnd));
-  }
-
-  @Test
-  public void compareStartDate_SourceNull() {
-    //Same start date, no end date
-    LocalDate targetEnd = LocalDate.of(2015, 10, 19);
-    DateTime source = new DateTime(null, targetEnd);
-    
-    assertEquals(1, source.compareStartDate(null, targetEnd));
-  }
-
-  @Test
-  public void compareStartDate_TargetNull() {
-    //Same start date, no end date
-    LocalDate sourceEnd = LocalDate.of(2015, 10, 19);
-    DateTime source = new DateTime(sourceEnd, null);
-    
-    assertEquals(-1, source.compareStartDate(sourceEnd, null));
-  }
-
-  //===========================================================================
-  // Compare End Time
+  // Compare Start Time
   //===========================================================================
   
   @Test

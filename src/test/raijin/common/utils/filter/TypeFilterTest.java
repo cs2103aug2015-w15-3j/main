@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import raijin.common.datatypes.Constants;
@@ -72,7 +73,7 @@ public class TypeFilterTest {
 
   @Test
   public void filter_OverdueTime() {
-    DateTime late = new DateTime(null, null, LocalDate.now(), 
+    DateTime late = new DateTime(LocalDate.now(), null, LocalDate.now(), 
         LocalTime.now().minusMinutes(2L));
 
     tasks.add(createTask("I am late", late));
@@ -83,4 +84,14 @@ public class TypeFilterTest {
     assertEquals(3, filtered.size());
   }
 
+  @Test
+  public void filter_OverdueDateTime() {
+    DateTime today = new DateTime("26/10/2015", "2359");
+    ArrayList<Task> nothing = new ArrayList<Task>();
+    nothing.add(createTask("I am late", today));
+
+    TypeFilter type = new TypeFilter(Constants.TYPE_TASK.OVERDUE);
+    List<Task> filtered = type.filter(nothing);
+    assertEquals(0, filtered.size());
+  }
 }
