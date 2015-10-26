@@ -3,7 +3,6 @@ package raijin.common.utils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
@@ -12,15 +11,11 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
 import com.google.common.collect.HashMultiset;
-import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multiset;
-import com.google.common.collect.TreeMultiset;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import raijin.common.datatypes.Constants;
-import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
-import raijin.logic.command.DisplayCommandRunner;
 
 public class TaskUtils {
 	final static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
@@ -70,9 +65,8 @@ public class TaskUtils {
 	  
 	  list.add(new TaskPane ("Today - " + todayString + "")); //TodayPane
 	  
-	  boolean todayIsEmpty = false;
+	  boolean todayIsEmpty = true;
 	  boolean tomorrowIsEmpty = true;
-	  boolean insertedTomorrowPane = false;
 	  LocalDate taskStartDate;
 	  
 	  int i = 0;
@@ -85,29 +79,38 @@ public class TaskUtils {
 	    		taskStartDate = today.plusDays(2);
 	    	}
 	    	
-	    	if (taskStartDate.isAfter(today) && !insertedTomorrowPane) {
-	    		// If list only has TodayPane
-	    		if (list.size() == 1) {
-	    			todayIsEmpty = true;
-	    			list.add(new TaskPane ("No pending tasks!"));
-	    		}
-	    		list.add(new TaskPane ("Tomorrow - " + tomorrowString + ""));
-	    		insertedTomorrowPane = true;
-	    	}
-	    	
-	    	if (taskStartDate.isAfter(tomorrow)) {
+	    	if (taskStartDate.isAfter(today)) {
 	    		break;
 	    	}
 	    	
-	    	if (insertedTomorrowPane == true) {
-	    		tomorrowIsEmpty = false;
-	    	}
 	    	list.add(new TaskPane(i + 1, task, "none"));
+	    	todayIsEmpty = false;
+	    
 	  }
 	  
-	  if (!insertedTomorrowPane) {
-		  list.add(new TaskPane ("Tomorrow - " + tomorrowString + ""));
-  		  insertedTomorrowPane = true;
+	  if (todayIsEmpty) {
+			list.add(new TaskPane ("No pending tasks!"));
+	  }
+	  
+	  list.add(new TaskPane ("Tomorrow - " + tomorrowString + ""));
+	  
+	  int j;
+	  for (j=i; j<tasks.size(); j++) {
+		  Task task = tasks.get(j);
+		  
+		  try {
+	    		taskStartDate = task.getDateTime().getStartDate();
+	      } catch (NullPointerException e) {
+	    		taskStartDate = today.plusDays(2);
+	      }
+	    	
+	      if (taskStartDate.isAfter(tomorrow)) {
+	      	  break;
+	      }
+	      
+	      list.add(new TaskPane (j+1, task, "none"));
+	      tomorrowIsEmpty = false;
+		  
 	  }
 	  
 	  if (tomorrowIsEmpty) {
@@ -117,9 +120,9 @@ public class TaskUtils {
 	  list.add(new TaskPane ("Future"));
 	  
 	  boolean futureIsEmpty = true;
-	  for (int j=i; j<tasks.size(); j++) {
-		  Task task = tasks.get(j);
-		  list.add(new TaskPane (j + 1, task, "none"));
+	  for (int k=j; k<tasks.size(); k++) {
+		  Task task = tasks.get(k);
+		  list.add(new TaskPane (k + 1, task, "none"));
 		  futureIsEmpty = false;
 	  }
 	  

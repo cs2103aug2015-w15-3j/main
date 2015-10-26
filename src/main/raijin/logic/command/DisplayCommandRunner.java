@@ -125,8 +125,9 @@ public class DisplayCommandRunner extends CommandRunner {
 				for (Task currentTask : pending) {
 					taskDateTime = currentTask.getDateTime();
 
-					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
-							isRelevantDate(new DateTime(tomorrowDate, tomorrowDate), taskDateTime)) {
+					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING 
+						&& isRelevantDate(new DateTime(tomorrowDate, tomorrowDate), taskDateTime)
+						&& !isAlreadyInToday(currentTask, today)) {
 
 						isTomorrowEmpty = false;
 						tomorrow.add(currentTask);
@@ -365,6 +366,14 @@ public class DisplayCommandRunner extends CommandRunner {
 		}
 
 		return false;
+	}
+	
+	boolean isAlreadyInToday (Task task, ArrayList<Task> today) {
+		if (today.contains(task)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
