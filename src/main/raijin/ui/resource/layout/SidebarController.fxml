@@ -24,7 +24,7 @@
             </ImageView>
             <HBox fx:id="inboxHBox">
                <children>
-                  <Button fx:id="inbox" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleInboxButtonAction" prefHeight="33.0" prefWidth="122.0" style="-fx-background-color: #ccf8ff;" text="inbox" wrapText="true" VBox.vgrow="NEVER">
+                  <Button fx:id="inbox" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleInboxButtonAction" prefHeight="33.0" prefWidth="122.0" style="-fx-background-color: #ccf8ff;" text="all" wrapText="true" VBox.vgrow="NEVER">
                      <font>
                         <Font name="Droid Sans Mono" size="16.0" />
                      </font>

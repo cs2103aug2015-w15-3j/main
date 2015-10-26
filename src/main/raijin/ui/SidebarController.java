@@ -259,7 +259,7 @@ public class SidebarController extends BorderPane {
   }
   
   void triggerOverdueViewChange() {
-    eventbus.post(new SetCurrentDisplayEvent(overdueTasks, "Overdue"));
+    eventbus.post(new SetCurrentDisplayEvent(overdueTasks, Constants.DISPLAY_OVERDUE));
   }
 
   //Set button color when view changes

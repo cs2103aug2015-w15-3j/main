@@ -54,6 +54,14 @@ public class Constants {
   public static final String FEEDBACK_INVALID_ENDDATE = "Error: Invalid end date format!";
   public static final String FEEDBACK_INVALID_ENDTIME = "Error: Invalid end time format!";
   
+  //==================
+  // Display 
+  //==================
+  
+  public static final String DISPLAY_OVERDUE = "All overdue tasks";
+  public static final String DISPLAY_COMPLETED = "Tasks completed as of today, %s";
+  public static final String DISPLAY_FLOATING = "All floating tasks";
+  public static final String DISPLAY_ALL = "All pending tasks";
   
   //===========================================================================
   // Datatypes Constants
@@ -198,7 +206,7 @@ public class Constants {
   /*Different default views supported*/
   public static enum View {
 
-    INBOX("Inbox", null), 
+    INBOX(Constants.DISPLAY_ALL, null), 
     TODAY("Today", new DateTime(today, today)), 
     TOMORROW("Tomorrow", new DateTime(tomorrow, tomorrow)),
     FUTURE("Future", new DateTime(today.plusDays(2L), today.plusYears(1L)));
