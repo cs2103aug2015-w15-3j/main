@@ -139,6 +139,6 @@ public class DateTimeTest {
     System.out.println(source.getEndTime().toString());
     System.out.println(source.getStartDate().toString());
     DateTime target = new DateTime(null, null, LocalDate.now(), LocalTime.now());
-    assertEquals(-1, source.compareTo(target));
+    assertTrue(source.compareTo(target) < 0);
   }
 }

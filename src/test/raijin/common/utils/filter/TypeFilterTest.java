@@ -86,7 +86,7 @@ public class TypeFilterTest {
 
   @Test
   public void filter_OverdueDateTime() {
-    DateTime today = new DateTime("26/10/2015", "2359");
+    DateTime today = new DateTime(LocalDate.now(), null, LocalDate.now(), LocalTime.of(23, 59));
     ArrayList<Task> nothing = new ArrayList<Task>();
     nothing.add(createTask("I am late", today));
 
