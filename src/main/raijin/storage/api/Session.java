@@ -96,6 +96,10 @@ public class Session {
     setupTempPath(StorageHandler.createTempFile(Constants.NAME_TEMP_DATA));
   }
 
+  public void setDataPath(String dataPath) {
+    this.dataPath = dataPath;
+  }
+
   public String getPathInfo() {
     return programDirectory + "\n" + storageDirectory + "\n" + baseConfigPath + "\n" + dataPath
         + "\n" + userConfigPath;

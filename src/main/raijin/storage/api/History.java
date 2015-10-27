@@ -65,7 +65,7 @@ public class History {
   }
   
   /*Clears both undo and redo stacks*/
-  void clear() {
+  public void clear() {
     undoStack.clear();
     redoStack.clear();
   }
