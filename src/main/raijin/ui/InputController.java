@@ -17,6 +17,7 @@ import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.common.eventbus.events.SetFailureEvent;
 import raijin.common.eventbus.events.SetInputEvent;
+import raijin.common.eventbus.events.UndoRedoEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -86,8 +87,8 @@ public class InputController extends BorderPane {
   }
 
   public void setFeedback(String text) {
-	 // feedbackBar.setTextFill(Color.BLACK);
-	  feedbackBar.setText(text);
+    // feedbackBar.setTextFill(Color.BLACK);
+    feedbackBar.setText(text);
   }
 
   public void setInput(String text) {
@@ -102,29 +103,30 @@ public class InputController extends BorderPane {
           @Subscribe
           @Override
           public void handleEvent(SetFeedbackEvent event) {
-              feedbackBar.setTextFill(Color.BLACK);
-        	  setFeedback(event.output);
+            feedbackBar.setTextFill(Color.BLACK);
+            setFeedback(event.output);
           }
         };
   }
 
   public void setFailureFeedback(String text) {
-	 // feedbackBar.setTextFill(Color.RED);
-	  setFeedback(text);
+    // feedbackBar.setTextFill(Color.RED);
+    setFeedback(text);
   }
-  
+
   void handleSetFailureEvent() {
-	  MainSubscriber<SetFailureEvent> failureSubscriber =
-	    new MainSubscriber<SetFailureEvent>(eventbus) {
-		 
-		@Subscribe
-		@Override
-		public void handleEvent(SetFailureEvent event) {
-			feedbackBar.setTextFill(Color.RED);
-			setFailureFeedback(event.output);
-		}
-	  };
+    MainSubscriber<SetFailureEvent> failureSubscriber =
+        new MainSubscriber<SetFailureEvent>(eventbus) {
+
+          @Subscribe
+          @Override
+          public void handleEvent(SetFailureEvent event) {
+            feedbackBar.setTextFill(Color.RED);
+            setFailureFeedback(event.output);
+          }
+        };
   }
+
   void handleSetInputEvent() {
     MainSubscriber<SetInputEvent> inputSubscriber = new MainSubscriber<SetInputEvent>(eventbus) {
 
@@ -151,8 +153,15 @@ public class InputController extends BorderPane {
 
       @Override
       public void handle(KeyEvent event) {
-        String userInput = inputCommandBar.getText();
-        eventbus.post(new KeyPressEvent(event, userInput));
+        if (Constants.KEY_UNDO.match(event)) {
+          eventbus.post(new UndoRedoEvent(true, false));
+        } else if (Constants.KEY_REDO.match(event)) {
+          eventbus.post(new UndoRedoEvent(false, true));
+        } else {
+          String userInput = inputCommandBar.getText();
+          eventbus.post(new KeyPressEvent(event, userInput));
+        }
+        event.consume();
       }
 
     });
@@ -183,7 +192,8 @@ public class InputController extends BorderPane {
   }
 
   /**
-   * Handles copy, cut, and paste operation 
+   * Handles copy, cut, and paste operation
+   * 
    * @param event
    */
   void handleIOEvent(KeyEvent event) {
@@ -193,20 +203,20 @@ public class InputController extends BorderPane {
       getClipboardContent();
       event.consume();
     } else if (Constants.KEY_CUT.match(event)) {
-      
+
     }
   }
 
   /**
    * Handles cut and copy operation
+   * 
    * @param isCut determines whether selected text will be removed
    */
   public void copyToClipboard(boolean isCut) {
     /*
-    ClipboardContent content = new ClipboardContent();
-    content.putString(inputCommandBar.getSelectedText());
-    fxClipboard.setContent(content);
-    */
+     * ClipboardContent content = new ClipboardContent();
+     * content.putString(inputCommandBar.getSelectedText()); fxClipboard.setContent(content);
+     */
     if (isCut) {
       inputCommandBar.cut();
     } else {

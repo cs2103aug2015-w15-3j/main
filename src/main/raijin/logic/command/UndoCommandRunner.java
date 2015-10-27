@@ -6,6 +6,7 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
+import raijin.common.eventbus.events.UndoRedoEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.CommandRunner;
@@ -24,14 +25,13 @@ public class UndoCommandRunner extends CommandRunner implements CommandShortcut 
   }
 
   public void handleKeyEvent() {
-    MainSubscriber<KeyPressEvent> undoKeySubscriber = new MainSubscriber<
-        KeyPressEvent>(eventbus) {
+    MainSubscriber<UndoRedoEvent> undoKeySubscriber = new MainSubscriber<
+        UndoRedoEvent>(eventbus) {
 
       @Subscribe
       @Override
-      public void handleEvent(KeyPressEvent event) {
-        if (Constants.KEY_UNDO.match(event.keyEvent)) {
-          event.keyEvent.consume();                 //Prevent multiple undo
+      public void handleEvent(UndoRedoEvent event) {
+        if (event.canUndo) {
           try {
             history.undo();
             sendFeedbackEvent(Constants.FEEDBACK_UNDO_SUCCESS);
