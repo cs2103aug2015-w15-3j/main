@@ -33,6 +33,7 @@ public class RedoCommandRunner extends CommandRunner implements CommandShortcut 
       @Override
       public void handleEvent(UndoRedoEvent event) {
         if (event.canRedo) {
+          System.out.println("ctrl+y");
           try {
             history.redo();
             sendFeedbackEvent(Constants.FEEDBACK_REDO_SUCCESS);

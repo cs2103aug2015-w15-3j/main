@@ -32,6 +32,7 @@ public class UndoCommandRunner extends CommandRunner implements CommandShortcut 
       @Override
       public void handleEvent(UndoRedoEvent event) {
         if (event.canUndo) {
+          System.out.println("ctrl+z");
           try {
             history.undo();
             sendFeedbackEvent(Constants.FEEDBACK_UNDO_SUCCESS);
