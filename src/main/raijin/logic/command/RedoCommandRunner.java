@@ -32,6 +32,7 @@ public class RedoCommandRunner extends CommandRunner implements CommandShortcut 
       @Override
       public void handleEvent(KeyPressEvent event) {
         if (Constants.KEY_REDO.match(event.keyEvent)) {
+          event.keyEvent.consume();
           try {
             history.redo();
             sendFeedbackEvent(Constants.FEEDBACK_REDO_SUCCESS);

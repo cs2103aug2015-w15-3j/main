@@ -31,6 +31,7 @@ public class UndoCommandRunner extends CommandRunner implements CommandShortcut 
       @Override
       public void handleEvent(KeyPressEvent event) {
         if (Constants.KEY_UNDO.match(event.keyEvent)) {
+          event.keyEvent.consume();                 //Prevent multiple undo
           try {
             history.undo();
             sendFeedbackEvent(Constants.FEEDBACK_UNDO_SUCCESS);
