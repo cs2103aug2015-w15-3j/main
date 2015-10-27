@@ -53,6 +53,7 @@ public class Constants {
   public static final String FEEDBACK_INVALID_STARTTIME = "Error: Invalid start time format!";
   public static final String FEEDBACK_INVALID_ENDDATE = "Error: Invalid end date format!";
   public static final String FEEDBACK_INVALID_ENDTIME = "Error: Invalid end time format!";
+  public static final String FEEDBACK_INVALID_ENDDATETIME = "Error: Invalid end date/time format!";
   
   //==================
   // Display 

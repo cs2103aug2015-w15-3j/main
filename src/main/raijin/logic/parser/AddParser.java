@@ -94,44 +94,38 @@ public class AddParser {
               throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDDATE,
                   Constants.CommandParam.DATETIME); 
             }
-          }
+          }          
           
-          // startDate startTime {endDate endTime}
-          if (containsStartDate && containsStartTime && i < wordsOfInput.length-5 && 
-              wordsOfInput[i+3].matches(Constants.DATE_END_PREPOSITION)) {
-            
-
-            // startDate startTime {endDate} endTime
-            if (wordsOfInput[i+4].toLowerCase().matches(datePattern)) {
-              containsEndDate = true;
-              endDate = wordsOfInput[i+4];
-            } else {
-              throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDDATE,
-                  Constants.CommandParam.DATETIME); 
-            }
-            
-            // startDate startTime endDate {endTime}
-            if (wordsOfInput[i+5].matches(timePattern)) {
-              containsEndTime = true;
-              endTime = wordsOfInput[i+5];
-            } else {
-              throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
-                  Constants.CommandParam.DATETIME); 
-            } 
-            
-          } else if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && 
+          if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && 
               wordsOfInput[i+3].toLowerCase().matches(Constants.DATE_END_PREPOSITION)) {
             
-            // startDate startTime {endTime}
             if (wordsOfInput[i+4].matches(timePattern)) {
+              
+              // startDate startTime {endTime}
               containsEndTime = true;
               endTime = wordsOfInput[i+4];
+              
+            } else if (wordsOfInput[i+4].matches(datePattern)) {
+              
+              // startDate startTime {endDate} endTime
+              containsEndDate = true;
+              endDate = wordsOfInput[i+4];
+              
+              // startDate startTime endDate {endTime}
+              if (wordsOfInput[i+5].matches(timePattern)) {
+                containsEndTime = true;
+                endTime = wordsOfInput[i+5];
+              } else {
+                throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
+                    Constants.CommandParam.DATETIME); 
+              }
+              
             } else {
-              throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
+              throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDDATETIME,
                   Constants.CommandParam.DATETIME); 
             } 
             
-          }
+          } 
         } else if (i < wordsOfInput.length-1 && wordsOfInput[i+1].matches(timePattern)) {
           
           // Checks for format of {startTime}. If doesn't exist, ignore.

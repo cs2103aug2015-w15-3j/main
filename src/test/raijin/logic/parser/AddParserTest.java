@@ -70,7 +70,7 @@ public class AddParserTest {
   }
   
   @Test
-  public void testAddWithPriorityAndTagsAfterDate() throws FailedToParseException {
+  public void testAddWithPriorityAndTagsAfterTimeline() throws FailedToParseException {
     addCommand = parser.parse("add finish work from 0800 to 0900 !h #work #school");
     assertEquals("finish work", addCommand.getName());
     assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
@@ -81,9 +81,24 @@ public class AddParserTest {
   }
   
   @Test
-  public void testAddWithPriorityAndTagsBeforeDate() throws FailedToParseException {
-    addCommand = parser.parse("add finish work !h #work #school from 0800 to 0900");
+  public void testAddWithPriorityAndTagsBeforeEvent() throws FailedToParseException {
+    addCommand = parser.parse("add finish work !h #work #school from 27/12 0800 to 27/12 0900");
     assertEquals("finish work", addCommand.getName());
+    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
+    assertEquals("2015-12-27", addCommand.getDateTime().getEndDate().toString());
+    assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("09:00", addCommand.getDateTime().getEndTime().toString());
+    assertEquals(Constants.PRIORITY_HIGH, addCommand.getPriority());
+    assertEquals("school", addCommand.getTags().pollFirst());
+    assertEquals("work", addCommand.getTags().pollFirst());
+  }
+  
+  @Test
+  public void testAddWithPriorityAndTagsAfterEvent() throws FailedToParseException {
+    addCommand = parser.parse("add finish work from 27/12 0800 to 27/12 0900 !h #work #school");
+    assertEquals("finish work", addCommand.getName());
+    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
+    assertEquals("2015-12-27", addCommand.getDateTime().getEndDate().toString());
     assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
     assertEquals("09:00", addCommand.getDateTime().getEndTime().toString());
     assertEquals(Constants.PRIORITY_HIGH, addCommand.getPriority());
@@ -99,9 +114,21 @@ public class AddParserTest {
   }
   
   @Test
-  public void testAddWithTagsPriorityAtEnd() throws FailedToParseException {
+  public void testAddWithTagsPriorityAfterOneDate() throws FailedToParseException {
     addCommand = parser.parse("add finish work by 27/12 !h #work");
+    assertEquals("finish work", addCommand.getName());
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
+    assertEquals(Constants.PRIORITY_HIGH, addCommand.getPriority());
+    assertEquals("work", addCommand.getTags().pollFirst());
+  }
+  
+  @Test
+  public void testAddWithTagsPriorityAfterOneDateAndTimeline() throws FailedToParseException {
+    addCommand = parser.parse("add finish work from 27/12 1800 to 2000 !h #work");
+    assertEquals("finish work", addCommand.getName());
+    assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
+    assertEquals("18:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("20:00", addCommand.getDateTime().getEndTime().toString());
     assertEquals(Constants.PRIORITY_HIGH, addCommand.getPriority());
     assertEquals("work", addCommand.getTags().pollFirst());
   }
