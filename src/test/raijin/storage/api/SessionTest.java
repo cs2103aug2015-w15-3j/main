@@ -2,9 +2,13 @@ package raijin.storage.api;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,15 +20,26 @@ import raijin.storage.handler.StorageHandler;
 
 public class SessionTest {
 
-  private Session session;
-  private final String invalidJsonFile = "/test-classes/invalid.json";
-  private final String wrongFormatFile = "/test-classes/wrongFormat.json";
+  private static Session session;
+  private static String invalidJsonFile = "/test-classes/invalid.json";
+  private static String wrongFormatFile = "/test-classes/wrongFormat.json";
+  private static String nothing = "/nothing";
 
   @Rule public TemporaryFolder tmpFolder = new TemporaryFolder();
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeClass
+  public static void setUpClass() throws Exception {
     session = Session.getSession();
+    invalidJsonFile = StorageHandler.getJarPath() + invalidJsonFile;
+    wrongFormatFile = StorageHandler.getJarPath() + wrongFormatFile;
+    nothing = StorageHandler.getJarPath() + nothing;
+  }
+
+  @AfterClass
+  public static void tearDownClass() throws Exception {
+    new File(invalidJsonFile).delete();
+    new File(wrongFormatFile).delete();
+    new File(nothing).delete();
   }
 
   @Test
