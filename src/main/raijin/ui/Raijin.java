@@ -50,10 +50,10 @@ public class Raijin extends Application implements NativeKeyListener {
   private static final String NO_DIRECTORY_SELECTED_FEEDBACK = "I'm sorry! You have not selected "
       + "a directory yet. Please try again!";
   private boolean isVisible = false;
-  private BorderPane rootLayout, introLayout, inputController, displayController,
+  BorderPane rootLayout, introLayout, inputController, displayController,
       sidebarController;
   private HBox hBox;
-  private Stage stage;
+  private static Stage stage;
   private Logic logic;
   private IntroController introController;
   private EventBus eventbus = RaijinEventBus.getEventBus();
@@ -63,6 +63,10 @@ public class Raijin extends Application implements NativeKeyListener {
 
   public static void main(String[] args) {
     launch(args);
+  }
+
+  public static Stage getStage() {
+    return stage;
   }
 
   @Override

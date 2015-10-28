@@ -4,7 +4,7 @@
   <groupId>Raijin</groupId>
   <artifactId>Raijin</artifactId>
   <name>Raijin</name>
-  <version>0.2.5</version>
+  <version>0.3.1</version>
   <description>A desktop todo manager application</description>
   <build>
     <sourceDirectory>src/main/</sourceDirectory>
