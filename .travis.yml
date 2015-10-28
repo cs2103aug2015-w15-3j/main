@@ -1,5 +1,5 @@
 language: java
-script: mvn install 
+script: mvn install -DskipITs
 jdk:
 - oraclejdk8
 
@@ -19,4 +19,4 @@ before_install:
     - sh -e /etc/init.d/xvfb start
 
 after_success:
-    - mvn clean install -DskipITs jacoco:report coveralls:report
+    - mvn clean test -DskipITs jacoco:report coveralls:report
