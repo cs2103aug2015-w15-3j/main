@@ -14,7 +14,7 @@ import org.loadui.testfx.utils.FXTestUtils;
 
 import raijin.common.datatypes.Constants;
 
-public class RaijinTest {
+public class RaijinIT {
 
   private static GuiTest raijin;
 
@@ -36,7 +36,7 @@ public class RaijinTest {
   public void testAddCommandAutoComplete() throws InterruptedException {
     raijin.type(KeyCode.A);
     raijin.press(KeyCode.TAB);
-    Thread.sleep(1000);
+    Thread.sleep(2000);
     TextField result = (TextField) GuiTest.find("#inputCommandBar");
     assertEquals("add", result.getText());
   }
