@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import junitx.framework.FileAssert;
+
 import org.slf4j.Logger;
 
 import static org.junit.Assert.*;
@@ -26,6 +28,7 @@ import raijin.logic.parser.ParsedInput.ParsedInputBuilder;
 import raijin.logic.parser.ParserInterface;
 import raijin.logic.parser.SimpleParser;
 import raijin.storage.api.History;
+import raijin.storage.api.Session;
 import raijin.storage.api.TasksManager;
 
 /**
@@ -110,14 +113,15 @@ public class TestUtils {
   
   //Compare JSON files produced after running test script
   public static void assertSimilarFiles(File expected, File actual) {
-    assertEquals(expected, actual);
+    FileAssert.assertEquals(expected, actual);
   }
 
   //===========================================================================
   // Running test
   //===========================================================================
   
-  public static List<String> runCommands(String scriptPath, Logic logic) {
+  public static List<String> runCommands(String scriptPath, String outputPath, 
+      Logic logic) {
     ArrayList<String> statusList = new ArrayList<String>();
 
     try(BufferedReader br = new BufferedReader(new InputStreamReader(

@@ -20,7 +20,8 @@ public class RaijinIT {
   void executeTest(String testCaseName) {
     //Given
     TestProperties properties = new TestProperties(testCaseName);
-    TestUtils.runCommands(properties.testScript, logic);
+    TestUtils.runCommands(properties.testScript, properties.actualJSON.getAbsolutePath(),
+        logic);
     
     //Then
     TestUtils.assertSimilarFiles(properties.expectedJSON, properties.actualJSON);

@@ -129,6 +129,7 @@ public class Session {
     commit();
     Path source = Paths.get(tempPath);
     Path target = Paths.get(dataPath);
+    System.out.println(dataPath);
     try {
       StorageHandler.copyFiles(source, target);
     } catch (IOException e) {
