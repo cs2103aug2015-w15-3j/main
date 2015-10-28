@@ -1,0 +1,13 @@
+add submit OP1 by 19/12 0800
+add prepare lab report on 31/10 
+add sweep floor ; do laundry ; read Tao of Pooh
+delete 3
+done 1
+display c
+edit 1 on 30/11 1700 
+add OP2 rehearsal by 31/10 #cs2101
+add experiment with mockito #cs2103
+add do peer review 3 by 1/11 #cs2101
+done #cs2101
+
+
