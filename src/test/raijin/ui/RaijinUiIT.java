@@ -44,7 +44,9 @@ public class RaijinUiIT {
   @Test
   public void testAddCommandAutoComplete() throws InterruptedException {
     raijin.type(KeyCode.A);
+    Thread.sleep(2000);
     raijin.press(KeyCode.TAB);
+    Thread.sleep(2000);
     TextField result = (TextField) GuiTest.find("#inputCommandBar");
     assertEquals("add", result.getText());
   }
