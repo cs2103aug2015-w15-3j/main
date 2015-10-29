@@ -10,16 +10,15 @@ import raijin.common.datatypes.Constants;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.RaijinEventBus;
 
+import javafx.stage.*;
+
 
 public class HelpCommandRunner extends CommandRunner {
   private EventBus eventBus = RaijinEventBus.getEventBus();
   
   public Status processCommand(ParsedInput cmd) {
-	  String message = "Help!";
-
-    eventBus.post(new SetCurrentDisplayEvent(Constants.HELP_MESSAGE, message));
 	
-    return new Status(Constants.FEEDBACK_INFO_SUCCESS);
+    return new Status(Constants.FEEDBACK_HELP_COMMAND);
   }
 
 }
