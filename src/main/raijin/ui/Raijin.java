@@ -26,12 +26,15 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 
@@ -48,17 +51,23 @@ public class Raijin extends Application implements NativeKeyListener {
   private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
   private static final String INTRO_LAYOUT_FXML_LOCATION = "resource/layout/IntroLayout.fxml";
   private static final String TRAY_ICON_LOCATION = "resource/styles/raijin2.png";
+  private static final String HELP_IMAGES = "resource/styles/help1.jpg";
+	
   private static final String CSS_LOCATION = "resource/styles/RaijinStyle.css";
   private static final double MIN_WIDTH = 550.0;
   private static final double MIN_HEIGTH = 650.0;
 
   private static final String NO_DIRECTORY_SELECTED_FEEDBACK = "I'm sorry! You have not selected "
       + "a directory yet. Please try again!";
+  
   private boolean isVisible = false;
+  private boolean isHelpOn = false;
   BorderPane rootLayout, introLayout, inputController, displayController,
       sidebarController;
+  private double dragX = 0;
+  private double dragY = 0;
   private HBox hBox;
-  private static Stage stage;
+  private static Stage stage, helpStage;
   private Logic logic;
   private IntroController introController;
   private EventBus eventbus = RaijinEventBus.getEventBus();
@@ -131,18 +140,6 @@ public class Raijin extends Application implements NativeKeyListener {
     logic = new Logic();
   }
 
-  private void initIntroLayout() {
-    FXMLLoader loader = new FXMLLoader(getClass().getResource(INTRO_LAYOUT_FXML_LOCATION));
-    loader.setController(introController);
-    loader.setRoot(introController);
-
-    try {
-      introLayout = loader.load();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
   public void changeToMinimisedView() {
     rootLayout.setCenter(displayController);
     rootLayout.setBottom(inputController);
@@ -158,13 +155,6 @@ public class Raijin extends Application implements NativeKeyListener {
   }
 
   public void decideScene() {
-
-    /*
-     * if (logic.isFirstTime()) { introController = new IntroController(this, logic, stage);
-     * initIntroLayout();
-     * 
-     * this.stage.setScene(new Scene(introLayout)); } else {
-     */
     initRootLayout();
     changeToMinimisedView();
     this.stage.setScene(new Scene(rootLayout));
@@ -198,7 +188,8 @@ public class Raijin extends Application implements NativeKeyListener {
     String response = result.getFeedback();
     if (response.equals(Constants.FEEDBACK_EXIT_SUCCESS)) {
       System.exit(0);
-    } else if (response.equals(Constants.FEEDBACK_HELP_COMMAND)) {
+    } else if (response.equals(Constants.FEEDBACK_HELP_COMMAND) && !isHelpOn) {
+      isHelpOn = true;
       bringUpHelpSection();	
   	} else if (!isSuccessful) {
       eventbus.post(new SetFailureEvent(response));
@@ -206,19 +197,40 @@ public class Raijin extends Application implements NativeKeyListener {
       eventbus.post(new SetFeedbackEvent(response));
     }
   }
-
+  
   private void bringUpHelpSection() {
-	  final Stage dialog = new Stage();
-	  dialog.initModality(Modality.NONE);
-	  dialog.initOwner(this.stage);
+	 
+	  helpStage = new Stage();
+	  helpStage.initStyle(StageStyle.TRANSPARENT);
+	  
+	  helpStage.initModality(Modality.NONE);
+	  helpStage.initOwner(stage);
+	  
+	  StackPane helpRoot = new StackPane();
 	  
 	  VBox dialogVbox = new VBox(20);
 	  
-	  ImageView img = new ImageView(TRAY_ICON_LOCATION);
+	  helpRoot.setOnMousePressed(new EventHandler<MouseEvent>() {
+	  		public void handle (MouseEvent me) {
+            dragX = me.getScreenX() - helpStage.getX();
+            dragY = me.getScreenY() - helpStage.getY();
+         }
+      });
+      
+      helpRoot.setOnMouseDragged(new EventHandler<MouseEvent>() {
+         public void handle (MouseEvent me) {   
+             helpStage.setX(me.getScreenX() - dragX);
+             helpStage.setY(me.getScreenY() - dragY);
+         }
+      });
+      	  
+	  ImageView img = new ImageView(HELP_IMAGES);
 	  dialogVbox.getChildren().addAll(img);
-	  Scene dialogScene = new Scene(dialogVbox, 300, 200);
-	  dialog.setScene(dialogScene);
-	  dialog.show();
+	  helpRoot.getChildren().add(dialogVbox);
+	  
+	  Scene dialogScene = new Scene(helpRoot, 400, 600);
+	  helpStage.setScene(dialogScene);
+	  helpStage.show();
   }
   //
   // Methods for Eventbus
@@ -275,11 +287,15 @@ public class Raijin extends Application implements NativeKeyListener {
       });
     }
 
-    boolean isCtrlHPressed =
+    boolean isCtrlSpacePressed =
         arg0.getKeyCode() == NativeKeyEvent.VC_SPACE
             && NativeInputEvent.getModifiersText(arg0.getModifiers()).equals("Ctrl");
 
-    if (isCtrlHPressed && isVisible) {
+    boolean isCtrlHPressed =
+        arg0.getKeyCode() == NativeKeyEvent.VC_H
+            && NativeInputEvent.getModifiersText(arg0.getModifiers()).equals("Ctrl");
+    
+    if (isCtrlSpacePressed && isVisible) {
       hide(stage);
       try {
         tray.add(trayIcon);
@@ -287,7 +303,7 @@ public class Raijin extends Application implements NativeKeyListener {
         System.out.println("TrayIcon could not be added.");
       }
       isVisible = false;
-    } else if (isCtrlHPressed) {
+    } else if (isCtrlSpacePressed) {
       Platform.runLater(new Runnable() {
         @Override
         public void run() {
@@ -296,6 +312,17 @@ public class Raijin extends Application implements NativeKeyListener {
         }
       });
       isVisible = true;
+    } else if(isCtrlHPressed && !isHelpOn) {
+    	isHelpOn = true;
+    	Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+            	bringUpHelpSection();
+            }
+          });
+    } else if(isCtrlHPressed && isHelpOn) {
+    	isHelpOn = false;
+    	hide(helpStage);
     }
   }
 
