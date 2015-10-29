@@ -35,11 +35,13 @@ public class Constants {
   public static final String FEEDBACK_DELETE_SUCCESS = "You have just deleted \"%s\" !";
   public static final String FEEDBACK_DELETE_FAILURE = "Failed to delete. Task(s) don't exist!";
   public static final String FEEDBACK_DONE_FAILURE = "Failed to mark as done. Task(s) don't exist!";
+  public static final String FEEDBACK_DONE_SUCCESS = "Nicely done! Give yourself a pat on the back!";
+  public static final String FEEDBACK_HELP_COMMAND = "Help";
+  public static final String FEEDBACK_EXIT_SUCCESS = "Exiting";
   public static final String FEEDBACK_UNDO_SUCCESS = "Undo successfully";
   public static final String FEEDBACK_REDO_SUCCESS = "Redo successfully";
   public static final String FEEDBACK_ERROR_FAILEDPARSING = "Failed to parse \"%s\"";
   public static final String FEEDBACK_ERROR_FAILEDCOMMAND = "Failed to execute \"%s\" command";
-  public static final String FEEDBACK_DONE_SUCCESS = "Nicely done! Give yourself a pat on the back!";
   
   public static final String FEEDBACK_NO_TASK_NAME = "Error: Please specify a name for your task!";
   public static final String FEEDBACK_NO_TASK_ID = "Error: Please specify a task ID!";
