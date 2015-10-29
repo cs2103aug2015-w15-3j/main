@@ -25,6 +25,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
@@ -51,8 +52,24 @@ public class Raijin extends Application implements NativeKeyListener {
   private static final String ROOT_LAYOUT_FXML_LOCATION = "resource/layout/RootLayout.fxml";
   private static final String INTRO_LAYOUT_FXML_LOCATION = "resource/layout/IntroLayout.fxml";
   private static final String TRAY_ICON_LOCATION = "resource/styles/raijin2.png";
-  private static final String HELP_IMAGES = "resource/styles/help1.jpg";
-	
+  private static final String HELP_ADD = "resource/styles/helpAdd.jpg";
+  private static final String HELP_DELETE = "resource/styles/helpDelete.jpg";
+  private static final String HELP_DISPLAY = "resource/styles/helpDisplay.jpg";
+  private static final String HELP_DONE = "resource/styles/helpDone.jpg";
+  private static final String HELP_EDIT = "resource/styles/helpEdit.jpg";
+  private static final String HELP_SEARCH  = "resource/styles/helpSearch.jpg";
+  private static final String HELP_SET = "resource/styles/helpSet.jpg";
+  private static final String HELP_UNDOREDO = "resource/styles/helpUndoRedo.jpg";
+  private static final String KEYBOARD_SHORTCUTS = "resource/styles/keyboardShort.jpg";
+  private static final String[] helpImg = {"resource/styles/helpAdd.jpg",
+		  "resource/styles/helpDelete.jpg",
+		  "resource/styles/helpDisplay.jpg",
+		  "resource/styles/helpDone.jpg",
+		  "resource/styles/helpEdit.jpg",
+		  "resource/styles/helpSearch.jpg",
+		  "resource/styles/helpSet.jpg",
+		  "resource/styles/helpUndoRedo.jpg",
+		  "resource/styles/keyboardShort.jpg"};	
   private static final String CSS_LOCATION = "resource/styles/RaijinStyle.css";
   private static final double MIN_WIDTH = 550.0;
   private static final double MIN_HEIGTH = 650.0;
@@ -67,6 +84,7 @@ public class Raijin extends Application implements NativeKeyListener {
   private double dragX = 0;
   private double dragY = 0;
   private HBox hBox;
+  private ImageView[] helpImg_ImageView = new ImageView[9];
   private static Stage stage, helpStage;
   private Logic logic;
   private IntroController introController;
@@ -86,7 +104,7 @@ public class Raijin extends Application implements NativeKeyListener {
   @Override
   public void start(Stage stage) throws Exception {
     /* Adding fxml */
-    initPrimaryStage(stage);
+	initPrimaryStage(stage);
     initLogic();
     setUpVariables();
     decideScene();
@@ -103,7 +121,7 @@ public class Raijin extends Application implements NativeKeyListener {
     this.isVisible = true;
 
     /*
-     * this.stage.widthProperty().greaterThan(750).addListener((obs, oldValue, newValue) -> { if
+     * this.stage.widthProperty().greaterThan(add750).addListener((obs, oldValue, newValue) -> { if
      * (!newValue) { changeToMinimisedView(); } else { changeToMaximisedView(); } });
      */
 
@@ -207,6 +225,7 @@ public class Raijin extends Application implements NativeKeyListener {
 	  helpStage.initOwner(stage);
 	  
 	  StackPane helpRoot = new StackPane();
+	  ScrollPane innerStage = new ScrollPane();
 	  
 	  VBox dialogVbox = new VBox(20);
 	  
@@ -223,12 +242,34 @@ public class Raijin extends Application implements NativeKeyListener {
              helpStage.setY(me.getScreenY() - dragY);
          }
       });
-      	  
-	  ImageView img = new ImageView(HELP_IMAGES);
-	  dialogVbox.getChildren().addAll(img);
-	  helpRoot.getChildren().add(dialogVbox);
+      
+      for(int i = 0; i < helpImg_ImageView.length; i++) {
+    	  helpImg_ImageView[i] = new ImageView(helpImg[i]);
+    	  helpImg_ImageView[i].setFitWidth(583);
+    	  helpImg_ImageView[i].setPreserveRatio(true);
+    	  dialogVbox.getChildren().add(helpImg_ImageView[i]);
+      }
+      
+      /*
+	  ImageView helpAdd = new ImageView(HELP_ADD);
+	  ImageView helpDelete = new ImageView(HELP_DELETE);
+	  ImageView helpDisplay = new ImageView(HELP_DISPLAY);
+	  ImageView helpDone = new ImageView(HELP_DONE);
+	  ImageView helpEdit = new ImageView(HELP_EDIT);
+	  ImageView helpSearch = new ImageView(HELP_SEARCH);
+	  ImageView helpSet = new ImageView(HELP_SET);
+	  ImageView helpUndoRedo = new ImageView(HELP_UNDOREDO);
+	  ImageView keyboardShort = new ImageView(KEYBOARD_SHORTCUTS);
 	  
-	  Scene dialogScene = new Scene(helpRoot, 400, 600);
+	  
+	  dialogVbox.getChildren().addAll(helpAdd, helpDelete, helpDisplay,
+			  						  helpDone, helpEdit, helpSearch,
+			  						  helpSet, helpUndoRedo, keyboardShort);
+	 */
+	  innerStage.setContent(dialogVbox);
+	  helpRoot.getChildren().add(innerStage);
+	  
+	  Scene dialogScene = new Scene(helpRoot, 600, 600);
 	  helpStage.setScene(dialogScene);
 	  helpStage.show();
   }
