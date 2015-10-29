@@ -26,9 +26,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 
 import org.jnativehook.GlobalScreen;
@@ -36,6 +40,7 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
+import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.logic.api.Logic;
 
@@ -191,16 +196,30 @@ public class Raijin extends Application implements NativeKeyListener {
     Status result = logic.executeCommand(userInput);
     Boolean isSuccessful = result.isSuccess();
     String response = result.getFeedback();
-    if (response.equals("Exiting")) {
+    if (response.equals(Constants.FEEDBACK_EXIT_SUCCESS)) {
       System.exit(0);
-    } else if (!isSuccessful) {
-      System.out.println("yeaup");
+    } else if (response.equals(Constants.FEEDBACK_HELP_COMMAND)) {
+      bringUpHelpSection();	
+  	} else if (!isSuccessful) {
       eventbus.post(new SetFailureEvent(response));
     } else {
       eventbus.post(new SetFeedbackEvent(response));
     }
   }
 
+  private void bringUpHelpSection() {
+	  final Stage dialog = new Stage();
+	  dialog.initModality(Modality.NONE);
+	  dialog.initOwner(this.stage);
+	  
+	  VBox dialogVbox = new VBox(20);
+	  
+	  ImageView img = new ImageView(TRAY_ICON_LOCATION);
+	  dialogVbox.getChildren().addAll(img);
+	  Scene dialogScene = new Scene(dialogVbox, 300, 200);
+	  dialog.setScene(dialogScene);
+	  dialog.show();
+  }
   //
   // Methods for Eventbus
   //
