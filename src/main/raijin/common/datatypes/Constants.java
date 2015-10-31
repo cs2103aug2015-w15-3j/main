@@ -160,6 +160,75 @@ public class Constants {
       + "\nTAB: Autocomplete names, or changes names to ID for EDIT/DELETE/DONE."
       + "\nUP/DOWN: Cycles through previously executed commands.\n";
 
+  //============
+  // Add command
+  //============
+
+  public static final String ADD_FLOATING = "add [my task]";
+  public static final String ADD_FLOATING_DESC = "Adds a task without deadline";
+  public static final String ADD_SPECIFIC = "add [my task] by/on [end date] [end time]";
+  public static final String ADD_SPECIFIC_DESC = "Adds a task with a deadline. "
+      + "If no time is given, it will be set to 11.59 pm";
+  public static final String ADD_EVENT_SAME_DATE = "add [my task] on [end date] "
+      + "[start time] to [end time]";
+  public static final String ADD_EVENT_SAME_DATE_DESC = "Adds an event for that "
+      + "period of time";
+  public static final String ADD_EVENT_DIFFERENT_DATE = "add [my task] from [start date] "
+      + "[start time] to [end date] [end time]";
+  public static final String ADD_EVENT_DIFFERENT_DATE_DESC = "Adds an event that "
+      + "spans more than 1 day";
+
+  public static final String ADD_BATCH = "add [task 1] ; [task 2] ; [task 3] ...";
+  public static final String ADD_BATCH_DESC = "Adds multiple tasks. Date can be "
+      + "added at the end like normal add";
+
+  //=============
+  // Edit command
+  //=============
+
+  public static final String EDIT_TASK = "edit [task id] [changes]";
+  public static final String EDIT_TASK_DESC = "Edit any task given its task id";
+  
+  //================
+  // Display command
+  //================
+
+  public static final String DISPLAY = "display all | completed | overdue | floating";
+  public static final String DISPLAY_DESC = "Show tasks based on different criteria";
+
+  //================
+  // Done command
+  //================
+
+  public static final String DONE = "done [task id] [task id] .... #tag";
+  public static final String DONE_DESC = "marks a task as done given the task id or tag";
+
+  //================
+  // Delete command
+  //================
+
+  public static final String DELETE = "delete [task id] [task id] .... #tag";
+  public static final String DELETE_DESC = "deletes a task that no longer needed to be "
+      + "completed";
+
+  //================
+  // Undo and redo command
+  //================
+
+  public static final String UNDO = "undo";
+  public static final String REDO = "redo";
+  public static final String UNDO_DESC = "Undo previous command. You can also use "
+      + "Ctrl + Z to undo";
+  public static final String REDO_DESC = "Redo previous command. You can also use "
+      + "Ctrl + Y to undo";
+
+  //================
+  // Search command
+  //================
+
+  public static final String SEARCH = "search [keyword] [keyword] ... #tag !priority";
+  public static final String SEARCH_DESC = "searches all pending tasks based that "
+      + "matches all given keywords";
   //===========================================================================
   // Keyboard shortcuts
   //===========================================================================
@@ -230,5 +299,4 @@ public class Constants {
       return dateTime;
     }
   }
-
 }

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.*?>
 
-<fx:root id="inputControllerBorderPane" opacity="1.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root id="inputControllerBorderPane" opacity="1.0" prefHeight="82.0" prefWidth="271.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <center>
     <TextField fx:id="inputCommandBar" onKeyPressed="#onKeyPress" prefWidth="-1.0" promptText="What would you like to do?">
       <BorderPane.margin>
@@ -28,4 +28,7 @@
       </BorderPane.margin>
     </Label>
   </top>
+   <bottom>
+      <TextFlow fx:id="helpBar" prefHeight="25.0" prefWidth="271.0" style="-fx-background-color: #333332; -fx-border-radius: 10 10 10 10; -fx-background-radius: 10 10 10 10;" BorderPane.alignment="CENTER" />
+   </bottom>
 </fx:root>

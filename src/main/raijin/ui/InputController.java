@@ -2,6 +2,7 @@ package raijin.ui;
 
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextFlow;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -19,6 +20,8 @@ import raijin.common.eventbus.events.SetFailureEvent;
 import raijin.common.eventbus.events.SetInputEvent;
 import raijin.common.eventbus.events.UndoRedoEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +36,9 @@ public class InputController extends BorderPane {
 
   @FXML
   private Label feedbackBar;
+
+  @FXML
+  private TextFlow helpBar;
 
   private static final String INPUT_COMMAND_BAR_LAYOUT_FXML =
       "resource/layout/InputController.fxml";
@@ -60,6 +66,7 @@ public class InputController extends BorderPane {
     clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     fxClipboard = javafx.scene.input.Clipboard.getSystemClipboard();
     handleAllEvents();
+    helpBar.setVisible(false);
   }
 
   public TextField getCommandBar() {
@@ -147,6 +154,22 @@ public class InputController extends BorderPane {
     });
   }
 
+  void handleHelpBar() {
+    helpBar.visibleProperty().addListener(new ChangeListener<Boolean>() {
+
+      @Override
+      public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
+        if (t1.booleanValue()) { // If maximized
+          helpBar.setPrefSize(inputCommandBar.widthProperty().doubleValue(), inputCommandBar
+              .heightProperty().doubleValue());
+        } else {
+          helpBar.setMaxSize(0, 0);
+          helpBar.setMinSize(0, 0);
+        }
+      }
+    });
+  }
+
   /* This is needed because TextArea is not updated till keypress is shot */
   void handleKeyReleaseEvent() {
     inputCommandBar.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -168,6 +191,7 @@ public class InputController extends BorderPane {
   }
 
   void handleAllEvents() {
+    handleHelpBar();
     handleTabEvent();
     handleSetFailureEvent();
     handleSetFeedbackEvent();
