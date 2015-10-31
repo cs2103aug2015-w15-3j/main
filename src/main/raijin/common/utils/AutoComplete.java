@@ -20,6 +20,7 @@ import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.ChangeViewEvent;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
+import raijin.common.eventbus.events.SetHelpCommandEvent;
 import raijin.common.eventbus.events.SetInputEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.storage.api.TasksManager;
@@ -146,6 +147,7 @@ public class AutoComplete {
 
     if (isCommand(tokens)) { // Get suggestions from commandList
       suggestions = commandList.getSuggestions(prefix);
+      eventbus.post(new SetHelpCommandEvent(false));
     } else if (isTag(tokens)) { // Get suggestions from tagList
       updateTagSuggestion(input);
     } else { // Get suggestions from task
@@ -162,6 +164,7 @@ public class AutoComplete {
   public boolean isCommandWithID(String userInput) {
     String[] tokens = userInput.trim().split(" ");
     if (isValidCommand(tokens[0])) {
+      handleHelpForCommand(tokens[0]);
       return tokens[0].equals("done") || tokens[0].equals("edit") || tokens[0].equals("delete");
     }
     return false;
@@ -250,6 +253,69 @@ public class AutoComplete {
       eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(tasksManager.getPendingTasks()),
           view));
     }
+  }
+
+  void handleHelpForCommand(String command) {
+    Constants.Command inputCommand = Constants.Command.valueOf(command.toUpperCase());
+    String commandFormat = "";                       
+    String description = "";
+
+    switch (inputCommand) {
+
+      case ADD:
+        commandFormat = Constants.ADD_SPECIFIC;
+        description = Constants.ADD_SPECIFIC_DESC;
+        break;
+
+      case DELETE:
+        commandFormat = Constants.DELETE;
+        description = Constants.DELETE_DESC;
+        break;
+
+      case DISPLAY:
+        commandFormat = Constants.DISPLAY;
+        description = Constants.DISPLAY_DESC;
+        break;
+
+      case DONE:
+        commandFormat = Constants.DONE;
+        description = Constants.DONE_DESC;
+        break;
+
+      case EDIT:
+        commandFormat = Constants.EDIT_TASK;
+        description = Constants.EDIT_TASK_DESC;
+        break;
+
+      case EXIT:
+        break;
+
+      case HELP:
+        break;
+
+      case REDO:
+        commandFormat = Constants.REDO;
+        description = Constants.REDO_DESC;
+        break;
+
+      case SEARCH:
+        break;
+
+      case SET:
+        break;
+
+      case UNDO:
+        commandFormat = Constants.UNDO;
+        description = Constants.UNDO_DESC;
+        break;
+
+      default:
+        commandFormat = Constants.ADD_FLOATING;
+        description = Constants.ADD_FLOATING_DESC;
+        break;
+      
+    }
+    eventbus.post(new SetHelpCommandEvent(commandFormat, description));
   }
 
   public void handleTabEvent() {

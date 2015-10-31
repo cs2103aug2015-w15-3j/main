@@ -13,10 +13,12 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.HelpMessage;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.common.eventbus.events.SetFailureEvent;
+import raijin.common.eventbus.events.SetHelpCommandEvent;
 import raijin.common.eventbus.events.SetInputEvent;
 import raijin.common.eventbus.events.UndoRedoEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
@@ -116,6 +118,25 @@ public class InputController extends BorderPane {
         };
   }
 
+  void handleSetHelpEvent() {
+    MainSubscriber<SetHelpCommandEvent> helpSubscriber =
+        new MainSubscriber<SetHelpCommandEvent>(eventbus) {
+
+          @Subscribe
+          @Override
+          public void handleEvent(SetHelpCommandEvent event) {
+            if (event.isVisible) {
+              helpBar.getChildren().clear();
+              HelpMessage msg = new HelpMessage(event.commandFormat, event.description);
+              helpBar.getChildren().addAll(msg.commandFormat, msg.description);
+              helpBar.setVisible(true);
+            } else {
+              helpBar.setVisible(false);
+            }
+          }
+        };
+  }
+
   public void setFailureFeedback(String text) {
     // feedbackBar.setTextFill(Color.RED);
     setFeedback(text);
@@ -160,8 +181,8 @@ public class InputController extends BorderPane {
       @Override
       public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
         if (t1.booleanValue()) { // If maximized
-          helpBar.setPrefSize(inputCommandBar.widthProperty().doubleValue(), inputCommandBar
-              .heightProperty().doubleValue());
+          helpBar.setMaxSize(inputCommandBar.getMaxWidth(), 
+              inputCommandBar.getMaxHeight());
         } else {
           helpBar.setMaxSize(0, 0);
           helpBar.setMinSize(0, 0);
@@ -192,6 +213,7 @@ public class InputController extends BorderPane {
 
   void handleAllEvents() {
     handleHelpBar();
+    handleSetHelpEvent();
     handleTabEvent();
     handleSetFailureEvent();
     handleSetFeedbackEvent();
