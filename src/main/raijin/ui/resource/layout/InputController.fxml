@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -29,6 +30,10 @@
     </Label>
   </top>
    <bottom>
-      <TextFlow fx:id="helpBar" prefHeight="25.0" prefWidth="271.0" style="-fx-background-color: #333332; -fx-border-radius: 10 10 10 10; -fx-background-radius: 10 10 10 10;" BorderPane.alignment="CENTER" />
+      <TextFlow fx:id="helpBar" prefHeight="50.0" prefWidth="271.0" style="-fx-background-color: #333332;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+         <padding>
+            <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+         </padding>
+      </TextFlow>
    </bottom>
 </fx:root>

@@ -10,7 +10,7 @@ public class HelpMessage {
 
   private static final Color COMMAND_FORMAT_COLOR = Color.rgb(0, 102, 204);
   private static final Color DESCRIPTION_COLOR = Color.WHITE;
-  private static final String DEFAULT_FONT_SIZE = "18";
+  private static final String DEFAULT_FONT_SIZE = "15";
   public Text commandFormat;
   public Text description;
   public List<Text> helpMessage = new ArrayList<Text>();
