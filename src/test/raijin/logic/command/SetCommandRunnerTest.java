@@ -6,7 +6,9 @@ import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
@@ -21,6 +23,9 @@ public class SetCommandRunnerTest {
   private Session session;
   private SetCommandRunner setCommandRunner;
   private String storageDirectory;
+
+  @Rule
+  public TemporaryFolder tmpFolder = new TemporaryFolder();
 
   @Before
   public void setUp() throws Exception {
@@ -38,11 +43,10 @@ public class SetCommandRunnerTest {
   public void processCommand_ValidPath_ChangeStoragePath() throws UnableToExecuteCommandException {
     String initialStoragePath = session.storageDirectory;
     ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.SET).
-        helperOption("/tmp").createParsedInput();
+        helperOption(tmpFolder.getRoot().getAbsolutePath()).createParsedInput();
    
     setCommandRunner.execute(input);
     String currentStoragePath = session.storageDirectory;
-    System.out.println(initialStoragePath);
     assertNotEquals(initialStoragePath, currentStoragePath);
   }
 
