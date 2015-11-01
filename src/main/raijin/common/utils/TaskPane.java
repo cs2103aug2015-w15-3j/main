@@ -15,8 +15,8 @@ import raijin.common.datatypes.Task;
 
 public class TaskPane extends StackPane {
 	
-	private String highPriorityColour = "#FF9494"; 		    // red
-	private String midPriorityColour = "#99E6FF"; 		    // blue
+	private String highPriorityColour = "#FF9F94"; 		    // red
+	private String midPriorityColour = "#AAE6FF"; 		    // blue
 	private String lowPriorityColour = "#E6E6E6";		    // grey
 	
 	final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
@@ -33,7 +33,7 @@ public class TaskPane extends StackPane {
 	public String colour;
 	
 	// A Task pane
-	// VBox					VBox												  VBox
+	// VBox					VBox											
 	//========================================================================//
 	//|id       |__ taskName _________________________________________________|
 	//|_________|[start:date,time|end:date,time]/[endDate, time-time]/[none]__| 
@@ -95,9 +95,6 @@ public class TaskPane extends StackPane {
 			datesBox.getChildren().addAll(startValue);
 		}
 		
-		HBox indentBox = new HBox();
-		indentBox.setPrefWidth(50);
-		
 		HBox idBox = new HBox();
 		idBox.setPrefWidth(80);
 		idBox.getChildren().addAll(id);
@@ -106,7 +103,6 @@ public class TaskPane extends StackPane {
 		fillerBox.setPrefWidth(10);
 		
 		HBox taskBox = new HBox();
-		//taskBox.setPrefHeight(30);
 		taskBox.setPadding(new Insets(3, 0, 3, 0));
 		taskBox.getChildren().addAll(taskName);
 		
@@ -121,7 +117,6 @@ public class TaskPane extends StackPane {
 		centre.getChildren().addAll(taskBox, datesBox, tagsBox);
 
 		HBox pane = new HBox();
-		//pane.setPrefHeight(0);
 		
 		if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
 			this.setStyle("-fx-background-color: " + highPriorityColour + ";");
