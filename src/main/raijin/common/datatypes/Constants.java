@@ -102,7 +102,7 @@ public class Constants {
       + "|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)((\\/|-|\\.)(\\d{4}|\\d{2}))?$";
   
   public static final String DATE_START_PREPOSITION = "by|at|on|during|from";
-  public static final String DATE_END_PREPOSITION = "to|till|until";
+  public static final String DATE_END_PREPOSITION = "to|till|until|-";
   
   // Regex for recognizing a date operator. Used for splitting into String array.
   public static final String DATE_OPERATOR = "(\\/|-|\\.)";
@@ -111,9 +111,19 @@ public class Constants {
   public static final String PREFIXES = "^[!|@|#|$].*";
 
   // Regex for recognizing 24hr time patterns. Available test cases at: http://fiddle.re/bc9mj6
-  public static final String TIME_PATTERN = "^([01]?[0-9]|2[0-3])[0-5][0-9]$";
+  public static final String TIME24_PATTERN = "^([01]?[0-9]|2[0-3])[0-5][0-9]$";
+  //Regex for recognizing 24hr time patterns. Available test cases at: http://fiddle.re/dfduv6
+  public static final String TIME12_PATTERN = "(0?[1-9]|1[0-2])((.|:)[0-5][0-9])?(am?|pm?)";
+  public static final String TIME_PATTERN = TIME24_PATTERN +"|"+ TIME12_PATTERN;
+  
   public static final String[] MONTHS = new String[]{"jan","feb","mar","apr","may","jun","jul",
       "aug","sep","oct","nov","dec"};
+  
+  // Regex for recognizing days input.
+  public static final String DAYS = "mond?a?y?|tues?d?a?y?|wedn?e?s?d?a?y?|thur?s?d?a?y?|frid?a?y?"
+      + "|satu?r?d?a?y?|sund?a?y?";
+  public static final String[] DAYS_LIST = new String[]{"mond?a?y?", "tues?d?a?y?", 
+      "wedn?e?s?d?a?y?", "thur?s?d?a?y?", "frid?a?y?", "satu?r?d?a?y?", "sund?a?y?"};
   
   //===========================================================================
   // Command related constants
@@ -283,7 +293,7 @@ public class Constants {
       KeyCodeCombination.ALT_DOWN);
 
   //===========================================================================
-  // Autcomplete 
+  // Autocomplete 
   //===========================================================================
   
   private static final LocalDate today = LocalDate.now();

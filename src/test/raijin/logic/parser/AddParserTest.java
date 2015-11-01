@@ -2,6 +2,8 @@ package raijin.logic.parser;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -172,6 +174,54 @@ public class AddParserTest {
     addCommand = parser.parse("add finish work /by 27/12 /#YOLO by 27/12");
     assertEquals("finish work by 27/12 #YOLO", addCommand.getNames().pollFirst());
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
+  }
+  
+  @Test
+  public void testAddWith12HrTime() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by 6am to 10.30p");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals("06:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("22:30", addCommand.getDateTime().getEndTime().toString());
+  }
+  
+  @Test // This test input needs constant changes as it changes according to current date.
+  public void testAddWithDayOfWeek() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by tues");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals("2015-11-03", addCommand.getDateTime().getStartDate().toString());
+  }
+  
+  @Test // This test input needs constant changes as it changes according to current date.
+  public void testAddWithDayOfNext() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by next sun 8.00am to 11.59pm");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals("2015-11-08", addCommand.getDateTime().getStartDate().toString());
+    assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("23:59", addCommand.getDateTime().getEndTime().toString());
+  }
+  
+  @Test
+  public void testAddWithDayOfNextWeek() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by next week");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    LocalDate exptDate = LocalDate.now().plusWeeks(1);
+    assertEquals(exptDate.toString(), addCommand.getDateTime().getStartDate().toString());
+  }
+  
+  @Test
+  public void testAddWithDayOfNextMonth() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by next mth");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    LocalDate exptDate = LocalDate.now().plusMonths(1);
+    assertEquals(exptDate.toString(), addCommand.getDateTime().getStartDate().toString());
+  }
+  
+  @Test
+  public void testAddWithDayOfNextYear() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by next yr");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    LocalDate exptDate = LocalDate.now().plusYears(1);
+    assertEquals(exptDate.toString(), addCommand.getDateTime().getStartDate().toString());
   }
   
   @Test(expected=IllegalCommandArgumentException.class)
