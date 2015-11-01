@@ -37,7 +37,6 @@ public class TimeSlot {
         Collectors.toList());
     Collections.sort(occupiedSlots, durationComparator);
     streamlineEvents();
-    System.out.println("DONE");
   }
 
   List<Task> filterEvents(List<Task> pendingTasks) {
@@ -83,8 +82,6 @@ public class TimeSlot {
 
     for (int i = index + 1 ; i < occupiedSlots.size() ; i++) {
       DateTime target = occupiedSlots.get(i);
-      System.out.println(result.getStartTime().toString() + " " 
-          + result.getEndTime().toString());
       if (target != null) {
         result = extendDuration(result, target);
       }
