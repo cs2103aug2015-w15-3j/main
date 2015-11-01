@@ -21,14 +21,28 @@
     </TextField>
   </center>
   <top>
-    <Label fx:id="feedbackBar" focusTraversable="false" maxHeight="22.0" textFill="BLACK" BorderPane.alignment="CENTER">
-      <font>
-        <Font size="16.0" />
-      </font>
-      <BorderPane.margin>
-        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-      </BorderPane.margin>
-    </Label>
+      <VBox fx:id="feedbackVBOX" alignment="CENTER">
+         <children>
+          <Label fx:id="feedbackBar" alignment="CENTER" focusTraversable="false" maxHeight="22.0" textFill="BLACK" BorderPane.alignment="CENTER">
+            <font>
+              <Font size="16.0" />
+            </font>
+            <BorderPane.margin>
+              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </BorderPane.margin>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+          </Label>
+            <HBox fx:id="timeSlot" prefHeight="33.0" prefWidth="271.0" spacing="5.0" style="-fx-border-width: 2; -fx-border-color: #000000;">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding></HBox>
+         </children>
+      </VBox>
   </top>
    <bottom>
       <TextFlow fx:id="helpBar" lineSpacing="1.15" prefHeight="50.0" prefWidth="271.0" style="-fx-background-color: #333332;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
