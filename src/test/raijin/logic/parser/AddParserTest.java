@@ -186,20 +186,21 @@ public class AddParserTest {
   
   @Test
   public void testAddWithToday() throws FailedToParseException {
-    addCommand = parser.parse("add finish work by today 10pm - 11pm");
+    addCommand = parser.parse("add finish work by today 10am - 11pm");
     assertEquals("finish work", addCommand.getNames().pollFirst());
     assertEquals(LocalDate.now().toString(), addCommand.getDateTime().getStartDate().toString());
-    assertEquals("22:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("10:00", addCommand.getDateTime().getStartTime().toString());
     assertEquals("23:00", addCommand.getDateTime().getEndTime().toString());
   }
   
   @Test
   public void testAddWithTomorrow() throws FailedToParseException {
-    addCommand = parser.parse("add finish work by tmr 10pm - 11pm");
+    addCommand = parser.parse("add finish work by tmr 8:00am - 11:00am");
     assertEquals("finish work", addCommand.getNames().pollFirst());
-    assertEquals(LocalDate.now().plusDays(1).toString(), addCommand.getDateTime().getStartDate().toString());
-    assertEquals("22:00", addCommand.getDateTime().getStartTime().toString());
-    assertEquals("23:00", addCommand.getDateTime().getEndTime().toString());
+    assertEquals(LocalDate.now().plusDays(1).toString(), 
+        addCommand.getDateTime().getStartDate().toString());
+    assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("11:00", addCommand.getDateTime().getEndTime().toString());
   }
   
   @Test // This test input needs constant changes as it changes according to current date.
@@ -211,11 +212,11 @@ public class AddParserTest {
   
   @Test // This test input needs constant changes as it changes according to current date.
   public void testAddWithDayOfNext() throws FailedToParseException {
-    addCommand = parser.parse("add finish work by next sun 8.00am to 11.59pm");
+    addCommand = parser.parse("add finish work by next sun 12.10pm to 9.59pm");
     assertEquals("finish work", addCommand.getNames().pollFirst());
-    assertEquals("2015-11-08", addCommand.getDateTime().getStartDate().toString());
-    assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
-    assertEquals("23:59", addCommand.getDateTime().getEndTime().toString());
+    assertEquals("2015-11-15", addCommand.getDateTime().getStartDate().toString());
+    assertEquals("12:10", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("21:59", addCommand.getDateTime().getEndTime().toString());
   }
   
   @Test

@@ -90,34 +90,42 @@ public class DateTimeFormat {
   
   
   public String format12HourTime(String time) {
+    String time24 = "";
     int oprIndex = time.indexOf(":") > 0 ? time.indexOf(":") : time.indexOf(".");
     boolean isPM = time.contains("p");
     
     if (oprIndex == -1) {
       int periodIndex = time.indexOf("p") > 0 ? time.indexOf("p") : time.indexOf("a");
       if (periodIndex == 1) {
+        int hour = Integer.parseInt(time.substring(0,1));
         if (isPM) {
-          time = Integer.parseInt(time.substring(0,1))+12 + "00";
+          time24 = (hour+12) + "00";
         } else {
-          time = "0" + time.charAt(0) + "00";
+          time24 = "0" + hour + "00";
         }
       } else {
+        int hour = Integer.parseInt(time.substring(0,2));
         if (isPM) {
-          time = Integer.parseInt(time.substring(0,2))+12 + "00";
+          time24 = hour == 12 ? "1200" : (hour+12) + "00";
         } else {
-          time = time.substring(0,2) + "00";
+          time24 = hour == 12 ? "0000" : hour + "00";
         }
       }
     } else if (oprIndex == 1) {
-      time = "0" + time.charAt(0) + time.substring(2,4);
+      time24 += isPM ? Integer.parseInt(time.substring(0,1))+12 : "0" + time.charAt(0);
+      time24 += time.substring(2,4);
     } else if (oprIndex == 2) {
+      int hour = Integer.parseInt(time.substring(0,2));
       if (isPM) {
-        time = Integer.parseInt(time.substring(0,2))+12 + time.substring(3,5);
+        time24 += hour == 12 ? "12" : (hour+12) ;
+        time24 += time.substring(3,5);
       } else {
-        time = time.substring(0,2) + time.substring(3,5);
+        time24 = "";
+        time24 += hour == 12 ? "00" : hour ;
+        time24 += time.substring(3,5);
       }
     }
     
-    return time;
+    return time24;
   }
 }
