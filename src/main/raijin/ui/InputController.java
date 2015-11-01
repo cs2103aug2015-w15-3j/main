@@ -51,7 +51,7 @@ public class InputController extends BorderPane {
   private TextFlow helpBar;
   
   @FXML
-  private HBox timeSlot;
+  public HBox timeSlot;
   
   @FXML
   private VBox feedbackVBox;
@@ -83,11 +83,14 @@ public class InputController extends BorderPane {
     fxClipboard = javafx.scene.input.Clipboard.getSystemClipboard();
     handleAllEvents();
     helpBar.setVisible(false);
-    timeSlot.setVisible(false);
   }
 
   public TextField getCommandBar() {
     return inputCommandBar;
+  }
+
+  public HBox getTimeSlot() {
+    return timeSlot;
   }
 
   public void clear() {
@@ -141,11 +144,9 @@ public class InputController extends BorderPane {
           @Override
           public void handleEvent(SetTimeSlotEvent event) {
             if (event.isVisible) {
-              System.out.println("TRUE");
               generateTimeSlots(event.busySlots);
               timeSlot.setVisible(true);
             } else {
-              System.out.println("FALSE");
               timeSlot.setVisible(false);
             }
           }

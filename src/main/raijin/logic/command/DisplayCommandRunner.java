@@ -12,7 +12,6 @@ import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
-import raijin.common.utils.EventBus;
 import raijin.common.utils.filter.SortFilter;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
@@ -20,12 +19,20 @@ import raijin.storage.api.TasksManager;
 
 public class DisplayCommandRunner extends CommandRunner {
 
-	private static final String TYPE_ALL = "a";   // display ALL PENDING
-	private static final String TYPE_PENDING = "p";  // display PENDING (for today)
-	private static final String TYPE_COMPLETED = "c";     // display COMPLETED
-	private static final String TYPE_FLOATING = "f";  // display FLOATING
-	private static final String TYPE_OVERDUE = "o";  // display OVERDUE
+	private static final String TYPE_ALL = "a";   			// display ALL PENDING
+	private static final String TYPE_PENDING = "p";  		// display PENDING (for a day)
+	private static final String TYPE_COMPLETED = "c";       // display COMPLETED
+	private static final String TYPE_FLOATING = "f";        // display FLOATING
+	private static final String TYPE_OVERDUE = "o";         // display OVERDUE
 
+	// Head messages
+	private static final String HEADMESSAGE_DEFAULT_PENDING = "Tasks pending for...";
+	private static final String HEADMESSAGE_ALL_FLOATING = "All floating tasks";
+	private static final String HEADMESSAGE_ALL_OVERDUE = "All overdue tasks";
+	private static final String HEADMESSAGE_ALL_PENDING = "All pending tasks";
+	private static final String HEADMESSAGE_COMPLETED = "Tasks completed as of today, ";
+	
+	// Feedback status messages
 	private static final String FEEDBACK_DISPLAY = "Displaying: ";
 	private static final String FEEDBACK_FLOATING = "floating tasks";
 	private static final String FEEDBACK_ALL_PENDING = "all pending tasks";
@@ -33,6 +40,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	private static final String FEEDBACK_COMPLETED = "completed tasks";
 	private static final String FEEDBACK_OVERDUE = "overdue tasks";
 
+	// List is empty messages
 	private static final String MESSAGE_SUCCESS = "Success";
 	private static final String MESSAGE_NO_PENDING = "You have no pending tasks!";
 	private static final String MESSAGE_NO_COMPLETED = "You have no completed tasks!";
@@ -41,22 +49,21 @@ public class DisplayCommandRunner extends CommandRunner {
 
 	private DateTime cmdDateTime;
 	private DateTime taskDateTime;
-	private LocalDate now;
+	private LocalDate todayDate;
 	private LocalDate tomorrowDate;
 
 	private ArrayList<Task> pending;
 	private ArrayList<Task> completed;
 	private ArrayList<Task> relevant;
 
-	private EventBus eventBus = EventBus.getEventBus();
 	private com.google.common.eventbus.EventBus eventbus = RaijinEventBus.getEventBus();
 
 	final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
 
 	public Status processCommand(ParsedInput cmd) {
 
-		now = LocalDate.now();
-		tomorrowDate = now.plusDays(1);
+		todayDate = LocalDate.now();
+		tomorrowDate = todayDate.plusDays(1);
 
 		retrieveLists();
 		cmdDateTime = getQueriedDate(cmd);
@@ -70,11 +77,58 @@ public class DisplayCommandRunner extends CommandRunner {
 		switch (cmd.getDisplayOptions()) {
 
 		case TYPE_PENDING:
-			if (!cmdDateTime.getStartDate().isEqual(now)) {
-				message = "Tasks pending for " 
-						+ dateForDisplay;
+			if (!cmdDateTime.getStartDate().isEqual(todayDate)) {
+				//message = "Tasks pending for "  + dateForDisplay;
+				message = "Tasks pending for " + dateForDisplay + " & next day";
 
 				feedbackMessage = FEEDBACK_PENDING;
+				ArrayList<Task> thisDay = new ArrayList<Task>();
+				ArrayList<Task> nextDay = new ArrayList<Task>();
+				
+				boolean thisDayIsEmpty = true;
+				
+				for (Task currentTask : pending) {
+					taskDateTime = currentTask.getDateTime();
+
+					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
+							isRelevantDate(cmdDateTime, taskDateTime)) {
+
+						thisDayIsEmpty = false;
+						thisDay.add(currentTask);
+					}
+				}
+				
+				if (!thisDayIsEmpty) {
+					Collections.sort(thisDay);
+				}
+				
+				boolean nextDayIsEmpty = true;
+				LocalDate nextDayDate = cmdDateTime.getStartDate().plusDays(1);
+				
+				for (Task currentTask : pending) {
+					taskDateTime = currentTask.getDateTime();
+
+					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING 
+						&& isRelevantDate(new DateTime(nextDayDate, nextDayDate), taskDateTime)
+						&& !isAlreadyInList(currentTask, thisDay)) {
+
+						nextDayIsEmpty = false;
+						nextDay.add(currentTask);
+					}
+				}
+				
+				if (!nextDayIsEmpty) {
+					Collections.sort(nextDay);
+					thisDay.addAll(nextDay);
+				}
+				
+				if (thisDayIsEmpty && nextDayIsEmpty) {
+					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+				} else {
+					eventbus.post(new SetCurrentDisplayEvent(thisDay, message));
+				}
+				
+				/*
 				for (Task currentTask : pending) {
 					taskDateTime = currentTask.getDateTime();
 
@@ -87,39 +141,38 @@ public class DisplayCommandRunner extends CommandRunner {
 				}
 
 				if (isEmpty) {
-					//eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
 					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
 				} else {
 					Collections.sort(relevant);
-					//eventBus.setCurrentTasks(relevant);
 					eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 				}
+				*/
 			} else {
-				message = "Tasks pending for...";
+				message = HEADMESSAGE_DEFAULT_PENDING;
 
 				feedbackMessage = FEEDBACK_PENDING + " for today, tomorrow and future";
 				ArrayList<Task> today = new ArrayList<Task>();
 				ArrayList<Task> tomorrow = new ArrayList<Task>();
 				
-				boolean isTodayEmpty = true;
+				boolean todayIsEmpty = true;
 				
 				// Getting today's tasks
 				for (Task currentTask : pending) {
 					taskDateTime = currentTask.getDateTime();
 
 					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
-							isRelevantDate(new DateTime(now, now), taskDateTime)) {
+							isRelevantDate(new DateTime(todayDate, todayDate), taskDateTime)) {
 
-						isTodayEmpty = false;
+						todayIsEmpty = false;
 						today.add(currentTask);
 					}
 				}
 				
-				if (!isTodayEmpty) {
+				if (!todayIsEmpty) {
 					Collections.sort(today);
 				}
 				
-				boolean isTomorrowEmpty = true;
+				boolean tomorrowIsEmpty = true;
 				
 				// Getting tomorrow's tasks
 				for (Task currentTask : pending) {
@@ -127,14 +180,14 @@ public class DisplayCommandRunner extends CommandRunner {
 
 					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING 
 						&& isRelevantDate(new DateTime(tomorrowDate, tomorrowDate), taskDateTime)
-						&& !isAlreadyInToday(currentTask, today)) {
+						&& !isAlreadyInList(currentTask, today)) {
 
-						isTomorrowEmpty = false;
+						tomorrowIsEmpty = false;
 						tomorrow.add(currentTask);
 					}
 				}
 				
-				if (!isTomorrowEmpty) {
+				if (!tomorrowIsEmpty) {
 					Collections.sort(tomorrow);
 					today.addAll(tomorrow);
 				}
@@ -145,17 +198,16 @@ public class DisplayCommandRunner extends CommandRunner {
 					temp.remove(task);
 				}
 				int i = 0;
-				boolean isRestEmpty = true;
+				boolean restIsEmpty = true;
 				for (int size=today.size(); size < 20 && i < temp.size(); size++) {
 					Task task = temp.get(i++);
 					if (!isOverdue(task.getDateTime())) {
 						today.add(task);
-						isRestEmpty = false;
+						restIsEmpty = false;
 					}
 				}
 				
-				
-				if (isTodayEmpty && isTomorrowEmpty && isRestEmpty) {
+				if (todayIsEmpty && tomorrowIsEmpty && restIsEmpty) {
 					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
 				} else {
 					eventbus.post(new SetCurrentDisplayEvent(today, message));
@@ -167,15 +219,13 @@ public class DisplayCommandRunner extends CommandRunner {
 
 		case TYPE_ALL:
 			feedbackMessage = FEEDBACK_ALL_PENDING;
-			message = "All pending tasks";
+			message = HEADMESSAGE_ALL_PENDING;
 
 			if (pending.isEmpty()) {
-				//eventBus.setCurrentTasks(MESSAGE_NO_PENDING);
 				eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
 			} else {
 				relevant = new ArrayList<Task>(pending);
 				Collections.sort(relevant);
-				//eventBus.setCurrentTasks(relevant);
 				eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
 
@@ -183,7 +233,7 @@ public class DisplayCommandRunner extends CommandRunner {
 
 		case TYPE_FLOATING:
 			feedbackMessage = FEEDBACK_FLOATING;
-			message = "All floating tasks";
+			message = HEADMESSAGE_ALL_FLOATING;
 
 			for (Task currentTask : pending) {
 
@@ -194,10 +244,8 @@ public class DisplayCommandRunner extends CommandRunner {
 			}
 
 			if (isEmpty) {
-				//eventBus.setCurrentTasks(MESSAGE_NO_FLOATING);
 				eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_FLOATING, message));
 			} else {
-				//eventBus.setCurrentTasks(relevant);
 			    relevant = (ArrayList<Task>) new SortFilter(Constants.SORT_CRITERIA.PRIORITY).filter(relevant);
 				eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
@@ -206,7 +254,7 @@ public class DisplayCommandRunner extends CommandRunner {
 
 		case TYPE_COMPLETED:
 			feedbackMessage = FEEDBACK_COMPLETED;
-			message = "Tasks completed as of today, " + dateForDisplay;
+			message = HEADMESSAGE_COMPLETED + dateForDisplay;
 
 			for (Task currentTask : completed) {
 				relevant.add(currentTask);
@@ -214,11 +262,9 @@ public class DisplayCommandRunner extends CommandRunner {
 			}
 
 			if (isEmpty) {
-				//eventBus.setCurrentTasks(MESSAGE_NO_COMPLETED);
 				eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_COMPLETED, message));
 			} else {
 				Collections.sort(relevant);
-				//eventBus.setCurrentTasks(relevant);
 				eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
 
@@ -227,7 +273,7 @@ public class DisplayCommandRunner extends CommandRunner {
 
 		case TYPE_OVERDUE:
 			feedbackMessage = FEEDBACK_OVERDUE;
-			message = "All overdue tasks";
+			message = HEADMESSAGE_ALL_OVERDUE;
 
 			for (Task currentTask : pending) {
 				DateTime currentTaskDateTime;
@@ -245,11 +291,9 @@ public class DisplayCommandRunner extends CommandRunner {
 			}
 
 			if (isEmpty) {
-				//eventBus.setCurrentTasks(MESSAGE_NO_OVERDUE);
 				eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_OVERDUE, message));
 			} else {
 				Collections.sort(relevant);
-				//eventBus.setCurrentTasks(relevant);
 				eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 			}
 
@@ -286,11 +330,11 @@ public class DisplayCommandRunner extends CommandRunner {
 		if (cmd.getDateTime() != null) {
 			cmdDateTime = cmd.getDateTime();
 		} else {
-			cmdDateTime = new DateTime(String.format("%02d", now.getDayOfMonth()) 
+			cmdDateTime = new DateTime(String.format("%02d", todayDate.getDayOfMonth()) 
 					+ "/" 
-					+ String.format("%02d", now.getMonthValue())
+					+ String.format("%02d", todayDate.getMonthValue())
 					+ "/"
-					+ now.getYear());
+					+ todayDate.getYear());
 		}
 
 		return cmdDateTime;
@@ -341,8 +385,8 @@ public class DisplayCommandRunner extends CommandRunner {
 		LocalDate taskEndDate;
 		LocalTime taskEndTime;
 
-		LocalDate nowDate = LocalDate.now();
-		LocalTime nowTime = LocalTime.now();
+		LocalDate todayDate = LocalDate.now();
+		LocalTime todayNowTime = LocalTime.now();
 
 		try {
 			taskEndDate = taskDateTime.getEndDate();
@@ -351,12 +395,12 @@ public class DisplayCommandRunner extends CommandRunner {
 			return false;
 		}
 
-		if (taskEndDate.isBefore(nowDate)) {
+		if (taskEndDate.isBefore(todayDate)) {
 			return true;
-		} else if (taskEndDate.isEqual(nowDate)) {
+		} else if (taskEndDate.isEqual(todayDate)) {
 			try {
 				taskEndTime = taskDateTime.getEndTime(); 
-				if (taskEndTime.isBefore(nowTime)) {
+				if (taskEndTime.isBefore(todayNowTime)) {
 					return true;
 				}
 			} catch (NullPointerException e) {
@@ -368,7 +412,7 @@ public class DisplayCommandRunner extends CommandRunner {
 		return false;
 	}
 	
-	boolean isAlreadyInToday (Task task, ArrayList<Task> today) {
+	boolean isAlreadyInList (Task task, ArrayList<Task> today) {
 		if (today.contains(task)) {
 			return true;
 		} else {

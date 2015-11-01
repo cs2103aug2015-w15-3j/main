@@ -35,7 +35,7 @@ public class TaskUtils {
     }
 
     for (int i = 0; i < tasks.size(); i++) {
-      list.add(new TaskPane(i + 1, tasks.get(i), "none"));
+      list.add(new TaskPane(i + 1, tasks.get(i)));
     }
 
     return list;
@@ -50,7 +50,7 @@ public class TaskUtils {
     
     for (int i = 0; i < tasks.size(); i++) {
     	Task task = tasks.get(i);
-    	list.add(new TaskPane(i + 1, task, "none"));
+    	list.add(new TaskPane(i + 1, task));
     }
     
     return list;
@@ -83,7 +83,7 @@ public class TaskUtils {
 	    		break;
 	    	}
 	    	
-	    	list.add(new TaskPane(i + 1, task, "none"));
+	    	list.add(new TaskPane(i + 1, task));
 	    	todayIsEmpty = false;
 	    
 	  }
@@ -108,7 +108,7 @@ public class TaskUtils {
 	      	  break;
 	      }
 	      
-	      list.add(new TaskPane (j+1, task, "none"));
+	      list.add(new TaskPane (j+1, task));
 	      tomorrowIsEmpty = false;
 		  
 	  }
@@ -122,7 +122,7 @@ public class TaskUtils {
 	  boolean futureIsEmpty = true;
 	  for (int k=j; k<tasks.size(); k++) {
 		  Task task = tasks.get(k);
-		  list.add(new TaskPane (k + 1, task, "none"));
+		  list.add(new TaskPane (k + 1, task));
 		  futureIsEmpty = false;
 	  }
 	  
@@ -134,6 +134,7 @@ public class TaskUtils {
 	  return list;
 	  
   }
+  
 
   public static List<TaskPane> displayMessage(String message) {
     ArrayList<TaskPane> list = new ArrayList<TaskPane>();

@@ -1,7 +1,5 @@
 package raijin.common.utils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.TreeSet;
 
@@ -12,22 +10,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 
 public class TaskPane extends StackPane {
 	
-	//private String[] highPriorityColours = {"#FF9494", "#FFA366"}; 		// red, orange
-	//private String[] midPriorityColours = {"#B2FFB2", "#99E6FF"}; 		// green, blue
-	//private String[] lowPriorityColours = {"#E6E6E6"};					// grey
-	
-	private String[] highPriorityColours = {"#FF9494"}; 		// red, orange
-	private String[] midPriorityColours = {"#99E6FF"}; 		// green, blue
-	private String[] lowPriorityColours = {"#E6E6E6"};					// grey
-	
-	//private String[] subTaskColours = {"#FFC2C2", "#FFC299", "#D1FFD1", "#C2F0FF", "#F0F0F0"};
-	private String[] subTaskColours = {"#FFC2C2", "#D1FFD1", "#F0F0F0"};
+	private String highPriorityColour = "#FF9F94"; 		    // red
+	private String midPriorityColour = "#AAE6FF"; 		    // blue
+	private String lowPriorityColour = "#E6E6E6";		    // grey
 	
 	final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
 	
@@ -38,29 +28,26 @@ public class TaskPane extends StackPane {
 	private Label startValue, endValue;
 	private Label tags = new Label("Tags: ");
 	private Label tagsValue;
-	private Label priority = new Label("Priority:");
-	private Label priorityValue;
 	
 	private Constants.TYPE_TASK taskType;
 	public String colour;
 	
 	// A Task pane
-	// VBox					VBox												  VBox
-	//====================================================================================//
-	//|id       |__ taskName _________________________________________________| Priority: |
-	//|_________|[start:date,time|end:date,time]/[endDate, time-time]/[none]__| high/med/ |
-	//|Overdue? |	tags go here											  | low       |
-	//====================================================================================//
+	// VBox					VBox											
+	//========================================================================//
+	//|id       |__ taskName _________________________________________________|
+	//|_________|[start:date,time|end:date,time]/[endDate, time-time]/[none]__| 
+	//|			|	tags go here											  |
+	//========================================================================//
 	
 	public TaskPane() {
 		
 	}
 	
-	public TaskPane (int displayedNum, Task task, String colourOfParent) {
+	public TaskPane (int displayedNum, Task task) {
 		id = new Label(Integer.toString(displayedNum));
 		id.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
 		id.setPadding(new Insets(15,20,0,25));
-		//id.setTextAlignment(TextAlignment.CENTER); // this seems useless
 		
 		start.setStyle("-fx-font-weight:bold");
 		end.setStyle("-fx-font-weight:bold");
@@ -72,17 +59,6 @@ public class TaskPane extends StackPane {
 		tags.setStyle("-fx-font-weight:bold;");
 		tagsValue = new Label(retrieveTags(task));
 		tagsValue.setStyle("-fx-font-style: italic;");
-		
-		priority.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
-		
-		
-		if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
-			priorityValue = new Label("High");
-		} else if (task.getPriority().equals(Constants.PRIORITY_MID)) {
-			priorityValue = new Label("Mid");
-		} else {
-			priorityValue = new Label("Low");
-		}
 		
 		taskType = task.getType();
 		
@@ -119,9 +95,6 @@ public class TaskPane extends StackPane {
 			datesBox.getChildren().addAll(startValue);
 		}
 		
-		HBox indentBox = new HBox();
-		indentBox.setPrefWidth(50);
-		
 		HBox idBox = new HBox();
 		idBox.setPrefWidth(80);
 		idBox.getChildren().addAll(id);
@@ -130,7 +103,6 @@ public class TaskPane extends StackPane {
 		fillerBox.setPrefWidth(10);
 		
 		HBox taskBox = new HBox();
-		//taskBox.setPrefHeight(30);
 		taskBox.setPadding(new Insets(3, 0, 3, 0));
 		taskBox.getChildren().addAll(taskName);
 		
@@ -143,61 +115,25 @@ public class TaskPane extends StackPane {
 		VBox centre = new VBox();
 		centre.setPrefWidth(500);
 		centre.getChildren().addAll(taskBox, datesBox, tagsBox);
-		
-		VBox right = new VBox();
-		right.getChildren().addAll(priority, priorityValue);
 
 		HBox pane = new HBox();
-		//pane.setPrefHeight(0);
 		
-		if (colourOfParent.equals("none")) {
-			if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
-				this.setStyle("-fx-background-color: " + highPriorityColours[task.getId()%1] + ";");
-				this.colour = highPriorityColours[task.getId()%1];
-				tagsValue.setTextFill(Color.rgb(178, 36, 0));
-			} else if (task.getPriority().equals(Constants.PRIORITY_MID)) {
-				this.setStyle("-fx-background-color: " + midPriorityColours[task.getId()%1] + ";");
-				this.colour = midPriorityColours[task.getId()%1];
-				tagsValue.setTextFill(Color.rgb(32, 129, 160));
-			} else if(task.getPriority().equals(Constants.PRIORITY_LOW)) {
-				this.setStyle("-fx-background-color: " + lowPriorityColours[task.getId()%1] + ";");
-				this.colour = lowPriorityColours[task.getId()%1];
-				tagsValue.setTextFill(Color.rgb(110, 110, 110));
-			}
-			
-			//pane.getChildren().addAll(idBox, centre, right);
-			pane.getChildren().addAll(idBox, centre); //excluding priority label
-			
-		} else {
-			String colourForThis = "";
-			
-			for (int i=0; i<highPriorityColours.length; i++) {
-				if (colourOfParent.equals(highPriorityColours[i])) {
-					colourForThis = subTaskColours[i];
-				}
-			}
-			
-			for (int i=0; i<midPriorityColours.length; i++) {
-				if (colourOfParent.equals(midPriorityColours[i])) {
-					colourForThis = subTaskColours[i+1];
-				}
-			}
-			
-			for (int i=0; i<lowPriorityColours.length; i++) {
-				if (colourOfParent.equals(lowPriorityColours[i])) {
-					colourForThis = subTaskColours[i+2];
-				}
-			}
-			
-			this.colour = colourForThis;
-			this.setStyle("-fx-background-color: " + colourForThis);
-			pane.getChildren().addAll(indentBox, idBox, centre, right);
+		if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
+			this.setStyle("-fx-background-color: " + highPriorityColour + ";");
+			tagsValue.setTextFill(Color.rgb(178, 36, 0));
+		} else if (task.getPriority().equals(Constants.PRIORITY_MID)) {
+			this.setStyle("-fx-background-color: " + midPriorityColour + ";");
+			tagsValue.setTextFill(Color.rgb(32, 129, 160));
+		} else if(task.getPriority().equals(Constants.PRIORITY_LOW)) {
+			this.setStyle("-fx-background-color: " + lowPriorityColour + ";");
+			tagsValue.setTextFill(Color.rgb(110, 110, 110));
 		}
-		
+			
+		pane.getChildren().addAll(idBox, centre); //excluding priority label
+			
 		this.getChildren().addAll(pane);
 		this.setPrefHeight(65);
 		this.setStyle(this.getStyle() + "-fx-background-radius: 20px;");
-		//this.setPadding(new Insets(10));
 		
 	}
 	

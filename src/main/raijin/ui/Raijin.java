@@ -184,6 +184,7 @@ public class Raijin extends Application implements NativeKeyListener {
     this.inputController = new InputController(this);
     this.displayController = new DisplayController();
     this.sidebarController = new SidebarController(this.logic);
+    ((InputController) inputController).timeSlot.setVisible(false);
   }
 
   //
