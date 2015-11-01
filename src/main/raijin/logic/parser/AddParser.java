@@ -23,7 +23,6 @@ public class AddParser {
   private String currentDate;
   private int parseType; // 0 for add, 1 for edit, 2 for display.
   
-  private boolean containsPriority;
   private boolean containsStartDate;
   private boolean containsEndDate;
   private boolean containsStartTime;
@@ -35,6 +34,7 @@ public class AddParser {
   private static final DateTimeFormat dtFormat = new DateTimeFormat();
   
   private String name, startDate, startTime, endDate, endTime;
+  private int start, tpsIndex, index;
   
   public AddParser(ParsedInput.ParsedInputBuilder builder, String[] wordsOfInput, int type) 
       throws IllegalCommandArgumentException {
@@ -49,7 +49,6 @@ public class AddParser {
     tags = new TreeSet<String>();
     names = new TreeSet<String>();
     
-    containsPriority = false;
     containsStartDate = false;
     containsEndDate = false;
     containsStartTime = false;
@@ -74,9 +73,9 @@ public class AddParser {
    * @throws    IllegalCommandArgumentException
    */
   public ParsedInput.ParsedInputBuilder process() throws IllegalCommandArgumentException {
-    int start = 1; // For recording starting index of the name currently being checked
-    int index = wordsOfInput.length; // (Last index of task name - 1) currently being checked
-    int tpsIndex = wordsOfInput.length; // Latest index of tag/priority/subtask inputs
+    start = 1; // For recording starting index of the name currently being checked
+    index = wordsOfInput.length; // (Last index of task name - 1) currently being checked
+    tpsIndex = wordsOfInput.length; // Latest index of tag/priority/subtask inputs
     
     for (int i = 0; i < wordsOfInput.length; i++) {
       if (wordsOfInput[i].toLowerCase().matches(Constants.DATE_START_PREPOSITION)) {
@@ -187,117 +186,15 @@ public class AddParser {
           }
           
         } else if (i < wordsOfInput.length-1 && wordsOfInput[i+1].toLowerCase().equals("next")) { 
-          
-          if (i < wordsOfInput.length-2) {           
-            if (wordsOfInput[i+2].toLowerCase().matches(Constants.DAYS)) {
-              // by next (day)
-              containsStartDate = true;
-              index = tpsIndex > i ? i : tpsIndex ;
-              produceDateFromDay(wordsOfInput[i+2], 1);
-            } else if (wordsOfInput[i+2].toLowerCase().matches("week|wk")) {
-              // by next (week)
-              containsStartDate = true;
-              index = tpsIndex > i ? i : tpsIndex ;
-              produceDateFromDay(null, 2);
-            } else if (wordsOfInput[i+2].toLowerCase().matches("month|mth")) {
-              // by next (month)
-              containsStartDate = true;
-              index = tpsIndex > i ? i : tpsIndex ;
-              produceDateFromDay(null, 3);
-            } else if (wordsOfInput[i+2].toLowerCase().matches("year|yr")) {
-              // by next (year)
-              containsStartDate = true;
-              index = tpsIndex > i ? i : tpsIndex ;
-              produceDateFromDay(null, 4);
-            }
-          }
-          
+          lookUpNextDate(i);
         }
       }
-      
-      /************* PRIORITY ADDING **************/
-      if (wordsOfInput[i].indexOf("!") == 0) {
-        if ((!containsStartDate || !containsStartTime) && index > i) {
-          index = i;
-          tpsIndex = i;
-        }
-        containsPriority = true;
-        String priority = wordsOfInput[i].substring(1);
-        if (priority.matches("h|high")) {
-          builder.priority(Constants.PRIORITY_HIGH);
-        } else if (priority.matches("m|mid|middle|medium")) {
-          builder.priority(Constants.PRIORITY_MID);
-        } else if (priority.matches("l|low")) {
-          builder.priority(Constants.PRIORITY_LOW);
-        } else {
-          throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_PRIORITY,
-              Constants.CommandParam.PRIORITY);
-        }
-      }
-      
-      if (!containsPriority && parseType == 1) {
-        builder.priority(null);
-      }
-      
-      /************* PROJECT ADDING **************/
-      if (wordsOfInput[i].indexOf('$') == 0) {
-        if ((!containsStartDate || !containsStartTime) && index > i) {
-          index = i;
-          tpsIndex = i;
-        }
-        String project = wordsOfInput[i].substring(1);
-        builder.project(project);
-      }
-      
-      /************* TAGS ADDING **************/
-      if (wordsOfInput[i].indexOf('#') == 0) {
-        if ((!containsStartDate || !containsStartTime) && index > i) {
-          index = i;
-          tpsIndex = i;
-        }
-        String tag = wordsOfInput[i].substring(1);
-        tags.add(tag);
-      }
-      
-      /************* SUBTASKS ADDING **************/
-      if (wordsOfInput[i].indexOf('@') == 0) {
-        if ((!containsStartDate || !containsStartTime) && index > i) {
-          index = i;
-          tpsIndex = i;
-        }
-        String id = wordsOfInput[i].substring(1);
-        try {
-          builder.subTaskOf(Integer.parseInt(id));
-        } catch (NumberFormatException e) {
-          throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_SUBTASK,
-              Constants.CommandParam.SUBTASKOF);
-        }
-      }
-      
-      /************* BATCH NAME ADDING **************/
-      if (wordsOfInput[i].equals(";")) {
-        if (index == wordsOfInput.length) {
-          index = i;
-        }
-        for (int n = start; n < index; n++) {
-          if (wordsOfInput[n].indexOf("/") == 0) {
-            name += wordsOfInput[n].substring(1);
-          } else {
-            name += wordsOfInput[n];
-          }
-          if (n < index-1) {
-            name += " ";
-          }
-        }
-        if (name.length() == 0 && parseType == 0) {
-          throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_TASK_NAME,
-              Constants.CommandParam.NAME);
-        }
-        names.add(name);
-        name = "";
-        start = i+1;                    // Move on to check on next name
-        index = wordsOfInput.length;    // Reset end index to end of string
-      }
+    
+      checkForPriority(i);
+      checkForProject(i);
+      checkForTag(i);
+      checkForSubtask(i);
+      checkForBatchAdding(i);
       
     }
     
@@ -359,39 +256,114 @@ public class AddParser {
     return builder.name(names).dateTime(dateTime).tag(tags);
 
   }
-  
-  /**
-   * Method that checks if start and end date exists on the calendar.
-   * 
-   * @param startDate       Start date in dd/mm/yyyy format.
-   * @param endDate         End date in dd/mm/yyyy format.
-   * @param dateTime        DateTime object created from both startDate & endDate.
-   * @throws                IllegalCommandArgumentException
-   */
-  public void checkStartEndDate(String startDate, String endDate, DateTime dateTime)
-      throws IllegalCommandArgumentException {
-    int startDay = Integer.parseInt(startDate.split(dateOperator)[0]);
-    int endDay = Integer.parseInt(endDate.split(dateOperator)[0]);
-    if (dateTime.getStartDate().getDayOfMonth() != startDay ||
-        dateTime.getEndDate().getDayOfMonth() != endDay) {
-      throw new IllegalCommandArgumentException(
-          Constants.FEEDBACK_INVALID_DATE, Constants.CommandParam.DATETIME);
+
+  public void lookUpNextDate(int i) {
+    if (i < wordsOfInput.length-2) {           
+      if (wordsOfInput[i+2].toLowerCase().matches(Constants.DAYS)) {
+        // by next (day)
+        containsStartDate = true;
+        index = tpsIndex > i ? i : tpsIndex ;
+        produceDateFromDay(wordsOfInput[i+2], 1);
+      } else if (wordsOfInput[i+2].toLowerCase().matches("week|wk")) {
+        // by next (week)
+        containsStartDate = true;
+        index = tpsIndex > i ? i : tpsIndex ;
+        produceDateFromDay(null, 2);
+      } else if (wordsOfInput[i+2].toLowerCase().matches("month|mth")) {
+        // by next (month)
+        containsStartDate = true;
+        index = tpsIndex > i ? i : tpsIndex ;
+        produceDateFromDay(null, 3);
+      } else if (wordsOfInput[i+2].toLowerCase().matches("year|yr")) {
+        // by next (year)
+        containsStartDate = true;
+        index = tpsIndex > i ? i : tpsIndex ;
+        produceDateFromDay(null, 4);
+      }
     }
   }
-  
-  /**
-   * Method that checks if start date exists on the calendar.
-   * 
-   * @param endDate         End date in dd/mm/yyyy format.
-   * @param dateTime        DateTime object created from startDate.
-   * @throws                IllegalCommandArgumentException
-   */
-  public void checkEndDate(String endDate, DateTime dateTime)
-      throws IllegalCommandArgumentException {
-    int startDay = Integer.parseInt(endDate.split(dateOperator)[0]);
-    if (dateTime.getEndDate().getDayOfMonth() != startDay) {
-      throw new IllegalCommandArgumentException(
-          Constants.FEEDBACK_INVALID_DATE, Constants.CommandParam.DATETIME);
+
+  public void checkForBatchAdding(int i) throws IllegalCommandArgumentException {
+    if (wordsOfInput[i].equals(";")) {
+      if (index == wordsOfInput.length) {
+        index = i;
+      }
+      for (int n = start; n < index; n++) {
+        if (wordsOfInput[n].indexOf("/") == 0) {
+          name += wordsOfInput[n].substring(1);
+        } else {
+          name += wordsOfInput[n];
+        }
+        if (n < index-1) {
+          name += " ";
+        }
+      }
+      if (name.length() == 0 && parseType == 0) {
+        throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_TASK_NAME,
+            Constants.CommandParam.NAME);
+      }
+      names.add(name);
+      name = "";
+      start = i+1;                    // Move on to check on next name
+      index = wordsOfInput.length;    // Reset end index to end of string
+    }
+  }
+
+  public void checkForSubtask(int i) throws IllegalCommandArgumentException {
+    if (wordsOfInput[i].indexOf('@') == 0) {
+      if ((!containsStartDate || !containsStartTime) && index > i) {
+        index = i;
+        tpsIndex = i;
+      }
+      String id = wordsOfInput[i].substring(1);
+      try {
+        builder.subTaskOf(Integer.parseInt(id));
+      } catch (NumberFormatException e) {
+        throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_SUBTASK,
+            Constants.CommandParam.SUBTASKOF);
+      }
+    }
+  }
+
+  public void checkForTag(int i) {
+    if (wordsOfInput[i].indexOf('#') == 0) {
+      if ((!containsStartDate || !containsStartTime) && index > i) {
+        index = i;
+        tpsIndex = i;
+      }
+      String tag = wordsOfInput[i].substring(1);
+      tags.add(tag);
+    }
+  }
+
+  public void checkForProject(int i) {
+    if (wordsOfInput[i].indexOf('$') == 0) {
+      if ((!containsStartDate || !containsStartTime) && index > i) {
+        index = i;
+        tpsIndex = i;
+      }
+      String project = wordsOfInput[i].substring(1);
+      builder.project(project);
+    }
+  }
+
+  public void checkForPriority(int i) throws IllegalCommandArgumentException {
+    if (wordsOfInput[i].indexOf("!") == 0) {
+      if ((!containsStartDate || !containsStartTime) && index > i) {
+        index = i;
+        tpsIndex = i;
+      }
+      String priority = wordsOfInput[i].substring(1);
+      if (priority.matches("h|high")) {
+        builder.priority(Constants.PRIORITY_HIGH);
+      } else if (priority.matches("m|mid|middle|medium")) {
+        builder.priority(Constants.PRIORITY_MID);
+      } else if (priority.matches("l|low")) {
+        builder.priority(Constants.PRIORITY_LOW);
+      } else {
+        throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_PRIORITY,
+            Constants.CommandParam.PRIORITY);
+      }
     }
   }
   
@@ -430,6 +402,41 @@ public class AddParser {
       }
     }
     startDate = date.getDayOfMonth() + "/" + date.getMonthValue() + "/" +date.getYear();
+  }
+  
+  /**
+   * Method that checks if start and end date exists on the calendar.
+   * 
+   * @param startDate       Start date in dd/mm/yyyy format.
+   * @param endDate         End date in dd/mm/yyyy format.
+   * @param dateTime        DateTime object created from both startDate & endDate.
+   * @throws                IllegalCommandArgumentException
+   */
+  public void checkStartEndDate(String startDate, String endDate, DateTime dateTime)
+      throws IllegalCommandArgumentException {
+    int startDay = Integer.parseInt(startDate.split(dateOperator)[0]);
+    int endDay = Integer.parseInt(endDate.split(dateOperator)[0]);
+    if (dateTime.getStartDate().getDayOfMonth() != startDay ||
+        dateTime.getEndDate().getDayOfMonth() != endDay) {
+      throw new IllegalCommandArgumentException(
+          Constants.FEEDBACK_INVALID_DATE, Constants.CommandParam.DATETIME);
+    }
+  }
+  
+  /**
+   * Method that checks if start date exists on the calendar.
+   * 
+   * @param endDate         End date in dd/mm/yyyy format.
+   * @param dateTime        DateTime object created from startDate.
+   * @throws                IllegalCommandArgumentException
+   */
+  public void checkEndDate(String endDate, DateTime dateTime)
+      throws IllegalCommandArgumentException {
+    int startDay = Integer.parseInt(endDate.split(dateOperator)[0]);
+    if (dateTime.getEndDate().getDayOfMonth() != startDay) {
+      throw new IllegalCommandArgumentException(
+          Constants.FEEDBACK_INVALID_DATE, Constants.CommandParam.DATETIME);
+    }
   }
   
 }
