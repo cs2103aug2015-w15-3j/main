@@ -46,6 +46,7 @@ public class AutoComplete {
   private SimpleParser parser;
   private Logger logger;
   private com.google.common.eventbus.EventBus eventbus;
+  private EventBus eventBus;
   private TreeSet<String> taskNames;
   private TreeSet<String> tags;
   public List<String> suggestions;
@@ -61,6 +62,7 @@ public class AutoComplete {
     this.eventbus = RaijinEventBus.getEventBus();
     this.logger = RaijinLogger.getLogger();
     this.parser = new SimpleParser();
+    this.eventBus = EventBus.getEventBus();
     suggestions = new ArrayList<String>();
     selectedTasks = new ArrayList<Task>();
 
@@ -263,7 +265,7 @@ public class AutoComplete {
 
   void handleHelpForCommand(String command, String userInput) {
     Constants.Command inputCommand = Constants.Command.valueOf(command.toUpperCase());
-    String commandFormat = "";                       
+    String commandFormat = "";
     String description = "";
 
     switch (inputCommand) {
@@ -316,10 +318,22 @@ public class AutoComplete {
 
       default:
         break;
-      
+
     }
 
-    if (!commandFormat.equals("")) {    //Only trigger help for certain commands
+    if (!commandFormat.equals("")) { // Only trigger help for certain commands
+
+      try {
+        ParsedInput parsed = parser.parse(userInput);
+        if (isInvalidId(parsed)) {
+          description = Constants.ADD_INVALID_ID;
+        }
+      } catch (FailedToParseException e) {
+        if (isInvalidDate(e)) {
+          description = Constants.ADD_INVALID_DATE;
+        }
+      }
+
       eventbus.post(new SetHelpCommandEvent(commandFormat, description));
     }
 
@@ -345,7 +359,7 @@ public class AutoComplete {
       }
     };
   }
-  
+
   String[] handleAddHelpCommand(String userInput) {
     String[] result = new String[2];
     result[0] = Constants.ADD_SPECIFIC;
@@ -365,21 +379,30 @@ public class AutoComplete {
       result[1] = Constants.ADD_EVENT_SAME_DATE_DESC;
     }
 
-    try {
-      ParsedInput parsed = parser.parse(userInput);
-    } catch (FailedToParseException e) {
-      if (isInvalidDate(e)) {
-        result[1] = Constants.ADD_INVALID_DATE;
-      }
-    }
 
     return result;
   }
-  
+
   boolean isInvalidDate(FailedToParseException e) {
-    return e.getCause() instanceof IllegalCommandArgumentException 
+    return e.getCause() instanceof IllegalCommandArgumentException
         && ((IllegalCommandArgumentException) e.getCause()).getArgument().equals(
             Constants.CommandParam.DATETIME);
+  }
+
+  boolean isInvalidId(ParsedInput input) {
+    if (input.getId() != 0) {
+
+      for (int displayedId : input.getIds()) {
+
+        try {
+          eventBus.getDisplayedTasks().get(displayedId - 1).getId();
+        } catch (IndexOutOfBoundsException e) {
+          return true;
+        }
+
+      }
+    }
+    return false;
   }
 
 }

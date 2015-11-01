@@ -184,6 +184,9 @@ public class Constants {
       + "by details of the tasks";
 
   public static final String ADD_INVALID_DATE = "?Please enter a valid time format";
+  public static final String ADD_INVALID_ID = "?Invalid task id(s) found. Please "
+      + "enter only task id that appears on the screen";
+
   //=============
   // Edit command
   //=============
