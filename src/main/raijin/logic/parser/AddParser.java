@@ -128,13 +128,7 @@ public class AddParser {
               endDate = wordsOfInput[i+4];
               
               // startDate startTime endDate {endTime}
-              if (wordsOfInput[i+5].toLowerCase().matches(timePattern)) {
-                containsEndTime = true;
-                endTime = wordsOfInput[i+5];
-              } else {
-                throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
-                    Constants.CommandParam.DATETIME); 
-              }
+              checkForEndTimeInput(i+5);
               
             } else {
               throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDDATETIME,
@@ -153,13 +147,7 @@ public class AddParser {
           // startTime {endTime}
           if (i < wordsOfInput.length - 3 && 
               wordsOfInput[i+2].matches(Constants.DATE_END_PREPOSITION)) {
-            if (wordsOfInput[i+3].toLowerCase().matches(timePattern)) {
-              containsEndTime = true;
-              endTime = wordsOfInput[i+3];
-            } else {
-              throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
-                  Constants.CommandParam.DATETIME); 
-            } 
+            checkForEndTimeInput(i+3);
           }
           
         } else if (i < wordsOfInput.length-1 && 
@@ -171,16 +159,12 @@ public class AddParser {
           produceDateFromDay(wordsOfInput[i+1], 0);
           
           if (i < wordsOfInput.length-2 && wordsOfInput[i+2].toLowerCase().matches(timePattern)) {
+            containsStartTime = true;
             startTime = wordsOfInput[i+2];
           
             if (i < wordsOfInput.length - 4 && 
                 wordsOfInput[i+3].matches(Constants.DATE_END_PREPOSITION)) {
-              if (wordsOfInput[i+4].toLowerCase().matches(timePattern)) {
-                endTime = wordsOfInput[i+4];
-              } else {
-                throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
-                    Constants.CommandParam.DATETIME); 
-              }
+              checkForEndTimeInput(i+4);
             }
             
           }
@@ -198,8 +182,22 @@ public class AddParser {
       
     }
     
-    /********** Creates objects and then ParseInputBuilders based on info. **********/  
+    extractLastTaskName();
     
+    formatDateTime();
+    DateTime dateTime = createDateTime();
+    
+    return builder.name(names).dateTime(dateTime).tag(tags);
+
+  }
+
+  /**
+   * Extracts task names that has yet to be processed and checks if it is blank in the case of
+   * adding. Throws exception as adding requires a task name.
+   * 
+   * @throws IllegalCommandArgumentException
+   */
+  public void extractLastTaskName() throws IllegalCommandArgumentException {
     // Adds name that isn't checked by ";" (i.e. start is < wordsOfInput.length)
     for (int n = start; n < index; n++) {
       if (wordsOfInput[n].indexOf("/") == 0) {
@@ -217,20 +215,15 @@ public class AddParser {
           Constants.CommandParam.NAME);
     } 
     names.add(name);
-    
-    // Check if type of parsing is for display or not. 
-    // If it is for display, no need to check if date has already passed.
-    if (parseType != 2) {
-      startDate = dtFormat.formatDate(startDate,0);
-      endDate = dtFormat.formatDate(endDate,0);
-    } else {
-      startDate = dtFormat.formatDate(startDate,1);
-      endDate = dtFormat.formatDate(endDate,1);
-    }
-    
-    startTime = dtFormat.formatTime(startTime);
-    endTime = dtFormat.formatTime(endTime);
-    
+  }
+
+  /**
+   * Checks the dates for any invalid calendar dates, and creates relevant DateTime objects.
+   * 
+   * @return DateTime                           DateTime object containing all date and time info.
+   * @throws IllegalCommandArgumentException
+   */
+  public DateTime createDateTime() throws IllegalCommandArgumentException {
     DateTime dateTime = null;
     if (containsStartDate && containsStartTime && containsEndDate && containsEndTime) {
       dateTime = new DateTime(startDate, startTime, endDate, endTime);
@@ -252,18 +245,69 @@ public class AddParser {
     } else if (containsStartTime) {
       dateTime = new DateTime(currentDate, startTime);
     }
-    
-    return builder.name(names).dateTime(dateTime).tag(tags);
-
+    return dateTime;
   }
 
-  public void lookUpNextDate(int i) {
+  /**
+   * Checks parseType before determining the type of format used for Date.
+   * Formats both date and time input to a format that can be used for DateTime parsing.
+   */
+  public void formatDateTime() {
+    // Check if type of parsing is for display or not. 
+    // If it is for display, no need to check if date has already passed.
+    if (parseType != 2) {
+      startDate = dtFormat.formatDate(startDate,0);
+      endDate = dtFormat.formatDate(endDate,0);
+    } else {
+      startDate = dtFormat.formatDate(startDate,1);
+      endDate = dtFormat.formatDate(endDate,1);
+    }
+    
+    startTime = dtFormat.formatTime(startTime);
+    endTime = dtFormat.formatTime(endTime);
+  }
+
+  /**
+   * Checks the word for any end time input.
+   * 
+   * @param i       Index of string input array.
+   * @throws IllegalCommandArgumentException
+   */
+  public void checkForEndTimeInput(int i) throws IllegalCommandArgumentException {
+    if (wordsOfInput[i].toLowerCase().matches(timePattern)) {
+      containsEndTime = true;
+      endTime = wordsOfInput[i];
+    } else {
+      throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
+          Constants.CommandParam.DATETIME); 
+    }
+  }
+  
+  /**
+   * Processes the date that the user wants to look up for.
+   * 
+   * @param i       Index of string input array.
+   * @throws IllegalCommandArgumentException 
+   */
+  public void lookUpNextDate(int i) throws IllegalCommandArgumentException {
     if (i < wordsOfInput.length-2) {           
       if (wordsOfInput[i+2].toLowerCase().matches(Constants.DAYS)) {
         // by next (day)
         containsStartDate = true;
         index = tpsIndex > i ? i : tpsIndex ;
         produceDateFromDay(wordsOfInput[i+2], 1);
+        
+        // by next day (starttime)
+        if (i < wordsOfInput.length-3 && wordsOfInput[i+3].toLowerCase().matches(timePattern)) {
+          containsStartTime = true;
+          startTime = wordsOfInput[i+3];
+          
+          // by next day starttime (endtime)
+          if (i < wordsOfInput.length - 5 && 
+              wordsOfInput[i+4].matches(Constants.DATE_END_PREPOSITION)) {
+            checkForEndTimeInput(i+5);
+          }
+        }   
       } else if (wordsOfInput[i+2].toLowerCase().matches("week|wk")) {
         // by next (week)
         containsStartDate = true;
@@ -283,32 +327,30 @@ public class AddParser {
     }
   }
 
+  /**
+   * Checks for any batch adding to be processed.
+   * 
+   * @param i       Index of string input array.
+   * @throws IllegalCommandArgumentException
+   */
   public void checkForBatchAdding(int i) throws IllegalCommandArgumentException {
     if (wordsOfInput[i].equals(";")) {
       if (index == wordsOfInput.length) {
         index = i;
       }
-      for (int n = start; n < index; n++) {
-        if (wordsOfInput[n].indexOf("/") == 0) {
-          name += wordsOfInput[n].substring(1);
-        } else {
-          name += wordsOfInput[n];
-        }
-        if (n < index-1) {
-          name += " ";
-        }
-      }
-      if (name.length() == 0 && parseType == 0) {
-        throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_TASK_NAME,
-            Constants.CommandParam.NAME);
-      }
-      names.add(name);
+      extractLastTaskName();
       name = "";
       start = i+1;                    // Move on to check on next name
       index = wordsOfInput.length;    // Reset end index to end of string
     }
   }
 
+  /**
+   * Checks current word of array for any subtask association.
+   * 
+   * @param i       Index of string input array.
+   * @throws IllegalCommandArgumentException
+   */
   public void checkForSubtask(int i) throws IllegalCommandArgumentException {
     if (wordsOfInput[i].indexOf('@') == 0) {
       if ((!containsStartDate || !containsStartTime) && index > i) {
@@ -325,6 +367,11 @@ public class AddParser {
     }
   }
 
+  /**
+   * Checks current word of array for any tag association.
+   * 
+   * @param i       Index of string input array.
+   */
   public void checkForTag(int i) {
     if (wordsOfInput[i].indexOf('#') == 0) {
       if ((!containsStartDate || !containsStartTime) && index > i) {
@@ -336,6 +383,11 @@ public class AddParser {
     }
   }
 
+  /**
+   * Checks current word of array for any project association.
+   * 
+   * @param i       Index of string input array.
+   */
   public void checkForProject(int i) {
     if (wordsOfInput[i].indexOf('$') == 0) {
       if ((!containsStartDate || !containsStartTime) && index > i) {
@@ -347,6 +399,12 @@ public class AddParser {
     }
   }
 
+  /**
+   * Checks current word of array for any priority adding.
+   * 
+   * @param i       Index of string input array.
+   * @throws IllegalCommandArgumentException
+   */
   public void checkForPriority(int i) throws IllegalCommandArgumentException {
     if (wordsOfInput[i].indexOf("!") == 0) {
       if ((!containsStartDate || !containsStartTime) && index > i) {

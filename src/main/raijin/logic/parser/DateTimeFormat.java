@@ -109,7 +109,7 @@ public class DateTimeFormat {
         }
       }
     } else if (oprIndex == 1) {
-      time = time.charAt(0) + time.substring(2,4);
+      time = "0" + time.charAt(0) + time.substring(2,4);
     } else if (oprIndex == 2) {
       if (isPM) {
         time = Integer.parseInt(time.substring(0,2))+12 + time.substring(3,5);

@@ -193,9 +193,11 @@ public class AddParserTest {
   
   @Test // This test input needs constant changes as it changes according to current date.
   public void testAddWithDayOfNext() throws FailedToParseException {
-    addCommand = parser.parse("add finish work by next sun");
+    addCommand = parser.parse("add finish work by next sun 8.00am to 11.59pm");
     assertEquals("finish work", addCommand.getNames().pollFirst());
     assertEquals("2015-11-08", addCommand.getDateTime().getStartDate().toString());
+    assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("23:59", addCommand.getDateTime().getEndTime().toString());
   }
   
   @Test
