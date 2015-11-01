@@ -151,23 +151,8 @@ public class AddParser {
           }
           
         } else if (i < wordsOfInput.length-1 && 
-            wordsOfInput[i+1].toLowerCase().matches(Constants.DAYS)) {
-          // by (day)
-          
-          containsStartDate = true;
-          index = tpsIndex > i ? i : tpsIndex ;
-          produceDateFromDay(wordsOfInput[i+1], 0);
-          
-          if (i < wordsOfInput.length-2 && wordsOfInput[i+2].toLowerCase().matches(timePattern)) {
-            containsStartTime = true;
-            startTime = wordsOfInput[i+2];
-          
-            if (i < wordsOfInput.length - 4 && 
-                wordsOfInput[i+3].matches(Constants.DATE_END_PREPOSITION)) {
-              checkForEndTimeInput(i+4);
-            }
-            
-          }
+            wordsOfInput[i+1].toLowerCase().matches(Constants.DAYS + "|today|tdy|tomorrow|tmr")) {
+          lookUpNextDay(i);
           
         } else if (i < wordsOfInput.length-1 && wordsOfInput[i+1].toLowerCase().equals("next")) { 
           lookUpNextDate(i);
@@ -188,98 +173,39 @@ public class AddParser {
     DateTime dateTime = createDateTime();
     
     return builder.name(names).dateTime(dateTime).tag(tags);
-
   }
 
   /**
-   * Extracts task names that has yet to be processed and checks if it is blank in the case of
-   * adding. Throws exception as adding requires a task name.
+   * Checks string for any day string input. Eg. Mon(day), Tue(sday), etc.
+   * Also checks for "today" or "tomorrow" input and processes accordingly.
    * 
+   * @param i           Index of string input array.
    * @throws IllegalCommandArgumentException
    */
-  public void extractLastTaskName() throws IllegalCommandArgumentException {
-    // Adds name that isn't checked by ";" (i.e. start is < wordsOfInput.length)
-    for (int n = start; n < index; n++) {
-      if (wordsOfInput[n].indexOf("/") == 0) {
-        name += wordsOfInput[n].substring(1);
-      } else {
-        name += wordsOfInput[n];
-      }
-      if (n < index-1) {
-        name += " ";
-      }
+  public void lookUpNextDay(int i) throws IllegalCommandArgumentException {
+    containsStartDate = true;
+    index = tpsIndex > i ? i : tpsIndex ;
+    
+    if (wordsOfInput[i+1].matches(Constants.DAYS)) {
+      // by (day)
+      produceDateFromDay(wordsOfInput[i+1], 0);
+    } else if (wordsOfInput[i+1].matches("today|tdy")) {
+      // by today
+      produceDateFromDay(null, 5);
+    } else if (wordsOfInput[i+1].matches("tomorrow|tmr")) {
+      // by tomorrow
+      produceDateFromDay(null, 6);
     }
     
-    if (name.length() == 0 && parseType == 0) {
-      throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_TASK_NAME, 
-          Constants.CommandParam.NAME);
-    } 
-    names.add(name);
-  }
-
-  /**
-   * Checks the dates for any invalid calendar dates, and creates relevant DateTime objects.
-   * 
-   * @return DateTime                           DateTime object containing all date and time info.
-   * @throws IllegalCommandArgumentException
-   */
-  public DateTime createDateTime() throws IllegalCommandArgumentException {
-    DateTime dateTime = null;
-    if (containsStartDate && containsStartTime && containsEndDate && containsEndTime) {
-      dateTime = new DateTime(startDate, startTime, endDate, endTime);
-      checkStartEndDate(startDate, endDate, dateTime);
-    } else if (containsStartDate && containsStartTime && containsEndTime) {
-      dateTime = new DateTime(startDate, startTime, endTime);
-      checkEndDate(startDate, dateTime);
-    } else if (containsStartDate && containsStartTime) {
-      dateTime = new DateTime(startDate, startTime);
-      checkEndDate(startDate, dateTime);
-    } else if (containsStartDate && containsEndDate) {
-      dateTime = new DateTime(startDate, currentTime, endDate, "2359");
-      checkStartEndDate(startDate, endDate, dateTime);
-    } else if (containsStartDate) {
-      dateTime = new DateTime(startDate);
-      checkEndDate(startDate, dateTime);
-    } else if (containsStartTime && containsEndTime) {
-      dateTime = new DateTime(currentDate, startTime, endTime);
-    } else if (containsStartTime) {
-      dateTime = new DateTime(currentDate, startTime);
-    }
-    return dateTime;
-  }
-
-  /**
-   * Checks parseType before determining the type of format used for Date.
-   * Formats both date and time input to a format that can be used for DateTime parsing.
-   */
-  public void formatDateTime() {
-    // Check if type of parsing is for display or not. 
-    // If it is for display, no need to check if date has already passed.
-    if (parseType != 2) {
-      startDate = dtFormat.formatDate(startDate,0);
-      endDate = dtFormat.formatDate(endDate,0);
-    } else {
-      startDate = dtFormat.formatDate(startDate,1);
-      endDate = dtFormat.formatDate(endDate,1);
-    }
+    if (i < wordsOfInput.length-2 && wordsOfInput[i+2].toLowerCase().matches(timePattern)) {
+      containsStartTime = true;
+      startTime = wordsOfInput[i+2];
     
-    startTime = dtFormat.formatTime(startTime);
-    endTime = dtFormat.formatTime(endTime);
-  }
-
-  /**
-   * Checks the word for any end time input.
-   * 
-   * @param i       Index of string input array.
-   * @throws IllegalCommandArgumentException
-   */
-  public void checkForEndTimeInput(int i) throws IllegalCommandArgumentException {
-    if (wordsOfInput[i].toLowerCase().matches(timePattern)) {
-      containsEndTime = true;
-      endTime = wordsOfInput[i];
-    } else {
-      throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
-          Constants.CommandParam.DATETIME); 
+      if (i < wordsOfInput.length - 4 && 
+          wordsOfInput[i+3].matches(Constants.DATE_END_PREPOSITION)) {
+        checkForEndTimeInput(i+4);
+      }
+      
     }
   }
   
@@ -430,6 +356,7 @@ public class AddParser {
    * 
    * @param dayInput    Day of week input by user. Eg. Mon(day), Tue(sday), etc.
    * @param plus        Amount to add onto the date. 1 for next day, 2 week, 3 month & 4 for year.
+   *                    5 for today, 6 for tomorrow.
    */
   public void produceDateFromDay(String dayInput, int plus) {
     LocalDate date = null;
@@ -440,6 +367,10 @@ public class AddParser {
       date = LocalDate.now().plusMonths(1);
     } else if (plus == 4) {
       date = LocalDate.now().plusYears(1);
+    } else if (plus == 5) {
+      date = LocalDate.now();
+    } else if (plus == 6) {
+      date = LocalDate.now().plusDays(1);
     } else {
       for (int n = 0; n < Constants.DAYS_LIST.length; n++) {
         if (dayInput.toLowerCase().matches(Constants.DAYS_LIST[n])) {
@@ -460,6 +391,98 @@ public class AddParser {
       }
     }
     startDate = date.getDayOfMonth() + "/" + date.getMonthValue() + "/" +date.getYear();
+  }
+  
+  /**
+   * Extracts task names that has yet to be processed and checks if it is blank in the case of
+   * adding. Throws exception as adding requires a task name.
+   * 
+   * @throws IllegalCommandArgumentException
+   */
+  public void extractLastTaskName() throws IllegalCommandArgumentException {
+    // Adds name that isn't checked by ";" (i.e. start is < wordsOfInput.length)
+    for (int n = start; n < index; n++) {
+      if (wordsOfInput[n].indexOf("/") == 0) {
+        name += wordsOfInput[n].substring(1);
+      } else {
+        name += wordsOfInput[n];
+      }
+      if (n < index-1) {
+        name += " ";
+      }
+    }
+    
+    if (name.length() == 0 && parseType == 0) {
+      throw new IllegalCommandArgumentException(Constants.FEEDBACK_NO_TASK_NAME, 
+          Constants.CommandParam.NAME);
+    } 
+    names.add(name);
+  }
+
+  /**
+   * Checks the dates for any invalid calendar dates, and creates relevant DateTime objects.
+   * 
+   * @return DateTime                           DateTime object containing all date and time info.
+   * @throws IllegalCommandArgumentException
+   */
+  public DateTime createDateTime() throws IllegalCommandArgumentException {
+    DateTime dateTime = null;
+    if (containsStartDate && containsStartTime && containsEndDate && containsEndTime) {
+      dateTime = new DateTime(startDate, startTime, endDate, endTime);
+      checkStartEndDate(startDate, endDate, dateTime);
+    } else if (containsStartDate && containsStartTime && containsEndTime) {
+      dateTime = new DateTime(startDate, startTime, endTime);
+      checkEndDate(startDate, dateTime);
+    } else if (containsStartDate && containsStartTime) {
+      dateTime = new DateTime(startDate, startTime);
+      checkEndDate(startDate, dateTime);
+    } else if (containsStartDate && containsEndDate) {
+      dateTime = new DateTime(startDate, currentTime, endDate, "2359");
+      checkStartEndDate(startDate, endDate, dateTime);
+    } else if (containsStartDate) {
+      dateTime = new DateTime(startDate);
+      checkEndDate(startDate, dateTime);
+    } else if (containsStartTime && containsEndTime) {
+      dateTime = new DateTime(currentDate, startTime, endTime);
+    } else if (containsStartTime) {
+      dateTime = new DateTime(currentDate, startTime);
+    }
+    return dateTime;
+  }
+
+  /**
+   * Checks parseType before determining the type of format used for Date.
+   * Formats both date and time input to a format that can be used for DateTime parsing.
+   */
+  public void formatDateTime() {
+    // Check if type of parsing is for display or not. 
+    // If it is for display, no need to check if date has already passed.
+    if (parseType != 2) {
+      startDate = dtFormat.formatDate(startDate,0);
+      endDate = dtFormat.formatDate(endDate,0);
+    } else {
+      startDate = dtFormat.formatDate(startDate,1);
+      endDate = dtFormat.formatDate(endDate,1);
+    }
+    
+    startTime = dtFormat.formatTime(startTime);
+    endTime = dtFormat.formatTime(endTime);
+  }
+
+  /**
+   * Checks the word for any end time input.
+   * 
+   * @param i       Index of string input array.
+   * @throws IllegalCommandArgumentException
+   */
+  public void checkForEndTimeInput(int i) throws IllegalCommandArgumentException {
+    if (wordsOfInput[i].toLowerCase().matches(timePattern)) {
+      containsEndTime = true;
+      endTime = wordsOfInput[i];
+    } else {
+      throw new IllegalCommandArgumentException(Constants.FEEDBACK_INVALID_ENDTIME,
+          Constants.CommandParam.DATETIME); 
+    }
   }
   
   /**
