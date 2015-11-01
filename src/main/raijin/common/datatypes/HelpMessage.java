@@ -10,6 +10,7 @@ public class HelpMessage {
 
   private static final Color COMMAND_FORMAT_COLOR = Color.rgb(51, 153, 255);
   private static final Color USER_INPUT_COLOR = Color.rgb(224, 224, 224);
+  private static final Color ERROR_COLOR = Color.rgb(255, 55, 55);
   private static final Color DESCRIPTION_COLOR = Color.WHITE;
   private static final String DEFAULT_FONT_SIZE = "15";
   public Text commandFormat;
@@ -20,7 +21,7 @@ public class HelpMessage {
     this.commandFormat = createText(commandFormat, COMMAND_FORMAT_COLOR);
     this.description = createText("\n" + description, DESCRIPTION_COLOR);
     initializeContent(commandFormat);
-    helpMessage.add(this.description);
+    initializeDescription(description);
   }
   
   Text createText(String input, Color fillColor) {
@@ -40,6 +41,14 @@ public class HelpMessage {
     
     for (String token : tokens) {
       helpMessage.add(generateTextFromString(token));
+    }
+  }
+
+  void initializeDescription(String description) {
+    if (description.substring(0, 1).equals("?")) {
+      helpMessage.add(createText("\n" + description.substring(1), ERROR_COLOR));
+    } else {
+      helpMessage.add(createText("\n" + description, DESCRIPTION_COLOR));
     }
   }
 

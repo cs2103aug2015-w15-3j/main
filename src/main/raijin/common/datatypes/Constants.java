@@ -183,7 +183,7 @@ public class Constants {
   public static final String ADD_BATCH_DESC = "Adds multiple tasks followed "
       + "by details of the tasks";
 
-  public static final String ADD_INVALID_DATE = "Please enter a valid time format";
+  public static final String ADD_INVALID_DATE = "?Please enter a valid time format";
   //=============
   // Edit command
   //=============
