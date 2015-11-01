@@ -164,29 +164,31 @@ public class Constants {
   // Add command
   //============
 
-  public static final String ADD_FLOATING = "add [my task]";
+  public static final String ADD_FLOATING = "add ?[my_task] #tag !priority";
   public static final String ADD_FLOATING_DESC = "Adds a task without deadline";
-  public static final String ADD_SPECIFIC = "add [my task] by/on [end date] [end time]";
+  public static final String ADD_SPECIFIC = "add ?[my_task] by/on ?[end_date] ?[end_time] "
+      + "#tag !priority";
   public static final String ADD_SPECIFIC_DESC = "Adds a task with a deadline. "
       + "If no time is given, it will be set to 11.59 pm";
-  public static final String ADD_EVENT_SAME_DATE = "add [my task] on [end date] "
-      + "[start time] to [end time]";
+  public static final String ADD_EVENT_SAME_DATE = "add ?[my_task] by/on ?[end_date] "
+      + "?[start_time] to ?[end_time] #tag !priority";
   public static final String ADD_EVENT_SAME_DATE_DESC = "Adds an event for that "
       + "period of time";
-  public static final String ADD_EVENT_DIFFERENT_DATE = "add [my task] from [start date] "
-      + "[start time] to [end date] [end time]";
+  public static final String ADD_EVENT_DIFFERENT_DATE = "add ?[my_task] from ?[start_date] "
+      + "?[start_time] to ?[end_date] ?[end_time] #tag !priority";
   public static final String ADD_EVENT_DIFFERENT_DATE_DESC = "Adds an event that "
       + "spans more than 1 day";
 
-  public static final String ADD_BATCH = "add [task 1] ; [task 2] ; [task 3] ...";
-  public static final String ADD_BATCH_DESC = "Adds multiple tasks. Date can be "
-      + "added at the end like normal add";
+  public static final String ADD_BATCH = "add ?[task_1] ; ?[task_2] ; ?[task_3] ...";
+  public static final String ADD_BATCH_DESC = "Adds multiple tasks followed "
+      + "by details of the tasks";
 
+  public static final String ADD_INVALID_DATE = "Please enter a valid time format";
   //=============
   // Edit command
   //=============
 
-  public static final String EDIT_TASK = "edit [task id] [changes]";
+  public static final String EDIT_TASK = "edit ?[task_id] ?[changes]";
   public static final String EDIT_TASK_DESC = "Edit any task given its task id";
   
   //================
@@ -200,14 +202,14 @@ public class Constants {
   // Done command
   //================
 
-  public static final String DONE = "done [task id] [task id] .... #tag";
+  public static final String DONE = "done ?[task_id] ?[task_id] ... #tag";
   public static final String DONE_DESC = "marks a task as done given the task id or tag";
 
   //================
   // Delete command
   //================
 
-  public static final String DELETE = "delete [task id] [task id] .... #tag";
+  public static final String DELETE = "delete ?[task_id] ?[task_id] .... #tag";
   public static final String DELETE_DESC = "deletes a task that no longer needed to be "
       + "completed";
 
@@ -223,12 +225,21 @@ public class Constants {
       + "Ctrl + Y to undo";
 
   //================
-  // Search command
+  // search command
   //================
 
-  public static final String SEARCH = "search [keyword] [keyword] ... #tag !priority";
-  public static final String SEARCH_DESC = "searches all pending tasks based that "
-      + "matches all given keywords";
+  public static final String SEARCH = "search ?[keyword] ?[keyword] ... #tag !priority";
+  public static final String SEARCH_DESC = "searches all pending tasks that "
+      + "matches given keywords";
+  
+  
+  //================
+  // set command
+  //================
+
+  public static final String SET = "set ?[directory_to_store_data]";
+  public static final String SET_DESC = "Specifies directory to store your data";
+
   //===========================================================================
   // Keyboard shortcuts
   //===========================================================================

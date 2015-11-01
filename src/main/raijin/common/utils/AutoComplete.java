@@ -23,6 +23,10 @@ import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.events.SetHelpCommandEvent;
 import raijin.common.eventbus.events.SetInputEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
+import raijin.common.exception.FailedToParseException;
+import raijin.common.exception.IllegalCommandArgumentException;
+import raijin.logic.parser.ParsedInput;
+import raijin.logic.parser.SimpleParser;
 import raijin.storage.api.TasksManager;
 
 /**
@@ -39,6 +43,7 @@ public class AutoComplete {
   private SetTrie tagList; // List of tags
   private SetTrie taskList; // List of task names
   private TasksManager tasksManager;
+  private SimpleParser parser;
   private Logger logger;
   private com.google.common.eventbus.EventBus eventbus;
   private TreeSet<String> taskNames;
@@ -55,6 +60,7 @@ public class AutoComplete {
     this.tasksManager = tasksManager;
     this.eventbus = RaijinEventBus.getEventBus();
     this.logger = RaijinLogger.getLogger();
+    this.parser = new SimpleParser();
     suggestions = new ArrayList<String>();
     selectedTasks = new ArrayList<Task>();
 
@@ -164,7 +170,7 @@ public class AutoComplete {
   public boolean isCommandWithID(String userInput) {
     String[] tokens = userInput.trim().split(" ");
     if (isValidCommand(tokens[0])) {
-      handleHelpForCommand(tokens[0]);
+      handleHelpForCommand(tokens[0], userInput);
       return tokens[0].equals("done") || tokens[0].equals("edit") || tokens[0].equals("delete");
     }
     return false;
@@ -255,7 +261,7 @@ public class AutoComplete {
     }
   }
 
-  void handleHelpForCommand(String command) {
+  void handleHelpForCommand(String command, String userInput) {
     Constants.Command inputCommand = Constants.Command.valueOf(command.toUpperCase());
     String commandFormat = "";                       
     String description = "";
@@ -263,8 +269,9 @@ public class AutoComplete {
     switch (inputCommand) {
 
       case ADD:
-        commandFormat = Constants.ADD_SPECIFIC;
-        description = Constants.ADD_SPECIFIC_DESC;
+        String[] result = handleAddHelpCommand(userInput);
+        commandFormat = result[0];
+        description = result[1];
         break;
 
       case DELETE:
@@ -287,21 +294,19 @@ public class AutoComplete {
         description = Constants.EDIT_TASK_DESC;
         break;
 
-      case EXIT:
-        break;
-
-      case HELP:
-        break;
-
       case REDO:
         commandFormat = Constants.REDO;
         description = Constants.REDO_DESC;
         break;
 
       case SEARCH:
+        commandFormat = Constants.SEARCH;
+        description = Constants.SEARCH_DESC;
         break;
 
       case SET:
+        commandFormat = Constants.SET;
+        description = Constants.SET_DESC;
         break;
 
       case UNDO:
@@ -310,12 +315,14 @@ public class AutoComplete {
         break;
 
       default:
-        commandFormat = Constants.ADD_FLOATING;
-        description = Constants.ADD_FLOATING_DESC;
         break;
       
     }
-    eventbus.post(new SetHelpCommandEvent(commandFormat, description));
+
+    if (!commandFormat.equals("")) {    //Only trigger help for certain commands
+      eventbus.post(new SetHelpCommandEvent(commandFormat, description));
+    }
+
   }
 
   public void handleTabEvent() {
@@ -337,6 +344,42 @@ public class AutoComplete {
 
       }
     };
+  }
+  
+  String[] handleAddHelpCommand(String userInput) {
+    String[] result = new String[2];
+    result[0] = Constants.ADD_SPECIFIC;
+    result[1] = Constants.ADD_SPECIFIC_DESC;
+    if (userInput.contains(";")) {
+      result[0] = Constants.ADD_BATCH;
+      result[1] = Constants.ADD_BATCH_DESC;
+    }
+
+    if (userInput.contains("from")) {
+      result[0] = Constants.ADD_EVENT_DIFFERENT_DATE;
+      result[1] = Constants.ADD_EVENT_DIFFERENT_DATE_DESC;
+    }
+
+    if (userInput.contains("to")) {
+      result[0] = Constants.ADD_EVENT_SAME_DATE;
+      result[1] = Constants.ADD_EVENT_SAME_DATE_DESC;
+    }
+
+    try {
+      ParsedInput parsed = parser.parse(userInput);
+    } catch (FailedToParseException e) {
+      if (isInvalidDate(e)) {
+        result[1] = Constants.ADD_INVALID_DATE;
+      }
+    }
+
+    return result;
+  }
+  
+  boolean isInvalidDate(FailedToParseException e) {
+    return e.getCause() instanceof IllegalCommandArgumentException 
+        && ((IllegalCommandArgumentException) e.getCause()).getArgument().equals(
+            Constants.CommandParam.DATETIME);
   }
 
 }

@@ -128,7 +128,7 @@ public class InputController extends BorderPane {
             if (event.isVisible) {
               helpBar.getChildren().clear();
               HelpMessage msg = new HelpMessage(event.commandFormat, event.description);
-              helpBar.getChildren().addAll(msg.commandFormat, msg.description);
+              helpBar.getChildren().addAll(msg.helpMessage);
               helpBar.setVisible(true);
             } else {
               helpBar.setVisible(false);
