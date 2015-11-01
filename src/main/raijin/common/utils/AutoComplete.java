@@ -109,7 +109,7 @@ public class AutoComplete {
       @Subscribe
       @Override
       public void handleEvent(KeyPressEvent event) {
-        updateDisplayView(event.keyEvent);
+        //updateDisplayView(event.keyEvent);
         if (event.keyEvent.getCode() != KeyCode.TAB && event.keyEvent.getCode() != KeyCode.SPACE) {
           tabCount = 0;
           String userInput = event.currentUserInput;
@@ -324,24 +324,26 @@ public class AutoComplete {
     }
 
     if (!commandFormat.equals("")) { // Only trigger help for certain commands
-
       try {
         ParsedInput parsed = parser.parse(userInput);
-        if (parsed.getDateTime().getEndDate() != null) {
-          TimeSlot slots = new TimeSlot(parsed.getDateTime()
-              .getEndDate(), TaskUtils.getTasksList(tasksManager.getPendingTasks()));
-          eventbus.post(new SetTimeSlotEvent(slots.getOccupiedSlots()));
-        }
 
         if (isInvalidId(parsed)) {
           description = Constants.ADD_INVALID_ID;
         }
+
+        if (parsed.getDateTime() != null && parsed.getDateTime().getEndDate() != null) {
+          TimeSlot slots = new TimeSlot(parsed.getDateTime()
+              .getEndDate(), TaskUtils.getTasksList(tasksManager.getPendingTasks()));
+          eventbus.post(new SetTimeSlotEvent(slots.getOccupiedSlots()));
+        } else {
+          eventbus.post(new SetTimeSlotEvent(false));
+        }
+
       } catch (FailedToParseException e) {
         if (isInvalidDate(e)) {
           description = Constants.ADD_INVALID_DATE;
         }
       }
-
       eventbus.post(new SetHelpCommandEvent(commandFormat, description));
     }
 
