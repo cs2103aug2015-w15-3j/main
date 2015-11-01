@@ -169,7 +169,7 @@ public class AddParser {
           
           containsStartDate = true;
           index = tpsIndex > i ? i : tpsIndex ;
-          produceDateFromDay(wordsOfInput[i+1]);
+          produceDateFromDay(wordsOfInput[i+1], 0);
           
           if (i < wordsOfInput.length-2 && wordsOfInput[i+2].toLowerCase().matches(timePattern)) {
             startTime = wordsOfInput[i+2];
@@ -186,18 +186,32 @@ public class AddParser {
             
           }
           
-        } else if (i < wordsOfInput.length-1 && wordsOfInput[i+1].toLowerCase().equals("next")) {
-        
+        } else if (i < wordsOfInput.length-1 && wordsOfInput[i+1].toLowerCase().equals("next")) { 
           
-          // by next (day)
+          if (i < wordsOfInput.length-2) {           
+            if (wordsOfInput[i+2].toLowerCase().matches(Constants.DAYS)) {
+              // by next (day)
+              containsStartDate = true;
+              index = tpsIndex > i ? i : tpsIndex ;
+              produceDateFromDay(wordsOfInput[i+2], 1);
+            } else if (wordsOfInput[i+2].toLowerCase().matches("week|wk")) {
+              // by next (week)
+              containsStartDate = true;
+              index = tpsIndex > i ? i : tpsIndex ;
+              produceDateFromDay(null, 2);
+            } else if (wordsOfInput[i+2].toLowerCase().matches("month|mth")) {
+              // by next (month)
+              containsStartDate = true;
+              index = tpsIndex > i ? i : tpsIndex ;
+              produceDateFromDay(null, 3);
+            } else if (wordsOfInput[i+2].toLowerCase().matches("year|yr")) {
+              // by next (year)
+              containsStartDate = true;
+              index = tpsIndex > i ? i : tpsIndex ;
+              produceDateFromDay(null, 4);
+            }
+          }
           
-          // by next (week)
-          
-          // by next (month)
-          
-          // by next (year)
-          
-          //
         }
       }
       
@@ -385,22 +399,37 @@ public class AddParser {
    * Method that produces a Date string based on day input by user
    * 
    * @param dayInput    Day of week input by user. Eg. Mon(day), Tue(sday), etc.
+   * @param plus        Amount to add onto the date. 1 for next day, 2 week, 3 month & 4 for year.
    */
-  public void produceDateFromDay(String dayInput) {
-    for (int n = 0; n < Constants.DAYS_LIST.length; n++) {
-      if (dayInput.toLowerCase().matches(Constants.DAYS_LIST[n])) {
-        int days = (n+1) - LocalDate.now().getDayOfWeek().getValue();
-        
-        LocalDate date;
-        if (days > 0) {
-          date = LocalDate.now().plusDays(days);
-        } else {
-          date = LocalDate.now().plusDays(days+7);
+  public void produceDateFromDay(String dayInput, int plus) {
+    LocalDate date = null;
+    
+    if (plus == 2) {
+      date = LocalDate.now().plusWeeks(1);
+    } else if (plus == 3) {
+      date = LocalDate.now().plusMonths(1);
+    } else if (plus == 4) {
+      date = LocalDate.now().plusYears(1);
+    } else {
+      for (int n = 0; n < Constants.DAYS_LIST.length; n++) {
+        if (dayInput.toLowerCase().matches(Constants.DAYS_LIST[n])) {
+          int days = (n+1) - LocalDate.now().getDayOfWeek().getValue();
+
+          if (days >= 0) {
+            if (plus == 1) {
+              date = LocalDate.now().plusDays(days+7);
+            } else {
+              date = LocalDate.now().plusDays(days);
+            }
+          } else {
+            date = LocalDate.now().plusDays(days+7);
+          }
+
+          break;
         }
-        
-        startDate = date.getDayOfMonth() + "/" + date.getMonthValue();
-        break;
       }
     }
+    startDate = date.getDayOfMonth() + "/" + date.getMonthValue() + "/" +date.getYear();
   }
+  
 }
