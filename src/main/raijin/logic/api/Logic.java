@@ -74,7 +74,7 @@ public class Logic {
       return cmdRunner.execute(parsed);
     } catch (UnableToExecuteCommandException | FailedToParseException e) {
       logger.error(e.getMessage(), e);
-      return new Status(e.getMessage());
+      return new Status(e.getMessage(), false);
     } 
   }
   
