@@ -67,13 +67,16 @@ public class DateTimeFormat {
   
   /**
    * Method that formats time to a proper format that will allow LocalTime parsing.
-   * Assumes that the time format has already been checked to be valid (24h timing).
+   * Checks whether it is 12/24hr formatting before proceeding.
    * 
    * @param time    String of time input by user.
    * @return        The proper time format after formatting the string input.     
    */
   public String formatTime(String time) {
-    if (time.length() == 3) {
+    if (time.matches(Constants.TIME12_PATTERN)) {
+      return format12HourTime(time);
+      
+    } else if (time.length() == 3) {
       if (time.charAt(0) == '0') {
         // Assuming the String time starts with "00" as it passed the format matching already.
         time += "0";
@@ -82,6 +85,39 @@ public class DateTimeFormat {
       }
     }
 
+    return time;
+  }
+  
+  
+  public String format12HourTime(String time) {
+    int oprIndex = time.indexOf(":") > 0 ? time.indexOf(":") : time.indexOf(".");
+    boolean isPM = time.contains("p");
+    
+    if (oprIndex == -1) {
+      int periodIndex = time.indexOf("p") > 0 ? time.indexOf("p") : time.indexOf("a");
+      if (periodIndex == 1) {
+        if (isPM) {
+          time = Integer.parseInt(time.substring(0,1))+12 + "00";
+        } else {
+          time = "0" + time.charAt(0) + "00";
+        }
+      } else {
+        if (isPM) {
+          time = Integer.parseInt(time.substring(0,2))+12 + "00";
+        } else {
+          time = time.substring(0,2) + "00";
+        }
+      }
+    } else if (oprIndex == 1) {
+      time = time.charAt(0) + time.substring(2,4);
+    } else if (oprIndex == 2) {
+      if (isPM) {
+        time = Integer.parseInt(time.substring(0,2))+12 + time.substring(3,5);
+      } else {
+        time = time.substring(0,2) + time.substring(3,5);
+      }
+    }
+    
     return time;
   }
 }

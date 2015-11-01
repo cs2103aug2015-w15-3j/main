@@ -174,6 +174,21 @@ public class AddParserTest {
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
   }
   
+  @Test
+  public void testAddWith12HrTime() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by 6am to 10.30p");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals("06:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("22:30", addCommand.getDateTime().getEndTime().toString());
+  }
+  
+  @Test
+  public void testAddWithDayOfWeek() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by frid");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals("2015-11-06", addCommand.getDateTime().getStartDate().toString());
+  }
+  
   @Test(expected=IllegalCommandArgumentException.class)
   public void testNoNameGivenError() throws IllegalCommandArgumentException {
     new AddParser(builder, new String("add").split(" "), 0).process();
