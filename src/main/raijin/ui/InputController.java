@@ -1,18 +1,24 @@
 package raijin.ui;
 
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.HelpMessage;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.KeyPressEvent;
@@ -20,6 +26,7 @@ import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.common.eventbus.events.SetFailureEvent;
 import raijin.common.eventbus.events.SetHelpCommandEvent;
 import raijin.common.eventbus.events.SetInputEvent;
+import raijin.common.eventbus.events.SetTimeSlotEvent;
 import raijin.common.eventbus.events.UndoRedoEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import javafx.beans.value.ChangeListener;
@@ -27,6 +34,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -41,6 +49,12 @@ public class InputController extends BorderPane {
 
   @FXML
   private TextFlow helpBar;
+  
+  @FXML
+  private HBox timeSlot;
+  
+  @FXML
+  private VBox feedbackVBox;
 
   private static final String INPUT_COMMAND_BAR_LAYOUT_FXML =
       "resource/layout/InputController.fxml";
@@ -69,6 +83,7 @@ public class InputController extends BorderPane {
     fxClipboard = javafx.scene.input.Clipboard.getSystemClipboard();
     handleAllEvents();
     helpBar.setVisible(false);
+    timeSlot.setVisible(false);
   }
 
   public TextField getCommandBar() {
@@ -114,6 +129,25 @@ public class InputController extends BorderPane {
           public void handleEvent(SetFeedbackEvent event) {
             feedbackBar.setTextFill(Color.BLACK);
             setFeedback(event.output);
+          }
+        };
+  }
+
+  void handleSetTimeSlotEvent() {
+    MainSubscriber<SetTimeSlotEvent> timeSlotSubscriber =
+        new MainSubscriber<SetTimeSlotEvent>(eventbus) {
+
+          @Subscribe
+          @Override
+          public void handleEvent(SetTimeSlotEvent event) {
+            if (event.isVisible) {
+              System.out.println("TRUE");
+              generateTimeSlots(event.busySlots);
+              timeSlot.setVisible(true);
+            } else {
+              System.out.println("FALSE");
+              timeSlot.setVisible(false);
+            }
           }
         };
   }
@@ -191,6 +225,30 @@ public class InputController extends BorderPane {
     });
   }
 
+  void handleTimeSlot() {
+    timeSlot.visibleProperty().addListener(new ChangeListener<Boolean>() {
+
+      @Override
+      public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
+        if (t1.booleanValue()) { // If maximized
+          /*
+          timeSlot.setMaxSize(inputCommandBar.getMaxWidth(), 
+              timeSlot.getMaxHeight());
+              */
+          feedbackVBox.getChildren().clear();
+          feedbackVBox.getChildren().addAll(feedbackBar, timeSlot);
+        } else {
+          /*
+          timeSlot.setMaxSize(0, 0);
+          timeSlot.setMinSize(0, 0);
+          */
+          feedbackVBox.getChildren().clear();
+          feedbackVBox.getChildren().add(feedbackBar);
+        }
+      }
+    });
+  }
+
   /* This is needed because TextArea is not updated till keypress is shot */
   void handleKeyReleaseEvent() {
     inputCommandBar.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -213,6 +271,8 @@ public class InputController extends BorderPane {
 
   void handleAllEvents() {
     handleHelpBar();
+    handleTimeSlot();
+    handleSetTimeSlotEvent();
     handleSetHelpEvent();
     handleTabEvent();
     handleSetFailureEvent();
@@ -277,6 +337,31 @@ public class InputController extends BorderPane {
       int caretPosition = inputCommandBar.getCaretPosition();
       inputCommandBar.insertText(caretPosition, data);
     }
+  }
+  
+  void generateTimeSlots(List<DateTime> slots) {
+    timeSlot.getChildren().clear();
+    Label intro = new Label("You are busy from: ");
+    intro.setTextAlignment(TextAlignment.CENTER);
+    intro.setPadding(new Insets(5, 5, 5, 5));
+    intro.setStyle("-fx-font-size: 14");
+    timeSlot.getChildren().add(intro);
+    Collections.sort(slots);
+
+    for (DateTime slot : slots) {
+      timeSlot.getChildren().add(createTimeSlot(slot));
+    }
+  }
+
+  Label createTimeSlot(DateTime slot) {
+    String startTime = slot.getStartTime().toString();
+    String endTime = slot.getEndTime().toString();
+    String duration = startTime + " ~ " + endTime;
+    Label timeSlot = new Label(duration);
+    timeSlot.setPadding(new Insets(5, 5, 5, 5));
+    timeSlot.setStyle("-fx-font-size: 14; -fx-background-color: #FF9494; "
+        + "-fx-border-radius: 5 5 5 5; -fx-background-radius: 5 5 5 5;");
+    return timeSlot;
   }
 
 }

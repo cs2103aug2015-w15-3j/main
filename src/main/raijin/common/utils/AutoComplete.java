@@ -16,12 +16,14 @@ import javafx.scene.input.KeyEvent;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.SetTrie;
 import raijin.common.datatypes.Task;
+import raijin.common.datatypes.TimeSlot;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.ChangeViewEvent;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.events.SetHelpCommandEvent;
 import raijin.common.eventbus.events.SetInputEvent;
+import raijin.common.eventbus.events.SetTimeSlotEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.exception.FailedToParseException;
 import raijin.common.exception.IllegalCommandArgumentException;
@@ -325,6 +327,12 @@ public class AutoComplete {
 
       try {
         ParsedInput parsed = parser.parse(userInput);
+        if (parsed.getDateTime().getEndDate() != null) {
+          TimeSlot slots = new TimeSlot(parsed.getDateTime()
+              .getEndDate(), TaskUtils.getTasksList(tasksManager.getPendingTasks()));
+          eventbus.post(new SetTimeSlotEvent(slots.getOccupiedSlots()));
+        }
+
         if (isInvalidId(parsed)) {
           description = Constants.ADD_INVALID_ID;
         }

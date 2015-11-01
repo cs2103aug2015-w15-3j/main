@@ -81,7 +81,35 @@ public class TimeSlotTest {
     TimeSlot timeSlot = new TimeSlot(testDate, pendingTasks);
     
     assertEquals(65, timeSlot.getDuration(start, end));
-
   }
 
+  @Test
+  public void streamlineEvents_Test1() {
+
+    pendingTasks.add(testUtils.createTask("event 0", new DateTime(testDate,
+        LocalTime.of(5, 0), testDate, LocalTime.of(6, 0))));
+
+    pendingTasks.add(testUtils.createTask("event 1", new DateTime(testDate,
+        LocalTime.of(20, 0), testDate, LocalTime.of(22, 0))));
+
+    pendingTasks.add(testUtils.createTask("event 2", new DateTime(testDate,
+        LocalTime.of(8, 0), testDate, LocalTime.of(12, 0))));
+
+    //Overlap event
+    pendingTasks.add(testUtils.createTask("event 3", new DateTime(testDate,
+        LocalTime.of(16, 0), testDate, LocalTime.of(16, 45))));
+
+    //Long event
+    pendingTasks.add(testUtils.createTask("event 4", new DateTime(testDate,
+        LocalTime.of(12, 0), testDate, LocalTime.of(19, 0))));
+
+    pendingTasks.add(testUtils.createTask("event 5", new DateTime(testDate,
+        LocalTime.of(20, 20), testDate, LocalTime.of(23, 0))));
+
+    TimeSlot timeSlot = new TimeSlot(testDate, pendingTasks);
+
+    List<DateTime> result = timeSlot.streamlineEvents();
+    assertEquals(3, result.size());
+
+  }
 }
