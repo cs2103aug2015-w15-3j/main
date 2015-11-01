@@ -184,6 +184,24 @@ public class AddParserTest {
     assertEquals("22:30", addCommand.getDateTime().getEndTime().toString());
   }
   
+  @Test
+  public void testAddWithToday() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by today 10pm - 11pm");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals(LocalDate.now().toString(), addCommand.getDateTime().getStartDate().toString());
+    assertEquals("22:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("23:00", addCommand.getDateTime().getEndTime().toString());
+  }
+  
+  @Test
+  public void testAddWithTomorrow() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by tmr 10pm - 11pm");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals(LocalDate.now().plusDays(1).toString(), addCommand.getDateTime().getStartDate().toString());
+    assertEquals("22:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("23:00", addCommand.getDateTime().getEndTime().toString());
+  }
+  
   @Test // This test input needs constant changes as it changes according to current date.
   public void testAddWithDayOfWeek() throws FailedToParseException {
     addCommand = parser.parse("add finish work by tues");
