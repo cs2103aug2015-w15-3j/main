@@ -213,7 +213,11 @@ public class AddParser {
           index = i;
         }
         for (int n = start; n < index; n++) {
-          name += wordsOfInput[n];
+          if (wordsOfInput[n].indexOf("/") == 0) {
+            name += wordsOfInput[n].substring(1);
+          } else {
+            name += wordsOfInput[n];
+          }
           if (n < index-1) {
             name += " ";
           }
@@ -234,7 +238,11 @@ public class AddParser {
     
     // Adds name that isn't checked by ";" (i.e. start is < wordsOfInput.length)
     for (int n = start; n < index; n++) {
-      name += wordsOfInput[n];
+      if (wordsOfInput[n].indexOf("/") == 0) {
+        name += wordsOfInput[n].substring(1);
+      } else {
+        name += wordsOfInput[n];
+      }
       if (n < index-1) {
         name += " ";
       }
