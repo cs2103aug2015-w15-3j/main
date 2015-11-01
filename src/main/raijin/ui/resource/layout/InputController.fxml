@@ -21,7 +21,7 @@
     </TextField>
   </center>
   <top>
-      <VBox fx:id="feedbackVBOX" alignment="CENTER">
+      <VBox fx:id="feedbackVBox" alignment="CENTER">
          <children>
           <Label fx:id="feedbackBar" alignment="CENTER" focusTraversable="false" maxHeight="22.0" textFill="BLACK" BorderPane.alignment="CENTER">
             <font>
