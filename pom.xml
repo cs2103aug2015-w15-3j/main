@@ -17,15 +17,6 @@
 		<testSourceDirectory>src/test/</testSourceDirectory>
 		<resources>
 			<resource>
-			<targetPath>raijin/common/utils/resource</targetPath>
-				<directory>src/main/raijin/common/utils/resource</directory>
-				<includes>
-					<include>*.xml</include>
-					<include>*.lm</include>
-					<include>*.6d</include>
-				</includes>
-			</resource>
-			<resource>
 			<targetPath>raijin/ui/resource/layout</targetPath>
 				<directory>src/main/raijin/ui/resource/layout</directory>
 				<includes>

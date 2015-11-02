@@ -1,3 +1,5 @@
+//@@author A0112213E
+
 package raijin.common.datatypes;
 
 public class Status {

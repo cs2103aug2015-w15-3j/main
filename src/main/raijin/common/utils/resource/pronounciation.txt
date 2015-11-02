@@ -1,9 +1,0 @@
-today
-tomorrow
-next 
-week
-completed
-help
-undo
-redo
-
