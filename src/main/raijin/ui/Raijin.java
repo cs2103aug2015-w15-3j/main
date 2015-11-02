@@ -247,7 +247,7 @@ public class Raijin extends Application implements NativeKeyListener {
       for(int i = 0; i < helpImg_ImageView.length; i++) {
     	  helpImg_ImageView[i] = new ImageView(getClass().getResource(helpImg[i])
     	     .toString());
-    	  helpImg_ImageView[i].setFitWidth(583);
+    	  helpImg_ImageView[i].setFitWidth(800);
     	  helpImg_ImageView[i].setPreserveRatio(true);
     	  dialogVbox.getChildren().add(helpImg_ImageView[i]);
       }
@@ -271,7 +271,7 @@ public class Raijin extends Application implements NativeKeyListener {
 	  innerStage.setContent(dialogVbox);
 	  helpRoot.getChildren().add(innerStage);
 	  
-	  Scene dialogScene = new Scene(helpRoot, 600, 600);
+	  Scene dialogScene = new Scene(helpRoot, 800, 600);
 	  helpStage.setScene(dialogScene);
 	  helpStage.show();
   }
