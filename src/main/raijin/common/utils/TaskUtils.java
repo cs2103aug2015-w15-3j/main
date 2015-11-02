@@ -1,5 +1,7 @@
 package raijin.common.utils;
 
+import static raijin.common.utils.TaskUtils.initSort;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,6 +25,12 @@ public class TaskUtils {
   public static List<Task> initSort(List<Task> tasks) {
 	  ArrayList<Task> list = new ArrayList<Task>(tasks);
 	  Collections.sort(list);
+	  
+	  return list;
+  }
+  
+  public static List<Task> initTasks(HashMap<Integer, Task> pendingTasks) {
+	  List<Task> list = initSort(new ArrayList<Task>(pendingTasks.values()));
 	  
 	  return list;
   }

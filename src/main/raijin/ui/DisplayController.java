@@ -1,20 +1,19 @@
 package raijin.ui;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
+
+import raijin.common.datatypes.Constants;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.ChangeViewEvent;
 import raijin.common.eventbus.events.ScrollEvent;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
-import raijin.common.utils.EventBus;
 import raijin.common.utils.TaskPane;
 import raijin.common.utils.TaskUtils;
 import raijin.storage.api.TasksManager;
@@ -26,7 +25,6 @@ import com.google.common.eventbus.Subscribe;
 
 public class DisplayController extends BorderPane {
 
-  private EventBus eventBus = EventBus.getEventBus();
   private com.google.common.eventbus.EventBus eventbus = RaijinEventBus.getEventBus(); // Google
                                                                                        // event bus
 
@@ -50,37 +48,32 @@ public class DisplayController extends BorderPane {
       e.printStackTrace();
     }
 
-    headMessage = new Label("All pending tasks");
+    // Setting up headMessage
+    headMessage = new Label(Constants.DISPLAY_ALL);
     headMessage.setStyle("-fx-font-size: 20px; -fx-padding: 10px;");
     this.setTop(headMessage);
 
+    // Setting up tasksPane
     tasksPane = new ListView<TaskPane>();
     tasksPane.setStyle("-fx-background-insets: 0; -fx-background-color: #fff, #fff;");
     tasksPane.setPadding(new Insets(0));
-
-    this.setStyle("-fx-background-color: white;");
     this.setCenter(tasksPane);
 
-    eventBus.displayHeadMessageProperty().addListener((v, oldVal, newVal) -> {
-      setHeadMessage(newVal);
-    });
-
-    eventBus.currentTasksProperty().addListener(new ListChangeListener<String>() {
-
-      @Override
-      public void onChanged(javafx.collections.ListChangeListener.Change<? extends String> c) {
-        // tasksPane.setItems(eventBus.currentTasksPropertyPane());
-        // TODO deprecated?
-      }
-
-    });
-
-    eventBus.initDisplayTasks(TasksManager.getManager());
-    tasksPane.setItems(eventBus.currentTasksPropertyPane());
-
+    // Configuring the display colour
+    this.setStyle("-fx-background-color: white;");
+    
+    // Subscribing and listening to event changes
     handleScrollEvent();
     handleSetCurrentDisplayEvent();
     handleChangeViewEvent();
+    
+    // Initialising display in tasksPane
+    if (TasksManager.getManager().getPendingTasks().isEmpty()) {
+    	eventbus.post(new SetCurrentDisplayEvent("You have no pending tasks!", Constants.DISPLAY_ALL));
+    } else {
+    	eventbus.post(new SetCurrentDisplayEvent(TaskUtils.initTasks(TasksManager.getManager().getPendingTasks())));
+    }
+
   }
 
   private void setHeadMessage(String newVal) {
