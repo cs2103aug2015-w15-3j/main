@@ -111,7 +111,7 @@ public class AutoComplete {
       @Subscribe
       @Override
       public void handleEvent(KeyPressEvent event) {
-        //updateDisplayView(event.keyEvent);
+        updateDisplayView(event.keyEvent);
         if (event.keyEvent.getCode() != KeyCode.TAB && event.keyEvent.getCode() != KeyCode.SPACE) {
           tabCount = 0;
           String userInput = event.currentUserInput;
