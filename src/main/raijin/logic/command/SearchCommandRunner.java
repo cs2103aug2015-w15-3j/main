@@ -58,6 +58,10 @@ public class SearchCommandRunner extends CommandRunner {
 
   public boolean matchOnlyKeyword(ArrayList<String> source, Task task) {
     ArrayList<String> target = task.getKeywords();
+    target = (ArrayList<String>) target.stream().map(k -> k.toLowerCase())
+        .collect(Collectors.toList());
+    source = (ArrayList<String>) source.stream().map(k -> k.toLowerCase())
+        .collect(Collectors.toList());
     return handlePriority(task) && CollectionUtils.intersection(
         target,source).size() == source.size();
   }
