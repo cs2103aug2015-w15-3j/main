@@ -26,7 +26,6 @@ public class TaskPane extends StackPane {
 	private Label start = new Label("Start: "), end = new Label("End: ");
 	private Label startByOn = new Label("By/On: ");
 	private Label startValue, endValue;
-	private Label tags = new Label("Tags: ");
 	private Label tagsValue;
 	
 	private Constants.TYPE_TASK taskType;
@@ -56,9 +55,8 @@ public class TaskPane extends StackPane {
 		taskName = new Label((task.getName().length() > 59 ? task.getName().substring(0,59) + "..." : task.getName()));
 		taskName.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
 		
-		tags.setStyle("-fx-font-weight:bold;");
 		tagsValue = new Label(retrieveTags(task));
-		tagsValue.setStyle("-fx-font-style: italic;");
+		tagsValue.setStyle("-fx-font-style: italic; -fx-font-size: 13px;");
 		
 		taskType = task.getType();
 		
@@ -87,13 +85,18 @@ public class TaskPane extends StackPane {
 					:  ", " + task.getDateTime().getEndTime().toString();
 			
 			startValue = new Label(endDate + startTime + endTime);
+			endValue = new Label("");
 			
 			datesBox.getChildren().addAll(startByOn, startValue);
 			
 		} else if (taskType.equals(Constants.TYPE_TASK.FLOATING)) {
 			startValue = new Label("");
+			endValue = new Label("");
 			datesBox.getChildren().addAll(startValue);
 		}
+		
+		startValue.setStyle("-fx-font-size:13px;");
+		endValue.setStyle("-fx-font-size:13px;");
 		
 		HBox idBox = new HBox();
 		idBox.setPrefWidth(80);
@@ -132,7 +135,8 @@ public class TaskPane extends StackPane {
 		pane.getChildren().addAll(idBox, centre); //excluding priority label
 			
 		this.getChildren().addAll(pane);
-		this.setPrefHeight(65);
+		//this.setPrefHeight(65);
+		this.setPrefHeight(69);
 		this.setStyle(this.getStyle() + "-fx-background-radius: 20px;");
 		
 	}

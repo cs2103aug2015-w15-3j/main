@@ -26,6 +26,12 @@ public class TaskUtils {
 	  
 	  return list;
   }
+  
+  public static List<Task> initTasks(HashMap<Integer, Task> pendingTasks) {
+	  List<Task> list = initSort(new ArrayList<Task>(pendingTasks.values()));
+	  
+	  return list;
+  }
 
   public static List<TaskPane> initTasks(List<Task> tasks) {
     ArrayList<TaskPane> list = new ArrayList<TaskPane>();
