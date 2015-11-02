@@ -2,6 +2,8 @@
  * Class that handles ADD parsing.
  * @author LingJie
  */
+//@@author A0124745E
+
 package raijin.logic.parser;
 
 import java.time.LocalDate;

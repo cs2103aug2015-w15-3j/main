@@ -1,3 +1,5 @@
+//@@author A0112213E
+
 package raijin.logic.parser;
 
 import java.util.Collection;
@@ -7,10 +9,6 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Status;
 
-/**
- * 
- * @author papa
- */
 public class ParsedInput {
   
   //===========================================================================
