@@ -4,6 +4,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
@@ -60,6 +61,8 @@ public class InputController extends BorderPane {
   private static final String INPUT_COMMAND_BAR_LAYOUT_FXML =
       "resource/layout/InputController.fxml";
 
+  private static final String INPUT_FONT = "resource/styles/DejaVuSans.ttf";
+
   private Raijin mainApp;
   private EventBus eventbus = RaijinEventBus.getEventBus();
   /* Stores previously entered command */
@@ -67,6 +70,8 @@ public class InputController extends BorderPane {
   private static int upCount = 0; // Count number of UP pressed
   private Clipboard clipboard; // System clipboard
   private javafx.scene.input.Clipboard fxClipboard;
+
+  private Font inputFont;
 
   public InputController(Raijin mainApp) throws IOException {
     FXMLLoader loader = new FXMLLoader(getClass().getResource(INPUT_COMMAND_BAR_LAYOUT_FXML));
@@ -82,6 +87,7 @@ public class InputController extends BorderPane {
     this.setStyle("-fx-background-color:white;");
     clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     fxClipboard = javafx.scene.input.Clipboard.getSystemClipboard();
+    setupStyles();
     handleAllEvents();
     helpBar.setVisible(false);
   }
@@ -324,10 +330,11 @@ public class InputController extends BorderPane {
   void handleScrollEvent(KeyEvent event) {
     if (Constants.SCROLL_UP.match(event)) {
       eventbus.post(new ScrollEvent(-1));
+      event.consume();
     } else if (Constants.SCROLL_DOWN.match(event)) {
       eventbus.post(new ScrollEvent(1));
+      event.consume();
     }
-    event.consume();
   }
 
   /**
@@ -379,6 +386,11 @@ public class InputController extends BorderPane {
     timeSlot.setStyle("-fx-font-size: 14; -fx-background-color: #FF9494; "
         + "-fx-border-radius: 5 5 5 5; -fx-background-radius: 5 5 5 5;");
     return timeSlot;
+  }
+
+  void setupStyles() {
+    inputFont = Font.loadFont(getClass().getResource(INPUT_FONT).toString(), 18);
+    inputCommandBar.setFont(inputFont);
   }
 
 }

@@ -16,7 +16,7 @@
         <Insets bottom="5.0" left="5.0" right="5.0" />
       </BorderPane.margin>
          <font>
-            <Font name="DejaVu Sans Bold" size="18.0" />
+            <Font name="BPdotsMinus-Bold" size="18.0" />
          </font>
     </TextField>
   </center>

@@ -39,6 +39,7 @@
 					<include>**/*.css</include>
 					<include>**/*.png</include>
 					<include>**/*.jpg</include>
+					<include>**/*.ttf</include>
 				</includes>
 			</resource>
 		</resources>
