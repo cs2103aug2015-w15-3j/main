@@ -1,3 +1,4 @@
+//@@author A0112213E
 package raijin.logic.parser;
 
 import static org.junit.Assert.*;
@@ -28,6 +29,7 @@ public class ParsedInputTest {
     assertEquals("submit op1", addCommand.getName());
   }
   
+  //@@author A0124745E
   @Test
   public void parseEditCommandInSimpleParser() throws FailedToParseException {
     ParsedInput editCommand = parser.parse("edit 1 full test from 1/1 800 to 12/5 000");

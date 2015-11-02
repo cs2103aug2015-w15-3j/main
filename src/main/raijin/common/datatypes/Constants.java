@@ -45,6 +45,7 @@ public class Constants {
   public static final String FEEDBACK_ERROR_FAILEDPARSING = "Failed to parse \"%s\"";
   public static final String FEEDBACK_ERROR_FAILEDCOMMAND = "Failed to execute \"%s\" command";
   
+  //@@author A0124745E
   public static final String FEEDBACK_NO_TASK_NAME = "Error: Please specify a name for your task!";
   public static final String FEEDBACK_NO_TASK_ID = "Error: Please specify a task ID!";
   public static final String FEEDBACK_NO_KEYWORDS = "Error: Please specify keywords to search!";
@@ -62,7 +63,7 @@ public class Constants {
   //==================
   // Display 
   //==================
-  
+  //@@author A0112213E
   public static final String DISPLAY_OVERDUE = "All overdue tasks";
   public static final String DISPLAY_COMPLETED = "Tasks completed as of today, %s";
   public static final String DISPLAY_FLOATING = "All floating tasks";
@@ -98,7 +99,8 @@ public class Constants {
   //===========================================================================
   // Parser Constants
   //===========================================================================
-
+  //@@author A0124745E
+  
   // Regex for recognizing date patterns. Available test cases at: http://fiddle.re/56t2j6
   public static final String DATE_PATTERN = "^(0?[1-9]|[12][0-9]|3[01])(\\/|-|\\.)((0?[1-9]|1[012])"
       + "|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)((\\/|-|\\.)(\\d{4}|\\d{2}))?$";
@@ -130,7 +132,8 @@ public class Constants {
   //===========================================================================
   // Command related constants
   //===========================================================================
-
+  //@@author A0112213E
+  
   public enum CommandParam {
    ID, NAME, DATETIME, PRIORITY, HELPEROPTION, SUBTASKOF
   }
@@ -140,6 +143,8 @@ public class Constants {
     SET
   }
   
+  //@@author A0124745E-unused
+  // Currently using images instead of string feedback messages.
   public static final String HELP_MESSAGE = "\n<----==== Raijin to the Rescue! ====---->"
       + "\nADD <Task Name>\nAdds a task with a specified name.\n"
       + "ADD <Task Name> <DateTime*>\nAdds a task with specified name and timeline.\n"
@@ -175,7 +180,8 @@ public class Constants {
   //============
   // Add command
   //============
-
+  //@@author A0112213E
+  
   public static final String ADD_FLOATING = "add ?[my_task] #tag !priority";
   public static final String ADD_FLOATING_DESC = "Adds a task without deadline";
   public static final String ADD_SPECIFIC = "add ?[my_task] by/on ?[end_date] ?[end_time] "
