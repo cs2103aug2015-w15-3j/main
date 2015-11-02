@@ -22,6 +22,7 @@ import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.HelpMessage;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.KeyPressEvent;
+import raijin.common.eventbus.events.ScrollEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.common.eventbus.events.SetFailureEvent;
 import raijin.common.eventbus.events.SetHelpCommandEvent;
@@ -100,6 +101,7 @@ public class InputController extends BorderPane {
   @FXML
   public void onKeyPress(KeyEvent event) {
     handleIOEvent(event);
+    handleScrollEvent(event);
     if (Constants.KEY_MINMAX.match(event)) {
       mainApp.resizeWindow();
     } else if (Constants.KEY_CLEAR.match(event)) {
@@ -312,6 +314,20 @@ public class InputController extends BorderPane {
     } else if (Constants.KEY_CUT.match(event)) {
 
     }
+  }
+
+  /**
+   * Handles scroll event using keyboard
+   * 
+   * @param event
+   */
+  void handleScrollEvent(KeyEvent event) {
+    if (Constants.SCROLL_UP.match(event)) {
+      eventbus.post(new ScrollEvent(-1));
+    } else if (Constants.SCROLL_DOWN.match(event)) {
+      eventbus.post(new ScrollEvent(1));
+    }
+    event.consume();
   }
 
   /**

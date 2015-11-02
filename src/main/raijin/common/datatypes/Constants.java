@@ -292,6 +292,10 @@ public class Constants {
   public  static final KeyCodeCombination KEY_MINMAX = new KeyCodeCombination(KeyCode.ESCAPE, 
       KeyCodeCombination.ALT_DOWN);
 
+  public  static final KeyCodeCombination SCROLL_UP = new KeyCodeCombination(KeyCode.PAGE_UP);
+
+  public  static final KeyCodeCombination SCROLL_DOWN = new KeyCodeCombination(KeyCode.PAGE_DOWN);
+
   //===========================================================================
   // Autocomplete 
   //===========================================================================

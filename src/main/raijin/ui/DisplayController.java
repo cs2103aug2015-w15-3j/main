@@ -1,5 +1,6 @@
 package raijin.ui;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.ChangeViewEvent;
+import raijin.common.eventbus.events.ScrollEvent;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.utils.EventBus;
@@ -25,9 +27,11 @@ import com.google.common.eventbus.Subscribe;
 public class DisplayController extends BorderPane {
 
   private EventBus eventBus = EventBus.getEventBus();
-  private com.google.common.eventbus.EventBus eventbus = RaijinEventBus.getEventBus();     //Google event bus
+  private com.google.common.eventbus.EventBus eventbus = RaijinEventBus.getEventBus(); // Google
+                                                                                       // event bus
 
   private static final String DISPLAY_CONTROLLER_FXML = "resource/layout/DisplayController.fxml";
+  private static int scrollIndex = 0; // Determines position of scrollbar
 
   @FXML
   private Label headMessage;
@@ -45,7 +49,7 @@ public class DisplayController extends BorderPane {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    
+
     headMessage = new Label("All pending tasks");
     headMessage.setStyle("-fx-font-size: 20px; -fx-padding: 10px;");
     this.setTop(headMessage);
@@ -53,40 +57,41 @@ public class DisplayController extends BorderPane {
     tasksPane = new ListView<TaskPane>();
     tasksPane.setStyle("-fx-background-insets: 0; -fx-background-color: #fff, #fff;");
     tasksPane.setPadding(new Insets(0));
-    
+
     this.setStyle("-fx-background-color: white;");
     this.setCenter(tasksPane);
 
     eventBus.displayHeadMessageProperty().addListener((v, oldVal, newVal) -> {
       setHeadMessage(newVal);
     });
-    
+
     eventBus.currentTasksProperty().addListener(new ListChangeListener<String>() {
 
       @Override
       public void onChanged(javafx.collections.ListChangeListener.Change<? extends String> c) {
-        //tasksPane.setItems(eventBus.currentTasksPropertyPane());
-    	  // TODO deprecated?
+        // tasksPane.setItems(eventBus.currentTasksPropertyPane());
+        // TODO deprecated?
       }
-      
+
     });
-    
+
     eventBus.initDisplayTasks(TasksManager.getManager());
     tasksPane.setItems(eventBus.currentTasksPropertyPane());
 
+    handleScrollEvent();
     handleSetCurrentDisplayEvent();
     handleChangeViewEvent();
   }
-  
+
   private void setHeadMessage(String newVal) {
     if (newVal != null) {
       headMessage.setText(newVal);
     }
   }
-  
+
   void handleSetCurrentDisplayEvent() {
-    MainSubscriber<SetCurrentDisplayEvent> setCurrentHandler = new MainSubscriber<
-        SetCurrentDisplayEvent>(eventbus) {
+    MainSubscriber<SetCurrentDisplayEvent> setCurrentHandler =
+        new MainSubscriber<SetCurrentDisplayEvent>(eventbus) {
 
           @Subscribe
           @Override
@@ -95,20 +100,21 @@ public class DisplayController extends BorderPane {
             if (event.bodyMessage != null) {
               currentTask = TaskUtils.displayMessage(event.bodyMessage);
             } else {
-            	if (event.headMessage != null && event.headMessage.equals("Tasks pending for...")) {
-            		currentTask = TaskUtils.convertToTaskPaneDefaultView(event.tasks);
-            	} else {
-            		currentTask = TaskUtils.convertToTaskPane(event.tasks);
-            	}
+              if (event.headMessage != null && event.headMessage.equals("Tasks pending for...")) {
+                currentTask = TaskUtils.convertToTaskPaneDefaultView(event.tasks);
+              } else {
+                currentTask = TaskUtils.convertToTaskPane(event.tasks);
+              }
             }
             tasksPane.setItems(FXCollections.observableArrayList(currentTask));
             setHeadMessage(event.headMessage);
-          }};
+          }
+        };
   }
-  
+
   void handleChangeViewEvent() {
-    MainSubscriber<ChangeViewEvent> changeViewHandler = new MainSubscriber<
-        ChangeViewEvent>(eventbus) {
+    MainSubscriber<ChangeViewEvent> changeViewHandler =
+        new MainSubscriber<ChangeViewEvent>(eventbus) {
 
           @Subscribe
           @Override
@@ -116,6 +122,25 @@ public class DisplayController extends BorderPane {
             List<TaskPane> currentTask = TaskUtils.convertToTaskPane(event.focusView);
             tasksPane.setItems(FXCollections.observableArrayList(currentTask));
             setHeadMessage(event.viewMessage);
-          }};
+          }
+        };
+  }
+
+  void handleScrollEvent() {
+    MainSubscriber<ScrollEvent> scrollViewHandler = new MainSubscriber<ScrollEvent>(eventbus) {
+
+      @Subscribe
+      @Override
+      public void handleEvent(ScrollEvent event) {
+        scrollIndex = scrollIndex + event.scrollDelta;
+        if (scrollIndex >= tasksPane.getItems().size()) {
+          scrollIndex = tasksPane.getItems().size() -1;
+          System.out.println(scrollIndex);
+        }
+        scrollIndex = scrollIndex < 0 ? 0 : scrollIndex;
+        tasksPane.scrollTo(scrollIndex);
+
+      }
+    };
   }
 }
