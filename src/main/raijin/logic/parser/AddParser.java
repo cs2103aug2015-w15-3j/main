@@ -188,7 +188,7 @@ public class AddParser {
     containsStartDate = true;
     index = tpsIndex > i ? i : tpsIndex ;
     
-    if (wordsOfInput[i+1].matches(Constants.DAYS)) {
+    if (wordsOfInput[i+1].toLowerCase().matches(Constants.DAYS)) {
       // by (day)
       produceDateFromDay(wordsOfInput[i+1], 0);
     } else if (wordsOfInput[i+1].matches("today|tdy")) {
