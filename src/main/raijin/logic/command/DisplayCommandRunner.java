@@ -1,3 +1,5 @@
+//@@author A0130720Y
+
 package raijin.logic.command;
 
 import java.time.LocalDate;
@@ -77,76 +79,85 @@ public class DisplayCommandRunner extends CommandRunner {
 		switch (cmd.getDisplayOptions()) {
 
 		case TYPE_PENDING:
+			// If user isn't querying for today
 			if (!cmdDateTime.getStartDate().isEqual(todayDate)) {
-				//message = "Tasks pending for "  + dateForDisplay;
-				message = "Tasks pending for " + dateForDisplay + " & next day";
-
+				message = "Tasks pending for " + dateForDisplay;
 				feedbackMessage = FEEDBACK_PENDING;
-				ArrayList<Task> thisDay = new ArrayList<Task>();
-				ArrayList<Task> nextDay = new ArrayList<Task>();
 				
-				boolean thisDayIsEmpty = true;
-				
-				for (Task currentTask : pending) {
-					taskDateTime = currentTask.getDateTime();
-
-					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
-							isRelevantDate(cmdDateTime, taskDateTime)) {
-
-						thisDayIsEmpty = false;
-						thisDay.add(currentTask);
+				// If user is querying for a range of dates
+				if (cmdDateTime.getStartDate() != cmdDateTime.getEndDate()) {
+					message += " ~ " + cmdDateTime.getEndDate().format(dateFormatter);
+					
+					ArrayList<Task> relevant = new ArrayList<Task>();
+					
+					for (Task currentTask : pending) {
+						if (isRelevantDate(cmd.getDateTime(), currentTask.getDateTime())
+							&& !isAlreadyInList (currentTask, relevant)) {
+							
+							relevant.add(currentTask);
+						}
 					}
-				}
-				
-				if (!thisDayIsEmpty) {
-					Collections.sort(thisDay);
-				}
-				
-				boolean nextDayIsEmpty = true;
-				LocalDate nextDayDate = cmdDateTime.getStartDate().plusDays(1);
-				
-				for (Task currentTask : pending) {
-					taskDateTime = currentTask.getDateTime();
-
-					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING 
-						&& isRelevantDate(new DateTime(nextDayDate, nextDayDate), taskDateTime)
-						&& !isAlreadyInList(currentTask, thisDay)) {
-
-						nextDayIsEmpty = false;
-						nextDay.add(currentTask);
+					
+					if (relevant.isEmpty()) {
+						eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+					} else {
+						Collections.sort(relevant);
+						eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 					}
-				}
+					
 				
-				if (!nextDayIsEmpty) {
-					Collections.sort(nextDay);
-					thisDay.addAll(nextDay);
-				}
-				
-				if (thisDayIsEmpty && nextDayIsEmpty) {
-					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+				// User is only querying for a specific date that is not today.
 				} else {
-					eventbus.post(new SetCurrentDisplayEvent(thisDay, message));
-				}
-				
-				/*
-				for (Task currentTask : pending) {
-					taskDateTime = currentTask.getDateTime();
+					message += " & next day";
+					
+					ArrayList<Task> thisDay = new ArrayList<Task>();
+					ArrayList<Task> nextDay = new ArrayList<Task>();
+					
+					boolean thisDayIsEmpty = true;
+					
+					for (Task currentTask : pending) {
+						taskDateTime = currentTask.getDateTime();
 
-					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
-							isRelevantDate(cmdDateTime, taskDateTime)) {
+						if (currentTask.getType() != Constants.TYPE_TASK.FLOATING && 
+								isRelevantDate(cmdDateTime, taskDateTime)) {
 
-						isEmpty = false;
-						relevant.add(currentTask);
+							thisDayIsEmpty = false;
+							thisDay.add(currentTask);
+						}
+					}
+					
+					if (!thisDayIsEmpty) {
+						Collections.sort(thisDay);
+					}
+					
+					boolean nextDayIsEmpty = true;
+					LocalDate nextDayDate = cmdDateTime.getStartDate().plusDays(1);
+					
+					for (Task currentTask : pending) {
+						taskDateTime = currentTask.getDateTime();
+
+						if (currentTask.getType() != Constants.TYPE_TASK.FLOATING 
+							&& isRelevantDate(new DateTime(nextDayDate, nextDayDate), taskDateTime)
+							&& !isAlreadyInList(currentTask, thisDay)) {
+
+							nextDayIsEmpty = false;
+							nextDay.add(currentTask);
+						}
+					}
+					
+					if (!nextDayIsEmpty) {
+						Collections.sort(nextDay);
+						thisDay.addAll(nextDay);
+					}
+					
+					if (thisDayIsEmpty && nextDayIsEmpty) {
+						eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+					} else {
+						eventbus.post(new SetCurrentDisplayEvent(thisDay, message));
 					}
 				}
-
-				if (isEmpty) {
-					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
-				} else {
-					Collections.sort(relevant);
-					eventbus.post(new SetCurrentDisplayEvent(relevant, message));
-				}
-				*/
+				
+				
 			} else {
 				message = HEADMESSAGE_DEFAULT_PENDING;
 
@@ -346,15 +357,13 @@ public class DisplayCommandRunner extends CommandRunner {
 	 * specified date, or the specified date falls in between the queried date.
 	 * 
 	 * @param cmdDateTime     Specified/queried DateTime by user.
-	 * @param taskDateTime A task's DateTime.
+	 * @param taskDateTime 	  A task's DateTime.
 	 * @return true if relevant, false if otherwise
 	 */
 	public boolean isRelevantDate(DateTime cmdDateTime, DateTime taskDateTime) {
 		LocalDate taskStart;
 		LocalDate taskEnd;
 
-		//TODO this needs to change. start=end default?
-		// Don't display floating tasks
 		try {
 			taskStart = taskDateTime.getStartDate();
 			taskEnd = taskDateTime.getEndDate();
@@ -362,16 +371,33 @@ public class DisplayCommandRunner extends CommandRunner {
 			return false;
 		}
 
-		LocalDate date = cmdDateTime.getStartDate();
-
-		if (taskStart.isBefore(date) && taskEnd.isAfter(date)) {
-			return true;
-		} else if (taskStart.isBefore(date) && taskEnd.isBefore(date)) {
-			return false;
-		} else if (taskStart.isEqual(date) || taskEnd.isEqual(date)) {
-			return true;
-		} else {
-			return false;
+		LocalDate queriedStart = cmdDateTime.getStartDate();
+		LocalDate queriedEnd = cmdDateTime.getEndDate();
+		
+		// If user's query is only one specific date
+		if (queriedStart.isEqual(queriedEnd)) {
+			if (taskStart.isBefore(queriedStart) && taskEnd.isAfter(queriedStart)) {
+				return true;
+			} else if (taskStart.isEqual(queriedStart) || taskEnd.isEqual(queriedStart)) {
+				return true;
+			} else if (taskStart.isBefore(queriedStart) && taskEnd.isBefore(queriedStart)) {
+				return false;
+			}  else {
+				return false;
+			}
+		} 
+		
+		// If user's query is a range of dates
+		else {
+			if (taskStart.isAfter(queriedStart) && taskStart.isBefore(queriedEnd)) {
+				return true;
+			} else if (taskStart.isEqual(queriedStart) || taskStart.isEqual(queriedEnd)) {
+				return true;
+			} else if (taskEnd.isAfter(queriedStart) && taskEnd.isBefore(queriedEnd)) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -390,7 +416,6 @@ public class DisplayCommandRunner extends CommandRunner {
 
 		try {
 			taskEndDate = taskDateTime.getEndDate();
-			//taskEndTime = taskDateTime.getEndTime();
 		} catch (NullPointerException e) {
 			return false;
 		}
@@ -412,8 +437,16 @@ public class DisplayCommandRunner extends CommandRunner {
 		return false;
 	}
 	
-	boolean isAlreadyInList (Task task, ArrayList<Task> today) {
-		if (today.contains(task)) {
+	/**
+	 * This method determines whether a task has already been
+	 * added into a particular list.
+	 * 
+	 * @param task		The task that you want to check for.
+	 * @param list		List to check if a task already exists.
+	 * @return true 	if task exists in list, false if otherwise.
+	 */
+	boolean isAlreadyInList (Task task, ArrayList<Task> list) {
+		if (list.contains(task)) {
 			return true;
 		} else {
 			return false;
