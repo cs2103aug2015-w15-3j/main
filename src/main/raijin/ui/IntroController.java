@@ -1,3 +1,9 @@
+//@@author A0129650E -unused 
+//This class is not used anymore because we decided
+//to go full keyboard in our program. This class
+//will make user do some clicking in order to set 
+//his directory. 
+
 package raijin.ui;
 
 import java.awt.Button;

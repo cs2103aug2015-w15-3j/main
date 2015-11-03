@@ -1,3 +1,11 @@
+<!--  
+@@author A0129650E
+This class is not used anymore because we decided
+to go full keyboard in our program. This class
+will make user do some clicking in order to set 
+his directory. 
+-->
+
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>

@@ -1,3 +1,5 @@
+//@@author A0129650E
+
 package raijin.logic.command;
 
 import com.google.common.eventbus.EventBus;
@@ -14,8 +16,7 @@ import javafx.stage.*;
 
 
 public class HelpCommandRunner extends CommandRunner {
-  private EventBus eventBus = RaijinEventBus.getEventBus();
-  
+ 
   public Status processCommand(ParsedInput cmd) {
 	
     return new Status(Constants.FEEDBACK_HELP_COMMAND);

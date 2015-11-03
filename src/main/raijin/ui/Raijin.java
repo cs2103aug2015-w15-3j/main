@@ -1,3 +1,5 @@
+//@@author A0129650E
+
 package raijin.ui;
 
 import com.google.common.eventbus.EventBus;
@@ -252,22 +254,6 @@ public class Raijin extends Application implements NativeKeyListener {
     	  dialogVbox.getChildren().add(helpImg_ImageView[i]);
       }
       
-      /*
-	  ImageView helpAdd = new ImageView(HELP_ADD);
-	  ImageView helpDelete = new ImageView(HELP_DELETE);
-	  ImageView helpDisplay = new ImageView(HELP_DISPLAY);
-	  ImageView helpDone = new ImageView(HELP_DONE);
-	  ImageView helpEdit = new ImageView(HELP_EDIT);
-	  ImageView helpSearch = new ImageView(HELP_SEARCH);
-	  ImageView helpSet = new ImageView(HELP_SET);
-	  ImageView helpUndoRedo = new ImageView(HELP_UNDOREDO);
-	  ImageView keyboardShort = new ImageView(KEYBOARD_SHORTCUTS);
-	  
-	  
-	  dialogVbox.getChildren().addAll(helpAdd, helpDelete, helpDisplay,
-			  						  helpDone, helpEdit, helpSearch,
-			  						  helpSet, helpUndoRedo, keyboardShort);
-	 */
 	  innerStage.setContent(dialogVbox);
 	  helpRoot.getChildren().add(innerStage);
 	  
@@ -288,7 +274,6 @@ public class Raijin extends Application implements NativeKeyListener {
     }
 
     this.tray = SystemTray.getSystemTray();
-
 
     trayIcon.setImageAutoSize(true);
   }
