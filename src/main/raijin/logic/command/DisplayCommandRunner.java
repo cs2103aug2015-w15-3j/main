@@ -21,6 +21,7 @@ import raijin.storage.api.TasksManager;
 
 public class DisplayCommandRunner extends CommandRunner {
 
+	// Display options
 	private static final String TYPE_ALL = "a";   			// display ALL PENDING
 	private static final String TYPE_PENDING = "p";  		// display PENDING (for a day)
 	private static final String TYPE_COMPLETED = "c";       // display COMPLETED
