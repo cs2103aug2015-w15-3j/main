@@ -104,8 +104,8 @@ public class AddParser {
           
           // startDate {endDate}
           if (i < wordsOfInput.length-3 && 
-              wordsOfInput[i+2].matches(Constants.DATE_END_PREPOSITION)) {
-            if (wordsOfInput[i+3].matches(datePattern)) {
+              wordsOfInput[i+2].toLowerCase().matches(Constants.DATE_END_PREPOSITION)) {
+            if (wordsOfInput[i+3].toLowerCase().matches(datePattern)) {
               containsEndDate = true;
               endDate = wordsOfInput[i+3];
             } else {
@@ -117,13 +117,13 @@ public class AddParser {
           if (containsStartDate && containsStartTime && i < wordsOfInput.length-4 && 
               wordsOfInput[i+3].toLowerCase().matches(Constants.DATE_END_PREPOSITION)) {
             
-            if (wordsOfInput[i+4].toLowerCase().matches(timePattern)) {
+            if (wordsOfInput[i+4].toLowerCase().toLowerCase().matches(timePattern)) {
               
               // startDate startTime {endTime}
               containsEndTime = true;
               endTime = wordsOfInput[i+4];
               
-            } else if (wordsOfInput[i+4].matches(datePattern)) {
+            } else if (wordsOfInput[i+4].toLowerCase().matches(datePattern)) {
               
               // startDate startTime {endDate} endTime
               containsEndDate = true;
@@ -148,7 +148,7 @@ public class AddParser {
           
           // startTime {endTime}
           if (i < wordsOfInput.length - 3 && 
-              wordsOfInput[i+2].matches(Constants.DATE_END_PREPOSITION)) {
+              wordsOfInput[i+2].toLowerCase().matches(Constants.DATE_END_PREPOSITION)) {
             checkForEndTimeInput(i+3);
           }
           
@@ -191,10 +191,10 @@ public class AddParser {
     if (wordsOfInput[i+1].toLowerCase().matches(Constants.DAYS)) {
       // by (day)
       produceDateFromDay(wordsOfInput[i+1], 0);
-    } else if (wordsOfInput[i+1].matches("today|tdy")) {
+    } else if (wordsOfInput[i+1].toLowerCase().matches("today|tdy")) {
       // by today
       produceDateFromDay(null, 5);
-    } else if (wordsOfInput[i+1].matches("tomorrow|tmr")) {
+    } else if (wordsOfInput[i+1].toLowerCase().matches("tomorrow|tmr")) {
       // by tomorrow
       produceDateFromDay(null, 6);
     }
@@ -204,7 +204,7 @@ public class AddParser {
       startTime = wordsOfInput[i+2];
     
       if (i < wordsOfInput.length - 4 && 
-          wordsOfInput[i+3].matches(Constants.DATE_END_PREPOSITION)) {
+          wordsOfInput[i+3].toLowerCase().matches(Constants.DATE_END_PREPOSITION)) {
         checkForEndTimeInput(i+4);
       }
       
@@ -232,7 +232,7 @@ public class AddParser {
           
           // by next day starttime (endtime)
           if (i < wordsOfInput.length - 5 && 
-              wordsOfInput[i+4].matches(Constants.DATE_END_PREPOSITION)) {
+              wordsOfInput[i+4].toLowerCase().matches(Constants.DATE_END_PREPOSITION)) {
             checkForEndTimeInput(i+5);
           }
         }   
