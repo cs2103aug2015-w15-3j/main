@@ -389,15 +389,28 @@ public class DisplayCommandRunner extends CommandRunner {
 		
 		// If user's query is a range of dates
 		else {
-			if (taskStart.isAfter(queriedStart) && taskStart.isBefore(queriedEnd)) {
+			if (taskStart.isBefore(queriedStart) && taskEnd.isAfter(queriedStart)) {
 				return true;
-			} else if (taskStart.isEqual(queriedStart) || taskStart.isEqual(queriedEnd)) {
+			} else if (taskStart.isEqual(queriedStart) || taskStart.isEqual(queriedEnd) ||
+					   taskEnd.isEqual(queriedStart) || taskEnd.isEqual(queriedEnd)) {
 				return true;
-			} else if (taskEnd.isAfter(queriedStart) && taskEnd.isBefore(queriedEnd)) {
+			} else if (taskStart.isAfter(queriedStart) && taskStart.isBefore(queriedEnd)) {
 				return true;
 			} else {
 				return false;
 			}
+			/*
+			if (taskStart.isAfter(queriedStart) && taskStart.isBefore(queriedEnd)) {
+				return true;
+			} else if (taskStart.isEqual(queriedStart) || taskStart.isEqual(queriedEnd)) {
+				return true;
+			} else if (taskStart.isAfter(queriedStart) && taskEnd.isBefore(queriedEnd)) {
+				return true;
+			} else if (taskStart.isBefore(queriedStart) && taskEnd.isAfter(queriedEnd)) {	
+				return true;
+			} else {
+				return false;
+			}*/
 		}
 	}
 

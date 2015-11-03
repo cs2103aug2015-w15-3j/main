@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
+import raijin.logic.command.DisplayCommandRunner;
 
 public class TaskPane extends StackPane {
 	
@@ -29,9 +30,10 @@ public class TaskPane extends StackPane {
 	private Label startByOn = new Label("By/On: ");
 	private Label startValue, endValue;
 	private Label tagsValue;
+	private Label isOverdue = new Label("Overdue!");
 	
 	private Constants.TYPE_TASK taskType;
-	public String colour;
+	private DisplayCommandRunner displayInstance = new DisplayCommandRunner(); 
 	
 	// A Task pane
 	// VBox					VBox											
@@ -120,6 +122,10 @@ public class TaskPane extends StackPane {
 		VBox centre = new VBox();
 		centre.setPrefWidth(500);
 		centre.getChildren().addAll(taskBox, datesBox, tagsBox);
+		
+		HBox overdueBox = new HBox();
+		overdueBox.setPrefWidth(50);
+		overdueBox.getChildren().addAll(isOverdue);
 
 		HBox pane = new HBox();
 		
@@ -135,7 +141,12 @@ public class TaskPane extends StackPane {
 		}
 			
 		pane.getChildren().addAll(idBox, centre); //excluding priority label
-			
+		
+		
+		//if (displayInstance.isOverdue(task.getDateTime())) {
+		//	pane.getChildren().add(overdueBox);
+		//}
+		
 		this.getChildren().addAll(pane);
 		//this.setPrefHeight(65);
 		this.setPrefHeight(69);
