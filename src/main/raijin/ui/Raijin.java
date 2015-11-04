@@ -7,6 +7,7 @@ import com.google.common.eventbus.EventBus;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.common.eventbus.events.SetFailureEvent;
+import raijin.common.eventbus.events.SetTimeSlotEvent;
 
 import java.awt.AWTException;
 import java.awt.Image;
@@ -195,6 +196,7 @@ public class Raijin extends Application implements NativeKeyListener {
 
   public void handleKeyPress(InputController inputController, KeyCode key, String userInput) {
     if (key == KeyCode.ENTER) {
+      //eventbus.post(new SetTimeSlotEvent(false));
       inputController.updateCommandHistory(userInput); // Update list of user input
       inputController.clear();
       handleEnterPress(inputController, userInput);
