@@ -6,6 +6,11 @@ import java.util.List;
 
 import raijin.common.datatypes.DateTime;
 
+/**
+ * Show list of occupied time slots on the date specified by user
+ * @author papa
+ *
+ */
 public class SetTimeSlotEvent {
   
   public List<DateTime> busySlots;

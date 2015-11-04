@@ -2,6 +2,11 @@
 
 package raijin.common.eventbus.events;
 
+/**
+ * Trigger undo and redo command when shortcut is pressed
+ * @author papa
+ *
+ */
 public class UndoRedoEvent {
 
   public boolean canUndo = false;
