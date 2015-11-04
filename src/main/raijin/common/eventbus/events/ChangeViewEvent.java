@@ -11,15 +11,20 @@ import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.filter.DateFilter;
 
+/**
+ * Indicates change of view to fixed set of supported views.
+ * Supported views include today, tomorrow, future, all
+ * @author papa
+ *
+ */
 public class ChangeViewEvent {
 
-  static int count = 0; // Counter used to cycle through different views
-  LocalDate today;
-  public List<Task> focusView; // View that will be displayed to user
-  public Constants.View typeOfView;
-  public String viewMessage;
+  private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
   private static final String HEAD_FORMAT = "%s (%s)";
-  private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
+  private LocalDate today;
+  public List<Task> focusView;                                                  //list of tasks to be displayed
+  public Constants.View typeOfView;                                             //designated view to be displayed
+  public String viewMessage;                                                    //heading of current view
 
   public ChangeViewEvent(List<Task> pendingTasks, Constants.View view) {
 
@@ -57,10 +62,7 @@ public class ChangeViewEvent {
         break;
 
     }
-
     focusView = dateFilter.filter(pendingTasks);
-
-
   }
 
 }
