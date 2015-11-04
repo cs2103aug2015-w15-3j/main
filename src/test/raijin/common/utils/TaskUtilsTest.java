@@ -1,3 +1,5 @@
+//@@author A0112213E
+
 package raijin.common.utils;
 
 import static org.junit.Assert.*;
