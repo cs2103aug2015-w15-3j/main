@@ -28,8 +28,6 @@ public class DisplayCommandRunnerTest {
 	    t.setDaemon(true);
 	    t.start();
 	}
-	
-	/* Equivalence partitioning */
 
 	/* This is a test case for if a task's start date is before the queried date and has no end date */
 	@Test
