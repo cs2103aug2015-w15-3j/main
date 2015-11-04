@@ -36,6 +36,12 @@ public class UndoCommandRunner extends CommandRunner implements CommandShortcut 
         if (event.canUndo) {
           System.out.println("ctrl+z");
           try {
+            Thread.sleep(500);
+          } catch (InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          }
+          try {
             history.undo();
             sendFeedbackEvent(Constants.FEEDBACK_UNDO_SUCCESS);
           } catch (UnableToExecuteCommandException e) {
