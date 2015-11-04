@@ -10,7 +10,7 @@ import java.util.TreeSet;
 
 /**
  * This is a derivative work of Sujit Pal http://sujitpal.blogspot.sg
- * 
+ * Stores strings in a trie to be used for prefix searching 
  * @author papa
  *
  */
@@ -24,7 +24,6 @@ public class SetTrie {
 
   /**
    * Inserts word that can be autocompleted
-   * 
    * @param word
    */
   public void add(String word) {
@@ -37,7 +36,6 @@ public class SetTrie {
 
   /**
    * Checks if a prefix exists in the supported word list
-   * 
    * @param prefix
    * @return boolean
    */
@@ -51,6 +49,11 @@ public class SetTrie {
     return false;
   }
 
+  /**
+   * Obtain list of words that matched given prefix
+   * @param prefix
+   * @return matched words
+   */
   public List<String> getSuggestions(String prefix) {
     ArrayList<String> suggestions = new ArrayList<String>(); // Stores matched words
     Set<String> tailSet = wordList.tailSet(prefix);
