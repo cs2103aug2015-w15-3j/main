@@ -86,7 +86,7 @@ public class DisplayCommandRunner extends CommandRunner {
 				feedbackMessage = FEEDBACK_PENDING;
 				
 				// If user is querying for a range of dates
-				if (cmdDateTime.getStartDate() != cmdDateTime.getEndDate()) {
+				if (!cmdDateTime.getStartDate().equals(cmdDateTime.getEndDate())) {
 					message += " ~ " + cmdDateTime.getEndDate().format(dateFormatter);
 					
 					ArrayList<Task> relevant = new ArrayList<Task>();
