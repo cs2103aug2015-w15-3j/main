@@ -6,8 +6,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-import raijin.common.utils.RaijinLogger;
-
 public class DateTime implements Comparable<DateTime> {
 
   private static DateTimeFormatter dateFormatter = DateTimeFormatter
