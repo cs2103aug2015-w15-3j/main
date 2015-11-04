@@ -268,8 +268,10 @@ public class InputController extends BorderPane {
       public void handle(KeyEvent event) {
         if (Constants.KEY_UNDO.match(event)) {
           eventbus.post(new UndoRedoEvent(true, false));
+          event.consume();
         } else if (Constants.KEY_REDO.match(event)) {
           eventbus.post(new UndoRedoEvent(false, true));
+          event.consume();
         } else {
           String userInput = inputCommandBar.getText();
           eventbus.post(new KeyPressEvent(event, userInput));
@@ -385,7 +387,7 @@ public class InputController extends BorderPane {
     String duration = startTime + " ~ " + endTime;
     Label timeSlot = new Label(duration);
     timeSlot.setPadding(new Insets(5, 5, 5, 5));
-    timeSlot.setStyle("-fx-font-size: 14; -fx-background-color: #FF9494; "
+    timeSlot.setStyle("-fx-font-size: 14; -fx-background-color: #FF8000; "
         + "-fx-border-radius: 5 5 5 5; -fx-background-radius: 5 5 5 5;");
     return timeSlot;
   }
