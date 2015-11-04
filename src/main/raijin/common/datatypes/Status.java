@@ -4,29 +4,26 @@ package raijin.common.datatypes;
 
 public class Status {
   
-  private boolean isSuccess = true;    //Indicates success of an operation
-  private String result;                //To be displayed in Display View
-  private String feedback;              //Message feedback to user 
+  private boolean isSuccess = true;         //indicates success of a command execution
+  private String displayText;               //text that will be shown on main display
+  private String feedback;                  //feedback after execution of a command
 
-  /*Feedback is compulsory for any commands*/
   public Status(String feedback){
     this.feedback = feedback;
   }
 
-  /*Alternative for those commands to show error or for help command*/
-  public Status(String feedback, String result){
+  public Status(String feedback, String displayText){
     this.feedback = feedback;
-    this.result = result;
+    this.displayText = displayText;
   }
 
-  /*Alternative for those commands to show error*/
   public Status(String feedback, boolean isSuccess) {
     this.feedback = feedback;
     this.isSuccess = isSuccess;
   }
 
-  public String getResult() {
-    return result;
+  public String getDisplayText() {
+    return displayText;
   }
 
   public String getFeedback() {
