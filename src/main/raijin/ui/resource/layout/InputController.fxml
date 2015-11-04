@@ -1,8 +1,6 @@
-<!--  
-@@author A0129650E
--->
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- @@author A0129650E -->
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
@@ -19,7 +17,7 @@
         <Insets bottom="5.0" left="5.0" right="5.0" />
       </BorderPane.margin>
          <font>
-            <Font name="BPdotsMinus-Bold" size="18.0" />
+            <Font name="System Bold" size="18.0" />
          </font>
     </TextField>
   </center>

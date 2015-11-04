@@ -1,8 +1,6 @@
-<!--  
-@@author A0129650E
--->
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- @@author A0129650E -->
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
