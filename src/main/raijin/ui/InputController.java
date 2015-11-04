@@ -229,8 +229,11 @@ public class InputController extends BorderPane {
           helpBar.setMaxSize(inputCommandBar.getMaxWidth(), 
               inputCommandBar.getMaxHeight());
         } else {
+          /*
           helpBar.setMaxSize(0, 0);
           helpBar.setMinSize(0, 0);
+          */
+          helpBar.getChildren().clear();
         }
       }
     });
