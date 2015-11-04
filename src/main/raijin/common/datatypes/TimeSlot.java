@@ -14,22 +14,21 @@ import java.util.stream.Collectors;
 import raijin.common.utils.filter.DateFilter;
 
 /**
- * Shows occupied time slot for that particular date
+ * Shows occupied time slot for a given date
  * @author papa
  *
  */
 public class TimeSlot {
   
-  private static final LocalTime DEFAULT_START_TIME = LocalTime.of(5, 0);
-  private static final LocalTime DEFAULT_END_TIME = LocalTime.of(11, 59);
+  /*Compares duration of a task*/
   private Comparator<DateTime> durationComparator = (d1, d2) -> 
     (int) (getDuration(d2.getStartTime(), d2.getEndTime()) 
     - getDuration(d1.getStartTime(), d1.getEndTime()));
 
   private DateTime dateTime;
   private DateFilter dateFilter;
-  private List<Task> events;               //Events scheduled for this date
-  private List<DateTime> occupiedSlots;               //Stores occupied time slots
+  private List<Task> events;                                                    //list of events on given date 
+  private List<DateTime> occupiedSlots;                                         //list of occupied time slots
 
   public TimeSlot(LocalDate endDate, List<Task> pendingTasks) {
     this.dateTime = new DateTime(endDate, endDate);
@@ -37,10 +36,21 @@ public class TimeSlot {
     events = filterEvents(pendingTasks);
     occupiedSlots = events.stream().map(t -> t.getDateTime()).collect(
         Collectors.toList());
+    /*sort time slots by duration*/
     Collections.sort(occupiedSlots, durationComparator);
-    streamlineEvents();
+    occupiedSlots = combineAllTimeSlots();
   }
 
+  long getDuration(LocalTime start, LocalTime end) {
+    long minute = start.until(end, ChronoUnit.MINUTES);
+    return minute;
+  }
+
+  /**
+   * Filters tasks for event that spans only for one day 
+   * @param pendingTasks
+   * @return result
+   */
   List<Task> filterEvents(List<Task> pendingTasks) {
     List<Task> result = dateFilter.filter(pendingTasks).stream().filter(
         t -> t.getType().equals(Constants.TYPE_TASK.EVENT) 
@@ -51,47 +61,40 @@ public class TimeSlot {
     return result;
   }
 
-  public List<Task> getEvents() {
-    return events;
+  /**
+   * Merge two time slots based on result of comparing start time and end time
+   * @param compareStartWithStart
+   * @param compareEndWithEnd
+   * @param source
+   * @param target
+   * @return
+   */
+  DateTime handleOverlapEvents(int compareStartWithStart, int compareEndWithEnd,
+      DateTime source, DateTime target) {
+    LocalTime startTime = source.getStartTime();
+    LocalTime endTime = source.getEndTime();
+
+    if (compareStartWithStart > 0) {
+      startTime = target.getStartTime();
+    } 
+
+    if (compareEndWithEnd < 0) {
+      endTime = target.getEndTime();
+    }
+    return new DateTime(startTime, endTime);
+  }
+
+  /*Check if there is any overlap between two events*/
+  boolean isNoOverlap(int compareStartWithEnd, int compareEndWithStart) {
+    return compareStartWithEnd > 0 || compareEndWithStart < 0;
   }
   
-  public List<DateTime> getOccupiedSlots() {
-    return occupiedSlots;
+  /*Checks if the event lies within another event*/
+  boolean isWithinDuration(int compareStartWithStart, int compareEndWithEnd) {
+    return compareStartWithStart <= 0 && compareEndWithEnd >= 0;
   }
 
-  List<DateTime> streamlineEvents() {
-    List<DateTime> filtered = new ArrayList<DateTime>();
-    
-    for (DateTime source : occupiedSlots) {
-      if (source != null && occupiedSlots.indexOf(source)
-          != occupiedSlots.size() -1) {
-        filtered.add(iterativeExtendDuration(source));
-      }
-    }
-
-    return filtered;
-  }
-
-  long getDuration(LocalTime start, LocalTime end) {
-    long minute = start.until(end, ChronoUnit.MINUTES);
-    return minute;
-  }
-
-
-  DateTime iterativeExtendDuration(DateTime source) {
-    DateTime result = source;
-    int index = occupiedSlots.indexOf(source);
-
-    for (int i = index + 1 ; i < occupiedSlots.size() ; i++) {
-      DateTime target = occupiedSlots.get(i);
-      if (target != null) {
-        result = extendDuration(result, target);
-      }
-    }
-    return result;
-  }
-
-  //Extends duration of source if overlap occur with target
+  /*Merge overlap two time slots into one single slot*/
   DateTime extendDuration(DateTime source, DateTime target) {
 
     int compareStartWithEnd = source.getStartTime().compareTo(target.getEndTime());
@@ -109,30 +112,41 @@ public class TimeSlot {
       return handleOverlapEvents(compareStartWithStart, compareEndWithEnd, source, target);
     }
   }
-  
-  DateTime handleOverlapEvents(int compareStartWithStart, int compareEndWithEnd,
-      DateTime source, DateTime target) {
-    LocalTime startTime = source.getStartTime();
-    LocalTime endTime = source.getEndTime();
 
-    if (compareStartWithStart > 0) {
-      startTime = target.getStartTime();
-    } 
+  /*Merge iteratively with other time slots*/
+  DateTime consolidateTimeSlots(DateTime source) {
+    DateTime result = source;
+    int index = occupiedSlots.indexOf(source);
 
-    if (compareEndWithEnd < 0) {
-      endTime = target.getEndTime();
+    for (int i = index + 1 ; i < occupiedSlots.size() ; i++) {
+      DateTime target = occupiedSlots.get(i);
+      if (target != null) {
+        result = extendDuration(result, target);
+      }
     }
-    return new DateTime(startTime, endTime);
+    return result;
   }
 
-  //Check if there is any overlap between two events
-  boolean isNoOverlap(int compareStartWithEnd, int compareEndWithStart) {
-    return compareStartWithEnd > 0 || compareEndWithStart < 0;
+  /*Merge all occupied time slots*/
+  List<DateTime> combineAllTimeSlots() {
+    List<DateTime> filtered = new ArrayList<DateTime>();
+    
+    for (DateTime source : occupiedSlots) {
+      if (source != null && occupiedSlots.indexOf(source)
+          != occupiedSlots.size() -1) {
+        filtered.add(consolidateTimeSlots(source));
+      }
+    }
+    return filtered;
+  }
+
+  public List<Task> getEvents() {
+    return events;
   }
   
-  //Checks if the event lies within another event
-  boolean isWithinDuration(int compareStartWithStart, int compareEndWithEnd) {
-    return compareStartWithStart <= 0 && compareEndWithEnd >= 0;
+  public List<DateTime> getOccupiedSlots() {
+    return occupiedSlots;
   }
+
 
 }

@@ -110,7 +110,7 @@ public class TimeSlotTest {
 
     TimeSlot timeSlot = new TimeSlot(testDate, pendingTasks);
 
-    List<DateTime> result = timeSlot.streamlineEvents();
+    List<DateTime> result = timeSlot.getOccupiedSlots();
     assertEquals(3, result.size());
 
   }
