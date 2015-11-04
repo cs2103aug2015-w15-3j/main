@@ -6,11 +6,16 @@ import java.util.List;
 
 import raijin.common.datatypes.Task;
 
+/**
+ * Populate current view with given list of tasks
+ * @author papa
+ *
+ */
 public class SetCurrentDisplayEvent {
 
   public List<Task> tasks;
-  public String headMessage;
-  public String bodyMessage;
+  public String headMessage;                        //title of view
+  public String bodyMessage;                        //content of view will be replaced with this message
   
   public SetCurrentDisplayEvent(List<Task> tasks) {
     this.tasks = tasks;
