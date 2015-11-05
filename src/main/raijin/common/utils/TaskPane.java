@@ -8,6 +8,7 @@ import java.util.TreeSet;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -17,6 +18,8 @@ import raijin.common.datatypes.Task;
 import raijin.logic.command.DisplayCommandRunner;
 
 public class TaskPane extends StackPane {
+	private static final String OVERDUE_LOCATION = "/resource/styes/overdue.png";
+	//private ImageView overdueIcon = new ImageView(getClass().getResource(OVERDUE_LOCATION).toString());
 	
 	private String highPriorityColour = "#FF9F94"; 		    // red
 	private String midPriorityColour = "#AAE6FF"; 		    // blue
