@@ -6,14 +6,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
 import raijin.common.datatypes.Constants;
@@ -22,7 +19,6 @@ import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.exception.StorageFailureException;
 import raijin.common.utils.IDManager;
-import raijin.common.utils.RaijinLogger;
 import raijin.common.utils.TaskUtils;
 import raijin.storage.handler.StorageHandler;
 

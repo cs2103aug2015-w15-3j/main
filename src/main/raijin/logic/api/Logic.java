@@ -3,32 +3,24 @@
 package raijin.logic.api;
 
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
 
-import javafx.application.Application;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
-import raijin.common.eventbus.RaijinEventBus;
-import raijin.common.eventbus.events.TasksChangedEvent;
 import raijin.common.exception.FailedToParseException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.AutoComplete;
-import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
 import raijin.common.utils.TaskUtils;
 import raijin.logic.parser.ParsedInput;
 import raijin.logic.parser.ParserInterface;
 import raijin.logic.parser.SimpleParser;
-import raijin.storage.api.History;
 import raijin.storage.api.Session;
 import raijin.storage.api.TasksManager;
-import raijin.storage.handler.StorageHandler;
 
 
 /**
