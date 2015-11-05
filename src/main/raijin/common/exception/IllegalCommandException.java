@@ -11,7 +11,7 @@ public class IllegalCommandException extends RaijinException {
 
   public IllegalCommandException(String message, String command) {
     super(message, Constants.Error.IllegalCommand);
-    this.command = command;
+    this.command = command;                                                     //Type of command that is invalid
   }
   
   public String getCommand() {

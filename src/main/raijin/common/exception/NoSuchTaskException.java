@@ -11,7 +11,7 @@ public class NoSuchTaskException extends RaijinException {
 
  public NoSuchTaskException(String message, int id) {
     super(message, Constants.Error.NoSuchTask);
-    taskID = id;
+    taskID = id;                                //Task id that does not exists
  }
  
  public int getID() {

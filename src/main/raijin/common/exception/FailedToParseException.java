@@ -11,7 +11,7 @@ public class FailedToParseException extends RaijinException {
 
   public FailedToParseException(String message, String userInput, Throwable cause) {
     super(message, Constants.Error.FailedToParse, cause);
-    this.userInput = userInput;
+    this.userInput = userInput;                                                 //User input that causes this exception
   }
   
   public String getUserInput() {

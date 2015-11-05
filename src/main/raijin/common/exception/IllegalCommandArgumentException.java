@@ -2,8 +2,6 @@
 
 package raijin.common.exception;
 
-import java.util.List;
-
 import raijin.common.datatypes.Constants;
 
 @SuppressWarnings("serial")
@@ -13,7 +11,7 @@ public class IllegalCommandArgumentException extends RaijinException {
 
   public IllegalCommandArgumentException(String message, Constants.CommandParam arg) {
     super(message, Constants.Error.IllegalCommandArgument);
-    this.argument = arg;
+    this.argument = arg;                                                        //Type of argument that is invalid
   }
 
   public Constants.CommandParam getArgument() {
