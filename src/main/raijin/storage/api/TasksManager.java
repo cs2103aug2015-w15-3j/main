@@ -11,7 +11,6 @@ import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.TasksChangedEvent;
 import raijin.common.exception.NoSuchTaskException;
-import raijin.common.utils.EventBus;
 import raijin.common.utils.IDManager;
 
 /**

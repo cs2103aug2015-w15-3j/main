@@ -19,7 +19,6 @@ import raijin.common.eventbus.events.TasksChangedEvent;
 import raijin.common.exception.FailedToParseException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.AutoComplete;
-import raijin.common.utils.EventBus;
 import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
 import raijin.common.utils.TaskUtils;
