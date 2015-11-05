@@ -40,11 +40,6 @@ public class History {
   
   /*Helper to write changes to file and trigger view change*/
   void reflectChanges() {
-    EventBus.getEventBus().setHeadMessage("All pending tasks");
-    /*
-    EventBus.getEventBus().setCurrentTasks(new ArrayList<Task>(
-        tasksManager.getPendingTasks().values()));
-        */
     eventbus.post(new SetCurrentDisplayEvent(TaskUtils
         .getTasksList(tasksManager.getPendingTasks()), "All pending tasks"));
     //Notify tasks changed
