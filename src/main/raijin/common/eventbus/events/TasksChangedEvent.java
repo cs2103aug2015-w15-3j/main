@@ -2,14 +2,11 @@
 
 package raijin.common.eventbus.events;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import com.google.common.collect.Multiset;
 
 import raijin.common.datatypes.Constants;
-import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.TaskUtils;
 import raijin.common.utils.filter.DateFilter;
@@ -23,7 +20,7 @@ public class TasksChangedEvent {
   public List<Task> pendingTomorrow;             
   public List<Task> pendingNextWeek;              
   public List<Task> overdue;                     
-  public Multiset<String> tags;        //Stores number of pending tasks associated with a tag
+  public Multiset<String> tags;                                                 //tags that exist in storage
   public String storageDirectory;
   DateFilter dateFilter;
   TypeFilter overdueFilter;
@@ -36,10 +33,13 @@ public class TasksChangedEvent {
     completedTasks = TaskUtils.getTasksList(TasksManager.getManager().getCompletedTasks());
     dateFilter = new DateFilter(pendingTasks);
     overdueFilter = new TypeFilter(Constants.TYPE_TASK.OVERDUE);
-    update();
+    init();
   }
   
-  void update() {
+  /**
+   * Initialise different categories of tasks
+   */
+  void init() {
     pendingToday = dateFilter.filter(pendingTasks, Constants.View.TODAY);
     pendingTomorrow = dateFilter.filter(pendingTasks, Constants.View.TOMORROW);
     pendingNextWeek= dateFilter.filter(pendingTasks, Constants.View.FUTURE);
