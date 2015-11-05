@@ -9,6 +9,7 @@ import java.util.List;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
+import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.utils.filter.DateFilter;
 
 /**
@@ -22,6 +23,7 @@ public class ChangeViewEvent {
   private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
   private static final String HEAD_FORMAT = "%s (%s)";
   private LocalDate today;
+  private RaijinEventBus eventbus = RaijinEventBus.getInstance();
   public List<Task> focusView;                                                  //list of tasks to be displayed
   public Constants.View typeOfView;                                             //designated view to be displayed
   public String viewMessage;                                                    //heading of current view
@@ -63,6 +65,7 @@ public class ChangeViewEvent {
 
     }
     focusView = dateFilter.filter(pendingTasks);
+    eventbus.setDisplayedTasks(focusView);                                      //Update displayed tasks
   }
 
 }

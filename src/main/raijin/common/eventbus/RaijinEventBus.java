@@ -3,11 +3,17 @@
 package raijin.common.eventbus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import raijin.common.datatypes.Task;
+import raijin.common.eventbus.events.SetCurrentDisplayEvent;
+import raijin.common.eventbus.subscribers.MainSubscriber;
+import raijin.common.utils.TaskUtils;
+import raijin.storage.api.TasksManager;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 /**
  * Wrapper for Google event bus
@@ -22,6 +28,10 @@ public class RaijinEventBus {
   
   private RaijinEventBus() {
     eventbus = new EventBus();
+    HashMap<Integer, Task> pendingTasks = TasksManager.getManager().getPendingTasks();
+    if (!pendingTasks.isEmpty()) {
+      displayedTasks = TaskUtils.initTasks(pendingTasks);
+    }
   }
   
   public static RaijinEventBus getInstance() {
