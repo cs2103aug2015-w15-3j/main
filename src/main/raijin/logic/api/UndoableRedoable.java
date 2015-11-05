@@ -6,8 +6,8 @@ import raijin.common.exception.UnableToExecuteCommandException;
 
 /**
  * 
- * @author papa
  * Indicates that a command supports undo and redo
+ * @author papa
  */
 public interface UndoableRedoable {
   

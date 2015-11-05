@@ -13,13 +13,11 @@ import raijin.logic.command.RedoCommandRunner;
 import raijin.logic.command.SearchCommandRunner;
 import raijin.logic.command.SetCommandRunner;
 import raijin.logic.command.UndoCommandRunner;
-import raijin.logic.command.RedoCommandRunner;
 import raijin.logic.command.HelpCommandRunner;
 
 /**
- * 
- * @author papa
  * Factory to create CommandRunner objects based on available commands
+ * @author papa
  */
 public class CommandRunnerFactory {
 

@@ -7,8 +7,6 @@ import java.util.TreeSet;
 
 import org.slf4j.Logger;
 
-import com.google.common.eventbus.EventBus;
-
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.eventbus.RaijinEventBus;
@@ -53,7 +51,7 @@ public abstract class CommandRunner {
   }
 
   /**
-   * Translate virtual id on view to real task id 
+   * Translate virtual id on view to real task id for multiple ids
    * @param input
    * @throws UnableToExecuteCommandException
    */

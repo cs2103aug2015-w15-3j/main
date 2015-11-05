@@ -1,9 +1,10 @@
 package raijin.logic.api;
 
-import com.google.common.eventbus.EventBus;
-
-import raijin.common.eventbus.RaijinEventBus;
-
+/**
+ * Interface for commands that support keyboard shortcut
+ * @author papa
+ *
+ */
 public interface CommandShortcut {
   
   public void handleKeyEvent();
