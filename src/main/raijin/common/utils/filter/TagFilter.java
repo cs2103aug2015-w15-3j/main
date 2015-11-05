@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
 import raijin.common.datatypes.Task;
-import raijin.common.utils.RaijinLogger;
 
 /**
  * Filter tasks based on tags specified 
