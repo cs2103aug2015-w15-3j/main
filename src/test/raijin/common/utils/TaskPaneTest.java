@@ -1,3 +1,5 @@
+//@@author A0130720Y
+
 package raijin.common.utils;
 
 import static org.junit.Assert.*;
@@ -7,17 +9,9 @@ import java.util.TreeSet;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 import raijin.common.datatypes.Task;
-import raijin.logic.command.DisplayCommandRunnerTest.AsNonApp;
 
 public class TaskPaneTest {
 	
