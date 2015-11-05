@@ -5,12 +5,9 @@ package raijin.storage.handler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
@@ -20,41 +17,41 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Vector;
 
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
-import raijin.common.datatypes.Constants;
-import raijin.common.datatypes.Task;
 import raijin.common.utils.RaijinLogger;
-import raijin.ui.Raijin;
 
+/**
+ * Utility static class to handle low level I/O operations
+ * @author papa
+ *
+ */
 public class StorageHandler {
 
   private static Logger logger = RaijinLogger.getLogger();
-  private StorageHandler() {}   //Prevent developer from instantiating the class
+  private StorageHandler() {}   
 
   //===========================================================================
   //Regular File Operations
   //===========================================================================
 
-  /*Retrieves directory where the program is being executed by user*/
+  /*make paths os independent*/
+  public static String sanitizePath(String path) {
+    return path.replaceFirst("^/(.:/)", "$1");
+  }
+
+  /*Retrieves parent directory where the program is being executed by user*/
   public static String getJarPath() throws UnsupportedEncodingException {
     String path = StorageHandler.class.getProtectionDomain().
         getCodeSource().getLocation().getPath();
     String decodedPath = URLDecoder.decode(path, "UTF-8");
     String sanitizedPath = sanitizePath(decodedPath.substring(0, decodedPath.length()-1));    
-    /*Get parent path instead in case when packaged in JAR*/
     return Paths.get(sanitizedPath).getParent().toString();         
   }
 
@@ -63,6 +60,24 @@ public class StorageHandler {
     return directory.mkdir();  //If directory does not exist, create one
   }
   
+  public static boolean createFile(String filePath) throws IOException {
+    File file = new File(filePath);
+    boolean isCreated = false;
+    isCreated = file.createNewFile();
+    return isCreated;
+  }
+
+  public static String createTempFile(String fileName) {
+    File tempFile = null;
+    try {
+      tempFile = File.createTempFile(fileName, ".tmp");
+      /*delete temporary file after JVM exited*/
+      tempFile.deleteOnExit();                                                
+    } catch (IOException e) {
+      logger.error("Temp file is not created");
+    }
+    return tempFile.getAbsolutePath();
+  }
   /*Will replace file if it exists in target*/
   public static void copyFiles(Path src, Path target) throws IOException {
     /*Copy attribute such as last-modified-time from source*/
@@ -77,26 +92,7 @@ public class StorageHandler {
     return new File(dirPath).isDirectory();
   }
 
-  public static boolean createFile(String filePath) throws IOException {
-    File file = new File(filePath);
-    boolean isCreated = false;
-    isCreated = file.createNewFile();
-    return isCreated;
-  }
 
-  public static String createTempFile(String fileName) {
-    File tempFile = null;
-    try {
-      tempFile = File.createTempFile(fileName, ".tmp");
-      /*Mark file to be deleted when JVM exit*/
-      tempFile.deleteOnExit();
-    } catch (IOException e) {
-      logger.error("Temp file is not created");
-    }
-    return tempFile.getAbsolutePath();
-  }
-
-  /*Writes content to file*/
   public static void writeToFile(String output, String filePath) throws IOException {
     try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
         new FileOutputStream(filePath)))) {
@@ -104,25 +100,20 @@ public class StorageHandler {
     } 
   }
 
+  public static boolean deleteFile(String path) {
+    return new File(path).delete();
+  }
+
   /**
-   * Cannot recover from such error and storageDirectory is too important 
+   * Obtains storage path from base config file
    * @param absolutePath
-   * @return path of user storage directory
+   * @return path of storage directory
    * @throws IOException 
    */
   public static String getStorageDirectory(String absolutePath) throws IOException {
     try (BufferedReader br = new BufferedReader(new FileReader(absolutePath))) {
       return br.readLine();
     } 
-  }
-
-  /*make path invariant to windows and linux*/
-  public static String sanitizePath(String path) {
-    return path.replaceFirst("^/(.:/)", "$1");
-  }
-
-  public static boolean deleteFile(String path) {
-    return new File(path).delete();
   }
 
   //===========================================================================
