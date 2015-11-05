@@ -2,6 +2,11 @@
 
 package raijin.common.eventbus;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import raijin.common.datatypes.Task;
+
 import com.google.common.eventbus.EventBus;
 
 /**
@@ -13,6 +18,7 @@ public class RaijinEventBus {
   
   public static RaijinEventBus instance = null;
   private EventBus eventbus;
+  private List<Task> displayedTasks = new ArrayList<Task>();
   
   private RaijinEventBus() {
     eventbus = new EventBus();
@@ -31,6 +37,14 @@ public class RaijinEventBus {
   
   public EventBus getEventBus() {
     return eventbus;
+  }
+
+  public List<Task> getDisplayedTasks() {
+    return displayedTasks;
+  }
+  
+  public void setDisplayedTasks(List<Task> displayedTasks) {
+    this.displayedTasks = displayedTasks;
   }
 
 }
