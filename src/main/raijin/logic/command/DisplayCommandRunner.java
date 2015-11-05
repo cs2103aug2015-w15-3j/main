@@ -59,7 +59,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	private ArrayList<Task> completed;
 	private ArrayList<Task> relevant;
 
-	private com.google.common.eventbus.EventBus eventbus = RaijinEventBus.getEventBus();
+	private RaijinEventBus eventbus = RaijinEventBus.getInstance();
 
 	final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
 

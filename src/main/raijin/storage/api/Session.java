@@ -209,7 +209,7 @@ public class Session {
       tasksManager.sync(retrievedData);
       IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
       List<Task> result = TaskUtils.getTasksList(tasksManager.getPendingTasks());
-      RaijinEventBus.getEventBus().post(new SetCurrentDisplayEvent(result));
+      RaijinEventBus.getInstance().post(new SetCurrentDisplayEvent(result));
     }
   }
 

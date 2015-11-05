@@ -129,15 +129,17 @@ public class TimeSlot {
 
   /*Merge all occupied time slots*/
   List<DateTime> combineAllTimeSlots() {
-    List<DateTime> filtered = new ArrayList<DateTime>();
-    
-    for (DateTime source : occupiedSlots) {
-      if (source != null && occupiedSlots.indexOf(source)
-          != occupiedSlots.size() -1) {
-        filtered.add(consolidateTimeSlots(source));
+    if (occupiedSlots.size() > 1) {
+      List<DateTime> filtered = new ArrayList<DateTime>();
+
+      for (DateTime source : occupiedSlots) {
+        if (source != null && occupiedSlots.indexOf(source) != occupiedSlots.size() - 1) {
+          filtered.add(consolidateTimeSlots(source));
+        }
       }
+      return filtered;
     }
-    return filtered;
+    return occupiedSlots;
   }
 
   public List<Task> getEvents() {

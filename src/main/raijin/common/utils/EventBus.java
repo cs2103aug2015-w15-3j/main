@@ -105,7 +105,7 @@ public class EventBus {
 
   void handleSetCurrentTasksEvent() {
     MainSubscriber<SetCurrentDisplayEvent> setCurrentHandler = new MainSubscriber<
-        SetCurrentDisplayEvent>(RaijinEventBus.getEventBus()) {
+        SetCurrentDisplayEvent>(RaijinEventBus.getInstance().getEventBus()) {
 
           @Subscribe
           @Override

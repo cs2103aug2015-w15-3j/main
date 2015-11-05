@@ -49,7 +49,7 @@ public class AutoComplete {
   private TasksManager tasksManager;
   private SimpleParser parser;
   private Logger logger;
-  private com.google.common.eventbus.EventBus eventbus;
+  private RaijinEventBus eventbus;
   private EventBus eventBus;
   private TreeSet<String> taskNames;
   private TreeSet<String> tags;
@@ -63,7 +63,7 @@ public class AutoComplete {
     tags = new TreeSet<String>();
     taskNames = new TreeSet<String>();
     this.tasksManager = tasksManager;
-    this.eventbus = RaijinEventBus.getEventBus();
+    this.eventbus = RaijinEventBus.getInstance();
     this.logger = RaijinLogger.getLogger();
     this.parser = new SimpleParser();
     this.eventBus = EventBus.getEventBus();
@@ -106,7 +106,8 @@ public class AutoComplete {
   }
 
   void handleKeyEvent() {
-    MainSubscriber<KeyPressEvent> updateSuggestion = new MainSubscriber<KeyPressEvent>(eventbus) {
+    MainSubscriber<KeyPressEvent> updateSuggestion = new MainSubscriber<
+        KeyPressEvent>(eventbus.getEventBus()) {
 
       @Subscribe
       @Override
@@ -352,7 +353,8 @@ public class AutoComplete {
   }
 
   public void handleTabEvent() {
-    MainSubscriber<KeyEvent> completeOnPress = new MainSubscriber<KeyEvent>(eventbus) {
+    MainSubscriber<KeyEvent> completeOnPress = new MainSubscriber<
+        KeyEvent>(eventbus.getEventBus()) {
 
       @Subscribe
       @Override

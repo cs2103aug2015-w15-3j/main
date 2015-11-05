@@ -64,7 +64,7 @@ public class SidebarController extends BorderPane {
 
 
   private static final String SIDEBAR_LAYOUT_FXML = "resource/layout/SidebarController.fxml";
-  private com.google.common.eventbus.EventBus eventbus;
+  private RaijinEventBus eventbus;
   
   //===========================================================================
   // Domain objects
@@ -95,7 +95,7 @@ public class SidebarController extends BorderPane {
     //=========================================================================
     
     this.logic = logic;
-    eventbus = RaijinEventBus.getEventBus();
+    eventbus = RaijinEventBus.getInstance();
     init();
   }
 
@@ -148,7 +148,7 @@ public class SidebarController extends BorderPane {
 
   public void handleChangeView() {
     MainSubscriber<ChangeViewEvent> changeViewHandler =
-        new MainSubscriber<ChangeViewEvent>(eventbus) {
+        new MainSubscriber<ChangeViewEvent>(eventbus.getEventBus()) {
 
           @Subscribe
           @Override
@@ -160,7 +160,7 @@ public class SidebarController extends BorderPane {
 
   public void handleTaskChanged() {
     MainSubscriber<TasksChangedEvent> tasksChangedHandler =
-        new MainSubscriber<TasksChangedEvent>(eventbus) {
+        new MainSubscriber<TasksChangedEvent>(eventbus.getEventBus()) {
 
           @Subscribe
           @Override

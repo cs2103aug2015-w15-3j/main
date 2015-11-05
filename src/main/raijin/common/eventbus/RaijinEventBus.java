@@ -11,14 +11,26 @@ import com.google.common.eventbus.EventBus;
  */
 public class RaijinEventBus {
   
-  public static EventBus eventBus = null;
+  public static RaijinEventBus instance = null;
+  private EventBus eventbus;
   
-  private RaijinEventBus() {}
-  
-  public static EventBus getEventBus() {
-    if (eventBus == null) {
-      eventBus = new EventBus();
-    }
-    return eventBus;
+  private RaijinEventBus() {
+    eventbus = new EventBus();
   }
+  
+  public static RaijinEventBus getInstance() {
+    if (instance == null) {
+      instance = new RaijinEventBus();
+    }
+    return instance;
+  }
+  
+  public void post(Object event) {
+    eventbus.post(event);
+  }
+  
+  public EventBus getEventBus() {
+    return eventbus;
+  }
+
 }

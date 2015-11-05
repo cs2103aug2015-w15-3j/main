@@ -66,7 +66,7 @@ public class InputController extends BorderPane {
   private static final String INPUT_FONT = "resource/styles/DejaVuSans.ttf";
 
   private Raijin mainApp;
-  private EventBus eventbus = RaijinEventBus.getEventBus();
+  private RaijinEventBus eventbus = RaijinEventBus.getInstance();
   /* Stores previously entered command */
   private ArrayList<String> commandHistory = new ArrayList<String>();
   private static int upCount = 0; // Count number of UP pressed
@@ -135,7 +135,7 @@ public class InputController extends BorderPane {
 
   void handleSetFeedbackEvent() {
     MainSubscriber<SetFeedbackEvent> feedbackSubscriber =
-        new MainSubscriber<SetFeedbackEvent>(eventbus) {
+        new MainSubscriber<SetFeedbackEvent>(eventbus.getEventBus()) {
 
           @Subscribe
           @Override
@@ -148,7 +148,7 @@ public class InputController extends BorderPane {
 
   void handleSetTimeSlotEvent() {
     MainSubscriber<SetTimeSlotEvent> timeSlotSubscriber =
-        new MainSubscriber<SetTimeSlotEvent>(eventbus) {
+        new MainSubscriber<SetTimeSlotEvent>(eventbus.getEventBus()) {
 
           @Subscribe
           @Override
@@ -165,7 +165,7 @@ public class InputController extends BorderPane {
 
   void handleSetHelpEvent() {
     MainSubscriber<SetHelpCommandEvent> helpSubscriber =
-        new MainSubscriber<SetHelpCommandEvent>(eventbus) {
+        new MainSubscriber<SetHelpCommandEvent>(eventbus.getEventBus()) {
 
           @Subscribe
           @Override
@@ -189,7 +189,7 @@ public class InputController extends BorderPane {
 
   void handleSetFailureEvent() {
     MainSubscriber<SetFailureEvent> failureSubscriber =
-        new MainSubscriber<SetFailureEvent>(eventbus) {
+        new MainSubscriber<SetFailureEvent>(eventbus.getEventBus()) {
 
           @Subscribe
           @Override
@@ -201,7 +201,8 @@ public class InputController extends BorderPane {
   }
 
   void handleSetInputEvent() {
-    MainSubscriber<SetInputEvent> inputSubscriber = new MainSubscriber<SetInputEvent>(eventbus) {
+    MainSubscriber<SetInputEvent> inputSubscriber = new MainSubscriber<
+        SetInputEvent>(eventbus.getEventBus()) {
 
       @Subscribe
       @Override

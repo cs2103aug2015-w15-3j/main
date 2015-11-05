@@ -28,7 +28,7 @@ public class UndoCommandRunner extends CommandRunner implements CommandShortcut 
 
   public void handleKeyEvent() {
     MainSubscriber<UndoRedoEvent> undoKeySubscriber = new MainSubscriber<
-        UndoRedoEvent>(eventbus) {
+        UndoRedoEvent>(eventbus.getEventBus()) {
 
       @Subscribe
       @Override

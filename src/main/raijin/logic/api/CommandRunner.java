@@ -3,16 +3,13 @@
 package raijin.logic.api;
 
 
-import java.util.List;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.eventbus.RaijinEventBus;
-import raijin.common.exception.NoSuchTaskException;
 import raijin.common.exception.RaijinException;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.common.utils.EventBus;
@@ -30,7 +27,7 @@ public abstract class CommandRunner {
   protected History history = History.getHistory();
   protected Session session = Session.getSession();
   protected EventBus eventBus = EventBus.getEventBus();
-  protected com.google.common.eventbus.EventBus eventbus = RaijinEventBus.getEventBus();
+  protected RaijinEventBus eventbus = RaijinEventBus.getInstance();
   protected IDManager idManager = IDManager.getIdManager();
 
   protected abstract Status processCommand(ParsedInput input) throws UnableToExecuteCommandException;
@@ -39,6 +36,11 @@ public abstract class CommandRunner {
     return handleCommandException(input);
   }
   
+  /**
+   * Template method to handle exception thrown by execution of a command
+   * @param input       parsed input
+   * @return
+   */
   public Status handleCommandException(ParsedInput input) {
     try {
       translateIds(input);

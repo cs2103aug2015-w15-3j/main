@@ -27,8 +27,7 @@ import com.google.common.eventbus.Subscribe;
 
 public class DisplayController extends BorderPane {
 
-  private com.google.common.eventbus.EventBus eventbus = RaijinEventBus.getEventBus(); // Google
-                                                                                       // event bus
+  private RaijinEventBus eventbus = RaijinEventBus.getInstance();
 
   private static final String DISPLAY_CONTROLLER_FXML = "resource/layout/DisplayController.fxml";
   private static int scrollIndex = 0; // Determines position of scrollbar
@@ -86,7 +85,7 @@ public class DisplayController extends BorderPane {
 
   void handleSetCurrentDisplayEvent() {
     MainSubscriber<SetCurrentDisplayEvent> setCurrentHandler =
-        new MainSubscriber<SetCurrentDisplayEvent>(eventbus) {
+        new MainSubscriber<SetCurrentDisplayEvent>(eventbus.getEventBus()) {
 
           @Subscribe
           @Override
@@ -109,7 +108,7 @@ public class DisplayController extends BorderPane {
 
   void handleChangeViewEvent() {
     MainSubscriber<ChangeViewEvent> changeViewHandler =
-        new MainSubscriber<ChangeViewEvent>(eventbus) {
+        new MainSubscriber<ChangeViewEvent>(eventbus.getEventBus()) {
 
           @Subscribe
           @Override
@@ -122,7 +121,8 @@ public class DisplayController extends BorderPane {
   }
 
   void handleScrollEvent() {
-    MainSubscriber<ScrollEvent> scrollViewHandler = new MainSubscriber<ScrollEvent>(eventbus) {
+    MainSubscriber<ScrollEvent> scrollViewHandler = new MainSubscriber<
+        ScrollEvent>(eventbus.getEventBus()) {
 
       @Subscribe
       @Override

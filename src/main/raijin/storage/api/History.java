@@ -23,7 +23,7 @@ import raijin.logic.api.UndoableRedoable;
 
 public class History {
 
-  private com.google.common.eventbus.EventBus eventbus;
+  private RaijinEventBus eventbus;
   private static History history = new History();
   private TasksManager tasksManager;
   private Stack<UndoableRedoable> undoStack;   //Stores commandRunner created via user input
@@ -35,7 +35,7 @@ public class History {
     redoStack = new Stack<UndoableRedoable>();
     tasksManager = TasksManager.getManager();
     logger = RaijinLogger.getLogger();
-    eventbus = RaijinEventBus.getEventBus();
+    eventbus = RaijinEventBus.getInstance();
   }
   
   /*Helper to write changes to file and trigger view change*/

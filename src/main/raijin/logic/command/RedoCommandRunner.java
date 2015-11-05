@@ -29,7 +29,7 @@ public class RedoCommandRunner extends CommandRunner implements CommandShortcut 
 
   public void handleKeyEvent() {
     MainSubscriber<UndoRedoEvent> redoKeySubscriber = new MainSubscriber<
-        UndoRedoEvent>(eventbus) {
+        UndoRedoEvent>(eventbus.getEventBus()) {
 
       @Subscribe
       @Override

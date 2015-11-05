@@ -91,7 +91,7 @@ public class Raijin extends Application implements NativeKeyListener {
   private static Stage stage, helpStage;
   private Logic logic;
   private IntroController introController;
-  private EventBus eventbus = RaijinEventBus.getEventBus();
+  private RaijinEventBus eventbus = RaijinEventBus.getInstance();
   private SystemTray tray;
   final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", null);
 
