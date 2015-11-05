@@ -50,7 +50,6 @@ public class AutoComplete {
   private SimpleParser parser;
   private Logger logger;
   private RaijinEventBus eventbus;
-  private EventBus eventBus;
   private TreeSet<String> taskNames;
   private TreeSet<String> tags;
   public List<String> suggestions;
@@ -66,7 +65,6 @@ public class AutoComplete {
     this.eventbus = RaijinEventBus.getInstance();
     this.logger = RaijinLogger.getLogger();
     this.parser = new SimpleParser();
-    this.eventBus = EventBus.getEventBus();
     suggestions = new ArrayList<String>();
     selectedTasks = new ArrayList<Task>();
 
@@ -409,7 +407,7 @@ public class AutoComplete {
       for (int displayedId : input.getIds()) {
 
         try {
-          eventBus.getDisplayedTasks().get(displayedId - 1).getId();
+          eventbus.getDisplayedTasks().get(displayedId - 1).getId();
         } catch (IndexOutOfBoundsException e) {
           return true;
         }

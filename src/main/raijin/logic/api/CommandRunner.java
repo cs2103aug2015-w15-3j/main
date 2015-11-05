@@ -7,12 +7,13 @@ import java.util.TreeSet;
 
 import org.slf4j.Logger;
 
+import com.google.common.eventbus.EventBus;
+
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.exception.RaijinException;
 import raijin.common.exception.UnableToExecuteCommandException;
-import raijin.common.utils.EventBus;
 import raijin.common.utils.IDManager;
 import raijin.common.utils.RaijinLogger;
 import raijin.logic.parser.ParsedInput;
@@ -26,8 +27,8 @@ public abstract class CommandRunner {
   protected TasksManager tasksManager = TasksManager.getManager();
   protected History history = History.getHistory();
   protected Session session = Session.getSession();
-  protected EventBus eventBus = EventBus.getEventBus();
   protected RaijinEventBus eventbus = RaijinEventBus.getInstance();
+  //protected raijin.common.utils.EventBus eventBus = raijin.common.utils.EventBus.getEventBus();
   protected IDManager idManager = IDManager.getIdManager();
 
   protected abstract Status processCommand(ParsedInput input) throws UnableToExecuteCommandException;
@@ -73,7 +74,7 @@ public abstract class CommandRunner {
   
   int getRealId(int displayedId) throws UnableToExecuteCommandException {
     try {
-      return eventBus.getDisplayedTasks().get(displayedId-1).getId();
+      return eventbus.getDisplayedTasks().get(displayedId-1).getId();
     } catch (IndexOutOfBoundsException e) {
       throw new UnableToExecuteCommandException("Does not match displayed task", e);
     }
