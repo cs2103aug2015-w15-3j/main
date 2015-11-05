@@ -10,6 +10,11 @@ import java.util.stream.Collectors;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 
+/**
+ * Sorts tasks according to specified criteria
+ * @author papa
+ *
+ */
 public class SortFilter extends TaskFilter {
 
   //Sort by comparing deadlines
@@ -52,24 +57,10 @@ public class SortFilter extends TaskFilter {
         break;
 
       default:
-        sortCriteria = byDeadline;          //Resolve to sorting by deadline 
+        sortCriteria = byDeadline;                                              //resolve to sorting by deadline 
         break;
        
      }
-  }
-
-  @Override
-  public List<Task> filter(List<Task> tasks) {
-    List<Task> sorted = tasks.stream().sorted(sortCriteria).collect(Collectors.toList());
-    if (isReversed) {
-      Collections.reverse(sorted);
-    }
-    return sorted;
-  }
-  
-  //Returns reverse order 
-  public void setReverse() {
-    isReversed = true;
   }
 
   int getPriorityValue(String priority) {
@@ -86,6 +77,20 @@ public class SortFilter extends TaskFilter {
     int sourceVal = getPriorityValue(source);
     int targetVal = getPriorityValue(target);
     return sourceVal - targetVal;
+  }
+
+  @Override
+  public List<Task> filter(List<Task> tasks) {
+    List<Task> sorted = tasks.stream().sorted(sortCriteria).collect(Collectors.toList());
+    if (isReversed) {
+      Collections.reverse(sorted);
+    }
+    return sorted;
+  }
+  
+  /*sorts in reverse order */
+  public void setReverse() {
+    isReversed = true;
   }
 
 }

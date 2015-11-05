@@ -7,6 +7,11 @@ import java.util.stream.Collectors;
 
 import raijin.common.datatypes.Task;
 
+/**
+ * Filter tasks based on priority
+ * @author papa
+ *
+ */
 public class PriorityFilter extends TaskFilter {
 
   private String priority;

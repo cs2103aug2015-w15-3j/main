@@ -11,6 +11,11 @@ import org.apache.commons.collections4.CollectionUtils;
 import raijin.common.datatypes.Task;
 import raijin.common.utils.RaijinLogger;
 
+/**
+ * Filter tasks based on tags specified 
+ * @author papa
+ *
+ */
 public class TagFilter extends TaskFilter {
 
   private TreeSet<String> limitTags;
