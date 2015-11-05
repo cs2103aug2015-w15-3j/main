@@ -32,9 +32,8 @@ import raijin.storage.handler.StorageHandler;
 
 
 /**
- * 
+ * Main class that handles communication with other components
  * @author papa
- * Basically a facade class that handles all components needs
  */
 public class Logic {
 
@@ -43,12 +42,12 @@ public class Logic {
   private Logger logger;
   private AutoComplete autoComplete;
   private HashMap<Constants.Command, CommandRunner> commandRunners;
-  private com.google.common.eventbus.EventBus eventbus;
   
   public Logic() throws FileNotFoundException {
-    initAssets();                               //Initialize required components
+    initAssets();                              
   }
   
+  /*Initialiaze required assets*/
   private void initAssets() {
     parser = new SimpleParser();
     session = Session.getSession();
@@ -59,15 +58,11 @@ public class Logic {
 
   }
 
-  /*Initialize list of tasks*/
-  public void initializeData(TasksManager tasksManager) {
-    HashMap<Integer, Task> pendingTasks = tasksManager.getPendingTasks();
-    tasksManager.setPendingTasks(pendingTasks);
-    IDManager.getIdManager().updateIdPool(pendingTasks);
-  }
-  
-
-  /*Used by UI controller to execute command and get a Status message*/
+  /**
+   * Invokes command runner based on user input
+   * @param userInput       
+   * @return Status         status of executing the command
+   */
   public Status executeCommand(String userInput) {
     try {
       ParsedInput parsed = parser.parse(userInput);
@@ -84,6 +79,7 @@ public class Logic {
   // Session methods
   //===========================================================================
 
+  /*Checks if this is the first time a user runs this application*/
   public boolean isFirstTime() {
     return session.isFirstTime;
   }
@@ -94,7 +90,7 @@ public class Logic {
     session.setStorageDirectory(storagePath, session.baseConfigPath);
   }
 
-  //for UI to save on closing when exiting.
+  /*for UI to save on closing when exiting*/
   public Session getSession() {
 	  return this.session;
   }
@@ -107,13 +103,15 @@ public class Logic {
     ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT)
       .createParsedInput();
     try {
-      CommandRunner cmdRunner = CommandRunnerFactory.getCommandRunner(Constants.Command.EXIT);
+      CommandRunner cmdRunner = CommandRunnerFactory.getCommandRunner(
+          Constants.Command.EXIT);
       cmdRunner.execute(input);
     } catch (UnableToExecuteCommandException e) {
       logger.error(e.getMessage());
     }
   }
 
+  /*Initialise all command runners*/
   void setupCommandRunners() {
     for (Constants.Command cmd : Constants.Command.values()) {
       commandRunners.put(cmd, CommandRunnerFactory.getCommandRunner(cmd));
@@ -128,6 +126,10 @@ public class Logic {
     return TaskUtils.getTasksList(TasksManager.getManager().getCompletedTasks());
   }
 
+  /**
+   * Used by developers to load custom JSON file 
+   * @param fileName
+   */
   public void loadCustomData(String fileName) {
     String dataPath = session.programDirectory + "/" + fileName + ".json";
     session.loadCustomJSON(dataPath);
