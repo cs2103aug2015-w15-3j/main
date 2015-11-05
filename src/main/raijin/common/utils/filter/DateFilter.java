@@ -2,18 +2,19 @@
 
 package raijin.common.utils.filter;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
-import raijin.common.utils.RaijinLogger;
 import raijin.common.utils.TaskUtils;
-import raijin.storage.api.TasksManager;
 
+/**
+ * Filter tasks based on dates 
+ * @author papa
+ *
+ */
 public class DateFilter extends TaskFilter {
 
   private DateTime limit;
@@ -29,35 +30,6 @@ public class DateFilter extends TaskFilter {
 
   public void setDateTime(DateTime dateTime) {
     limit = dateTime;
-  }
-
-  @Override
-  public List<Task> filter(List<Task> tasks) {
-    if (limit == null) {
-      return inputTasks;
-    }
-    tasks = TaskUtils.getOnlyNormalTasks(tasks);
-    if (limit.getEndDate() == null) {
-      return getFutureTasks(tasks, Constants.MAX_TASKS);
-    }
-    return tasks.stream().filter(task -> isMatched(task.getDateTime())).
-        collect(Collectors.toList());
-  }
-  
-  /**
-   * Returns commonly used view 
-   * @param tasks
-   * @param view
-   * @return
-   */
-  public List<Task> filter(List<Task> tasks, Constants.View view) {
-    limit = view.getDateTime();
-    tasks = TaskUtils.getOnlyNormalTasks(tasks);
-    if (view == Constants.View.FUTURE) {
-      return getFutureTasks(tasks, Constants.MAX_TASKS);
-    }
-    return tasks.stream().filter(task -> isMatched(task.getDateTime())).
-        collect(Collectors.toList());
   }
 
   boolean isMatched(DateTime target) {
@@ -97,6 +69,35 @@ public class DateFilter extends TaskFilter {
     }
   }
   
+  @Override
+  public List<Task> filter(List<Task> tasks) {
+    if (limit == null) {
+      return inputTasks;
+    }
+    tasks = TaskUtils.getOnlyNormalTasks(tasks);
+    if (limit.getEndDate() == null) {
+      return getFutureTasks(tasks, Constants.MAX_TASKS);
+    }
+    return tasks.stream().filter(task -> isMatched(task.getDateTime())).
+        collect(Collectors.toList());
+  }
+  
+  /**
+   * Returns commonly used view 
+   * @param tasks
+   * @param view
+   * @return
+   */
+  public List<Task> filter(List<Task> tasks, Constants.View view) {
+    limit = view.getDateTime();
+    tasks = TaskUtils.getOnlyNormalTasks(tasks);
+    if (view == Constants.View.FUTURE) {
+      return getFutureTasks(tasks, Constants.MAX_TASKS);
+    }
+    return tasks.stream().filter(task -> isMatched(task.getDateTime())).
+        collect(Collectors.toList());
+  }
+
   boolean isMatchedFutureTasks(DateTime target) {
     return target.getEndDate().compareTo(limit.getStartDate()) >= 0;
   }
