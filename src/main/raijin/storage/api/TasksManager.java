@@ -3,18 +3,13 @@
 package raijin.storage.api;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import raijin.common.datatypes.Task;
-import raijin.common.eventbus.RaijinEventBus;
-import raijin.common.eventbus.events.TasksChangedEvent;
 import raijin.common.exception.NoSuchTaskException;
 import raijin.common.utils.IDManager;
 
 /**
- * 
+ * Manages tasks and perform operation on task needed by Command Runners
  * @author papa
  */
 public class TasksManager {
@@ -58,7 +53,6 @@ public class TasksManager {
 
   /*Sync pending and completed tasks to target tasksManager retrieved from Json file*/
   public void sync(TasksManager target) {
-    //@TODO fix checking null
     if (null != target) {
       pendingTasks = target.getPendingTasks();
       completedTasks = target.getCompletedTasks();
