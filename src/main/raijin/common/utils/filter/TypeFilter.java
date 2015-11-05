@@ -11,29 +11,29 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
 
+/**
+ * Filter by type of task
+ * @author papa
+ *
+ */
 public class TypeFilter extends TaskFilter {
 
-  private Constants.TYPE_TASK limit;        //Limiting criteria for filter
+  private Constants.TYPE_TASK limit;                                            //type of task to be filtered
   
   public TypeFilter(Constants.TYPE_TASK limit) {
-    this.limit = limit;
+    this.limit = limit;             
   }
 
   @Override
   public List<Task> filter(List<Task> tasks) {
-    switch (limit) {
-      
-      //Uses a date filter when overdue is specified
-      case OVERDUE:
-        return getOverdue(tasks);
-        
-      default:
-        return getType(tasks);
+    if (limit == Constants.TYPE_TASK.OVERDUE) {
+      return getOverdueTasks(tasks);
     }
+    return getFloatingTasks(tasks);
   }
   
-  List<Task> getOverdue(List<Task> tasks) {
-    //Generates date time object for comparison
+  List<Task> getOverdueTasks(List<Task> tasks) {
+    /*current date and time used for comparison*/
     DateTime current = new DateTime(LocalDate.now(), null, LocalDate.now(), 
         LocalTime.now());
 
@@ -43,7 +43,7 @@ public class TypeFilter extends TaskFilter {
     return result;
   }
 
-  List<Task> getType(List<Task> tasks) {
+  List<Task> getFloatingTasks(List<Task> tasks) {
     List<Task> floating = tasks.stream().filter(t -> t.getType() == limit).collect(Collectors
         .toList());
     return new SortFilter(Constants.SORT_CRITERIA.PRIORITY).filter(floating);
