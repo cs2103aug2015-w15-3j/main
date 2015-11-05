@@ -28,18 +28,31 @@ import raijin.storage.handler.StorageHandler;
 
 public class Session {
 
+  private static final String ERROR_FAIL_GET_STORAGE = "Cannot get storage "
+      + "directory from file %s";
+  private static final String ERROR_ENCODING = "Unsupported Encoding while "
+      + "getting program path"; 
+  private static final String ERROR_COPY_FILES = "Unable to copy temp file from "
+      + "%s to overwrite %s";
+  private static final String ERROR_WRITING_FILES = "Failed to write \"%s\" to %s";
+  private static final String ERROR_CREATING_FILE = "Cannot create file %s";
+  private static final String ERROR_CORRUPTED_JSON = "Corrupted JSON file. New "
+      + "JSON file is created";
+  private static final String ERROR_MISSING_JSON = "Missing JSON file. New "
+      + "JSON file is created";
+  private static final String ERROR_READING_JSON = "Failed to read JSON file. New "
+      + "JSON file is created";
+
   private static Session session = new Session();
-  private Logger logger;
   private TasksManager tasksManager;
 
   String userConfigPath;
   String dataPath;
   String tempPath;
-
   public String programDirectory;
   public String storageDirectory;
   public String baseConfigPath;
-  public boolean isFirstTime; // Verify if user has used this application before
+  public boolean isFirstTime; 
 
   private Session() {
     init();
@@ -49,19 +62,22 @@ public class Session {
     return session;
   }
 
-  /* Needed to run regardless of user's choice of storage location */
-  void init() {
-    logger = RaijinLogger.getLogger();
-    tasksManager = TasksManager.getManager();
-    try {
-      String basePath = StorageHandler.getJarPath() + Constants.NAME_USER_FOLDER;
-      setupBase(basePath);
-      setupStorage();
-    } catch (UnsupportedEncodingException e) {
-      throw new StorageFailureException("Unsupported Encoding while getting program path", e);
+  /**
+   * Creates base config file that stores desired storage directory
+   * @param baseConfigPath
+   */
+  void setupBaseConfig(String baseConfigPath) {
+    boolean isSuccessful = createNewFile(baseConfigPath);
+    if (isSuccessful) {
+      writeToFile(programDirectory, baseConfigPath);
     }
   }
 
+  /**
+   * Creates folder to store application's data.
+   * This may not be the same with storage directory.
+   * @param basePath
+   */
   public void setupBase(String basePath) {
     programDirectory = basePath;
     isFirstTime = StorageHandler.createDirectory(programDirectory); // Create working folder
@@ -69,22 +85,45 @@ public class Session {
     setupBaseConfig(baseConfigPath);
   }
 
-  /* Checks if this is the first time a user use the program */
-  public boolean isFirstTime() {
-    return !StorageHandler.isDirectory(programDirectory);
+  /**
+   * Read storage directory from base.cfg file
+   * @param baseConfigPath
+   * @return
+   */
+  String getStorageDirectory(String baseConfigPath) {
+    try {
+      return StorageHandler.getStorageDirectory(baseConfigPath);
+    } catch (IOException e) {
+      throw new StorageFailureException(String.format(ERROR_FAIL_GET_STORAGE,
+          baseConfigPath), e);
+    }
   }
 
-  public void setStorageDirectory(String desiredPath, String baseConfigPath) {
-    String sanitizedPath = StorageHandler.sanitizePath(desiredPath);
-    writeToFile(sanitizedPath, baseConfigPath);
-    setupStorage(); // trigger setup of storage after deciding storage path
+  /*Creates data folder at storage directory*/
+  void setupDataFolder() {
+    createNewFile(userConfigPath);
+    createNewFile(dataPath);
   }
 
-  /* Commit changes to tasks to a temp file */
-  public void commit() {
-    writeToFile(StorageHandler.convertToJson(TasksManager.getManager()), tempPath);
+  void generateNewFile(String filePath) {
+    StorageHandler.deleteFile(filePath);
+    createNewFile(filePath);
   }
 
+  /*Initializes tasks manager with external user data stored in JSON*/
+  void initTasksManager() {
+    TasksManager retrievedData = getDataFromJson(dataPath);
+    if (retrievedData != null) {
+      tasksManager.sync(retrievedData);
+      IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
+    }
+    generateNewFile(dataPath);                                                  
+  }
+
+  /*Setup temporary file that records all changes*/
+  void setupTempPath(String tempPath) {
+    this.tempPath = tempPath;
+  }
 
   /* Needed to be separated from init to ensure user has chosen a storage location */
   public void setupStorage() {
@@ -98,29 +137,32 @@ public class Session {
     setupTempPath(StorageHandler.createTempFile(Constants.NAME_TEMP_DATA));
   }
 
-  public void setDataPath(String dataPath) {
-    this.dataPath = dataPath;
-  }
-
-  public String getPathInfo() {
-    return programDirectory + "\n" + storageDirectory + "\n" + baseConfigPath + "\n" + dataPath
-        + "\n" + userConfigPath;
-  }
-
-  void setupBaseConfig(String baseConfigPath) {
-    boolean isSuccessful = createNewFile(baseConfigPath);
-    if (isSuccessful) {
-      writeToFile(programDirectory, baseConfigPath);
+  /*Initialise basic paths where application is ran*/
+  void init() {
+    tasksManager = TasksManager.getManager();
+    try {
+      String basePath = StorageHandler.getJarPath() + Constants.NAME_USER_FOLDER;
+      setupBase(basePath);
+      setupStorage();
+    } catch (UnsupportedEncodingException e) {
+      throw new StorageFailureException(ERROR_ENCODING, e);
     }
   }
 
-  void setupDataFolder() {
-    createNewFile(userConfigPath);
-    createNewFile(dataPath);
+  /* Checks if this is the first time a user use the program */
+  public boolean isFirstTime() {
+    return !StorageHandler.isDirectory(programDirectory);
   }
 
-  void setupTempPath(String tempPath) {
-    this.tempPath = tempPath;
+  public void setStorageDirectory(String desiredPath, String baseConfigPath) {
+    String sanitizedPath = StorageHandler.sanitizePath(desiredPath);
+    writeToFile(sanitizedPath, baseConfigPath);
+    setupStorage(); // trigger setup of storage after deciding storage path
+  }
+
+  /* Commit changes to a temp file */
+  public void commit() {
+    writeToFile(StorageHandler.convertToJson(TasksManager.getManager()), tempPath);
   }
 
   // ===========================================================================
@@ -135,8 +177,8 @@ public class Session {
     try {
       StorageHandler.copyFiles(source, target);
     } catch (IOException e) {
-      throw new StorageFailureException(String.format("Unable to copy temp file from %s to "
-          + "overwrite %s", tempPath, dataPath), e);
+      throw new StorageFailureException(String.format(ERROR_COPY_FILES, 
+          tempPath, dataPath), e);
     }
   }
 
@@ -144,7 +186,7 @@ public class Session {
     try {
       StorageHandler.writeToFile(output, filePath);
     } catch (IOException e) {
-      throw new StorageFailureException(String.format("Failed to write \"%s\" to %s", output,
+      throw new StorageFailureException(String.format(ERROR_WRITING_FILES, output,
           filePath), e);
     }
   }
@@ -154,16 +196,7 @@ public class Session {
     try {
       return StorageHandler.createFile(filePath);
     } catch (IOException e) {
-      throw new StorageFailureException(String.format("Cannot create file %s", filePath), e);
-    }
-  }
-
-  String getStorageDirectory(String baseConfigPath) {
-    try {
-      return StorageHandler.getStorageDirectory(baseConfigPath);
-    } catch (IOException e) {
-      throw new StorageFailureException(String.format("Cannot get storage directory from file %s",
-          baseConfigPath), e);
+      throw new StorageFailureException(String.format(ERROR_CREATING_FILE, filePath), e);
     }
   }
 
@@ -175,33 +208,22 @@ public class Session {
           StorageHandler.readFromJson(reader, new TypeToken<TasksManager>() {}.getType());
       return retrievedData;
 
-    } catch (JsonParseException e) { // JSON file is corrupted
-      generateNewFile(dataPath); // Recreate empty file
-      throw new StorageFailureException("Corrupted JSON file.New JSON file created", e);
+    } catch (JsonParseException e) {                                            // JSON file is corrupted
+      generateNewFile(dataPath);                                                // Create empty JSON file
+      throw new StorageFailureException(ERROR_CORRUPTED_JSON, e);
 
     } catch (NullPointerException e) { // JSON file is missing
       createNewFile(dataPath);
-      throw new StorageFailureException("Missing JSON file.New JSON file created", e);
+      throw new StorageFailureException(ERROR_MISSING_JSON, e);
 
     } catch (IOException e) {
-      throw new StorageFailureException("Failed to read from JSON file", e);
+      throw new StorageFailureException(ERROR_READING_JSON, e);
     }
   }
 
-  void initTasksManager() {
-    TasksManager retrievedData = getDataFromJson(dataPath);
-    if (retrievedData != null) {
-      tasksManager.sync(retrievedData);
-      IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
-    }
-    /* @TODO replace with backup */
-    generateNewFile(dataPath); // Recreate empty file
-  }
-
-  void generateNewFile(String filePath) {
-    StorageHandler.deleteFile(filePath);
-    createNewFile(filePath);
-  }
+  //===========================================================================
+  // Testing
+  //===========================================================================
 
   public void loadCustomJSON(String dataPath) {
     TasksManager retrievedData = getDataFromJson(dataPath);
@@ -211,6 +233,10 @@ public class Session {
       List<Task> result = TaskUtils.getTasksList(tasksManager.getPendingTasks());
       RaijinEventBus.getInstance().post(new SetCurrentDisplayEvent(result));
     }
+  }
+
+  public void setDataPath(String dataPath) {
+    this.dataPath = dataPath;
   }
 
 }
