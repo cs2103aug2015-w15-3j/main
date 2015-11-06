@@ -285,11 +285,8 @@ public class Constants {
   public static final String KEY_PASTE_HELP = "Ctrl + V";
   public static final String KEY_PASTE_HELP_DESC = "Keyboard shortcut for Paste";
   
-  public static final String KEY_TAB_HELP = "   ";
-  public static final String KEY_TAB_HELP_DESC = "   ";
- 
-  public static final String KEY_SPACE_HELP = "   ";
-  public static final String KEY_SPACE_HELP_DESC = "   ";
+  public static final String KEY_TAB_HELP = "tab";
+  public static final String KEY_TAB_HELP_DESC = "Press to autocomplete your command";
 
   public static final String KEY_VIEW_DOWN_HELP = "F2";
   public static final String KEY_VIEW_DOWN_HELP_DESC = "Keyboard shortcut for to "
@@ -299,20 +296,14 @@ public class Constants {
   public static final String KEY_VIEW_UP_HELP_DESC = "Keyboard shortcut for to "
 	  		+ "toggle up between all, today, tomorrow and future pending tasks";
    
-  public static final String KEY_PLAY_HELP = "   ";
-  public static final String KEY_PLAY_HELP_DESC = "    ";
+  public static final String KEY_MINMAX_HELP = "Alt + Esc";
+  public static final String KEY_MINMAX_HELP_DESC = "To minimise or maximise the window";
  
-  public static final String KEY_STOP_HELP = "     ";
-  public static final String KEY_STOP_HELP_DESC = "    ";
-  
-  public static final String KEY_MINMAX_HELP = "    ";
-  public static final String KEY_MINMAX_HELP_DESC = "    ";
- 
-  public static final String SCROLL_UP_HELP = "     ";
-  public static final String SCROLL_UP_HELP_DESC = "    ";
+  public static final String SCROLL_UP_HELP = "Pg Up";
+  public static final String SCROLL_UP_HELP_DESC = "To scroll up the display panel";
 
-  public static final String SCROLL_DOWN_HELP = "    ";
-  public static final String SCROLL_DOWN_HELP_DESC = "     ";
+  public static final String SCROLL_DOWN_HELP = "Pg Down";
+  public static final String SCROLL_DOWN_HELP_DESC = "To scroll down the display panel";
 
   //@@author A0112213E
  //===========================================================================
@@ -339,17 +330,9 @@ public class Constants {
 
   public static final KeyCodeCombination KEY_TAB = new KeyCodeCombination(KeyCode.ENTER);
 
-  public  static final KeyCodeCombination KEY_SPACE = new KeyCodeCombination(KeyCode.SPACE);
-
   public  static final KeyCodeCombination KEY_VIEW_DOWN = new KeyCodeCombination(KeyCode.F2);
 
   public  static final KeyCodeCombination KEY_VIEW_UP = new KeyCodeCombination(KeyCode.F1);
-
-  public  static final KeyCodeCombination KEY_PLAY = new KeyCodeCombination(KeyCode.P, 
-      KeyCodeCombination.CONTROL_DOWN);
-
-  public  static final KeyCodeCombination KEY_STOP = new KeyCodeCombination(KeyCode.S, 
-      KeyCodeCombination.CONTROL_DOWN);
 
   public  static final KeyCodeCombination KEY_MINMAX = new KeyCodeCombination(KeyCode.ESCAPE, 
       KeyCodeCombination.ALT_DOWN);
