@@ -18,15 +18,33 @@ import raijin.common.utils.TaskUtils;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 
+/**
+ * Searches tasks based on keywords, tags and priority
+ * @author papa
+ *
+ */
 public class SearchCommandRunner extends CommandRunner {
 
   private Task currentTask;
   private String inputPriority;
-  private static final int MAX_TAGS = 3;            //Maximum amount of tags displayed
-  private static final int MAX_KEYWORDS = 6;        //Maximum keyword of tags displayed
+  private static final String NO_ARGUMENT = "No argument(s) given to search";
   private static final String DISPLAY_MESSAGE = "Search results: %d found";
   private static final String INITIAL_FEEDBACK_MESSAGE = "Search keywords: ";
   private static final String MESSAGE_TEMPLATE = "\"%s\", ";
+
+  /**
+   * Additional filter to search. If no priority given, default to true
+   * @param task
+   * @return
+   */
+  boolean handlePriority(Task task) {
+    if (inputPriority == null) {
+      return true;
+    } else {
+      return task.getPriority().equals(inputPriority);
+    }
+  }
+
 
   void createTask(ParsedInput input) {
     currentTask = new Task(input.getName(), idManager.getId(), input);
@@ -34,30 +52,23 @@ public class SearchCommandRunner extends CommandRunner {
 
   Status createSuccessfulStatus(ArrayList<String> keywords) {
     StringBuilder strBuilder = new StringBuilder(INITIAL_FEEDBACK_MESSAGE);
+
     for (String keyword : keywords) {
       strBuilder.append(String.format(MESSAGE_TEMPLATE, keyword));
     }
+
     String feedback = strBuilder.toString();
     feedback = feedback.substring(0, feedback.length()-2);
     return new Status(feedback);
   }
 
-  boolean isMatchedKeywords(ArrayList<String> source, Task task) {
-    if (source.get(0) == "") {                          //Check if keyword is empty   
-      return matchOnlyTags(task, currentTask.getTags());
-    } else if (currentTask.getTags().isEmpty()){
-      return matchOnlyKeyword(source, task);
-    } else {
-      return matchOnlyKeyword(source, task) && matchOnlyTags(task, currentTask.getTags());
-    }
-
-  }
-
+  /*checks if the task matches tag query*/
   public boolean matchOnlyTags(Task task, TreeSet<String> tags) {
     return handlePriority(task) && CollectionUtils.intersection(
         tags, task.getTags()).size() == tags.size();
   }
 
+  /*checks if the task matched keyword(s) query*/
   public boolean matchOnlyKeyword(ArrayList<String> source, Task task) {
     ArrayList<String> target = task.getKeywords();
     target = (ArrayList<String>) target.stream().map(k -> k.toLowerCase())
@@ -68,17 +79,38 @@ public class SearchCommandRunner extends CommandRunner {
         target,source).size() == source.size();
   }
 
+  boolean isMatchedKeywords(ArrayList<String> source, Task task) {
+    if (source.get(0) == "") {                                                  //Checks if keywords are empty
+      return matchOnlyTags(task, currentTask.getTags());                        
+    } else if (currentTask.getTags().isEmpty()) {                               //Checks if tags are empty
+      return matchOnlyKeyword(source, task);
+    } else {
+      return matchOnlyKeyword(source, task) && matchOnlyTags(task, currentTask.getTags());
+    }
+
+  }
+
+  /*Checks if any argument is given to search*/
   boolean isInvalidInput(ParsedInput input) {
     return input.getNames().isEmpty() && input.getTags().isEmpty();
+  }
+
+  List<Task> getTasksWithMatchedKeyword(ArrayList<Task> pendingTasks) {
+    ArrayList<String> keywords = currentTask.getKeywords();
+    List<Task> filtered = pendingTasks.stream().filter(
+        x -> isMatchedKeywords(keywords, x)).collect(Collectors.toList());
+    return filtered;
   }
 
   @Override
   protected Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
     inputPriority = input.getPriority();            //Update priority
     List<Task> filtered = new ArrayList<Task>();
+
     if (isInvalidInput(input)) {
-      return new Status("No argument given to search", false);
+      return new Status(NO_ARGUMENT, false);
     }
+
     HashMap<Integer, Task> pendingTasks = tasksManager.getPendingTasks();
     createTask(input);
     ArrayList<Task> tempList = (ArrayList<Task>) TaskUtils.getTasksList(pendingTasks);
@@ -88,21 +120,6 @@ public class SearchCommandRunner extends CommandRunner {
     return createSuccessfulStatus(currentTask.getKeywords());
   }
 
-
-  List<Task> getTasksWithMatchedKeyword(ArrayList<Task> pendingTasks) {
-    ArrayList<String> keywords = currentTask.getKeywords();
-    List<Task> filtered = pendingTasks.stream().filter(
-        x -> isMatchedKeywords(keywords, x)).collect(Collectors.toList());
-    return filtered;
-  }
-
-  boolean handlePriority(Task task) {
-    if (inputPriority == null) {
-      return true;
-    } else {
-      return task.getPriority().equals(inputPriority);
-    }
-  }
 
 
 }
