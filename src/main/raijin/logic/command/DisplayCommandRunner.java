@@ -22,12 +22,11 @@ import raijin.storage.api.TasksManager;
 public class DisplayCommandRunner extends CommandRunner {
 
 	// Display options
-	private static final String TYPE_ALL = "a"; // display ALL PENDING
-	private static final String TYPE_PENDING = "p"; // display PENDING (for a
-													// day)
-	private static final String TYPE_COMPLETED = "c"; // display COMPLETED
-	private static final String TYPE_FLOATING = "f"; // display FLOATING
-	private static final String TYPE_OVERDUE = "o"; // display OVERDUE
+	private static final String TYPE_ALL = "a"; 		// display ALL PENDING
+	private static final String TYPE_PENDING = "p"; 	// display PENDING (for some day)
+	private static final String TYPE_COMPLETED = "c"; 	// display COMPLETED
+	private static final String TYPE_FLOATING = "f"; 	// display FLOATING
+	private static final String TYPE_OVERDUE = "o"; 	// display OVERDUE
 
 	// Head messages
 	private static final String HEADMESSAGE_DEFAULT_PENDING = "Tasks pending for...";
@@ -111,8 +110,7 @@ public class DisplayCommandRunner extends CommandRunner {
 							eventbus.post(new SetCurrentDisplayEvent(relevant, message));
 						}
 	
-						// User is only querying for a specific date that is not
-						// today.
+						// User is only querying for a specific date that is not today.
 					} else {
 						message += " & next day";
 	

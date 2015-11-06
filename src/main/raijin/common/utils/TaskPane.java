@@ -41,17 +41,15 @@ public class TaskPane extends StackPane {
 	private ArrayList<Task> completedList = new ArrayList<Task>(TasksManager.getManager()
 			                                                    .getCompletedTasks().values());
 	
-	public TaskPane() {
-		
-	}
+	/* Constructor for Unit Tests */
+	public TaskPane() {}
 	
+	/* Constructor for Tasks*/
 	public TaskPane (int displayedNum, Task task) {
 		id = new Label(Integer.toString(displayedNum));
-		
 		taskName = new Label((task.getName().length() > TASK_DISPLAY_NAME_LIMIT 
 							  ? task.getName().substring(0,TASK_DISPLAY_NAME_LIMIT) + "..."
 							  : task.getName()));
-		
 		tagsValue = new Label(retrieveTags(task));
 		
 		InnerShadow innerShadow = new InnerShadow();
@@ -96,18 +94,15 @@ public class TaskPane extends StackPane {
 			datesBox.getChildren().addAll(startValue);
 		}
 		
+		datesBox.setPrefHeight(10);
+		
 		HBox idBox = new HBox();
 		idBox.setPrefWidth(80);
 		idBox.getChildren().addAll(id);
 		
-		HBox fillerBox = new HBox();
-		fillerBox.setPrefWidth(10);
-		
-		HBox taskBox = new HBox();
-		taskBox.setPadding(new Insets(3, 0, 3, 0));
-		taskBox.getChildren().addAll(taskName);
-		
-		datesBox.setPrefHeight(10);
+		HBox taskNameBox = new HBox();
+		taskNameBox.setPadding(new Insets(3, 0, 3, 0));
+		taskNameBox.getChildren().addAll(taskName);
 		
 		HBox tagsBox = new HBox();
 		tagsBox.setPadding(new Insets(3, 0, 5, 0));
@@ -116,7 +111,7 @@ public class TaskPane extends StackPane {
 		
 		VBox centre = new VBox();
 		centre.setPrefWidth(550);
-		centre.getChildren().addAll(taskBox, datesBox, tagsBox);
+		centre.getChildren().addAll(taskNameBox, datesBox, tagsBox);
 		
 		HBox overdueBox = new HBox();
 		overdueBox.setPrefWidth(60);
@@ -124,7 +119,9 @@ public class TaskPane extends StackPane {
 		overdueBox.setPadding(new Insets(25, 0, 0, 0));
 
 		HBox pane = new HBox();
+		pane.getChildren().addAll(idBox, centre);
 		
+		// Styling the tags
 		if (task.getPriority().equals(Constants.PRIORITY_HIGH)) {
 			this.setStyle("-fx-background-color: " + highPriorityColour + ";");
 			tagsValue.setTextFill(Color.rgb(178, 36, 0));
@@ -135,9 +132,8 @@ public class TaskPane extends StackPane {
 			this.setStyle("-fx-background-color: " + lowPriorityColour + ";");
 			tagsValue.setTextFill(Color.rgb(110, 110, 110));
 		}
-			
-		pane.getChildren().addAll(idBox, centre);
 		
+		// Add an indicator for overdue if task is overdue
 		if (displayInstance.isOverdue(task) && !completedList.contains(task)) {
 			pane.getChildren().add(overdueBox);
 		}
@@ -159,6 +155,7 @@ public class TaskPane extends StackPane {
 		
 	}
 	
+	/* Constructor for non-tasks */
 	public TaskPane (String message) {
 		Label msg = new Label(message);
 		DropShadow dropShadow = new DropShadow();
