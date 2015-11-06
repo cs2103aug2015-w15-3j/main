@@ -1,6 +1,6 @@
 //@@author A0112213E
 
-package raijin.common.utils;
+package raijin.logic.realtime;
 
 import static org.junit.Assert.*;
 
@@ -17,8 +17,10 @@ import com.google.gson.stream.JsonReader;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
+import raijin.common.utils.TaskUtils;
 import raijin.logic.parser.ParsedInput;
 import raijin.logic.parser.ParsedInputTest;
+import raijin.logic.realtime.AutoComplete;
 import raijin.storage.api.TasksManager;
 import raijin.storage.handler.StorageHandler;
 

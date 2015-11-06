@@ -1,6 +1,6 @@
 //@@author A0112213E
 
-package raijin.common.utils;
+package raijin.logic.realtime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +29,8 @@ import raijin.common.eventbus.events.SetTimeSlotEvent;
 import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.exception.FailedToParseException;
 import raijin.common.exception.IllegalCommandArgumentException;
+import raijin.common.utils.RaijinLogger;
+import raijin.common.utils.TaskUtils;
 import raijin.logic.parser.ParsedInput;
 import raijin.logic.parser.SimpleParser;
 import raijin.storage.api.TasksManager;
