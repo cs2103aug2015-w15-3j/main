@@ -266,7 +266,7 @@ public class Constants {
   //================
   // keyboard shortcuts for help
   //================
-  
+  //@@author A0129650E
   public static final String KEY_UNDO_HELP = "Ctrl + Z";
   public static final String KEY_UNDO_HELP_DESC = "Keyboard shortcut for Undo";
   
@@ -314,6 +314,7 @@ public class Constants {
   public static final String SCROLL_DOWN_HELP = "    ";
   public static final String SCROLL_DOWN_HELP_DESC = "     ";
 
+  //@@author A0112213E
  //===========================================================================
   // Keyboard shortcuts
   //===========================================================================
