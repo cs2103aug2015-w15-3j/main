@@ -134,6 +134,8 @@ public class Constants {
   //===========================================================================
   //@@author A0112213E
   
+  public static final int MAX_NAME_LENGTH = 80;
+
   public enum CommandParam {
    ID, NAME, DATETIME, PRIORITY, HELPEROPTION, SUBTASKOF
   }

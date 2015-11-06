@@ -4,6 +4,8 @@ package raijin.logic.command;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang.StringUtils;
+
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
@@ -20,8 +22,9 @@ import raijin.logic.parser.ParsedInput;
  */
 public class AddCommandRunner extends CommandRunner implements UndoableRedoable {
 
-  private static final String SUCCESS_MSG = "You have added the task(s) successfully";
-  private static final String FAILURE_MSG = "Duplicate task(s) not added";
+  static final String SUCCESS_SINGLE_MSG = "You have added %s successfully";
+  static final String SUCCESS_MSG = "You have added the tasks successfully";
+  static final String FAILURE_MSG = "Duplicate task(s) not added";
   private ArrayList<Task> listOfTasks = new ArrayList<Task>();
   private int addedTasks = 0;
 
@@ -33,10 +36,22 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
     }
   }
 
+  /*Generates status for single task*/
+  Status createSingleStatus(String taskName) {
+    if (taskName.length() > Constants.MAX_NAME_LENGTH) {
+      taskName = StringUtils.left(listOfTasks.get(0).getName(), 
+          Constants.MAX_NAME_LENGTH) + "...";
+    }
+    return new Status(String.format(SUCCESS_SINGLE_MSG, taskName));
+  }
+
   /*Generates status of command execution*/
   Status createStatus() {
     /*Compares number of tasks added with those specified by user*/
     if (addedTasks == listOfTasks.size()) {                 
+      if (listOfTasks.size() == 1) {
+        return createSingleStatus(listOfTasks.get(0).getName());
+      }
       return new Status(SUCCESS_MSG);
     } else {
       return new Status(FAILURE_MSG, false);
