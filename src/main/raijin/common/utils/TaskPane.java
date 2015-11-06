@@ -22,9 +22,12 @@ import raijin.logic.command.DisplayCommandRunner;
 import raijin.storage.api.TasksManager;
 
 public class TaskPane extends StackPane {
-  private String highPriorityColour = "#FF9F94"; // red
-  private String midPriorityColour = "#AAE6FF"; // blue
-  private String lowPriorityColour = "#E6E6E6"; // grey
+  private String highPriorityColour = "#FF9F94";    // red
+  private String highPriorityTimeSlot = "#CC0000";  // dark red
+  private String midPriorityColour = "#AAE6FF";     // blue
+  private String midPriorityTimeSlot = "#0066CC";   // dark blue
+  private String lowPriorityColour = "#E6E6E6";     // grey
+  private String lowPriorityTimeSlot = "#202020";   // dark grey
 
   private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
   private final int TASK_DISPLAY_NAME_LIMIT = 69;
@@ -70,7 +73,7 @@ public class TaskPane extends StackPane {
     if (taskType.equals(Constants.TYPE_TASK.EVENT)) {
 
       if (task.getDateTime().getEndDate().equals(task.getDateTime().getStartDate())) {
-        setSingleDayEvent(task.getDateTime(), datesBox);
+        setSingleDayEvent(task, datesBox);
       } else {
         String startDate = task.getDateTime().getStartDate().format(dateFormat);
         String startTime =
@@ -195,7 +198,18 @@ public class TaskPane extends StackPane {
     return duration / MAX_EVENT_DURATION * MAX_TIMESLOT_WIDTH;
   }
 
-  void setSingleDayEvent(DateTime dateTime, HBox datesBox) {
+  String getTimeSlotColor(String priority) {
+    if (priority.equals(Constants.PRIORITY_HIGH)) {
+      return highPriorityTimeSlot;
+    } else if (priority.equals(Constants.PRIORITY_LOW)) {
+      return lowPriorityTimeSlot;
+    } else {
+      return midPriorityTimeSlot;
+    }
+  }
+
+  void setSingleDayEvent(Task task, HBox datesBox) {
+    DateTime dateTime = task.getDateTime();
     String endDate = dateTime.getEndDate().format(dateFormat).toString();
     String startTime = dateTime.getStartTime().toString();
     String endTime = dateTime.getEndTime().toString();
@@ -204,11 +218,16 @@ public class TaskPane extends StackPane {
     eventDate.setPadding(new Insets(0, 30, 0, 0));
     Label startTimeLabel = new Label(startTime);
     startTimeLabel.setPadding(new Insets(0, 10, 0, 0));
+    startTimeLabel.setStyle("-fx-font-weight: bold");
     Label timeSlot = new Label();
     timeSlot.setPrefHeight(10);
     timeSlot.setPrefWidth(getWidthOfTimeSlot(dateTime));
-    timeSlot.setStyle("-fx-background-color: #00cc00");
+    String color = getTimeSlotColor(task.getPriority());
+    timeSlot.setStyle("-fx-border-radius: 5 5 5 5; "
+                    + "-fx-background-radius: 5 5 5 5; " 
+                    + "-fx-background-color: " + color);
     Label endTimeLabel = new Label(endTime);
+    endTimeLabel.setStyle("-fx-font-weight: bold");
     endTimeLabel.setPadding(new Insets(0, 0, 0, 10));
 
     datesBox.getChildren().addAll(startByOn, eventDate, startTimeLabel, 
