@@ -2,37 +2,15 @@
 
 package raijin.ui;
 
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextFlow;
-
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import edu.emory.mathcs.backport.java.util.Collections;
-import raijin.common.datatypes.Constants;
-import raijin.common.datatypes.DateTime;
-import raijin.common.datatypes.HelpMessage;
-import raijin.common.eventbus.RaijinEventBus;
-import raijin.common.eventbus.events.KeyPressEvent;
-import raijin.common.eventbus.events.ScrollEvent;
-import raijin.common.eventbus.events.SetFeedbackEvent;
-import raijin.common.eventbus.events.SetFailureEvent;
-import raijin.common.eventbus.events.SetHelpCommandEvent;
-import raijin.common.eventbus.events.SetInputEvent;
-import raijin.common.eventbus.events.SetTimeSlotEvent;
-import raijin.common.eventbus.events.UndoRedoEvent;
-import raijin.common.eventbus.subscribers.MainSubscriber;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -43,8 +21,32 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
+import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.DateTime;
+import raijin.common.datatypes.HelpMessage;
+import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.KeyPressEvent;
+import raijin.common.eventbus.events.ScrollEvent;
+import raijin.common.eventbus.events.SetFailureEvent;
+import raijin.common.eventbus.events.SetFeedbackEvent;
+import raijin.common.eventbus.events.SetHelpCommandEvent;
+import raijin.common.eventbus.events.SetInputEvent;
+import raijin.common.eventbus.events.SetTimeSlotEvent;
+import raijin.common.eventbus.events.UndoRedoEvent;
+import raijin.common.eventbus.subscribers.MainSubscriber;
 
 public class InputController extends BorderPane {
+  private static final String INPUT_COMMAND_BAR_LAYOUT_FXML =
+		      "resource/layout/InputController.fxml";
+  private static final String INPUT_FONT = "resource/styles/DejaVuSans.ttf";
+	
   @FXML
   public TextField inputCommandBar;
 
@@ -60,17 +62,12 @@ public class InputController extends BorderPane {
   @FXML
   private VBox feedbackVBox;
 
-  private static final String INPUT_COMMAND_BAR_LAYOUT_FXML =
-      "resource/layout/InputController.fxml";
-
-  private static final String INPUT_FONT = "resource/styles/DejaVuSans.ttf";
-
   private Raijin mainApp;
   private RaijinEventBus eventbus = RaijinEventBus.getInstance();
+  
   /* Stores previously entered command */
   private ArrayList<String> commandHistory = new ArrayList<String>();
   private static int upCount = 0; // Count number of UP pressed
-  private Clipboard clipboard; // System clipboard
   private javafx.scene.input.Clipboard fxClipboard;
 
   private Font inputFont;
@@ -87,10 +84,13 @@ public class InputController extends BorderPane {
 
     this.mainApp = mainApp;
     this.setStyle("-fx-background-color:white;");
-    clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    
+    Toolkit.getDefaultToolkit().getSystemClipboard();
     fxClipboard = javafx.scene.input.Clipboard.getSystemClipboard();
+    
     setupStyles();
     handleAllEvents();
+    
     helpBar.setVisible(false);
   }
 

@@ -15,18 +15,29 @@ import javafx.scene.text.Text;
  */
 public class HelpMessage {
 
+  private static final Color HELP_FORMAT_COLOR = Color.rgb(142, 0, 214);
   private static final Color COMMAND_FORMAT_COLOR = Color.rgb(51, 153, 255);
   private static final Color USER_INPUT_COLOR = Color.rgb(224, 224, 224);
   private static final Color ERROR_COLOR = Color.rgb(255, 55, 55);
   private static final Color DESCRIPTION_COLOR = Color.WHITE;
   private static final String DEFAULT_FONT_SIZE = "15";
+  private static final String HELP_HEADER_FONT_SIZE = "25";
 
   /*acceptable format for a command*/
   public Text commandFormat;    
   /*function of a command or error message when there is an error with parsing*/
   public Text description;
+  /*Text for help header in help Menu*/
+  public Text help;
+  
   public List<Text> helpMessage = new ArrayList<Text>();
-
+  
+  public HelpMessage(String help) {
+	  this.help = createText(help, HELP_FORMAT_COLOR);
+	  this.help.setStyle("-fx-font-size: " + HELP_HEADER_FONT_SIZE + ";");
+	  helpMessage.add(this.help);
+  }
+  
   public HelpMessage(String commandFormat, String description) {
     this.commandFormat = createText(commandFormat, COMMAND_FORMAT_COLOR);
     this.description = createText("\n" + description, DESCRIPTION_COLOR);
