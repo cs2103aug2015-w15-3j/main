@@ -84,6 +84,7 @@ public class Raijin extends Application implements NativeKeyListener {
 		  "resource/styles/helpUndoRedo.jpg",
 		  "resource/styles/keyboardShort.jpg"};	
   private static final String CSS_LOCATION = "resource/styles/RaijinStyle.css";
+  private static final String CSS_LOCATION_HELP = "resource/styles/Help.css";
   private static final double MIN_WIDTH = 550.0;
   private static final double MIN_HEIGTH = 650.0;
 
@@ -166,9 +167,6 @@ public class Raijin extends Application implements NativeKeyListener {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    String CSS = getClass().getResource(CSS_LOCATION).toExternalForm();
-    rootLayout.getStylesheets().add(CSS);
   }
 
   private void initLogic() throws FileNotFoundException {
@@ -202,6 +200,9 @@ public class Raijin extends Application implements NativeKeyListener {
     this.displayController = new DisplayController();
     this.sidebarController = new SidebarController(this.logic);
     ((InputController) inputController).timeSlot.setVisible(false);
+    
+    String CSS = getClass().getResource(CSS_LOCATION).toExternalForm();
+    displayController.getStylesheets().add(CSS);
   }
 
   //
@@ -257,7 +258,9 @@ public class Raijin extends Application implements NativeKeyListener {
 	  allCommand.add(Constants.REDO);
 	  allCommand.add(Constants.SEARCH);
 	  allCommand.add(Constants.SET);
+	 
 	  allCommand.add("Keyboard Shortcuts");
+	  
 	  allCommand.add(Constants.KEY_UNDO_HELP);
 	  allCommand.add(Constants.KEY_REDO_HELP);
 	  allCommand.add(Constants.KEY_CLEAR_HELP);
@@ -275,6 +278,7 @@ public class Raijin extends Application implements NativeKeyListener {
 	  allCommand.add(Constants.SCROLL_DOWN_HELP);
 	  
 	  ArrayList<String> allDescription = new ArrayList<String>();
+	 
 	  allDescription.add(Constants.ADD_FLOATING_DESC + "\n\n");
 	  allDescription.add(Constants.ADD_SPECIFIC_DESC + "\n\n");
 	  allDescription.add(Constants.ADD_EVENT_SAME_DATE_DESC + "\n\n");
@@ -288,7 +292,9 @@ public class Raijin extends Application implements NativeKeyListener {
 	  allDescription.add(Constants.REDO_DESC + "\n\n");
 	  allDescription.add(Constants.SEARCH_DESC + "\n\n");
 	  allDescription.add(Constants.SET_DESC + "\n\n");
+	 
 	  allDescription.add("  \n");
+	  
 	  allDescription.add(Constants.KEY_UNDO_HELP_DESC + "\n\n");
 	  allDescription.add(Constants.KEY_REDO_HELP_DESC + "\n\n");
 	  allDescription.add(Constants.KEY_CLEAR_HELP_DESC + "\n\n");
@@ -308,26 +314,19 @@ public class Raijin extends Application implements NativeKeyListener {
 	  StackPane helpBase = new StackPane();
 	 
 	  helpContain = new ListView<TextFlow>();
-	  ObservableList<Text> helpItems = FXCollections
-		        .observableArrayList();
 	  
-	  HelpMessage helpHeader = new HelpMessage("Help", "  \n");
-	
-	  helpItems.addAll(helpHeader.helpMessage);
-	
+	  HelpMessage helpHeader = new HelpMessage("Help\n");
+	  helpBar.getChildren().addAll(helpHeader.helpMessage);
+	  
 	  for (int cmdAndDescripFormatId = 1; 
 			  cmdAndDescripFormatId < allCommand.size(); 
 			  cmdAndDescripFormatId++) {
-		  if (allCommand.get(cmdAndDescripFormatId).equals("Keyboard Shortcuts \n")) {
-			  HelpMessage keyboardHeader = new HelpMessage(allCommand.get(cmdAndDescripFormatId), allDescription.get(cmdAndDescripFormatId));
-			  helpItems.addAll(keyboardHeader.helpMessage);
+		  if (allCommand.get(cmdAndDescripFormatId).equals("Keyboard Shortcuts")) {
+			  HelpMessage keyboardHeader = new HelpMessage("Keyboard Shortcuts\n");
 			  helpBar.getChildren().addAll(keyboardHeader.helpMessage);
 		  } else {
 			  HelpMessage fullMessage = new HelpMessage(allCommand.get(cmdAndDescripFormatId), allDescription.get(cmdAndDescripFormatId));
-			  System.out.println(fullMessage.helpMessage);
-			  helpItems.addAll(fullMessage.helpMessage);
-			  helpBar.getChildren().addAll(fullMessage.helpMessage);
-			  
+			  helpBar.getChildren().addAll(fullMessage.helpMessage);  
 		  }
      }
 	  
@@ -335,24 +334,26 @@ public class Raijin extends Application implements NativeKeyListener {
 	  
 	  helpContain.setOnMouseDragged(new EventHandler<MouseEvent>() {
 	         public void handle (MouseEvent me) {   
-	        	 System.out.println("this is " + dragX);
-	             helpStage.setX(me.getScreenX() - dragX);
+	        	 helpStage.setX(me.getScreenX() - dragX);
 	             helpStage.setY(me.getScreenY() - dragY);
 	         }
 	      });
 	  
 	  helpContain.setOnMousePressed(new EventHandler<MouseEvent>() {
 	  		public void handle (MouseEvent me) {
-	  			System.out.println(me.getScreenX());
-	  			System.out.println(helpStage.getX());
             dragX = me.getScreenX() - helpStage.getX();
             dragY = me.getScreenY() - helpStage.getY();
          }
       });
-      
-      helpBase.getChildren().add(helpContain);
-      
+	  String CSS_HELP = getClass().getResource(CSS_LOCATION_HELP).toExternalForm();
+	  helpBase.getStylesheets().add(CSS_HELP);
 	  Scene dialogScene = new Scene(helpBase, 800, 600);
+	  helpBar.setStyle("-fx-background-color: #333332");
+	  helpBar.setPrefWidth(700);
+	  
+	 helpBase.getChildren().add(helpContain);
+      
+	  
 	  helpStage.setScene(dialogScene);
 	  helpStage.show();
   }
