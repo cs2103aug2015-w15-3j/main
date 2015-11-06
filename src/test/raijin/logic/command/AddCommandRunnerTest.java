@@ -99,19 +99,7 @@ public class AddCommandRunnerTest {
         name("submit op2 to ms lee").dateTime(new DateTime("19/09/2015")).createParsedInput();
     tasksManager.addPendingTask(new Task(input.getName(), IDManager.getIdManager().getId(), input));
     Status status = addTask("submit op2 to ms lee", new DateTime("19/09/2015"));
-    assertEquals(String.format(Constants.FEEDBACK_ADD_FAILURE, "submit op2 to ms lee"), status.getFeedback());
-  }
-
-  @Test
-  public void isMultipleTasks_MultipleTasks_ReturnTrue() {
-    //Setup multiple tasks
-    TreeSet<String> testNames = new TreeSet<String>();
-    testNames.add("I am cute");
-    testNames.add("wash batu");
-    testNames.add("watch monty");
-    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD).
-        name(testNames).priority("h").createParsedInput();
-    assertTrue(addCommandRunner.isMultipleTasks(input));
+    assertEquals("Duplicate task(s) not added", status.getFeedback());
   }
 
   @Test
@@ -165,7 +153,7 @@ public class AddCommandRunnerTest {
         name(testNames).priority("h").createParsedInput();
     
     Status status = addCommandRunner.execute(input);
-    String expected = "You have added the task(s) successfully";
+    String expected = "Duplicate task(s) not added";
     assertEquals(expected, status.getFeedback());
   }
   

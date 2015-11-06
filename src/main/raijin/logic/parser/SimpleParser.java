@@ -28,17 +28,17 @@ public class SimpleParser implements ParserInterface {
     wordsOfInput = userInput.trim().split("\\s+");
     
     try {
-      if (isFirstWord("add")) {
+      if (isFirstWord("add|\\+")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.ADD);
         builder = new AddParser(builder, wordsOfInput, 0).process();
-      } else if (isFirstWord("edit")) {
+      } else if (isFirstWord("edit|change")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EDIT);
         builder = new EditParser(builder, wordsOfInput).process();
-      } else if (isFirstWord("delete")) {
+      } else if (isFirstWord("delete|del")) {
         builder = new DeleteParser(wordsOfInput).process();
-      } else if (isFirstWord("done")) {
+      } else if (isFirstWord("done|finish")) {
         builder = new DoneParser(wordsOfInput).process();
-      } else if (isFirstWord("display")) {
+      } else if (isFirstWord("display|show")) {
         builder = new DisplayParser(wordsOfInput).process();
       } else if (isFirstWord("help")) { //TODO: Specific help commands.
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.HELP);
@@ -50,7 +50,7 @@ public class SimpleParser implements ParserInterface {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT);
       } else if (isFirstWord("set")) {
         builder = new SetParser(wordsOfInput).process();
-      } else if (isFirstWord("search")) {
+      } else if (isFirstWord("search|find")) {
         builder = new SearchParser(wordsOfInput).process();
       } else {
         throw new IllegalCommandException(Constants.FEEDBACK_INVALID_CMD, wordsOfInput[0]);
@@ -71,7 +71,7 @@ public class SimpleParser implements ParserInterface {
    * @return        boolean true or false whether it contains the word.
    */
   public boolean isFirstWord(String word) {
-    return wordsOfInput[0].toLowerCase().equals(word.toLowerCase());
+    return wordsOfInput[0].toLowerCase().matches(word);
   }
   
 }
