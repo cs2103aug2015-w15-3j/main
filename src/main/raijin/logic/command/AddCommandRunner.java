@@ -13,37 +13,48 @@ import raijin.logic.api.CommandRunner;
 import raijin.logic.api.UndoableRedoable;
 import raijin.logic.parser.ParsedInput;
 
+/**
+ * Command to add task(s)
+ * @author papa
+ *
+ */
 public class AddCommandRunner extends CommandRunner implements UndoableRedoable {
 
-  private Task currentTask;                                        //First task 
+  private static final String SUCCESS_MSG = "You have added the task(s) successfully";
+  private static final String FAILURE_MSG = "Duplicate task(s) not added";
   private ArrayList<Task> listOfTasks = new ArrayList<Task>();
   private int addedTasks = 0;
 
+  /*Generates task object from parsed user input*/
   void createTasks(ParsedInput input) {
     listOfTasks.clear();
     for (String name : input.getNames()) {
       listOfTasks.add(new Task(name, idManager.getId(), input));
     }
-    currentTask = listOfTasks.get(0);
   }
 
+  /*Generates status of command execution*/
   Status createStatus() {
-    if (addedTasks > 0) {
-      return new Status("You have added the task(s) successfully");
+    /*Compares number of tasks added with those specified by user*/
+    if (addedTasks == listOfTasks.size()) {                 
+      return new Status(SUCCESS_MSG);
     } else {
-      return new Status("Some task(s) already exist", false);
+      return new Status(FAILURE_MSG, false);
     }
   }
 
   public Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
     createTasks(input);
+
     for (Task task : listOfTasks) {
+      /*Adds a task if it is not a duplicate*/
       if (!tasksManager.getPendingTasks().containsValue(task)) {
         addedTasks++;
         tasksManager.addPendingTask(task);
       }
     }
 
+    /*Push command to undo stack provided one task can be added successfully*/
     if (addedTasks > 0) {
       history.pushCommand(this);
     }
@@ -54,6 +65,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
   public void undo() throws UnableToExecuteCommandException {
     for (Task task : listOfTasks) {
       logger.info("Undoing task id {} with content {}", task.getId(), task.getName());
+
       try {
         tasksManager.deletePendingTask(task.getId());
       } catch (NoSuchTaskException e) {
@@ -64,14 +76,12 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
 
   public void redo() {
     for (Task task : listOfTasks) {
-      task.setId(idManager.getId()); // Previous id may be used by other task
+      /*Need to get new id as previous id may be used by other task*/
+      task.setId(idManager.getId()); 
       logger.info("Re-adding task id {} with content {}", task.getId(),
           task.getName());
       tasksManager.addPendingTask(task);
     }
   }
 
-  boolean isMultipleTasks(ParsedInput input) {
-    return input.getNames().size() > 1;
-  }
 }
