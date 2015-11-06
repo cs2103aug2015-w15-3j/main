@@ -45,9 +45,9 @@ public class AutoComplete {
 
   private int tabCount = 0;
   private int viewCount = 0;
-  private SetTrie commandList; // List of commands
-  private SetTrie tagList; // List of tags
-  private SetTrie taskList; // List of task names
+  private SetTrie commandList;                              //list of commands
+  private SetTrie tagList;                                  //list of tags
+  private SetTrie taskList;                                 //list of task names
   private TasksManager tasksManager;
   private SimpleParser parser;
   private Logger logger;
@@ -74,6 +74,32 @@ public class AutoComplete {
     handleKeyEvent();
     handleTabEvent();
   }
+
+  //===========================================================================
+  // Helper
+  //===========================================================================
+
+  String getArguments(String input) {
+    int index = input.trim().indexOf(" ");
+    return input.substring(index + 1, input.length());
+  }
+
+  String getLastWord(String[] tokens) {
+    if (tokens.length == 0) {
+      return "";
+    } else {
+      return tokens[tokens.length - 1];
+    }
+  }
+
+  String[] getTokens(String userInput) {
+    return userInput.trim().split(" ");
+  }
+
+
+  //===========================================================================
+  // Updates
+  //===========================================================================
 
   /* Update to latest pending task names */
   void updateTasks() {
@@ -117,6 +143,107 @@ public class AutoComplete {
     setupList(tags, taskNames);
   }
 
+  boolean isValidCommand(String input) {
+    String command = input.toUpperCase(); // To create enum command
+    try {
+      return Arrays.asList(Constants.Command.values()).contains(Constants.Command.valueOf(command));
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
+  }
+
+  /**
+   * Update task name suggestions 
+   * @param input           keywords thats will be added to suggestions
+   */
+  void updateTaskSuggestion(String input) {
+    String[] tokens = getTokens(input);
+    String command = tokens[0];
+
+    /*Update only if command is supported*/
+    if (isValidCommand(command)) {
+      selectedTasks =
+          TaskUtils.filterTaskWithName(tasksManager.getPendingTasks(), 
+              getArguments(input));
+      suggestions =
+          taskList.getSuggestions(getArguments(input)).stream().map(
+              str -> command + " " + str).collect(Collectors.toList());
+    }
+  }
+
+  /**
+   * Update tag suggestions given input
+   * @param input           tags that will be added to suggetions
+   */
+  void updateTagSuggestion(String input) {
+    String[] tokens = getTokens(input);
+    String prefix = getLastWord(tokens);
+    int lastTagIndex = input.lastIndexOf("#");
+    String previousString = input.substring(0, lastTagIndex - 1);
+    String tag = prefix.substring(1, prefix.length()); // Get tag from last word
+
+    suggestions =
+        tagList.getSuggestions(tag).stream().map(str -> previousString + " #" + str)
+            .collect(Collectors.toList());
+  }
+
+  /*Checks if there is at least one word in input bar*/
+  boolean isCommand(String[] tokens) {
+    return tokens.length == 1;
+  }
+
+  /*Checks for presence of tag in user input*/
+  boolean isTag(String[] tokens) {
+    return tokens.length > 1 && getLastWord(tokens).substring(0, 1).equals("#");
+  }
+
+  /*Update suggestions lists as user is typing*/
+  void updateSuggestions(String input) {
+    updateWithStorage();
+    String[] tokens = getTokens(input);
+    String prefix = getLastWord(tokens);
+
+    if (isCommand(tokens)) { // Get suggestions from commandList
+      suggestions = commandList.getSuggestions(prefix);
+      eventbus.post(new SetHelpCommandEvent(false));
+    } else if (isTag(tokens)) { // Get suggestions from tagList
+      updateTagSuggestion(input);
+    } else { // Get suggestions from task
+      updateTaskSuggestion(input);
+    }
+
+  }
+
+  /*Update display view with implicit search result for certain commands*/
+  void updateDisplayWithTasks(String userInput) {
+    String command = userInput.trim().split(" ")[0];
+    String prefix = getArguments(userInput);
+    List<Task> filtered =
+        tasksManager.getPendingTasks().values().stream()
+            .filter(t -> t.getName().startsWith(prefix)).collect(Collectors.toList());
+    if (!filtered.isEmpty()) {
+      suggestions =
+          IntStream.rangeClosed(1, filtered.size())
+              .mapToObj(i -> command + " " + Integer.toString(i)).collect(Collectors.toList());
+      eventbus.post(new SetCurrentDisplayEvent(filtered, "Search results:"));
+    }
+  }
+
+  /**
+   * Checks if the given user input contains command that needs ID field
+   * 
+   * @return true if command uses ID field
+   */
+  public boolean isCommandWithID(String userInput) {
+    String[] tokens = userInput.trim().split(" ");
+    if (isValidCommand(tokens[0])) {
+      handleHelpForCommand(tokens[0], userInput);
+      return tokens[0].equals("done") || tokens[0].equals("edit") || tokens[0].equals("delete");
+    }
+    return false;
+
+  }
+
   /**
    * Real time update of display view with suggestions to current pending tasks
    */
@@ -135,36 +262,13 @@ public class AutoComplete {
     }
   }
 
-  void updateSuggestions(String input) {
-    updateWithStorage();
-    String[] tokens = getTokens(input);
-    String prefix = getLastWord(tokens);
+  //===========================================================================
+  // Handlers
+  //===========================================================================
 
-    if (isCommand(tokens)) { // Get suggestions from commandList
-      suggestions = commandList.getSuggestions(prefix);
-      eventbus.post(new SetHelpCommandEvent(false));
-    } else if (isTag(tokens)) { // Get suggestions from tagList
-      updateTagSuggestion(input);
-    } else { // Get suggestions from task
-      updateTaskSuggestion(input);
-    }
-
-  }
-
-  void updateDisplayWithTasks(String userInput) {
-    String command = userInput.trim().split(" ")[0];
-    String prefix = getArguments(userInput);
-    List<Task> filtered =
-        tasksManager.getPendingTasks().values().stream()
-            .filter(t -> t.getName().startsWith(prefix)).collect(Collectors.toList());
-    if (!filtered.isEmpty()) {
-      suggestions =
-          IntStream.rangeClosed(1, filtered.size())
-              .mapToObj(i -> command + " " + Integer.toString(i)).collect(Collectors.toList());
-      eventbus.post(new SetCurrentDisplayEvent(filtered, "Search results:"));
-    }
-  }
-
+  /**
+   *  Invoke changes and perform update on suggestions
+   */
   void handleKeyEvent() {
     MainSubscriber<KeyPressEvent> updateSuggestion = new MainSubscriber<
         KeyPressEvent>(eventbus.getEventBus()) {
@@ -187,6 +291,9 @@ public class AutoComplete {
     };
   }
 
+  /**
+   * Set input bar with suggestion when TAB is pressed
+   */
   public void handleTabEvent() {
     MainSubscriber<KeyEvent> completeOnPress = new MainSubscriber<
         KeyEvent>(eventbus.getEventBus()) {
@@ -209,86 +316,58 @@ public class AutoComplete {
     };
   }
 
-  //=======
-  // Helper 
-  //=======
-
-  String getLastWord(String[] tokens) {
-    if (tokens.length == 0) {
-      return "";
-    } else {
-      return tokens[tokens.length - 1];
+  /*Handles different variations of add command format*/
+  String[] handleAddHelpCommand(String userInput) {
+    String[] result = new String[2];
+    result[0] = Constants.ADD_SPECIFIC;
+    result[1] = Constants.ADD_SPECIFIC_DESC;
+    if (userInput.contains(";")) {
+      result[0] = Constants.ADD_BATCH;
+      result[1] = Constants.ADD_BATCH_DESC;
     }
+
+    if (userInput.contains("from")) {
+      result[0] = Constants.ADD_EVENT_DIFFERENT_DATE;
+      result[1] = Constants.ADD_EVENT_DIFFERENT_DATE_DESC;
+    }
+
+    if (userInput.contains("to")) {
+      result[0] = Constants.ADD_EVENT_SAME_DATE;
+      result[1] = Constants.ADD_EVENT_SAME_DATE_DESC;
+    }
+
+
+    return result;
   }
 
-  String[] getTokens(String userInput) {
-    return userInput.trim().split(" ");
+  /*Checks for date error so feedback can provided to user at realtime*/
+  boolean isInvalidDate(FailedToParseException e) {
+    return e.getCause() instanceof IllegalCommandArgumentException
+        && ((IllegalCommandArgumentException) e.getCause()).getArgument().equals(
+            Constants.CommandParam.DATETIME);
   }
 
-  /**
-   * Checks if the given user input contains command that needs ID field
-   * 
-   * @return true if command uses ID field
-   */
-  public boolean isCommandWithID(String userInput) {
-    String[] tokens = userInput.trim().split(" ");
-    if (isValidCommand(tokens[0])) {
-      handleHelpForCommand(tokens[0], userInput);
-      return tokens[0].equals("done") || tokens[0].equals("edit") || tokens[0].equals("delete");
+  /*Checks for id error so feedback can provided to user at realtime*/
+  boolean isInvalidId(ParsedInput input) {
+    if (input.getId() != 0) {
+
+      for (int displayedId : input.getIds()) {
+
+        try {
+          eventbus.getDisplayedTasks().get(displayedId - 1).getId();
+        } catch (IndexOutOfBoundsException e) {
+          return true;
+        }
+
+      }
     }
     return false;
-
   }
-
-  boolean isCommand(String[] tokens) {
-    return tokens.length == 1;
-  }
-
-  boolean isTag(String[] tokens) {
-    return tokens.length > 1 && getLastWord(tokens).substring(0, 1).equals("#");
-  }
-
-  void updateTaskSuggestion(String input) {
-    String[] tokens = getTokens(input);
-    String command = tokens[0];
-
-    if (isValidCommand(command)) {
-      selectedTasks =
-          TaskUtils.filterTaskWithName(tasksManager.getPendingTasks(), getArguments(input));
-      suggestions =
-          taskList.getSuggestions(getArguments(input)).stream().map(str -> command + " " + str)
-              .collect(Collectors.toList());
-    }
-  }
-
-  void updateTagSuggestion(String input) {
-    String[] tokens = getTokens(input);
-    String prefix = getLastWord(tokens);
-    int lastTagIndex = input.lastIndexOf("#");
-    String previousString = input.substring(0, lastTagIndex - 1);
-    String tag = prefix.substring(1, prefix.length()); // Get tag from last word
-
-    System.out.println(tag);
-    suggestions =
-        tagList.getSuggestions(tag).stream().map(str -> previousString + " #" + str)
-            .collect(Collectors.toList());
-    System.out.println(suggestions.toString());
-  }
-
-  boolean isValidCommand(String input) {
-    String command = input.toUpperCase(); // To create enum command
-    try {
-      return Arrays.asList(Constants.Command.values()).contains(Constants.Command.valueOf(command));
-    } catch (IllegalArgumentException e) {
-      return false;
-    }
-  }
-
-  String getArguments(String input) {
-    int index = input.trim().indexOf(" ");
-    return input.substring(index + 1, input.length());
-  }
-
+  /**
+   * Populate help bar with information relevant to command and user input
+   * @param command         
+   * @param userInput       
+   */
   void handleHelpForCommand(String command, String userInput) {
     Constants.Command inputCommand = Constants.Command.valueOf(command.toUpperCase());
     String commandFormat = "";
@@ -374,49 +453,6 @@ public class AutoComplete {
   }
 
 
-  String[] handleAddHelpCommand(String userInput) {
-    String[] result = new String[2];
-    result[0] = Constants.ADD_SPECIFIC;
-    result[1] = Constants.ADD_SPECIFIC_DESC;
-    if (userInput.contains(";")) {
-      result[0] = Constants.ADD_BATCH;
-      result[1] = Constants.ADD_BATCH_DESC;
-    }
 
-    if (userInput.contains("from")) {
-      result[0] = Constants.ADD_EVENT_DIFFERENT_DATE;
-      result[1] = Constants.ADD_EVENT_DIFFERENT_DATE_DESC;
-    }
-
-    if (userInput.contains("to")) {
-      result[0] = Constants.ADD_EVENT_SAME_DATE;
-      result[1] = Constants.ADD_EVENT_SAME_DATE_DESC;
-    }
-
-
-    return result;
-  }
-
-  boolean isInvalidDate(FailedToParseException e) {
-    return e.getCause() instanceof IllegalCommandArgumentException
-        && ((IllegalCommandArgumentException) e.getCause()).getArgument().equals(
-            Constants.CommandParam.DATETIME);
-  }
-
-  boolean isInvalidId(ParsedInput input) {
-    if (input.getId() != 0) {
-
-      for (int displayedId : input.getIds()) {
-
-        try {
-          eventbus.getDisplayedTasks().get(displayedId - 1).getId();
-        } catch (IndexOutOfBoundsException e) {
-          return true;
-        }
-
-      }
-    }
-    return false;
-  }
 
 }
