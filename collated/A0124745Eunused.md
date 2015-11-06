@@ -1,5 +1,5 @@
 # A0124745Eunused
-###### src\raijin\common\datatypes\Constants.java
+###### src\main\raijin\common\datatypes\Constants.java
 ``` java
   // Currently using images instead of string feedback messages.
   public static final String HELP_MESSAGE = "\n<----==== Raijin to the Rescue! ====---->"
