@@ -31,8 +31,18 @@ public class ParsedInputTest {
   
   //@@author A0124745E
   @Test
+  public void parseAddCommandInSimpleParser() throws FailedToParseException {
+    ParsedInput editCommand = parser.parse("+ full test from 1/1 800 to 12/5 000");
+    assertEquals("full test", editCommand.getName());
+    assertEquals("2016-01-01", editCommand.getDateTime().getStartDate().toString());
+    assertEquals("08:00", editCommand.getDateTime().getStartTime().toString());
+    assertEquals("2016-05-12", editCommand.getDateTime().getEndDate().toString());
+    assertEquals("00:00", editCommand.getDateTime().getEndTime().toString());
+  }
+  
+  @Test
   public void parseEditCommandInSimpleParser() throws FailedToParseException {
-    ParsedInput editCommand = parser.parse("edit 1 full test from 1/1 800 to 12/5 000");
+    ParsedInput editCommand = parser.parse("change 1 full test from 1/1 800 to 12/5 000");
     assertEquals(1, editCommand.getId());
     assertEquals("full test", editCommand.getName());
     assertEquals("2016-01-01", editCommand.getDateTime().getStartDate().toString());
@@ -43,7 +53,7 @@ public class ParsedInputTest {
   
   @Test
   public void parseDeleteCommandInSimpleParser() throws FailedToParseException {
-    ParsedInput deleteCommand = parser.parse("delete 12");
+    ParsedInput deleteCommand = parser.parse("del 12");
     assertEquals(12, deleteCommand.getId());
     
     deleteCommand = parser.parse("delete 1 work 2 school 3 ");
@@ -56,7 +66,7 @@ public class ParsedInputTest {
   
   @Test
   public void parseDoneCommandInSimpleParser() throws FailedToParseException {
-    ParsedInput doneCommand = parser.parse("done 28");
+    ParsedInput doneCommand = parser.parse("finish 28");
     assertEquals(28, doneCommand.getId());
     
     doneCommand = parser.parse("done 4 work 5 school 6");
