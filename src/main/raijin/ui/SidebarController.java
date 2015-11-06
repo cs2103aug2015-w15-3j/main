@@ -12,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.InputEvent;
 import javafx.scene.layout.BorderPane;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
@@ -25,11 +24,17 @@ import raijin.common.utils.filter.DateFilter;
 import raijin.common.utils.filter.TypeFilter;
 import raijin.logic.api.Logic;
 
+/**
+ * Contains useful information such number of pending tasks for 
+ * different categories of views
+ * @author papa
+ *
+ */
 public class SidebarController extends BorderPane {
   
-  //===========================================================================
+  //============
   // UI elements
-  //===========================================================================
+  //============
 
   @FXML
   private Button inbox;
@@ -60,15 +65,16 @@ public class SidebarController extends BorderPane {
   @FXML
   private Label numOfNextTasks;
 
-  private Button currentFocusedButton;                //Determines current view
+  /*Reference to button focused by user*/
+  private Button currentFocusedButton;               
 
 
   private static final String SIDEBAR_LAYOUT_FXML = "resource/layout/SidebarController.fxml";
   private RaijinEventBus eventbus;
   
-  //===========================================================================
+  //===============
   // Domain objects
-  //===========================================================================
+  //===============
   
   private Logic logic;
   private List<Task> pendingTasks;
@@ -90,14 +96,124 @@ public class SidebarController extends BorderPane {
       e.printStackTrace();
     }
 
-    //=========================================================================
-    // Initialisation
-    //=========================================================================
-    
     this.logic = logic;
     eventbus = RaijinEventBus.getInstance();
     init();
   }
+
+  void init() {
+    //Initialize states
+    pendingTasks = logic.getPendingTasks();
+    pendingToday = new DateFilter(pendingTasks, Constants.View.TODAY.getDateTime()).
+        filter(pendingTasks);
+    pendingTomorrow = new DateFilter(pendingTasks, Constants.View.TOMORROW.getDateTime()).
+        filter(pendingTasks);
+    pendingNextWeek = new DateFilter(pendingTasks, Constants.View.FUTURE.getDateTime()).
+        filter(pendingTasks, Constants.View.FUTURE);
+    overdueTasks = new TypeFilter(Constants.TYPE_TASK.OVERDUE).filter(pendingTasks);
+    completedTasks = logic.getCompletedTasks();
+    floatingFilter = new TypeFilter(Constants.TYPE_TASK.FLOATING);
+    floatingTasks = floatingFilter.filter(pendingTasks);
+    
+    /*initialize labels*/
+    updateLabels();
+    
+    /*initialize handlers*/
+    handleTaskChanged();
+    handleChangeView();
+    
+    /*Set current focused button*/
+    currentFocusedButton = inbox;
+  }
+
+  /**
+   * Update number of pending tasks when change occur to application 
+   */
+  void updateLabels() {
+    numOfPending.setText(Integer.toString(pendingTasks.size()));
+    numOfOverdue.setText(Integer.toString(overdueTasks.size()));
+    numOfCompleted.setText(Integer.toString(completedTasks.size()));
+    numOfFloating.setText(Integer.toString(floatingTasks.size()));
+
+    numOfToday.setText(Integer.toString(pendingToday.size()));
+    numOfTomorrow.setText(Integer.toString(pendingTomorrow.size()));
+    numOfNextTasks.setText(Integer.toString(pendingNextWeek.size()));
+  }
+
+  /**
+   * Sync domain object whenever any changes occur
+   * @param event
+   */
+  void updateState(TasksChangedEvent event) {
+    pendingTasks = event.pendingTasks;
+    overdueTasks = event.overdue;
+    completedTasks = event.completedTasks;
+    floatingTasks = floatingFilter.filter(pendingTasks);
+
+    pendingToday = event.pendingToday;
+    pendingTomorrow = event.pendingTomorrow;
+    pendingNextWeek = event.pendingNextWeek;
+    updateLabels();
+  }
+  
+
+  /**
+   * Sets focus button to the one holding current view
+   * @param event
+   */
+  void updateFocus(ChangeViewEvent event) {
+    switch (event.typeOfView) {
+
+      case INBOX:
+        setNewFocus(inbox);
+        break;
+
+      case FUTURE:
+        setNewFocus(future);
+        break;
+
+      case TODAY:
+        setNewFocus(today);
+        break;
+
+      case TOMORROW:
+        setNewFocus(tomorrow);
+        break;
+
+      default:
+        break;
+      
+    }
+  }
+
+  /*sets button color when view changes*/
+  void setNewFocus(Button newFocusedButton) {
+    if (!newFocusedButton.equals(currentFocusedButton)) {
+      currentFocusedButton.setStyle("-fx-background-color: #ffffff;");
+      newFocusedButton.setStyle("-fx-background-color: #ccf8ff;");
+      currentFocusedButton = newFocusedButton;
+    }
+  }
+
+  /**
+   * Fire change view event to trigger change in display
+   * @param view        view that will be displayed to user
+   */
+  void triggerViewChange(Constants.View view) {
+    eventbus.post(new ChangeViewEvent(pendingTasks, view));
+  }
+  
+  /**
+   * Fire overdue view event to trigger change in display
+   * @param view        view that will be displayed to user
+   */
+  void triggerOverdueViewChange() {
+    eventbus.post(new SetCurrentDisplayEvent(overdueTasks, Constants.DISPLAY_OVERDUE));
+  }
+
+  // ========
+  // Handlers
+  // ========
 
   @FXML
   protected void handleInboxButtonAction(ActionEvent event) {
@@ -142,10 +258,6 @@ public class SidebarController extends BorderPane {
     setNewFocus(floating);
   }
 
-  // =========================================================================
-  // Handlers
-  // =========================================================================
-
   public void handleChangeView() {
     MainSubscriber<ChangeViewEvent> changeViewHandler =
         new MainSubscriber<ChangeViewEvent>(eventbus.getEventBus()) {
@@ -170,107 +282,8 @@ public class SidebarController extends BorderPane {
     };
   }
   
-  void updateState(TasksChangedEvent event) {
-    pendingTasks = event.pendingTasks;
-    overdueTasks = event.overdue;
-    completedTasks = event.completedTasks;
-    floatingTasks = floatingFilter.filter(pendingTasks);
-
-    pendingToday = event.pendingToday;
-    pendingTomorrow = event.pendingTomorrow;
-    pendingNextWeek = event.pendingNextWeek;
-
-    
-    updateLabels();
-  }
   
 
-  void updateFocus(ChangeViewEvent event) {
-    switch (event.typeOfView) {
-
-      case INBOX:
-        setNewFocus(inbox);
-        break;
-
-      case FUTURE:
-        setNewFocus(future);
-        break;
-
-      case TODAY:
-        setNewFocus(today);
-        break;
-
-      case TOMORROW:
-        setNewFocus(tomorrow);
-        break;
-
-      default:
-        break;
-      
-    }
-  }
-
-  //===========================================================================
-  // Helper methods
-  //===========================================================================
   
-  /**
-   * Update before any commits or made
-   */
-  void init() {
-    //Initialize states
-    pendingTasks = logic.getPendingTasks();
-    pendingToday = new DateFilter(pendingTasks, Constants.View.TODAY.getDateTime()).
-        filter(pendingTasks);
-    pendingTomorrow = new DateFilter(pendingTasks, Constants.View.TOMORROW.getDateTime()).
-        filter(pendingTasks);
-    pendingNextWeek = new DateFilter(pendingTasks, Constants.View.FUTURE.getDateTime()).
-        filter(pendingTasks, Constants.View.FUTURE);
-    overdueTasks = new TypeFilter(Constants.TYPE_TASK.OVERDUE).filter(pendingTasks);
-    completedTasks = logic.getCompletedTasks();
-    floatingFilter = new TypeFilter(Constants.TYPE_TASK.FLOATING);
-    floatingTasks = floatingFilter.filter(pendingTasks);
-    
-    //Initialize labels
-    updateLabels();
-    
-    //Initialize handlers
-    handleTaskChanged();
-    handleChangeView();
-    
-    //Set current focused button
-    currentFocusedButton = inbox;
-  }
-
-  /**
-   * Update number of pending tasks when change occur to application 
-   */
-  void updateLabels() {
-    numOfPending.setText(Integer.toString(pendingTasks.size()));
-    numOfOverdue.setText(Integer.toString(overdueTasks.size()));
-    numOfCompleted.setText(Integer.toString(completedTasks.size()));
-    numOfFloating.setText(Integer.toString(floatingTasks.size()));
-
-    numOfToday.setText(Integer.toString(pendingToday.size()));
-    numOfTomorrow.setText(Integer.toString(pendingTomorrow.size()));
-    numOfNextTasks.setText(Integer.toString(pendingNextWeek.size()));
-  }
-  
-  void triggerViewChange(Constants.View view) {
-    eventbus.post(new ChangeViewEvent(pendingTasks, view));
-  }
-  
-  void triggerOverdueViewChange() {
-    eventbus.post(new SetCurrentDisplayEvent(overdueTasks, Constants.DISPLAY_OVERDUE));
-  }
-
-  //Set button color when view changes
-  void setNewFocus(Button newFocusedButton) {
-    if (!newFocusedButton.equals(currentFocusedButton)) {
-      currentFocusedButton.setStyle("-fx-background-color: #ffffff;");
-      newFocusedButton.setStyle("-fx-background-color: #ccf8ff;");
-      currentFocusedButton = newFocusedButton;
-    }
-  }
 
 }
