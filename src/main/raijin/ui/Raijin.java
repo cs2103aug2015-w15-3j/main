@@ -87,8 +87,8 @@ public class Raijin extends Application implements NativeKeyListener {
   private double dragX = 0; // values for dragging of help pane
   private double dragY = 0;
   
-  private boolean isVisible = false; // boolean that checks if Raijin is currently being shown
-  private boolean isHelpOn = false; // boolean that checks if help is currently being shown
+  static boolean isVisible = false; // boolean that checks if Raijin is currently being shown
+  static boolean isHelpOn = false; // boolean that checks if help is currently being shown
   
   private SystemTray tray;
   final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", null);
@@ -97,7 +97,8 @@ public class Raijin extends Application implements NativeKeyListener {
       sidebarController;
   
   private HBox hBox;
-  private Stage stage, helpStage;
+  private static Stage stage;
+private Stage helpStage;
   private Logic logic;
   private RaijinEventBus eventbus = RaijinEventBus.getInstance();
   
@@ -113,7 +114,7 @@ public class Raijin extends Application implements NativeKeyListener {
     launch(args);
   }
 
-  public Stage getStage() {
+  public static Stage getStage() {
     return stage;
   }
 
