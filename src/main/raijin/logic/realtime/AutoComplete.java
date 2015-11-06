@@ -363,6 +363,21 @@ public class AutoComplete {
     }
     return false;
   }
+
+  /**
+   * Trigger occupied time slots if end date exists
+   * @param parsed
+   */
+  public void handleTimeSlot(ParsedInput parsed) {
+    if (parsed.getDateTime() != null && parsed.getDateTime().getEndDate() != null) {
+      TimeSlot slots = new TimeSlot(parsed.getDateTime()
+          .getEndDate(), TaskUtils.getTasksList(tasksManager.getPendingTasks()));
+      eventbus.post(new SetTimeSlotEvent(slots.getOccupiedSlots()));
+    } else {
+      eventbus.post(new SetTimeSlotEvent(false));
+    }
+  }
+
   /**
    * Populate help bar with information relevant to command and user input
    * @param command         
@@ -434,13 +449,7 @@ public class AutoComplete {
           description = Constants.ADD_INVALID_ID;
         }
 
-        if (parsed.getDateTime() != null && parsed.getDateTime().getEndDate() != null) {
-          TimeSlot slots = new TimeSlot(parsed.getDateTime()
-              .getEndDate(), TaskUtils.getTasksList(tasksManager.getPendingTasks()));
-          eventbus.post(new SetTimeSlotEvent(slots.getOccupiedSlots()));
-        } else {
-          eventbus.post(new SetTimeSlotEvent(false));
-        }
+        handleTimeSlot(parsed);
 
       } catch (FailedToParseException e) {
         if (isInvalidDate(e)) {
@@ -451,6 +460,7 @@ public class AutoComplete {
     }
 
   }
+
 
 
 
