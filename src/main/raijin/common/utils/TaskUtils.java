@@ -180,16 +180,17 @@ public class TaskUtils {
 
   }
 
-//@@author A0112213E
+
   // ===========================================================================
   // Helper functions to retrieve different properties of task
   // ===========================================================================
 
   /**
-   * 
+   * Get set of tags created by user
    * @param pendingTasks
    * @return set of tags
    */
+  //@@author A0112213E
   public static TreeSet<String> getTags(HashMap<Integer, Task> pendingTasks) {
     TreeSet<String> tags = new TreeSet<String>();
 
@@ -200,10 +201,11 @@ public class TaskUtils {
   }
 
   /**
-   * Keep track of tasks associated with a tag
+   * Keep track of tasks associated with a tag for display on sidebar
    * @param pendingTasks
    * @return
    */
+  //@@author A0112213E
   public static Multiset<String> getTagMultiSet(List<Task> pendingTasks) {
     Multiset<String> tags = HashMultiset.create();
     for (Task task : pendingTasks) {
@@ -214,9 +216,9 @@ public class TaskUtils {
 
   /**
    * Retrieves set of task names
-   * 
    * @return set of task names
    */
+  //@@author A0112213E
   public static TreeSet<String> getTaskNames(HashMap<Integer, Task> pendingTasks) {
     List<String> names =
         pendingTasks.entrySet().stream().map(e -> e.getValue().getName())
@@ -225,6 +227,27 @@ public class TaskUtils {
   }
   
  
+  /**
+   * Get tasks that matches name provided
+   * @param pendingTasks
+   * @param name
+   * @return
+   */
+  //@@author A0112213E
+  public static List<Task> filterTaskWithName(HashMap<Integer, Task> pendingTasks, 
+      String name) {
+    List<Task> filtered = pendingTasks.values().stream().filter(
+        t -> t.getName().equals(name)).collect(Collectors.toList());
+    return filtered;
+  }
+
+  /**
+   * Get a list of tasks that matches these tags 
+   * @param pendingTasks    
+   * @param tags            tags that will be matched with
+   * @return filtered       tasks associated with all the tags 
+   */
+  //@@author A0112213E
   public static List<Task> filterTaskWithTags(HashMap<Integer, Task> pendingTasks,
       TreeSet<String> tags) {
       
@@ -235,6 +258,8 @@ public class TaskUtils {
       return filtered;
   }
   
+  /*Sanitize tag input*/
+  //@@author A0112213E
   static String removeHashTag(String tag) {
     if (tag.startsWith("#")) {
       return tag.substring(1);
@@ -242,29 +267,36 @@ public class TaskUtils {
     return tag;
   }
   
+  //@@author A0112213E
   public static List<String> getSanitizedTags(TreeSet<String> tags) {
     return tags.stream().map(tag -> removeHashTag(tag)).collect(Collectors.toList());
   }
   
-  public static List<Task> filterTaskWithName(HashMap<Integer, Task> pendingTasks, 
-      String name) {
-    List<Task> filtered = pendingTasks.values().stream().filter(
-        t -> t.getName().equals(name)).collect(Collectors.toList());
-    return filtered;
-  }
 
+  //@@author A0112213E
   TreeSet<Integer> getIdsFromTasks(List<Task> filtered) {
     return new TreeSet<Integer>(filtered.stream().map(
         t -> t.getId()).collect(Collectors.toList()));
   }
   
+  /**
+   * Returns sorted pending tasks without ids attached
+   * @param tasks
+   * @return
+   */
+  //@@author A0112213E
   public static List<Task> getTasksList(HashMap<Integer, Task> tasks) {
     List<Task> result = new ArrayList<Task>(tasks.values());
     Collections.sort(result);
     return result;
   }
 
-  /*Exclude floating tasks*/
+  /**
+   * Get only tasks that has a deadline
+   * @param tasks
+   * @return
+   */
+  //@@author A0112213E
   public static List<Task> getOnlyNormalTasks(List<Task> tasks) {
     return tasks.stream().filter(t -> t.getType() != Constants.TYPE_TASK.FLOATING).
         collect(Collectors.toList());
