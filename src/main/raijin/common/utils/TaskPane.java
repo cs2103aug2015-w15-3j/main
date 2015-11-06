@@ -8,7 +8,7 @@ import java.util.TreeSet;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.image.ImageView;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -18,9 +18,6 @@ import raijin.common.datatypes.Task;
 import raijin.logic.command.DisplayCommandRunner;
 
 public class TaskPane extends StackPane {
-	private static final String OVERDUE_LOCATION = "/resource/styes/overdue.png";
-	//private ImageView overdueIcon = new ImageView(getClass().getResource(OVERDUE_LOCATION).toString());
-	
 	private String highPriorityColour = "#FF9F94"; 		    // red
 	private String midPriorityColour = "#AAE6FF"; 		    // blue
 	private String lowPriorityColour = "#E6E6E6";		    // grey
@@ -38,36 +35,28 @@ public class TaskPane extends StackPane {
 	private Constants.TYPE_TASK taskType;
 	private DisplayCommandRunner displayInstance = new DisplayCommandRunner(); 
 	
-	// A Task pane
-	// VBox					VBox											
-	//========================================================================//
-	//|id       |__ taskName _________________________________________________|
-	//|_________|[start:date,time|end:date,time]/[endDate, time-time]/[none]__| 
-	//|			|	tags go here											  |
-	//========================================================================//
-	
 	public TaskPane() {
 		
 	}
 	
 	public TaskPane (int displayedNum, Task task) {
 		id = new Label(Integer.toString(displayedNum));
-		id.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
-		id.setPadding(new Insets(15,20,0,25));
 		
-		start.setStyle("-fx-font-weight:bold");
-		end.setStyle("-fx-font-weight:bold");
-		startByOn.setStyle("-fx-font-weight:bold");
-		
-		taskName = new Label((task.getName().length() > 59 ? task.getName().substring(0,59) + "..." : task.getName()));
-		taskName.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+		taskName = new Label((task.getName().length() > 69 
+							  ? task.getName().substring(0,69) + "..."
+							  : task.getName()));
 		
 		tagsValue = new Label(retrieveTags(task));
-		tagsValue.setStyle("-fx-font-style: italic; -fx-font-size: 13px;");
 		
-		taskType = task.getType();
+		InnerShadow innerShadow = new InnerShadow();
+		innerShadow.setOffsetX(3);
+		innerShadow.setOffsetY(0);
+		innerShadow.setColor(Color.web("#FF8566"));
+		isOverdue.setEffect(innerShadow);
+		System.out.println(isOverdue.getStyle());
 		
 		HBox datesBox = new HBox();
+		taskType = task.getType();
 		
 		if (taskType.equals(Constants.TYPE_TASK.EVENT)) {
 			String startDate = task.getDateTime().getStartDate().format(dateFormat);
@@ -102,9 +91,6 @@ public class TaskPane extends StackPane {
 			datesBox.getChildren().addAll(startValue);
 		}
 		
-		startValue.setStyle("-fx-font-size:13px;");
-		endValue.setStyle("-fx-font-size:13px;");
-		
 		HBox idBox = new HBox();
 		idBox.setPrefWidth(80);
 		idBox.getChildren().addAll(id);
@@ -123,12 +109,13 @@ public class TaskPane extends StackPane {
 		tagsBox.getChildren().addAll(tagsValue);
 		
 		VBox centre = new VBox();
-		centre.setPrefWidth(500);
+		centre.setPrefWidth(550);
 		centre.getChildren().addAll(taskBox, datesBox, tagsBox);
 		
 		HBox overdueBox = new HBox();
-		overdueBox.setPrefWidth(50);
+		overdueBox.setPrefWidth(60);
 		overdueBox.getChildren().addAll(isOverdue);
+		overdueBox.setPadding(new Insets(25, 0, 0, 0));
 
 		HBox pane = new HBox();
 		
@@ -143,17 +130,26 @@ public class TaskPane extends StackPane {
 			tagsValue.setTextFill(Color.rgb(110, 110, 110));
 		}
 			
-		pane.getChildren().addAll(idBox, centre); //excluding priority label
+		pane.getChildren().addAll(idBox, centre);
 		
-		
-		//if (displayInstance.isOverdue(task.getDateTime())) {
-		//	pane.getChildren().add(overdueBox);
-		//}
+		if (displayInstance.isOverdue(task)) {
+			pane.getChildren().add(overdueBox);
+		}
 		
 		this.getChildren().addAll(pane);
-		//this.setPrefHeight(65);
 		this.setPrefHeight(69);
 		this.setStyle(this.getStyle() + "-fx-background-radius: 20px;");
+		
+		// Assigning ID's to attributes for styling via css stylesheet
+		id.setId("id");
+		taskName.setId("taskName");
+		start.setId("start");
+		end.setId("end");
+		startByOn.setId("startByOn");
+		startValue.setId("startValue");
+		endValue.setId("endValue");
+		tagsValue.setId("tagsValue");
+		isOverdue.setId("isOverdue");
 		
 	}
 	
