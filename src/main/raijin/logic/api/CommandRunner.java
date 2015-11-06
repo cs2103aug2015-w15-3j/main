@@ -5,6 +5,7 @@ package raijin.logic.api;
 
 import java.util.TreeSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 
 import raijin.common.datatypes.Constants;
@@ -50,6 +51,14 @@ public abstract class CommandRunner {
     }
   }
 
+  int getRealId(int displayedId) throws UnableToExecuteCommandException {
+    try {
+      return eventbus.getDisplayedTasks().get(displayedId-1).getId();
+    } catch (IndexOutOfBoundsException e) {
+      throw new UnableToExecuteCommandException("Does not match displayed task", e);
+    }
+  }
+
   /**
    * Translate virtual id on view to real task id for multiple ids
    * @param input
@@ -70,11 +79,9 @@ public abstract class CommandRunner {
     throw new UnableToExecuteCommandException(e.getMessage(), typeOfCommand, e);
   }
   
-  int getRealId(int displayedId) throws UnableToExecuteCommandException {
-    try {
-      return eventbus.getDisplayedTasks().get(displayedId-1).getId();
-    } catch (IndexOutOfBoundsException e) {
-      throw new UnableToExecuteCommandException("Does not match displayed task", e);
-    }
+  /*trim task name to fit max length*/
+  protected String normalizeTaskName(String taskName) {
+    return StringUtils.left(taskName, Constants.MAX_NAME_LENGTH) + "...";
   }
+
 }
