@@ -75,20 +75,14 @@ public class AutoComplete {
     handleTabEvent();
   }
 
-  /**
-   * Setup database for auto completion
-   * 
-   * @param tagList
-   * @param tasks
-   */
-  public void setupList(TreeSet<String> tagList, TreeSet<String> tasks) {
-    loadCommandList();
-    loadTagList(tagList);
-    loadTaskList(tasks);
+  /* Update to latest pending task names */
+  void updateTasks() {
+    taskNames = TaskUtils.getTaskNames(tasksManager.getPendingTasks());
   }
 
-  public SetTrie getTaskList() {
-    return taskList;
+  /* Update any to any recently updated tags */
+  void updateTags() {
+    tags = TaskUtils.getTags(tasksManager.getPendingTasks());
   }
 
   void loadCommandList() {
@@ -103,6 +97,72 @@ public class AutoComplete {
 
   void loadTaskList(TreeSet<String> tasks) {
     this.taskList.addAll(tasks);
+  }
+
+  /**
+   * Setup database for auto completion
+   * 
+   * @param tagList
+   * @param tasks
+   */
+  public void setupList(TreeSet<String> tagList, TreeSet<String> tasks) {
+    loadCommandList();
+    loadTagList(tagList);
+    loadTaskList(tasks);
+  }
+  /* Overall update with states of application */
+  void updateWithStorage() {
+    updateTags();
+    updateTasks();
+    setupList(tags, taskNames);
+  }
+
+  /**
+   * Real time update of display view with suggestions to current pending tasks
+   */
+  void updateDisplayView(KeyEvent event) {
+    int next = 0;
+    if (Constants.KEY_VIEW_DOWN.match(event)) {
+      next = Math.floorMod((++viewCount), Constants.View.values().length);
+      Constants.View view = Constants.View.values()[next];
+      eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(tasksManager.getPendingTasks()),
+          view));
+    } else if (Constants.KEY_VIEW_UP.match(event)) {
+      next = Math.floorMod((--viewCount), Constants.View.values().length);
+      Constants.View view = Constants.View.values()[next];
+      eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(tasksManager.getPendingTasks()),
+          view));
+    }
+  }
+
+  void updateSuggestions(String input) {
+    updateWithStorage();
+    String[] tokens = getTokens(input);
+    String prefix = getLastWord(tokens);
+
+    if (isCommand(tokens)) { // Get suggestions from commandList
+      suggestions = commandList.getSuggestions(prefix);
+      eventbus.post(new SetHelpCommandEvent(false));
+    } else if (isTag(tokens)) { // Get suggestions from tagList
+      updateTagSuggestion(input);
+    } else { // Get suggestions from task
+      updateTaskSuggestion(input);
+    }
+
+  }
+
+  void updateDisplayWithTasks(String userInput) {
+    String command = userInput.trim().split(" ")[0];
+    String prefix = getArguments(userInput);
+    List<Task> filtered =
+        tasksManager.getPendingTasks().values().stream()
+            .filter(t -> t.getName().startsWith(prefix)).collect(Collectors.toList());
+    if (!filtered.isEmpty()) {
+      suggestions =
+          IntStream.rangeClosed(1, filtered.size())
+              .mapToObj(i -> command + " " + Integer.toString(i)).collect(Collectors.toList());
+      eventbus.post(new SetCurrentDisplayEvent(filtered, "Search results:"));
+    }
   }
 
   void handleKeyEvent() {
@@ -127,19 +187,31 @@ public class AutoComplete {
     };
   }
 
-  void updateDisplayWithTasks(String userInput) {
-    String command = userInput.trim().split(" ")[0];
-    String prefix = getArguments(userInput);
-    List<Task> filtered =
-        tasksManager.getPendingTasks().values().stream()
-            .filter(t -> t.getName().startsWith(prefix)).collect(Collectors.toList());
-    if (!filtered.isEmpty()) {
-      suggestions =
-          IntStream.rangeClosed(1, filtered.size())
-              .mapToObj(i -> command + " " + Integer.toString(i)).collect(Collectors.toList());
-      eventbus.post(new SetCurrentDisplayEvent(filtered, "Search results:"));
-    }
+  public void handleTabEvent() {
+    MainSubscriber<KeyEvent> completeOnPress = new MainSubscriber<
+        KeyEvent>(eventbus.getEventBus()) {
+
+      @Subscribe
+      @Override
+      public void handleEvent(KeyEvent event) {
+        try {
+
+          if (event.getCode() == KeyCode.TAB) {
+            String result = suggestions.get((tabCount++) % suggestions.size());
+            eventbus.post(new SetInputEvent(result));
+          }
+
+        } catch (ArithmeticException e) {
+          logger.error(e.getMessage());
+        }
+
+      }
+    };
   }
+
+  //=======
+  // Helper 
+  //=======
 
   String getLastWord(String[] tokens) {
     if (tokens.length == 0) {
@@ -151,22 +223,6 @@ public class AutoComplete {
 
   String[] getTokens(String userInput) {
     return userInput.trim().split(" ");
-  }
-
-  void updateSuggestions(String input) {
-    updateWithStorage();
-    String[] tokens = getTokens(input);
-    String prefix = getLastWord(tokens);
-
-    if (isCommand(tokens)) { // Get suggestions from commandList
-      suggestions = commandList.getSuggestions(prefix);
-      eventbus.post(new SetHelpCommandEvent(false));
-    } else if (isTag(tokens)) { // Get suggestions from tagList
-      updateTagSuggestion(input);
-    } else { // Get suggestions from task
-      updateTaskSuggestion(input);
-    }
-
   }
 
   /**
@@ -231,41 +287,6 @@ public class AutoComplete {
   String getArguments(String input) {
     int index = input.trim().indexOf(" ");
     return input.substring(index + 1, input.length());
-  }
-
-  /* Update to latest pending task names */
-  void updateTasks() {
-    taskNames = TaskUtils.getTaskNames(tasksManager.getPendingTasks());
-  }
-
-  /* Update any to any recently updated tags */
-  void updateTags() {
-    tags = TaskUtils.getTags(tasksManager.getPendingTasks());
-  }
-
-  /* Overall update with states of application */
-  void updateWithStorage() {
-    updateTags();
-    updateTasks();
-    setupList(tags, taskNames);
-  }
-
-  /**
-   * Real time update of display view with suggestions to current pending tasks
-   */
-  void updateDisplayView(KeyEvent event) {
-    int next = 0;
-    if (Constants.KEY_VIEW_DOWN.match(event)) {
-      next = Math.floorMod((++viewCount), Constants.View.values().length);
-      Constants.View view = Constants.View.values()[next];
-      eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(tasksManager.getPendingTasks()),
-          view));
-    } else if (Constants.KEY_VIEW_UP.match(event)) {
-      next = Math.floorMod((--viewCount), Constants.View.values().length);
-      Constants.View view = Constants.View.values()[next];
-      eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(tasksManager.getPendingTasks()),
-          view));
-    }
   }
 
   void handleHelpForCommand(String command, String userInput) {
@@ -352,27 +373,6 @@ public class AutoComplete {
 
   }
 
-  public void handleTabEvent() {
-    MainSubscriber<KeyEvent> completeOnPress = new MainSubscriber<
-        KeyEvent>(eventbus.getEventBus()) {
-
-      @Subscribe
-      @Override
-      public void handleEvent(KeyEvent event) {
-        try {
-
-          if (event.getCode() == KeyCode.TAB) {
-            String result = suggestions.get((tabCount++) % suggestions.size());
-            eventbus.post(new SetInputEvent(result));
-          }
-
-        } catch (ArithmeticException e) {
-          logger.error(e.getMessage());
-        }
-
-      }
-    };
-  }
 
   String[] handleAddHelpCommand(String userInput) {
     String[] result = new String[2];
