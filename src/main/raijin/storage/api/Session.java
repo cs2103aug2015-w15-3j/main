@@ -41,6 +41,7 @@ public class Session {
 
   private static Session session = new Session();
   private TasksManager tasksManager;
+  private RaijinEventBus eventbus = RaijinEventBus.getInstance();
 
   String userConfigPath;
   String dataPath;
@@ -112,6 +113,7 @@ public class Session {
     if (retrievedData != null) {
       tasksManager.sync(retrievedData);
       IDManager.getIdManager().updateIdPool(tasksManager.getPendingTasks());
+      eventbus.setDisplayedTasks(TaskUtils.getTasksList(tasksManager.getPendingTasks()));
     }
     generateNewFile(dataPath);                                                  
   }
