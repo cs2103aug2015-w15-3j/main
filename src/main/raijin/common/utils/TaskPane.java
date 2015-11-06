@@ -3,6 +3,7 @@
 package raijin.common.utils;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.TreeSet;
 
 import javafx.geometry.Insets;
@@ -16,13 +17,15 @@ import javafx.scene.paint.Color;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
 import raijin.logic.command.DisplayCommandRunner;
+import raijin.storage.api.TasksManager;
 
 public class TaskPane extends StackPane {
 	private String highPriorityColour = "#FF9F94"; 		    // red
 	private String midPriorityColour = "#AAE6FF"; 		    // blue
 	private String lowPriorityColour = "#E6E6E6";		    // grey
 	
-	final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
+	private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
+	private final int TASK_DISPLAY_NAME_LIMIT = 69;
 	
 	private Label id;
 	private Label taskName;
@@ -33,7 +36,10 @@ public class TaskPane extends StackPane {
 	private Label isOverdue = new Label("Overdue!");
 	
 	private Constants.TYPE_TASK taskType;
-	private DisplayCommandRunner displayInstance = new DisplayCommandRunner(); 
+	
+	private DisplayCommandRunner displayInstance = new DisplayCommandRunner();
+	private ArrayList<Task> completedList = new ArrayList<Task>(TasksManager.getManager()
+			                                                    .getCompletedTasks().values());
 	
 	public TaskPane() {
 		
@@ -42,8 +48,8 @@ public class TaskPane extends StackPane {
 	public TaskPane (int displayedNum, Task task) {
 		id = new Label(Integer.toString(displayedNum));
 		
-		taskName = new Label((task.getName().length() > 69 
-							  ? task.getName().substring(0,69) + "..."
+		taskName = new Label((task.getName().length() > TASK_DISPLAY_NAME_LIMIT 
+							  ? task.getName().substring(0,TASK_DISPLAY_NAME_LIMIT) + "..."
 							  : task.getName()));
 		
 		tagsValue = new Label(retrieveTags(task));
@@ -106,6 +112,7 @@ public class TaskPane extends StackPane {
 		
 		HBox tagsBox = new HBox();
 		tagsBox.setPadding(new Insets(3, 0, 5, 0));
+		tagsBox.setPrefWidth(500);
 		tagsBox.getChildren().addAll(tagsValue);
 		
 		VBox centre = new VBox();
@@ -132,7 +139,7 @@ public class TaskPane extends StackPane {
 			
 		pane.getChildren().addAll(idBox, centre);
 		
-		if (displayInstance.isOverdue(task)) {
+		if (displayInstance.isOverdue(task) && !completedList.contains(task)) {
 			pane.getChildren().add(overdueBox);
 		}
 		
@@ -181,6 +188,7 @@ public class TaskPane extends StackPane {
 	 */
 	public String retrieveTags(Task task) {
 		TreeSet<String> tagsTree = new TreeSet<String>(task.getTags());
+		
 		String tagString = "";
 		boolean hasTags = false;
 		
