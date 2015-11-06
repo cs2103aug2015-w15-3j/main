@@ -81,7 +81,10 @@ public abstract class CommandRunner {
   
   /*trim task name to fit max length*/
   protected String normalizeTaskName(String taskName) {
-    return StringUtils.left(taskName, Constants.MAX_NAME_LENGTH) + "...";
+    if (taskName.length() > Constants.MAX_NAME_LENGTH) {
+      return StringUtils.left(taskName, Constants.MAX_NAME_LENGTH) + "...";
+    }
+    return taskName;
   }
 
 }

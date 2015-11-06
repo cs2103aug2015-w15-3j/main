@@ -38,10 +38,7 @@ public class AddCommandRunner extends CommandRunner implements UndoableRedoable 
 
   /*Generates status for single task*/
   Status createSingleStatus(String taskName) {
-    if (taskName.length() > Constants.MAX_NAME_LENGTH) {
-      taskName = StringUtils.left(listOfTasks.get(0).getName(), 
-          Constants.MAX_NAME_LENGTH) + "...";
-    }
+    taskName = normalizeTaskName(taskName);
     return new Status(String.format(SUCCESS_SINGLE_MSG, taskName));
   }
 
