@@ -37,6 +37,7 @@ public class EditCommandRunner extends CommandRunner implements UndoableRedoable
   
   Status editSuccessfulStatus() {
     String taskName = taskAfterChange.getName();
+    taskName = normalizeTaskName(taskName);
     return new Status(String.format(Constants.FEEDBACK_EDIT_SUCCESS, taskName));
   }
   
