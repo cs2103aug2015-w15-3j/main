@@ -263,7 +263,58 @@ public class Constants {
   public static final String SET = "set ?[directory_to_store_data]";
   public static final String SET_DESC = "Specifies directory to store your data";
 
-  //===========================================================================
+  //================
+  // keyboard shortcuts for help
+  //================
+  
+  public static final String KEY_UNDO_HELP = "Ctrl + Z";
+  public static final String KEY_UNDO_HELP_DESC = "Keyboard shortcut for Undo";
+  
+  public static final String KEY_REDO_HELP = "Ctrl + Y";
+  public static final String KEY_REDO_HELP_DESC = "Keyboard shortcut for Redo";
+   
+  public static final String KEY_CLEAR_HELP = "Ctrl + R";
+  public static final String KEY_CLEAR_HELP_DESC = "Keyboard shortcut for Clear";
+  
+  public static final String KEY_COPY_HELP = "Ctrl + C";
+  public static final String KEY_COPY_HELP_DESC = "Keyboard shortcut for Copy";
+  
+  public static final String KEY_CUT_HELP = "Ctrl + X";
+  public static final String KEY_CUT_HELP_DESC = "Keyboard shortcut for Cut";
+ 
+  public static final String KEY_PASTE_HELP = "Ctrl + V";
+  public static final String KEY_PASTE_HELP_DESC = "Keyboard shortcut for Paste";
+  
+  public static final String KEY_TAB_HELP = "   ";
+  public static final String KEY_TAB_HELP_DESC = "   ";
+ 
+  public static final String KEY_SPACE_HELP = "   ";
+  public static final String KEY_SPACE_HELP_DESC = "   ";
+
+  public static final String KEY_VIEW_DOWN_HELP = "F2";
+  public static final String KEY_VIEW_DOWN_HELP_DESC = "Keyboard shortcut for to "
+  		+ "toggle down between all, today, tomorrow and future pending tasks";
+  
+  public static final String KEY_VIEW_UP_HELP = "F1";
+  public static final String KEY_VIEW_UP_HELP_DESC = "Keyboard shortcut for to "
+	  		+ "toggle up between all, today, tomorrow and future pending tasks";
+   
+  public static final String KEY_PLAY_HELP = "   ";
+  public static final String KEY_PLAY_HELP_DESC = "    ";
+ 
+  public static final String KEY_STOP_HELP = "     ";
+  public static final String KEY_STOP_HELP_DESC = "    ";
+  
+  public static final String KEY_MINMAX_HELP = "    ";
+  public static final String KEY_MINMAX_HELP_DESC = "    ";
+ 
+  public static final String SCROLL_UP_HELP = "     ";
+  public static final String SCROLL_UP_HELP_DESC = "    ";
+
+  public static final String SCROLL_DOWN_HELP = "    ";
+  public static final String SCROLL_DOWN_HELP_DESC = "     ";
+
+ //===========================================================================
   // Keyboard shortcuts
   //===========================================================================
   

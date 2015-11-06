@@ -16,6 +16,8 @@ import java.awt.TrayIcon;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,10 +27,15 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
@@ -40,6 +47,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.WindowEvent;
 
 import org.jnativehook.GlobalScreen;
@@ -48,6 +57,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
 import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.HelpMessage;
 import raijin.common.datatypes.Status;
 import raijin.logic.api.Logic;
 
@@ -94,8 +104,12 @@ public class Raijin extends Application implements NativeKeyListener {
   private RaijinEventBus eventbus = RaijinEventBus.getInstance();
   private SystemTray tray;
   final TrayIcon trayIcon = new TrayIcon(createImage(TRAY_ICON_LOCATION), "Raijin.java", null);
-
-
+  
+  @FXML
+  private TextFlow helpBar = new TextFlow();
+  @FXML
+  ListView<TextFlow> helpContain;
+  
   public static void main(String[] args) {
     launch(args);
   }
@@ -222,44 +236,123 @@ public class Raijin extends Application implements NativeKeyListener {
   }
   
   private void bringUpHelpSection() {
-	 
+	  	    
 	  helpStage = new Stage();
 	  helpStage.initStyle(StageStyle.TRANSPARENT);
 	  
 	  helpStage.initModality(Modality.NONE);
 	  helpStage.initOwner(stage);
 	  
-	  StackPane helpRoot = new StackPane();
-	  ScrollPane innerStage = new ScrollPane();
+	  ArrayList<String> allCommand = new ArrayList<String>();
+	  allCommand.add(Constants.ADD_FLOATING);
+	  allCommand.add(Constants.ADD_SPECIFIC);
+	  allCommand.add(Constants.ADD_EVENT_SAME_DATE);
+	  allCommand.add(Constants.ADD_EVENT_DIFFERENT_DATE);
+	  allCommand.add(Constants.ADD_BATCH);
+	  allCommand.add(Constants.EDIT_TASK);
+	  allCommand.add(Constants.DISPLAY);
+	  allCommand.add(Constants.DONE);
+	  allCommand.add(Constants.DELETE);
+	  allCommand.add(Constants.UNDO);
+	  allCommand.add(Constants.REDO);
+	  allCommand.add(Constants.SEARCH);
+	  allCommand.add(Constants.SET);
+	  allCommand.add("Keyboard Shortcuts");
+	  allCommand.add(Constants.KEY_UNDO_HELP);
+	  allCommand.add(Constants.KEY_REDO_HELP);
+	  allCommand.add(Constants.KEY_CLEAR_HELP);
+	  allCommand.add(Constants.KEY_COPY_HELP);
+	  allCommand.add(Constants.KEY_CUT_HELP);
+	  allCommand.add(Constants.KEY_PASTE_HELP);
+	  allCommand.add(Constants.KEY_TAB_HELP);
+	  allCommand.add(Constants.KEY_SPACE_HELP);
+	  allCommand.add(Constants.KEY_VIEW_DOWN_HELP);
+	  allCommand.add(Constants.KEY_VIEW_UP_HELP);
+	  allCommand.add(Constants.KEY_PLAY_HELP);
+	  allCommand.add(Constants.KEY_STOP_HELP);
+	  allCommand.add(Constants.KEY_MINMAX_HELP);
+	  allCommand.add(Constants.SCROLL_UP_HELP);
+	  allCommand.add(Constants.SCROLL_DOWN_HELP);
 	  
-	  VBox dialogVbox = new VBox(20);
+	  ArrayList<String> allDescription = new ArrayList<String>();
+	  allDescription.add(Constants.ADD_FLOATING_DESC + "\n\n");
+	  allDescription.add(Constants.ADD_SPECIFIC_DESC + "\n\n");
+	  allDescription.add(Constants.ADD_EVENT_SAME_DATE_DESC + "\n\n");
+	  allDescription.add(Constants.ADD_EVENT_DIFFERENT_DATE_DESC + "\n\n");
+	  allDescription.add(Constants.ADD_BATCH_DESC + "\n\n");
+	  allDescription.add(Constants.EDIT_TASK_DESC + "\n\n");
+	  allDescription.add(Constants.DISPLAY_DESC + "\n\n");
+	  allDescription.add(Constants.DONE_DESC + "\n\n");
+	  allDescription.add(Constants.DELETE_DESC + "\n\n");
+	  allDescription.add(Constants.UNDO_DESC + "\n\n");
+	  allDescription.add(Constants.REDO_DESC + "\n\n");
+	  allDescription.add(Constants.SEARCH_DESC + "\n\n");
+	  allDescription.add(Constants.SET_DESC + "\n\n");
+	  allDescription.add("  \n");
+	  allDescription.add(Constants.KEY_UNDO_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_REDO_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_CLEAR_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_COPY_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_CUT_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_PASTE_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_TAB_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_SPACE_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_VIEW_DOWN_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_VIEW_UP_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_PLAY_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_STOP_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.KEY_MINMAX_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.SCROLL_UP_HELP_DESC + "\n\n");
+	  allDescription.add(Constants.SCROLL_DOWN_HELP_DESC + "\n\n");
 	  
-	  helpRoot.setOnMousePressed(new EventHandler<MouseEvent>() {
+	  StackPane helpBase = new StackPane();
+	 
+	  helpContain = new ListView<TextFlow>();
+	  ObservableList<Text> helpItems = FXCollections
+		        .observableArrayList();
+	  
+	  HelpMessage helpHeader = new HelpMessage("Help", "  \n");
+	
+	  helpItems.addAll(helpHeader.helpMessage);
+	
+	  for (int cmdAndDescripFormatId = 1; 
+			  cmdAndDescripFormatId < allCommand.size(); 
+			  cmdAndDescripFormatId++) {
+		  if (allCommand.get(cmdAndDescripFormatId).equals("Keyboard Shortcuts \n")) {
+			  HelpMessage keyboardHeader = new HelpMessage(allCommand.get(cmdAndDescripFormatId), allDescription.get(cmdAndDescripFormatId));
+			  helpItems.addAll(keyboardHeader.helpMessage);
+			  helpBar.getChildren().addAll(keyboardHeader.helpMessage);
+		  } else {
+			  HelpMessage fullMessage = new HelpMessage(allCommand.get(cmdAndDescripFormatId), allDescription.get(cmdAndDescripFormatId));
+			  System.out.println(fullMessage.helpMessage);
+			  helpItems.addAll(fullMessage.helpMessage);
+			  helpBar.getChildren().addAll(fullMessage.helpMessage);
+			  
+		  }
+     }
+	  
+	  helpContain.setItems(FXCollections.observableArrayList(helpBar));
+	  
+	  helpContain.setOnMouseDragged(new EventHandler<MouseEvent>() {
+	         public void handle (MouseEvent me) {   
+	        	 System.out.println("this is " + dragX);
+	             helpStage.setX(me.getScreenX() - dragX);
+	             helpStage.setY(me.getScreenY() - dragY);
+	         }
+	      });
+	  
+	  helpContain.setOnMousePressed(new EventHandler<MouseEvent>() {
 	  		public void handle (MouseEvent me) {
+	  			System.out.println(me.getScreenX());
+	  			System.out.println(helpStage.getX());
             dragX = me.getScreenX() - helpStage.getX();
             dragY = me.getScreenY() - helpStage.getY();
          }
       });
       
-      helpRoot.setOnMouseDragged(new EventHandler<MouseEvent>() {
-         public void handle (MouseEvent me) {   
-             helpStage.setX(me.getScreenX() - dragX);
-             helpStage.setY(me.getScreenY() - dragY);
-         }
-      });
+      helpBase.getChildren().add(helpContain);
       
-      for(int i = 0; i < helpImg_ImageView.length; i++) {
-    	  helpImg_ImageView[i] = new ImageView(getClass().getResource(helpImg[i])
-    	     .toString());
-    	  helpImg_ImageView[i].setFitWidth(800);
-    	  helpImg_ImageView[i].setPreserveRatio(true);
-    	  dialogVbox.getChildren().add(helpImg_ImageView[i]);
-      }
-      
-	  innerStage.setContent(dialogVbox);
-	  helpRoot.getChildren().add(innerStage);
-	  
-	  Scene dialogScene = new Scene(helpRoot, 800, 600);
+	  Scene dialogScene = new Scene(helpBase, 800, 600);
 	  helpStage.setScene(dialogScene);
 	  helpStage.show();
   }
