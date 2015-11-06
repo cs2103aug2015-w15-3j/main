@@ -59,7 +59,6 @@ public class TaskPane extends StackPane {
 		innerShadow.setOffsetY(0);
 		innerShadow.setColor(Color.web("#FF8566"));
 		isOverdue.setEffect(innerShadow);
-		System.out.println(isOverdue.getStyle());
 		
 		HBox datesBox = new HBox();
 		taskType = task.getType();
