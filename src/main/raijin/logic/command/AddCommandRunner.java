@@ -22,7 +22,7 @@ import raijin.logic.parser.ParsedInput;
  */
 public class AddCommandRunner extends CommandRunner implements UndoableRedoable {
 
-  static final String SUCCESS_SINGLE_MSG = "You have added %s successfully";
+  static final String SUCCESS_SINGLE_MSG = "You have added \"%s\" successfully";
   static final String SUCCESS_MSG = "You have added the tasks successfully";
   static final String FAILURE_MSG = "Duplicate task(s) not added";
   private ArrayList<Task> listOfTasks = new ArrayList<Task>();
