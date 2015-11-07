@@ -50,7 +50,7 @@ public class RaijinInputIT {
 
   @Test
   public void testMaximiseShortcut() throws InterruptedException {
-    raijin.push(KeyCode.ALT, KeyCode.ESCAPE);
+    raijin.push(KeyCode.ALT, KeyCode.M);
     assertTrue(Raijin.getStage().isMaximized());
   }
 
