@@ -71,11 +71,6 @@ public class Logic {
   // Session methods
   //===========================================================================
 
-  /*Checks if this is the first time a user runs this application*/
-  public boolean isFirstTime() {
-    return session.isFirstTime;
-  }
-
   public void setChosenUserStorage(String userPath) {
     /*Append data folder to the path*/
     String storagePath = userPath + Constants.NAME_USER_FOLDER;

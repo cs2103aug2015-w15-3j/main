@@ -25,13 +25,13 @@ import raijin.logic.parser.ParsedInput;
  */
 public class SearchCommandRunner extends CommandRunner {
 
-  private Task currentTask;
-  private String inputPriority;
-  private static final String NO_ARGUMENT = "No argument(s) given to search";
   private static final String DISPLAY_MESSAGE = "Search results: %d found";
   private static final String INITIAL_FEEDBACK_MESSAGE = "Search keywords: ";
   private static final String MESSAGE_TEMPLATE = "\"%s\", ";
+  String displayMessageSent;            //Search result message displayed  
 
+  private Task currentTask;
+  private String inputPriority;
   /**
    * Additional filter to search. If no priority given, default to true
    * @param task
@@ -106,8 +106,8 @@ public class SearchCommandRunner extends CommandRunner {
     createTask(input);
     ArrayList<Task> tempList = (ArrayList<Task>) TaskUtils.getTasksList(pendingTasks);
     filtered = getTasksWithMatchedKeyword(tempList);
-    eventbus.post(new SetCurrentDisplayEvent(filtered, 
-        String.format(DISPLAY_MESSAGE,filtered.size())));
+    displayMessageSent = String.format(DISPLAY_MESSAGE,filtered.size());
+    eventbus.post(new SetCurrentDisplayEvent(filtered, displayMessageSent));
     return createSuccessfulStatus(currentTask.getKeywords());
   }
 

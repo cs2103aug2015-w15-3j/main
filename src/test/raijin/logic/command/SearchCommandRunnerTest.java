@@ -101,4 +101,20 @@ public class SearchCommandRunnerTest {
   }
 
 
+  @Test
+  public void processCommand_TagAndKeywordSearch() throws FailedToParseException, 
+    UnableToExecuteCommandException {
+    ParsedInput input = testUtils.createInputFromText("search this #house");
+    ParsedInput task2 = testUtils.createInputFromText("add cat it is #house");
+    HashMap<Integer, Task> tasks = new HashMap<Integer, Task>();
+    tasks.put(1, new Task("this is cat", 1));
+    tasks.put(2, new Task("cat it is", 2, task2));
+    tasks.put(2, new Task("this is cat", 2, task2));
+    tasksManager.setPendingTasks(tasks);
+    
+    Status result = searchCommandRunner.processCommand(input);
+    String expected = "Search results: 1 found";
+    assertEquals(expected, searchCommandRunner.displayMessageSent);
+  }
+
 }
