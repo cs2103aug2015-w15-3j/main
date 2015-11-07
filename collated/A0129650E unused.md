@@ -1,5 +1,5 @@
 # A0129650E unused
-###### src\main\raijin\ui\IntroController.java
+###### src\raijin\ui\IntroController.java
 ``` java
 //This class is not used anymore because we decided
 //to go full keyboard in our program. This class
