@@ -94,17 +94,14 @@ public class TaskPane extends StackPane {
 
     } else if (taskType.equals(Constants.TYPE_TASK.SPECIFIC)) {
       String endDate = task.getDateTime().getEndDate().format(dateFormat);
-      String startTime =
-          task.getDateTime().getStartTime() == null ? "" : " @ "
-              + task.getDateTime().getStartTime().toString() + " to";
-      String endTime =
-          task.getDateTime().getEndTime() == null ? "" : ", "
-              + task.getDateTime().getEndTime().toString();
 
-      startValue = new Label(endDate + startTime + endTime);
+      startValue = new Label(endDate);
+      startValue.setPadding(new Insets(0, 50, 0, 0));
+      Label timeValue = new Label(task.getDateTime().getEndTime().toString());
+      timeValue.setStyle("-fx-font-weight: bold");
       endValue = new Label("");
 
-      datesBox.getChildren().addAll(startByOn, startValue);
+      datesBox.getChildren().addAll(startByOn, startValue, timeValue);
 
     } else if (taskType.equals(Constants.TYPE_TASK.FLOATING)) {
       startValue = new Label("");
