@@ -21,7 +21,9 @@ import raijin.common.datatypes.Task;
 import raijin.ui.TaskPane;
 
 public class TaskUtils {
-	final static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
+  final static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
+  final static String MESSAGE_NO_PENDING = "You have no pending tasks!";
+  final static String MESSAGE_DEFAULT_NO_TASKS = "No pending tasks!";
 
   public static List<Task> initSort(List<Task> tasks) {
 	  ArrayList<Task> list = new ArrayList<Task>(tasks);
@@ -54,7 +56,7 @@ public class TaskUtils {
     ArrayList<TaskPane> list = new ArrayList<TaskPane>();
     
     if (tasks.isEmpty()) {
-        return displayMessage("You have no pending tasks!");
+        return displayMessage(MESSAGE_NO_PENDING);
     }
     
     for (int i = 0; i < tasks.size(); i++) {
@@ -98,7 +100,7 @@ public class TaskUtils {
 	  }
 	  
 	  if (todayIsEmpty) {
-			list.add(new TaskPane ("No pending tasks!"));
+			list.add(new TaskPane (MESSAGE_DEFAULT_NO_TASKS));
 	  }
 	  
 	  list.add(new TaskPane ("Tomorrow - " + tomorrowString + ""));
@@ -123,7 +125,7 @@ public class TaskUtils {
 	  }
 	  
 	  if (tomorrowIsEmpty) {
-		  list.add(new TaskPane ("No pending tasks!"));
+		  list.add(new TaskPane (MESSAGE_DEFAULT_NO_TASKS));
 	  }
 	  
 	  list.add(new TaskPane ("Future"));
@@ -136,14 +138,11 @@ public class TaskUtils {
 	  }
 	  
 	  if (futureIsEmpty) {
-		  list.add(new TaskPane ("No pending tasks!"));
+		  list.add(new TaskPane (MESSAGE_DEFAULT_NO_TASKS));
 	  }
-	  
-	  
 	  return list;
 	  
   }
-  
 
   public static List<TaskPane> displayMessage(String message) {
     ArrayList<TaskPane> list = new ArrayList<TaskPane>();
@@ -153,35 +152,7 @@ public class TaskUtils {
     return list;
   }
 
-  public static List<String> filterName(List<Task> tasks) {
-    return tasks
-        .stream()
-        .map(
-            (Task t) -> (tasks.indexOf(t) + 1)
-                + " : "
-                + (t.getName().length() > 60 ? t.getName().substring(0, 59) + "..." : t.getName())
-                + (t.getDateTime() == null ? "" : " [ "
-                    + String.format("%02d", t.getDateTime().getStartDate().getDayOfMonth())
-                    + "/"
-                    + String.format("%02d", t.getDateTime().getStartDate().getMonthValue())
-                    + "/"
-                    + t.getDateTime().getStartDate().getYear()
-                    + " to "
-                    + String.format("%02d", t.getDateTime().getEndDate().getDayOfMonth())
-                    + "/"
-                    + String.format("%02d", t.getDateTime().getEndDate().getMonthValue())
-                    + "/"
-                    + t.getDateTime().getEndDate().getYear()
-                    + " | "
-                    + (t.getDateTime().getStartTime() == null ? "" : t.getDateTime().getStartTime()
-                        .toString())
-                    + (t.getDateTime().getEndTime() == null ? "" : " - "
-                        + t.getDateTime().getEndTime().toString()) + " ]"))
-        .collect(Collectors.toList());
-
-  }
-
-
+  //@@author A0112213E
   // ===========================================================================
   // Helper functions to retrieve different properties of task
   // ===========================================================================
@@ -191,7 +162,6 @@ public class TaskUtils {
    * @param pendingTasks
    * @return set of tags
    */
-  //@@author A0112213E
   public static TreeSet<String> getTags(HashMap<Integer, Task> pendingTasks) {
     TreeSet<String> tags = new TreeSet<String>();
 
