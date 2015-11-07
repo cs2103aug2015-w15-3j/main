@@ -31,7 +31,7 @@ public class TaskPane extends StackPane {
 
   private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
   private final int TASK_DISPLAY_NAME_LIMIT = 69;
-  private final float MAX_EVENT_DURATION = 1440; // Set 12 hour as the upper bound for event duration
+  private final float MAX_EVENT_DURATION = 1440; // Set 24 hour as the upper bound for event duration
   private final float MAX_TIMESLOT_WIDTH = 150; // Maximum width of a time slot label
 
   private Label id;
