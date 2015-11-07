@@ -7,7 +7,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+import de.jensd.fx.glyphs.GlyphsDude;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.geometry.Insets;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
@@ -86,6 +89,7 @@ public class TaskPane extends StackPane {
                 + task.getDateTime().getEndTime().toString();
 
         startValue = new Label(startDate + startTime);
+        startValue.setPrefWidth(225);
         startValue.setPadding(new Insets(0, 50, 0, 0));
         endValue = new Label(endDate + endTime);
 
@@ -133,6 +137,10 @@ public class TaskPane extends StackPane {
     overdueBox.getChildren().addAll(isOverdue);
     overdueBox.setPadding(new Insets(25, 0, 0, 0));
 
+    Label overdueReminder = GlyphsDude.createIconLabel(FontAwesomeIcon.EXCLAMATION_CIRCLE, 
+        "", "25px", "10px", ContentDisplay.RIGHT);
+    overdueReminder.setPadding(new Insets(20, 0, 0, 0));
+
     HBox pane = new HBox();
     pane.getChildren().addAll(idBox, centre);
 
@@ -150,7 +158,8 @@ public class TaskPane extends StackPane {
 
     // Add an indicator for overdue if task is overdue
     if (displayInstance.isOverdue(task) && !completedList.contains(task)) {
-      pane.getChildren().add(overdueBox);
+      pane.getChildren().add(overdueReminder);
+      //pane.getChildren().add(overdueBox);
     }
 
     this.getChildren().addAll(pane);
