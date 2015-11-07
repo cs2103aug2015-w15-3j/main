@@ -1,0 +1,155 @@
+{
+  "pendingTasks": {
+    "3": {
+      "id": 3,
+      "name": "prepare lab report",
+      "dateTime": {
+        "startDate": {
+          "year": 2015,
+          "month": 11,
+          "day": 30
+        },
+        "endDate": {
+          "year": 2015,
+          "month": 11,
+          "day": 30
+        },
+        "endTime": {
+          "hour": 17,
+          "minute": 0,
+          "second": 0,
+          "nano": 0
+        }
+      },
+      "priority": "m",
+      "tags": [],
+      "subTasks": [],
+      "keywords": [
+        "prepare",
+        "lab",
+        "report"
+      ],
+      "type": "SPECIFIC"
+    },
+    "4": {
+      "id": 4,
+      "name": "experiment with mockito",
+      "priority": "m",
+      "tags": [
+        "cs2103"
+      ],
+      "subTasks": [],
+      "keywords": [
+        "experiment",
+        "with",
+        "mockito"
+      ],
+      "type": "FLOATING"
+    },
+    "5": {
+      "id": 5,
+      "name": "read tao of winnie",
+      "priority": "m",
+      "tags": [],
+      "subTasks": [],
+      "keywords": [
+        "read",
+        "tao",
+        "of",
+        "winnie"
+      ],
+      "type": "FLOATING"
+    },
+    "6": {
+      "id": 6,
+      "name": "sweep floor",
+      "priority": "m",
+      "tags": [],
+      "subTasks": [],
+      "keywords": [
+        "sweep",
+        "floor"
+      ],
+      "type": "FLOATING"
+    }
+  },
+  "completedTasks": {
+    "2": {
+      "id": 2,
+      "name": "OP2 rehearsal",
+      "dateTime": {
+        "startDate": {
+          "year": 2016,
+          "month": 10,
+          "day": 31
+        },
+        "endDate": {
+          "year": 2016,
+          "month": 10,
+          "day": 31
+        },
+        "endTime": {
+          "hour": 23,
+          "minute": 59,
+          "second": 0,
+          "nano": 0
+        }
+      },
+      "priority": "m",
+      "tags": [
+        "cs2101"
+      ],
+      "subTasks": [],
+      "keywords": [
+        "OP2",
+        "rehearsal"
+      ],
+      "type": "SPECIFIC"
+    },
+    "4": {
+      "id": 4,
+      "name": "test",
+      "priority": "m",
+      "tags": [],
+      "subTasks": [],
+      "keywords": [
+        "test"
+      ],
+      "type": "FLOATING"
+    },
+    "7": {
+      "id": 7,
+      "name": "do peer review 3",
+      "dateTime": {
+        "startDate": {
+          "year": 2016,
+          "month": 11,
+          "day": 1
+        },
+        "endDate": {
+          "year": 2016,
+          "month": 11,
+          "day": 1
+        },
+        "endTime": {
+          "hour": 23,
+          "minute": 59,
+          "second": 0,
+          "nano": 0
+        }
+      },
+      "priority": "m",
+      "tags": [
+        "cs2101"
+      ],
+      "subTasks": [],
+      "keywords": [
+        "do",
+        "peer",
+        "review",
+        "3"
+      ],
+      "type": "SPECIFIC"
+    }
+  }
+}
