@@ -32,7 +32,7 @@ import raijin.common.utils.TaskUtils;
 import raijin.logic.api.Logic;
 import raijin.storage.api.TasksManager;
 
-public class SidebarControllerTest {
+public class SidebarControllerIT {
 
   private static SidebarController sidebarController;
 
