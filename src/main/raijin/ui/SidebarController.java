@@ -37,33 +37,33 @@ public class SidebarController extends BorderPane {
   //============
 
   @FXML
-  private Button inbox;
+  Button inbox;
   @FXML
-  private Label numOfPending;
+  Label numOfPending;
   @FXML
-  private Button overdue;
+  Button overdue;
   @FXML
-  private Label numOfOverdue;
+  Label numOfOverdue;
   @FXML
-  private Button completed;
+  Button completed;
   @FXML
-  private Label numOfCompleted;
+  Label numOfCompleted;
   @FXML
-  private Button floating;
+  Button floating;
   @FXML
-  private Label numOfFloating;
+  Label numOfFloating;
   @FXML
-  private Button today;
+  Button today;
   @FXML
-  private Label numOfToday;
+  Label numOfToday;
   @FXML
-  private Button tomorrow;
+  Button tomorrow;
   @FXML
-  private Label numOfTomorrow;
+  Label numOfTomorrow;
   @FXML
-  private Button future;
+  Button future;
   @FXML
-  private Label numOfNextTasks;
+  Label numOfNextTasks;
 
   /*Reference to button focused by user*/
   private Button currentFocusedButton;               
