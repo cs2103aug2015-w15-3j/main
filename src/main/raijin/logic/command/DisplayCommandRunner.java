@@ -60,252 +60,50 @@ public class DisplayCommandRunner extends CommandRunner {
 	private ArrayList<Task> pending;
 	private ArrayList<Task> completed;
 	private ArrayList<Task> relevant;
-
+	
+	// Getting the one instance of eventBus
 	private RaijinEventBus eventbus = RaijinEventBus.getInstance();
 
 	// DateTimeFormatter used solely for display
-	final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
+	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");
+	
+	// Attributes accessible to all methods
+	private ParsedInput cmd;
+	private String dateForDisplay;
 
 	public Status processCommand(ParsedInput cmd) {
+		this.cmd = cmd;
 
 		todayDate = LocalDate.now();
 		tomorrowDate = todayDate.plusDays(1);
 
 		retrieveLists();
-		cmdDateTime = getQueriedDate(cmd);
-
-		String dateForDisplay = cmdDateTime.getStartDate().format(dateFormatter);
-		String message = "";
+		cmdDateTime = getQueriedDate();
+		dateForDisplay = cmdDateTime.getStartDate().format(dateFormatter);
 		String feedbackMessage = "";
 
-		boolean isEmpty = true;
 		String chosenDisplayType = cmd.getDisplayOptions();
 
 		switch (chosenDisplayType) {
 
 			case TYPE_PENDING:
-				// If user's queried date is not today
-				if (!cmdDateTime.getStartDate().isEqual(todayDate)) {
-					message = "Tasks pending for " + dateForDisplay;
-					feedbackMessage = FEEDBACK_PENDING;
-	
-					// If user is querying for a range of dates
-					if (!cmdDateTime.getStartDate().equals(cmdDateTime.getEndDate())) {
-						message += " ~ " + cmdDateTime.getEndDate().format(dateFormatter);
-	
-						ArrayList<Task> relevant = new ArrayList<Task>();
-	
-						for (Task currentTask : pending) {
-							if (isRelevantDate(cmd.getDateTime(), currentTask.getDateTime())
-									&& !isAlreadyInList(currentTask, relevant)) {
-	
-								relevant.add(currentTask);
-							}
-						}
-	
-						if (relevant.isEmpty()) {
-							eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
-						} else {
-							Collections.sort(relevant);
-							eventbus.post(new SetCurrentDisplayEvent(relevant, message));
-						}
-	
-						// User is only querying for a specific date that is not today.
-					} else {
-						message += " & next day";
-	
-						ArrayList<Task> thisDay = new ArrayList<Task>();
-						ArrayList<Task> nextDay = new ArrayList<Task>();
-	
-						boolean thisDayIsEmpty = true;
-	
-						for (Task currentTask : pending) {
-							taskDateTime = currentTask.getDateTime();
-	
-							if (currentTask.getType() != Constants.TYPE_TASK.FLOATING
-									&& isRelevantDate(cmdDateTime, taskDateTime)) {
-	
-								thisDayIsEmpty = false;
-								thisDay.add(currentTask);
-							}
-						}
-	
-						if (!thisDayIsEmpty) {
-							Collections.sort(thisDay);
-						}
-	
-						boolean nextDayIsEmpty = true;
-						LocalDate nextDayDate = cmdDateTime.getStartDate().plusDays(1);
-	
-						for (Task currentTask : pending) {
-							taskDateTime = currentTask.getDateTime();
-	
-							if (currentTask.getType() != Constants.TYPE_TASK.FLOATING
-									&& isRelevantDate(new DateTime(nextDayDate, nextDayDate), taskDateTime)
-									&& !isAlreadyInList(currentTask, thisDay)) {
-	
-								nextDayIsEmpty = false;
-								nextDay.add(currentTask);
-							}
-						}
-	
-						if (!nextDayIsEmpty) {
-							Collections.sort(nextDay);
-							thisDay.addAll(nextDay);
-						}
-	
-						if (thisDayIsEmpty && nextDayIsEmpty) {
-							eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
-						} else {
-							eventbus.post(new SetCurrentDisplayEvent(thisDay, message));
-						}
-					}
-	
-				}
-	
-				// User's queried date is today
-				else {
-					message = HEADMESSAGE_DEFAULT_PENDING;
-	
-					feedbackMessage = FEEDBACK_PENDING + " for today, tomorrow and future";
-					ArrayList<Task> today = new ArrayList<Task>();
-					ArrayList<Task> tomorrow = new ArrayList<Task>();
-	
-					boolean todayIsEmpty = true;
-	
-					// Getting today's tasks
-					for (Task currentTask : pending) {
-						taskDateTime = currentTask.getDateTime();
-	
-						if (currentTask.getType() != Constants.TYPE_TASK.FLOATING
-								&& isRelevantDate(new DateTime(todayDate, todayDate), taskDateTime)) {
-	
-							todayIsEmpty = false;
-							today.add(currentTask);
-						}
-					}
-	
-					if (!todayIsEmpty) {
-						Collections.sort(today);
-					}
-	
-					boolean tomorrowIsEmpty = true;
-	
-					// Getting tomorrow's tasks
-					for (Task currentTask : pending) {
-						taskDateTime = currentTask.getDateTime();
-	
-						if (currentTask.getType() != Constants.TYPE_TASK.FLOATING
-								&& isRelevantDate(new DateTime(tomorrowDate, tomorrowDate), taskDateTime)
-								&& !isAlreadyInList(currentTask, today)) {
-	
-							tomorrowIsEmpty = false;
-							tomorrow.add(currentTask);
-						}
-					}
-	
-					if (!tomorrowIsEmpty) {
-						Collections.sort(tomorrow);
-						today.addAll(tomorrow);
-					}
-	
-					ArrayList<Task> temp = new ArrayList<Task>(pending);
-					Collections.sort(temp);
-					for (Task task : today) {
-						temp.remove(task);
-					}
-					int i = 0;
-					boolean restIsEmpty = true;
-					for (int size = today.size(); size < 20 && i < temp.size(); size++) {
-						Task task = temp.get(i++);
-						if (!isOverdue(task)) {
-							today.add(task);
-							restIsEmpty = false;
-						}
-					}
-	
-					if (todayIsEmpty && tomorrowIsEmpty && restIsEmpty) {
-						eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
-					} else {
-						eventbus.post(new SetCurrentDisplayEvent(today, message));
-					}
-	
-				}
-	
+				feedbackMessage = runTypePending();
 				break;
 	
 			case TYPE_ALL:
-				feedbackMessage = FEEDBACK_ALL_PENDING;
-				message = HEADMESSAGE_ALL_PENDING;
-	
-				if (pending.isEmpty()) {
-					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
-				} else {
-					relevant = new ArrayList<Task>(pending);
-					Collections.sort(relevant);
-					eventbus.post(new SetCurrentDisplayEvent(relevant, message));
-				}
-	
+				feedbackMessage = runTypeAll();
 				break;
 	
 			case TYPE_FLOATING:
-				feedbackMessage = FEEDBACK_FLOATING;
-				message = HEADMESSAGE_ALL_FLOATING;
-	
-				for (Task currentTask : pending) {
-	
-					if (currentTask.getType().equals(Constants.TYPE_TASK.FLOATING)) {
-						relevant.add(currentTask);
-						isEmpty = false;
-					}
-				}
-	
-				if (isEmpty) {
-					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_FLOATING, message));
-				} else {
-					relevant = (ArrayList<Task>) new SortFilter(Constants.SORT_CRITERIA.PRIORITY).filter(relevant);
-					eventbus.post(new SetCurrentDisplayEvent(relevant, message));
-				}
-	
+				feedbackMessage = runTypeFloating();
 				break;
 	
 			case TYPE_COMPLETED:
-				feedbackMessage = FEEDBACK_COMPLETED;
-				message = HEADMESSAGE_COMPLETED + dateForDisplay;
-	
-				for (Task currentTask : completed) {
-					relevant.add(currentTask);
-					isEmpty = false;
-				}
-	
-				if (isEmpty) {
-					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_COMPLETED, message));
-				} else {
-					Collections.sort(relevant);
-					eventbus.post(new SetCurrentDisplayEvent(relevant, message));
-				}
-	
+				feedbackMessage = runTypeCompleted();
 				break;
 	
 			case TYPE_OVERDUE:
-				feedbackMessage = FEEDBACK_OVERDUE;
-				message = HEADMESSAGE_ALL_OVERDUE;
-	
-				for (Task currentTask : pending) {
-	
-					if (isOverdue(currentTask)) {
-						relevant.add(currentTask);
-						isEmpty = false;
-					}
-				}
-	
-				if (isEmpty) {
-					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_OVERDUE, message));
-				} else {
-					Collections.sort(relevant);
-					eventbus.post(new SetCurrentDisplayEvent(relevant, message));
-				}
-	
+				feedbackMessage = runTypeOverdue();
 				break;
 			}
 
@@ -331,8 +129,7 @@ public class DisplayCommandRunner extends CommandRunner {
 	 *            ParsedInput that the user keyed in.
 	 * @return the queried DateTime
 	 */
-
-	public DateTime getQueriedDate(ParsedInput cmd) {
+	public DateTime getQueriedDate() {
 		if (cmd.getDateTime() != null) {
 			cmdDateTime = cmd.getDateTime();
 		} else {
@@ -343,6 +140,266 @@ public class DisplayCommandRunner extends CommandRunner {
 		return cmdDateTime;
 	}
 
+
+	/**
+	 * Runs if user's display option is PENDING
+	 * @return feedbackMessage for the eventbus
+	 */
+	private String runTypePending() {
+		String message;
+		String feedbackMessage;
+		
+		// If user's queried date is not today
+		if (!cmdDateTime.getStartDate().isEqual(todayDate)) {
+			message = "Tasks pending for " + dateForDisplay;
+			feedbackMessage = FEEDBACK_PENDING;
+
+			// If user is querying for a range of dates
+			if (!cmdDateTime.getStartDate().equals(cmdDateTime.getEndDate())) {
+				message += " ~ " + cmdDateTime.getEndDate().format(dateFormatter);
+
+				ArrayList<Task> relevant = new ArrayList<Task>();
+
+				for (Task currentTask : pending) {
+					if (isRelevantDate(cmd.getDateTime(), currentTask.getDateTime())
+							&& !isAlreadyInList(currentTask, relevant)) {
+
+						relevant.add(currentTask);
+					}
+				}
+
+				if (relevant.isEmpty()) {
+					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+				} else {
+					Collections.sort(relevant);
+					eventbus.post(new SetCurrentDisplayEvent(relevant, message));
+				}
+			} 
+			
+			// User is only querying for a specific date that is not today.
+			else {
+				message += " & next day";
+
+				ArrayList<Task> thisDay = new ArrayList<Task>();
+				ArrayList<Task> nextDay = new ArrayList<Task>();
+
+				boolean thisDayIsEmpty = true;
+
+				for (Task currentTask : pending) {
+					taskDateTime = currentTask.getDateTime();
+
+					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING
+							&& isRelevantDate(cmdDateTime, taskDateTime)) {
+
+						thisDayIsEmpty = false;
+						thisDay.add(currentTask);
+					}
+				}
+
+				if (!thisDayIsEmpty) {
+					Collections.sort(thisDay);
+				}
+
+				boolean nextDayIsEmpty = true;
+				LocalDate nextDayDate = cmdDateTime.getStartDate().plusDays(1);
+
+				for (Task currentTask : pending) {
+					taskDateTime = currentTask.getDateTime();
+
+					if (currentTask.getType() != Constants.TYPE_TASK.FLOATING
+							&& isRelevantDate(new DateTime(nextDayDate, nextDayDate), taskDateTime)
+							&& !isAlreadyInList(currentTask, thisDay)) {
+
+						nextDayIsEmpty = false;
+						nextDay.add(currentTask);
+					}
+				}
+
+				if (!nextDayIsEmpty) {
+					Collections.sort(nextDay);
+					thisDay.addAll(nextDay);
+				}
+
+				if (thisDayIsEmpty && nextDayIsEmpty) {
+					eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+				} else {
+					eventbus.post(new SetCurrentDisplayEvent(thisDay, message));
+				}
+			}
+
+		} else { // User's queried date is today
+			message = HEADMESSAGE_DEFAULT_PENDING;
+
+			feedbackMessage = FEEDBACK_PENDING + " for today, tomorrow and future";
+			ArrayList<Task> today = new ArrayList<Task>();
+			ArrayList<Task> tomorrow = new ArrayList<Task>();
+
+			boolean todayIsEmpty = true;
+
+			// Getting today's tasks
+			for (Task currentTask : pending) {
+				taskDateTime = currentTask.getDateTime();
+
+				if (currentTask.getType() != Constants.TYPE_TASK.FLOATING
+						&& isRelevantDate(new DateTime(todayDate, todayDate), taskDateTime)) {
+
+					todayIsEmpty = false;
+					today.add(currentTask);
+				}
+			}
+
+			if (!todayIsEmpty) {
+				Collections.sort(today);
+			}
+
+			boolean tomorrowIsEmpty = true;
+
+			// Getting tomorrow's tasks
+			for (Task currentTask : pending) {
+				taskDateTime = currentTask.getDateTime();
+
+				if (currentTask.getType() != Constants.TYPE_TASK.FLOATING
+						&& isRelevantDate(new DateTime(tomorrowDate, tomorrowDate), taskDateTime)
+						&& !isAlreadyInList(currentTask, today)) {
+
+					tomorrowIsEmpty = false;
+					tomorrow.add(currentTask);
+				}
+			}
+
+			if (!tomorrowIsEmpty) {
+				Collections.sort(tomorrow);
+				today.addAll(tomorrow);
+			}
+
+			ArrayList<Task> temp = new ArrayList<Task>(pending);
+			Collections.sort(temp);
+			for (Task task : today) {
+				temp.remove(task);
+			}
+			int i = 0;
+			boolean restIsEmpty = true;
+			for (int size = today.size(); size < 20 && i < temp.size(); size++) {
+				Task task = temp.get(i++);
+				if (!isOverdue(task)) {
+					today.add(task);
+					restIsEmpty = false;
+				}
+			}
+
+			if (todayIsEmpty && tomorrowIsEmpty && restIsEmpty) {
+				eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+			} else {
+				eventbus.post(new SetCurrentDisplayEvent(today, message));
+			}
+
+		}
+		return feedbackMessage;
+	}
+
+	/**
+	 * Runs if user's display option is ALL
+	 * @return feedbackMessage for the eventbus
+	 */
+	private String runTypeAll() {
+		String message;
+		String feedbackMessage;
+		feedbackMessage = FEEDBACK_ALL_PENDING;
+		message = HEADMESSAGE_ALL_PENDING;
+
+		if (pending.isEmpty()) {
+			eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_PENDING, message));
+		} else {
+			relevant = new ArrayList<Task>(pending);
+			Collections.sort(relevant);
+			eventbus.post(new SetCurrentDisplayEvent(relevant, message));
+		}
+		return feedbackMessage;
+	}
+
+	/**
+	 * Runs if user's display option is FLOATING
+	 * @return feedbackMessage for the eventbus
+	 */
+	public String runTypeFloating() {
+		String message;
+		String feedbackMessage;
+		feedbackMessage = FEEDBACK_FLOATING;
+		message = HEADMESSAGE_ALL_FLOATING;
+		
+		boolean isEmpty = true;
+
+		for (Task currentTask : pending) {
+
+			if (currentTask.getType().equals(Constants.TYPE_TASK.FLOATING)) {
+				relevant.add(currentTask);
+				isEmpty = false;
+			}
+		}
+
+		if (isEmpty) {
+			eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_FLOATING, message));
+		} else {
+			relevant = (ArrayList<Task>) new SortFilter(Constants.SORT_CRITERIA.PRIORITY).filter(relevant);
+			eventbus.post(new SetCurrentDisplayEvent(relevant, message));
+		}
+		return feedbackMessage;
+	}
+
+	/**
+	 * Runs if user's display option is COMPLETED
+	 * @return feedbackMessage for the eventbus
+	 */
+	public String runTypeCompleted() {
+		String message;
+		String feedbackMessage;
+		feedbackMessage = FEEDBACK_COMPLETED;
+		message = HEADMESSAGE_COMPLETED + dateForDisplay;
+		
+		boolean isEmpty = true;
+
+		for (Task currentTask : completed) {
+			relevant.add(currentTask);
+			isEmpty = false;
+		}
+
+		if (isEmpty) {
+			eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_COMPLETED, message));
+		} else {
+			Collections.sort(relevant);
+			eventbus.post(new SetCurrentDisplayEvent(relevant, message));
+		}
+		return feedbackMessage;
+	}
+
+	/**
+	 * Runs if user's display option is OVERDUE
+	 * @return feedbackMessage for the eventbus
+	 */
+	public String runTypeOverdue() {
+		String message;
+		String feedbackMessage;
+		feedbackMessage = FEEDBACK_OVERDUE;
+		message = HEADMESSAGE_ALL_OVERDUE;
+		
+		boolean isEmpty = true;
+
+		for (Task currentTask : pending) {
+
+			if (isOverdue(currentTask)) {
+				relevant.add(currentTask);
+				isEmpty = false;
+			}
+		}
+
+		if (isEmpty) {
+			eventbus.post(new SetCurrentDisplayEvent(MESSAGE_NO_OVERDUE, message));
+		} else {
+			Collections.sort(relevant);
+			eventbus.post(new SetCurrentDisplayEvent(relevant, message));
+		}
+		return feedbackMessage;
+	}
 	/**
 	 * This method is used to determine whether a task's date is relevant to the
 	 * date that the user has specified. e.g. does start/end fall on specified
