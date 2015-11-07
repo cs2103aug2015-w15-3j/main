@@ -157,13 +157,13 @@ public class DateTime implements Comparable<DateTime> {
 
   @Override
   public int compareTo(DateTime compared) {
-    int result = getEndDate().compareTo(compared.getEndDate());
+    int result = getStartDate().compareTo(compared.getStartDate());
 
     // When both end dates are different
     if (result != 0) {
       return result;
     } else {
-      result = getStartDate().compareTo(compared.getStartDate());
+      result = getEndDate().compareTo(compared.getEndDate());
 
       // When both start dates are different
       if (result != 0) {

@@ -9,14 +9,12 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
-
 import raijin.common.datatypes.Constants;
+import raijin.common.eventbus.MainSubscriber;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.ChangeViewEvent;
 import raijin.common.eventbus.events.ScrollEvent;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
-import raijin.common.eventbus.subscribers.MainSubscriber;
-import raijin.common.utils.TaskPane;
 import raijin.common.utils.TaskUtils;
 import raijin.storage.api.TasksManager;
 

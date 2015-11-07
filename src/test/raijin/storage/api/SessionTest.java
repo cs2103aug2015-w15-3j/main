@@ -47,6 +47,7 @@ public class SessionTest {
   @Test
   public void testProgramDirectory_MatchWithTargetDirectory() throws UnsupportedEncodingException {
     String expected = StorageHandler.getJarPath() + Constants.NAME_USER_FOLDER;
+    session.setupBase(expected);
     assertEquals(expected, session.programDirectory);
   }
   

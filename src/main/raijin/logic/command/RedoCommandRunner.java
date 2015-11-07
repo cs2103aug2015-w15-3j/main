@@ -6,9 +6,9 @@ import com.google.common.eventbus.Subscribe;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
+import raijin.common.eventbus.MainSubscriber;
 import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.common.eventbus.events.UndoRedoEvent;
-import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.exception.UnableToExecuteCommandException;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.api.CommandShortcut;

@@ -430,8 +430,9 @@ public class AddParser {
   public DateTime createDateTime() throws IllegalCommandArgumentException {
     DateTime dateTime = null;
     if (containsStartDate && containsStartTime && containsEndDate && containsEndTime) {
+      compareStartEndDate();
       dateTime = new DateTime(startDate, startTime, endDate, endTime);
-      checkStartEndDate(startDate, endDate, dateTime);
+      checkStartEndDate(startDate, endDate, dateTime);  
     } else if (containsStartDate && containsStartTime && containsEndTime) {
       dateTime = new DateTime(startDate, startTime, endTime);
       checkEndDate(startDate, dateTime);
@@ -439,6 +440,7 @@ public class AddParser {
       dateTime = new DateTime(startDate, startTime);
       checkEndDate(startDate, dateTime);
     } else if (containsStartDate && containsEndDate) {
+      compareStartEndDate();
       dateTime = new DateTime(startDate, currentTime, endDate, "2359");
       checkStartEndDate(startDate, endDate, dateTime);
     } else if (containsStartDate) {
@@ -488,17 +490,40 @@ public class AddParser {
   }
   
   /**
+   * Compares both start and end dates and ensures that end date is always later than start date.
+   */
+  public void compareStartEndDate() {
+    String[] startDateArray = startDate.split(dateOperator);
+    String[] endDateArray = endDate.split(dateOperator);
+    
+ // Compares year first, then month, and then day.
+    if (Integer.parseInt(startDateArray[2]) > Integer.parseInt(endDateArray[2])) {
+      endDate = endDateArray[0] +"/"+ endDateArray[1] +"/"+ startDateArray[2];
+    } else if (Integer.parseInt(startDateArray[2]) == Integer.parseInt(endDateArray[2])) {
+      if (Integer.parseInt(startDateArray[1]) > Integer.parseInt(endDateArray[1])) {
+        endDate = endDateArray[0] +"/"+endDateArray[1] +"/"+(Integer.parseInt(startDateArray[2])+1);
+      } else if (Integer.parseInt(startDateArray[1]) == Integer.parseInt(endDateArray[1]) && 
+          Integer.parseInt(startDateArray[0]) > Integer.parseInt(endDateArray[0])) {
+        endDate = endDateArray[0] +"/"+endDateArray[1] +"/"+(Integer.parseInt(startDateArray[2])+1);
+      }
+    }
+  }
+  
+  /**
    * Method that checks if start and end date exists on the calendar.
    * 
-   * @param startDate       Start date in dd/mm/yyyy format.
-   * @param endDate         End date in dd/mm/yyyy format.
+   * @param date1           Start date in dd/mm/yyyy format.
+   * @param date2           End date in dd/mm/yyyy format.
    * @param dateTime        DateTime object created from both startDate & endDate.
    * @throws                IllegalCommandArgumentException
    */
-  public void checkStartEndDate(String startDate, String endDate, DateTime dateTime)
+  public void checkStartEndDate(String date1, String date2, DateTime dateTime)
       throws IllegalCommandArgumentException {
-    int startDay = Integer.parseInt(startDate.split(dateOperator)[0]);
-    int endDay = Integer.parseInt(endDate.split(dateOperator)[0]);
+    String[] startDateArray = date1.split(dateOperator);
+    String[] endDateArray = date2.split(dateOperator);
+    
+    int startDay = Integer.parseInt(startDateArray[0]);
+    int endDay = Integer.parseInt(endDateArray[0]);
     if (dateTime.getStartDate().getDayOfMonth() != startDay ||
         dateTime.getEndDate().getDayOfMonth() != endDay) {
       throw new IllegalCommandArgumentException(

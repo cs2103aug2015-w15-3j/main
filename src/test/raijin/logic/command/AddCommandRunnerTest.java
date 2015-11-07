@@ -65,7 +65,7 @@ public class AddCommandRunnerTest {
     String inputName = "submit op2 to ms lee";
     DateTime dateTime = new DateTime("19/09/2015");
     Status returnStatus = addTask(inputName, dateTime);
-    String expected = String.format("You have added %s successfully", inputName);
+    String expected = String.format("You have added \"%s\" successfully", inputName);
     
     assertEquals(expected, returnStatus.getFeedback());
   }

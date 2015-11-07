@@ -334,7 +334,7 @@ public class Constants {
 
   public  static final KeyCodeCombination KEY_VIEW_UP = new KeyCodeCombination(KeyCode.F1);
 
-  public  static final KeyCodeCombination KEY_MINMAX = new KeyCodeCombination(KeyCode.ESCAPE, 
+  public  static final KeyCodeCombination KEY_MINMAX = new KeyCodeCombination(KeyCode.M, 
       KeyCodeCombination.ALT_DOWN);
 
   public  static final KeyCodeCombination SCROLL_UP = new KeyCodeCombination(KeyCode.PAGE_UP);

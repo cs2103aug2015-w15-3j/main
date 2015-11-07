@@ -15,13 +15,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
+import raijin.common.eventbus.MainSubscriber;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.ChangeViewEvent;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.events.TasksChangedEvent;
-import raijin.common.eventbus.subscribers.MainSubscriber;
-import raijin.common.utils.filter.DateFilter;
-import raijin.common.utils.filter.TypeFilter;
+import raijin.common.filter.DateFilter;
+import raijin.common.filter.TypeFilter;
 import raijin.logic.api.Logic;
 
 /**
@@ -37,36 +37,36 @@ public class SidebarController extends BorderPane {
   //============
 
   @FXML
-  private Button inbox;
+  Button inbox;
   @FXML
-  private Label numOfPending;
+  Label numOfPending;
   @FXML
-  private Button overdue;
+  Button overdue;
   @FXML
-  private Label numOfOverdue;
+  Label numOfOverdue;
   @FXML
-  private Button completed;
+  Button completed;
   @FXML
-  private Label numOfCompleted;
+  Label numOfCompleted;
   @FXML
-  private Button floating;
+  Button floating;
   @FXML
-  private Label numOfFloating;
+  Label numOfFloating;
   @FXML
-  private Button today;
+  Button today;
   @FXML
-  private Label numOfToday;
+  Label numOfToday;
   @FXML
-  private Button tomorrow;
+  Button tomorrow;
   @FXML
-  private Label numOfTomorrow;
+  Label numOfTomorrow;
   @FXML
-  private Button future;
+  Button future;
   @FXML
-  private Label numOfNextTasks;
+  Label numOfNextTasks;
 
   /*Reference to button focused by user*/
-  private Button currentFocusedButton;               
+  Button currentFocusedButton;               
 
 
   private static final String SIDEBAR_LAYOUT_FXML = "resource/layout/SidebarController.fxml";
@@ -223,8 +223,8 @@ public class SidebarController extends BorderPane {
 
   @FXML
   protected void handleOverdueButtonAction(ActionEvent event) {
-    triggerOverdueViewChange();
     setNewFocus(overdue);
+    triggerOverdueViewChange();
   }
 
   @FXML
@@ -282,8 +282,4 @@ public class SidebarController extends BorderPane {
     };
   }
   
-  
-
-  
-
 }

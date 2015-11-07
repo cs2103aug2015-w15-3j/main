@@ -137,10 +137,8 @@ public class DateTimeTest {
   @Test
   public void compareTo_SameDate_EarlierEndTime() {
     DateTime source = new DateTime("25/10/2015", "1200");
-    System.out.println(source.getEndDate().toString());
-    System.out.println(source.getEndTime().toString());
-    System.out.println(source.getStartDate().toString());
-    DateTime target = new DateTime(null, null, LocalDate.now(), LocalTime.now());
+    DateTime target = new DateTime(LocalDate.now(), null, LocalDate.now(), 
+          LocalTime.now());
     assertTrue(source.compareTo(target) < 0);
   }
 }

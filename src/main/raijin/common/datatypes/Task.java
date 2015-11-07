@@ -24,7 +24,7 @@ public class Task implements Comparable<Task> {
   private int id; // unique id that describes a task
   private String name; // description of a task
   private DateTime dateTime;
-  private String priority;
+  private String priority = Constants.PRIORITY_MID;
   private TreeSet<String> tags = new TreeSet<String>();
   private TreeSet<Integer> subTasks = new TreeSet<Integer>();
   private ArrayList<String> keywords;
