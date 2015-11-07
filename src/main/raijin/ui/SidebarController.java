@@ -66,7 +66,7 @@ public class SidebarController extends BorderPane {
   Label numOfNextTasks;
 
   /*Reference to button focused by user*/
-  private Button currentFocusedButton;               
+  Button currentFocusedButton;               
 
 
   private static final String SIDEBAR_LAYOUT_FXML = "resource/layout/SidebarController.fxml";
@@ -223,8 +223,8 @@ public class SidebarController extends BorderPane {
 
   @FXML
   protected void handleOverdueButtonAction(ActionEvent event) {
-    triggerOverdueViewChange();
     setNewFocus(overdue);
+    triggerOverdueViewChange();
   }
 
   @FXML
@@ -282,8 +282,4 @@ public class SidebarController extends BorderPane {
     };
   }
   
-  
-
-  
-
 }

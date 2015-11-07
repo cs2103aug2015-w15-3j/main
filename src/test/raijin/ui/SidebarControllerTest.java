@@ -1,3 +1,5 @@
+//@@author A0112213E
+
 package raijin.ui;
 
 import static org.junit.Assert.*;
@@ -7,6 +9,8 @@ import java.util.HashMap;
 
 import javafx.application.Platform;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -18,8 +22,13 @@ import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.utils.FXTestUtils;
 import org.mockito.Mockito;
 
+import com.sun.javafx.robot.FXRobot;
+
+import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
+import raijin.common.eventbus.events.ChangeViewEvent;
 import raijin.common.eventbus.events.TasksChangedEvent;
+import raijin.common.utils.TaskUtils;
 import raijin.logic.api.Logic;
 import raijin.storage.api.TasksManager;
 
@@ -44,7 +53,7 @@ public class SidebarControllerTest {
     //================
 
     FXTestUtils.launchApp(Raijin.class);
-    Thread.sleep(1000);                     //Wait for program to be launched
+    Thread.sleep(5000);                     //Wait for program to be launched
     raijin = new GuiTest() {
 
       @Override
@@ -54,6 +63,14 @@ public class SidebarControllerTest {
 
     };
 
+
+    Platform.runLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        Raijin.getStage().setMaximized(true);
+      }
+    });
 
     //====================
     // Init domain objects
@@ -75,9 +92,51 @@ public class SidebarControllerTest {
   }
   
   @Test
-  @Ignore
-  public void updateState_TestNumberOfTasks() {
+  public void updateState_TestNumberOfPendingTasks() {
     TasksChangedEvent changeEvent = new TasksChangedEvent();
+    sidebarController.updateState(changeEvent);
+    assertEquals("3", sidebarController.numOfPending.getText());
+  }
+
+  @Test
+  public void updateState_TestNumberOfCompletedTasks() {
+    TasksChangedEvent changeEvent = new TasksChangedEvent();
+    sidebarController.updateState(changeEvent);
+    assertEquals("1", sidebarController.numOfCompleted.getText());
+  }
+
+  @Test
+  public void updateView_ChangeToToday() {
+    ChangeViewEvent event = new ChangeViewEvent(TaskUtils.getTasksList(
+        pendingTasks), Constants.View.TODAY);
+    sidebarController.updateFocus(event);
+    assertEquals(sidebarController.currentFocusedButton, 
+        sidebarController.today);
+  }
+
+  @Test
+  public void updateView_ChangeToTomorrow() {
+    ChangeViewEvent event = new ChangeViewEvent(TaskUtils.getTasksList(
+        pendingTasks), Constants.View.TOMORROW);
+    sidebarController.updateFocus(event);
+    assertEquals(sidebarController.currentFocusedButton, 
+        sidebarController.tomorrow);
+  }
+  
+  @Test
+  public void clickTomorrow_FocusOnTomorrowButton() throws InterruptedException {
+    Button tomorrow = (Button) GuiTest.find("#tomorrow");
+    raijin.move(tomorrow).click(tomorrow);
+    Button focusButton = sidebarController.currentFocusedButton;
+    assertEquals(focusButton, sidebarController.tomorrow);
+  }
+
+  @Test
+  public void clickToday_FocusOnNextWeekButton() {
+    Button future = (Button) GuiTest.find("#future");
+    raijin.move(future).click(future);
+    Button focusButton = sidebarController.currentFocusedButton;
+    assertEquals(focusButton, sidebarController.future);
   }
 
 }
