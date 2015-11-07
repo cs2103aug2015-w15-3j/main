@@ -9,6 +9,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import raijin.logic.realtime.SetTrie;
+
 public class SetTrieTest {
 
   private SetTrie taskList;

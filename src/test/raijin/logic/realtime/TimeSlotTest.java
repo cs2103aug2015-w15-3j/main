@@ -1,6 +1,6 @@
 //@@author A0112213E
 
-package raijin.common.datatypes;
+package raijin.logic.realtime;
 
 import static org.junit.Assert.*;
 
@@ -13,7 +13,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import raijin.common.datatypes.DateTime;
+import raijin.common.datatypes.Task;
 import raijin.helper.TestUtils;
+import raijin.logic.realtime.TimeSlot;
 
 public class TimeSlotTest {
 

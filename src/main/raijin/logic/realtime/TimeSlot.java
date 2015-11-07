@@ -1,6 +1,6 @@
 //@@author A0112213E
 
-package raijin.common.datatypes;
+package raijin.logic.realtime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,7 +11,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import raijin.common.utils.filter.DateFilter;
+import raijin.common.datatypes.Constants;
+import raijin.common.datatypes.DateTime;
+import raijin.common.datatypes.Task;
+import raijin.common.datatypes.Constants.TYPE_TASK;
+import raijin.common.filter.DateFilter;
 
 /**
  * Shows occupied time slot for a given date

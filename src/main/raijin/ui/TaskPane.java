@@ -1,6 +1,6 @@
 // @@author A0130720Y
 
-package raijin.common.utils;
+package raijin.ui;
 
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;

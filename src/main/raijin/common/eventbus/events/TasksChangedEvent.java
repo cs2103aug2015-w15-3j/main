@@ -8,9 +8,9 @@ import com.google.common.collect.Multiset;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
+import raijin.common.filter.DateFilter;
+import raijin.common.filter.TypeFilter;
 import raijin.common.utils.TaskUtils;
-import raijin.common.utils.filter.DateFilter;
-import raijin.common.utils.filter.TypeFilter;
 import raijin.storage.api.Session;
 import raijin.storage.api.TasksManager;
 
