@@ -215,10 +215,11 @@ public class TaskPane extends StackPane {
     String endTime = dateTime.getEndTime().toString();
 
     Label eventDate = new Label(endDate);
-    eventDate.setPadding(new Insets(0, 30, 0, 0));
-    Label startTimeLabel = new Label(startTime);
-    startTimeLabel.setPadding(new Insets(0, 10, 0, 0));
+    eventDate.setPadding(new Insets(0, 50, 0, 0));
+    Label startTimeLabel = new Label(startTime + " ~ " + endTime);
+    //startTimeLabel.setPadding(new Insets(0, 10, 0, 0));
     startTimeLabel.setStyle("-fx-font-weight: bold");
+    /*
     Label timeSlot = new Label();
     timeSlot.setPrefHeight(10);
     timeSlot.setPrefWidth(getWidthOfTimeSlot(dateTime));
@@ -226,12 +227,8 @@ public class TaskPane extends StackPane {
     timeSlot.setStyle("-fx-border-radius: 5 5 5 5; "
                     + "-fx-background-radius: 5 5 5 5; " 
                     + "-fx-background-color: " + color);
-    Label endTimeLabel = new Label(endTime);
-    endTimeLabel.setStyle("-fx-font-weight: bold");
-    endTimeLabel.setPadding(new Insets(0, 0, 0, 10));
-
-    datesBox.getChildren().addAll(startByOn, eventDate, startTimeLabel, 
-                                  timeSlot, endTimeLabel);
+                    */
+    datesBox.getChildren().addAll(startByOn, eventDate, startTimeLabel);
   }
 
   /**
