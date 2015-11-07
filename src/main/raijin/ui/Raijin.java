@@ -154,6 +154,7 @@ private Stage helpStage;
 
   private void initPrimaryStage(Stage stage) {
     this.stage = stage;
+    this.stage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream(TRAY_ICON_LOCATION)));
     this.stage.setTitle("Welcome to Raijin");
     this.stage.setMinWidth(MIN_WIDTH);
     this.stage.setMinHeight(MIN_HEIGTH);
