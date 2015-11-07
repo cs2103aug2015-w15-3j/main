@@ -24,7 +24,7 @@ public class RaijinInputIT {
   @BeforeClass
   public static void setUpClass() throws InterruptedException {
     FXTestUtils.launchApp(Raijin.class);
-    Thread.sleep(5000);                     //Wait for program to be launched
+    Thread.sleep(7000);                     //Wait for program to be launched
     raijin = new GuiTest() {
 
       @Override

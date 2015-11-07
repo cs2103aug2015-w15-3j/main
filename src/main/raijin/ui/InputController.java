@@ -30,17 +30,16 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
-import raijin.common.datatypes.HelpMessage;
+import raijin.common.eventbus.MainSubscriber;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.ScrollEvent;
 import raijin.common.eventbus.events.SetFailureEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
-import raijin.common.eventbus.events.SetHelpCommandEvent;
+import raijin.common.eventbus.events.SetGuideEvent;
 import raijin.common.eventbus.events.SetInputEvent;
 import raijin.common.eventbus.events.SetTimeSlotEvent;
 import raijin.common.eventbus.events.UndoRedoEvent;
-import raijin.common.eventbus.subscribers.MainSubscriber;
 
 public class InputController extends BorderPane {
   private static final String INPUT_COMMAND_BAR_LAYOUT_FXML =
@@ -164,12 +163,12 @@ public class InputController extends BorderPane {
   }
 
   void handleSetHelpEvent() {
-    MainSubscriber<SetHelpCommandEvent> helpSubscriber =
-        new MainSubscriber<SetHelpCommandEvent>(eventbus.getEventBus()) {
+    MainSubscriber<SetGuideEvent> helpSubscriber =
+        new MainSubscriber<SetGuideEvent>(eventbus.getEventBus()) {
 
           @Subscribe
           @Override
-          public void handleEvent(SetHelpCommandEvent event) {
+          public void handleEvent(SetGuideEvent event) {
             if (event.isVisible) {
               helpBar.getChildren().clear();
               HelpMessage msg = new HelpMessage(event.commandFormat, event.description);

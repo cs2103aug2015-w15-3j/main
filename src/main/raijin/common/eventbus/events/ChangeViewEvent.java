@@ -10,7 +10,7 @@ import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
-import raijin.common.utils.filter.DateFilter;
+import raijin.common.filter.DateFilter;
 
 /**
  * Indicates change of view to fixed set of supported views.

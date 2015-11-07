@@ -16,7 +16,7 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
-import raijin.common.utils.filter.SortFilter;
+import raijin.common.filter.SortFilter;
 import raijin.logic.parser.ParsedInput;
 
 public class SortFilterTest {

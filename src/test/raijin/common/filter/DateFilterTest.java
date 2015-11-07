@@ -1,6 +1,6 @@
 //@@author A0112213E
 
-package raijin.common.utils.filter;
+package raijin.common.filter;
 
 import static org.junit.Assert.*;
 
@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
+import raijin.common.filter.DateFilter;
 
 public class DateFilterTest {
 

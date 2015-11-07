@@ -8,7 +8,6 @@ import java.util.List;
 
 import raijin.common.datatypes.Task;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
-import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.utils.TaskUtils;
 import raijin.storage.api.TasksManager;
 
