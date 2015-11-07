@@ -1,6 +1,6 @@
 //@@author A0112213E
 
-package raijin.common.datatypes;
+package raijin.ui;
 
 import java.util.ArrayList;
 import java.util.List;

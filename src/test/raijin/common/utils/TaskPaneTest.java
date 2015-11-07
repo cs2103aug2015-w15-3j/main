@@ -12,6 +12,7 @@ import org.junit.Test;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import raijin.common.datatypes.Task;
+import raijin.ui.TaskPane;
 
 public class TaskPaneTest {
 	

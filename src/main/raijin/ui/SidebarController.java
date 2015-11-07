@@ -15,13 +15,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
+import raijin.common.eventbus.MainSubscriber;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.ChangeViewEvent;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.events.TasksChangedEvent;
-import raijin.common.eventbus.subscribers.MainSubscriber;
-import raijin.common.utils.filter.DateFilter;
-import raijin.common.utils.filter.TypeFilter;
+import raijin.common.filter.DateFilter;
+import raijin.common.filter.TypeFilter;
 import raijin.logic.api.Logic;
 
 /**

@@ -14,7 +14,7 @@ import raijin.common.datatypes.Status;
 import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
-import raijin.common.utils.filter.SortFilter;
+import raijin.common.filter.SortFilter;
 import raijin.logic.api.CommandRunner;
 import raijin.logic.parser.ParsedInput;
 import raijin.storage.api.TasksManager;

@@ -18,6 +18,7 @@ import com.google.common.collect.Multiset;
 import edu.emory.mathcs.backport.java.util.Collections;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Task;
+import raijin.ui.TaskPane;
 
 public class TaskUtils {
   final static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy");

@@ -1,6 +1,6 @@
 //@@author A0112213E
 
-package raijin.common.utils.filter;
+package raijin.common.filter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -16,17 +16,15 @@ import com.google.common.eventbus.Subscribe;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import raijin.common.datatypes.Constants;
-import raijin.common.datatypes.SetTrie;
 import raijin.common.datatypes.Task;
-import raijin.common.datatypes.TimeSlot;
+import raijin.common.eventbus.MainSubscriber;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.ChangeViewEvent;
 import raijin.common.eventbus.events.KeyPressEvent;
 import raijin.common.eventbus.events.SetCurrentDisplayEvent;
-import raijin.common.eventbus.events.SetHelpCommandEvent;
+import raijin.common.eventbus.events.SetGuideEvent;
 import raijin.common.eventbus.events.SetInputEvent;
 import raijin.common.eventbus.events.SetTimeSlotEvent;
-import raijin.common.eventbus.subscribers.MainSubscriber;
 import raijin.common.exception.FailedToParseException;
 import raijin.common.exception.IllegalCommandArgumentException;
 import raijin.common.utils.RaijinLogger;
@@ -205,7 +203,7 @@ public class AutoComplete {
 
     if (isCommand(tokens)) { // Get suggestions from commandList
       suggestions = commandList.getSuggestions(prefix);
-      eventbus.post(new SetHelpCommandEvent(false));
+      eventbus.post(new SetGuideEvent(false));
     } else if (isTag(tokens)) { // Get suggestions from tagList
       updateTagSuggestion(input);
     } else { // Get suggestions from task
@@ -456,7 +454,7 @@ public class AutoComplete {
           description = Constants.ADD_INVALID_DATE;
         }
       }
-      eventbus.post(new SetHelpCommandEvent(commandFormat, description));
+      eventbus.post(new SetGuideEvent(commandFormat, description));
     }
 
   }

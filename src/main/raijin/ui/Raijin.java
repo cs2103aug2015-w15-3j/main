@@ -42,7 +42,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import raijin.common.datatypes.Constants;
-import raijin.common.datatypes.HelpMessage;
 import raijin.common.datatypes.Status;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.SetFailureEvent;
