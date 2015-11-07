@@ -32,7 +32,7 @@ public class TaskPane extends StackPane {
   private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
   private final int TASK_DISPLAY_NAME_LIMIT = 69;
   private final float MAX_EVENT_DURATION = 720; // Set 12 hour as the upper bound for event duration
-  private final float MAX_TIMESLOT_WIDTH = 200; // Maximum width of a time slot label
+  private final float MAX_TIMESLOT_WIDTH = 150; // Maximum width of a time slot label
 
   private Label id;
   private Label taskName;
@@ -192,7 +192,9 @@ public class TaskPane extends StackPane {
 
   float getWidthOfTimeSlot(DateTime dateTime) {
     long duration = dateTime.getStartTime().until(dateTime.getEndTime(), ChronoUnit.MINUTES);
-    return duration / MAX_EVENT_DURATION * MAX_TIMESLOT_WIDTH;
+    float width = duration / MAX_EVENT_DURATION * MAX_TIMESLOT_WIDTH;
+    width = width > MAX_TIMESLOT_WIDTH ? MAX_TIMESLOT_WIDTH : width;
+    return width;
   }
 
   String getTimeSlotColor(String priority) {
