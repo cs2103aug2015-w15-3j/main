@@ -36,17 +36,17 @@ public class SimpleParser implements ParserInterface {
         builder = new EditParser(builder, wordsOfInput).process();
       } else if (isFirstWord("delete|del|remove|rem|trash")) {
         builder = new DeleteParser(wordsOfInput).process();
-      } else if (isFirstWord("done|finish")) {
+      } else if (isFirstWord("done|finish|fin|mark")) {
         builder = new DoneParser(wordsOfInput).process();
       } else if (isFirstWord("display|show")) {
         builder = new DisplayParser(wordsOfInput).process();
-      } else if (isFirstWord("help")) { //TODO: Specific help commands.
+      } else if (isFirstWord("help")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.HELP);
       } else if (isFirstWord("undo")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.UNDO);
       } else if (isFirstWord("redo")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.REDO);
-      } else if (isFirstWord("exit")) {
+      } else if (isFirstWord("exit|zao")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.EXIT);
       } else if (isFirstWord("set")) {
         builder = new SetParser(wordsOfInput).process();
