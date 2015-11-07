@@ -6,12 +6,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.utils.FXTestUtils;
 
+import raijin.common.datatypes.Constants;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.SetFeedbackEvent;
 import javafx.scene.Parent;
@@ -19,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.text.TextFlow;
 
 public class RaijinInputIT {
 
@@ -39,6 +42,11 @@ public class RaijinInputIT {
     };
     
     eventbus = RaijinEventBus.getInstance();
+  }
+
+  @AfterClass
+  public static void tearDownClass() {
+    raijin.closeCurrentWindow();
   }
 
   @After
@@ -89,11 +97,38 @@ public class RaijinInputIT {
   }
 
   @Test
-  @Ignore
+  public void testHelpBar() {
+    raijin.push(KeyCode.CONTROL, KeyCode.R);
+    raijin.type("edit 20");
+    TextFlow result = (TextFlow) GuiTest.find("#helpBar");
+    assertTrue(!result.getChildren().isEmpty());
+  }
+
+  @Test
+  public void testUndoShortcut() {
+    raijin.push(KeyCode.CONTROL, KeyCode.R);
+    raijin.type("add floating boy").push(KeyCode.ENTER);
+    raijin.push(KeyCode.CONTROL, KeyCode.Z);
+    Label result = (Label) GuiTest.find("#feedbackBar");
+    assertEquals(Constants.FEEDBACK_UNDO_SUCCESS, result.getText());
+  }
+
+  @Test
+  public void testRedoShortcut() {
+    raijin.push(KeyCode.CONTROL, KeyCode.R);
+    raijin.type("add meet at Limbo").push(KeyCode.ENTER);
+    raijin.push(KeyCode.CONTROL, KeyCode.Z);
+    raijin.push(KeyCode.CONTROL, KeyCode.Y);
+    Label result = (Label) GuiTest.find("#feedbackBar");
+    assertEquals(Constants.FEEDBACK_REDO_SUCCESS, result.getText());
+  }
+
+  @Test
   //@@author A0129650E
   public void testHelpAppear() throws InterruptedException {
 	raijin.push(KeyCode.CONTROL, KeyCode.H);
 	assertTrue(Raijin.isHelpOn);
+	raijin.push(KeyCode.CONTROL, KeyCode.H);
   }
   
   @Test
@@ -102,6 +137,7 @@ public class RaijinInputIT {
   public void testHide() throws InterruptedException {
 	raijin.push(KeyCode.CONTROL, KeyCode.SPACE);
 	assertTrue(Raijin.isVisible);  
+	raijin.push(KeyCode.CONTROL, KeyCode.SPACE);
   }
   
   @Test

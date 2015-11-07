@@ -4,6 +4,9 @@ package raijin.ui;
 
 import java.awt.AWTException;
 import java.awt.Image;
+
+import javafx.scene.image.*;
+
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.io.FileNotFoundException;
@@ -30,7 +33,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -507,4 +509,7 @@ private Stage helpStage;
     }
   }
   
+  public void testTwoImage() {
+    javafx.scene.image.Image fximg = new javafx.scene.image.Image("nonsense");
+  }
 }
