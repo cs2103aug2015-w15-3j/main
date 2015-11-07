@@ -29,9 +29,13 @@ public class SetCommandRunnerTest {
   @Rule
   public TemporaryFolder tmpFolder = new TemporaryFolder();
 
+  @Rule
+  public TemporaryFolder baseFolder = new TemporaryFolder();
+
   @Before
   public void setUp() throws Exception {
     session = Session.getSession();
+    session.setupBase(baseFolder.getRoot().getAbsolutePath());
     storageDirectory = session.storageDirectory;
     setCommandRunner = new SetCommandRunner();
   }

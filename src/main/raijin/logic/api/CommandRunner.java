@@ -40,15 +40,11 @@ public abstract class CommandRunner {
    * Template method to handle exception thrown by execution of a command
    * @param input       parsed input
    * @return
+   * @throws UnableToExecuteCommandException 
    */
-  public Status handleCommandException(ParsedInput input) {
-    try {
+  public Status handleCommandException(ParsedInput input) throws UnableToExecuteCommandException {
       translateIds(input);
       return processCommand(input);
-    } catch (UnableToExecuteCommandException e) {
-      logger.debug(e.getMessage(), e);
-      return new Status(e.getMessage());
-    }
   }
 
   int getRealId(int displayedId) throws UnableToExecuteCommandException {
