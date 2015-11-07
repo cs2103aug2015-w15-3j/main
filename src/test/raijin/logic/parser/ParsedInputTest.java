@@ -79,7 +79,7 @@ public class ParsedInputTest {
   
   @Test
   public void parseDeleteIDRange() throws FailedToParseException {
-    ParsedInput deleteCommand = parser.parse("del 1-5 1-");
+    ParsedInput deleteCommand = parser.parse("del 1-3 1-");
     assertEquals(1, deleteCommand.getIds().pollFirst().intValue());
     assertEquals(2, deleteCommand.getIds().pollFirst().intValue());
     assertEquals(3, deleteCommand.getIds().pollFirst().intValue());
@@ -88,7 +88,7 @@ public class ParsedInputTest {
   
   @Test
   public void parseDoneIDRange() throws FailedToParseException {
-    ParsedInput doneCommand = parser.parse("finish 5-1 a-a");
+    ParsedInput doneCommand = parser.parse("finish 3-1 a-a");
     assertEquals(1, doneCommand.getIds().pollFirst().intValue());
     assertEquals(2, doneCommand.getIds().pollFirst().intValue());
     assertEquals(3, doneCommand.getIds().pollFirst().intValue());

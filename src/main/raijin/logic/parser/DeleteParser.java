@@ -68,7 +68,7 @@ public class DeleteParser {
         end = temp;
       }
       
-      for (int j = start; j < end; j++) {
+      for (int j = start; j <= end; j++) {
         builder.id(j);
       }
     } catch(NumberFormatException e1) {
