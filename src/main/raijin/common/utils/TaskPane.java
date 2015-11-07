@@ -130,6 +130,7 @@ public class TaskPane extends StackPane {
 
     VBox centre = new VBox();
     centre.setPrefWidth(550);
+    centre.setPadding(new Insets(0, 10, 0, 0));
     centre.getChildren().addAll(taskNameBox, datesBox, tagsBox);
 
     HBox overdueBox = new HBox();
@@ -159,7 +160,6 @@ public class TaskPane extends StackPane {
     // Add an indicator for overdue if task is overdue
     if (displayInstance.isOverdue(task) && !completedList.contains(task)) {
       pane.getChildren().add(overdueReminder);
-      //pane.getChildren().add(overdueBox);
     }
 
     this.getChildren().addAll(pane);
