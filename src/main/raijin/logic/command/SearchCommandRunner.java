@@ -37,8 +37,8 @@ public class SearchCommandRunner extends CommandRunner {
    * @param task
    * @return
    */
-  boolean handlePriority(Task task) {
-    if (inputPriority == null) {
+  boolean handlePriority(Task task, String priority) {
+    if (priority == null) {
       return true;
     } else {
       return task.getPriority().equals(inputPriority);
@@ -64,7 +64,7 @@ public class SearchCommandRunner extends CommandRunner {
 
   /*checks if the task matches tag query*/
   public boolean matchOnlyTags(Task task, TreeSet<String> tags) {
-    return handlePriority(task) && CollectionUtils.intersection(
+    return handlePriority(task, inputPriority) && CollectionUtils.intersection(
         tags, task.getTags()).size() == tags.size();
   }
 
@@ -75,7 +75,7 @@ public class SearchCommandRunner extends CommandRunner {
         .collect(Collectors.toList());
     source = (ArrayList<String>) source.stream().map(k -> k.toLowerCase())
         .collect(Collectors.toList());
-    return handlePriority(task) && CollectionUtils.intersection(
+    return handlePriority(task, inputPriority) && CollectionUtils.intersection(
         target,source).size() == source.size();
   }
 
@@ -90,11 +90,6 @@ public class SearchCommandRunner extends CommandRunner {
 
   }
 
-  /*Checks if any argument is given to search*/
-  boolean isInvalidInput(ParsedInput input) {
-    return input.getNames().isEmpty() && input.getTags().isEmpty();
-  }
-
   List<Task> getTasksWithMatchedKeyword(ArrayList<Task> pendingTasks) {
     ArrayList<String> keywords = currentTask.getKeywords();
     List<Task> filtered = pendingTasks.stream().filter(
@@ -106,10 +101,6 @@ public class SearchCommandRunner extends CommandRunner {
   protected Status processCommand(ParsedInput input) throws UnableToExecuteCommandException {
     inputPriority = input.getPriority();            //Update priority
     List<Task> filtered = new ArrayList<Task>();
-
-    if (isInvalidInput(input)) {
-      return new Status(NO_ARGUMENT, false);
-    }
 
     HashMap<Integer, Task> pendingTasks = tasksManager.getPendingTasks();
     createTask(input);
