@@ -245,6 +245,32 @@ public class AddParserTest {
     assertEquals(exptDate.toString(), addCommand.getDateTime().getStartDate().toString());
   }
   
+  @Test
+  public void testAddWithBiggerStartDate() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by 1/11 12.10pm to 12/12 9.59pm");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals("2016-11-01", addCommand.getDateTime().getStartDate().toString());
+    assertEquals("2016-12-12", addCommand.getDateTime().getEndDate().toString());
+    assertEquals("12:10", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("21:59", addCommand.getDateTime().getEndTime().toString());
+  }
+  
+  @Test
+  public void testAddWithBiggerStartMonthAndDate() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by 1/11 to 1/10");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals("2016-11-01", addCommand.getDateTime().getStartDate().toString());
+    assertEquals("2017-10-01", addCommand.getDateTime().getEndDate().toString());
+  }
+  
+  @Test
+  public void testAddWithBiggerStartDay() throws FailedToParseException {
+    addCommand = parser.parse("add finish work by 28/12 to 27/12");
+    assertEquals("finish work", addCommand.getNames().pollFirst());
+    assertEquals("2015-12-28", addCommand.getDateTime().getStartDate().toString());
+    assertEquals("2016-12-27", addCommand.getDateTime().getEndDate().toString());
+  }
+  
   @Test(expected=IllegalCommandArgumentException.class)
   public void testNoNameGivenError() throws IllegalCommandArgumentException {
     new AddParser(builder, new String("add").split(" "), 0).process();
