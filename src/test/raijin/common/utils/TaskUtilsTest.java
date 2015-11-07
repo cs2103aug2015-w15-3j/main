@@ -4,6 +4,7 @@ package raijin.common.utils;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
@@ -15,7 +16,6 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
 import raijin.logic.parser.ParsedInput;
-import raijin.logic.parser.ParsedInputTest;
 
 public class TaskUtilsTest {
 
@@ -65,5 +65,30 @@ public class TaskUtilsTest {
     List<Task> result = TaskUtils.filterTaskWithName(pendingTasks, "I am me");
     
     assertEquals(3, result.size());
+  }
+  
+  @Test
+  public void getOnlyNormalTasks() {
+    List<Task> pendingTasks = new ArrayList<Task>();
+    pendingTasks.add(createSpecificTask("I am me", new DateTime("19/09/2011")));
+    pendingTasks.add(createSpecificTask("I am me", new DateTime("21/09/2011")));
+    pendingTasks.add(new Task("floating task 1", 3));
+    pendingTasks.add(new Task("floating task 2", 4));
+    
+    List<Task> result = TaskUtils.getOnlyNormalTasks(pendingTasks);
+    
+    assertEquals(2, result.size());
+  }
+
+  @Test
+  public void getTags_MultipleSimilarTags() {
+    HashMap<Integer, Task> pendingTasks = new HashMap<Integer, Task>();
+    pendingTasks.put(1, createTagTask(new String[]{"cs2101"}));
+    pendingTasks.put(2, createTagTask(new String[]{"cs2103"}));
+    pendingTasks.put(3, createTagTask(new String[]{"cs2103"}));
+
+    TreeSet<String> result = TaskUtils.getTags(pendingTasks);
+    System.out.println(result.toString());
+    assertEquals(2, result.size());
   }
 }

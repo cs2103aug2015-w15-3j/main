@@ -244,12 +244,6 @@ public class TaskUtils {
   }
   
 
-  //@@author A0112213E
-  TreeSet<Integer> getIdsFromTasks(List<Task> filtered) {
-    return new TreeSet<Integer>(filtered.stream().map(
-        t -> t.getId()).collect(Collectors.toList()));
-  }
-  
   /**
    * Returns sorted pending tasks without ids attached
    * @param tasks
