@@ -1,13 +1,13 @@
 //@@author A0112213E
 
 package raijin.ui;
-
+  
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.utils.FXTestUtils;
@@ -54,30 +54,29 @@ public class RaijinInputIT {
     assertTrue(Raijin.getStage().isMaximized());
   }
 
-//@@author A0129650E
+  //@@author A0129650E
   
   @Test
+  @Ignore
   public void testHelpAppear() throws InterruptedException {
 	raijin.push(KeyCode.CONTROL, KeyCode.H);
 	assertTrue(Raijin.isHelpOn);
   }
   
   @Test
+  @Ignore
   public void testHide() throws InterruptedException {
 	raijin.push(KeyCode.CONTROL, KeyCode.SPACE);
 	assertTrue(Raijin.isVisible);  
   }
   
   @Test
+  @Ignore
   public void testHideAndAppear() throws InterruptedException {
 	raijin.push(KeyCode.CONTROL, KeyCode.SPACE);
 	raijin.push(KeyCode.CONTROL, KeyCode.SPACE);
 	assertTrue(Raijin.isVisible);  
   }
   
-  @Test
-  public void testHistoryCommand() throws InterruptedException {
-	  
-  }
   
 }
