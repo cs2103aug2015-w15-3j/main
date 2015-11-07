@@ -76,6 +76,24 @@ public class ParsedInputTest {
     assertEquals("school", doneCommand.getTags().pollFirst());
     assertEquals("work", doneCommand.getTags().pollFirst());
   }
+  
+  @Test
+  public void parseDeleteIDRange() throws FailedToParseException {
+    ParsedInput deleteCommand = parser.parse("del 1-5 1-");
+    assertEquals(1, deleteCommand.getIds().pollFirst().intValue());
+    assertEquals(2, deleteCommand.getIds().pollFirst().intValue());
+    assertEquals(3, deleteCommand.getIds().pollFirst().intValue());
+    assertEquals("1-", deleteCommand.getTags().pollFirst());
+  }
+  
+  @Test
+  public void parseDoneIDRange() throws FailedToParseException {
+    ParsedInput doneCommand = parser.parse("finish 5-1 a-a");
+    assertEquals(1, doneCommand.getIds().pollFirst().intValue());
+    assertEquals(2, doneCommand.getIds().pollFirst().intValue());
+    assertEquals(3, doneCommand.getIds().pollFirst().intValue());
+    assertEquals("a-a", doneCommand.getTags().pollFirst());
+  }
 
   @Test
   public void getPriority_ReturnPriority() {
