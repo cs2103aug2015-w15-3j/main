@@ -54,11 +54,18 @@ public class SearchCommandRunner extends CommandRunner {
     StringBuilder strBuilder = new StringBuilder(INITIAL_FEEDBACK_MESSAGE);
 
     for (String keyword : keywords) {
-      strBuilder.append(String.format(MESSAGE_TEMPLATE, keyword));
+      if (!keyword.equals("")) {
+        strBuilder.append(String.format(MESSAGE_TEMPLATE, keyword));
+      }
+    }
+
+    for (String tag : currentTask.getTags()) {
+      strBuilder.append(String.format(MESSAGE_TEMPLATE, "#" + tag));
     }
 
     String feedback = strBuilder.toString();
     feedback = feedback.substring(0, feedback.length()-2);
+    feedback = normalizeTaskName(feedback);
     return new Status(feedback);
   }
 
