@@ -377,11 +377,38 @@ public class AutoComplete {
   }
 
   /**
+   * Make guide bar visible and populate with relevant information
+   * @param userInput
+   * @param commandFormat
+   * @param description
+   */
+  public void activateGuideBar(String userInput, String commandFormat, String description) {
+    if (!commandFormat.equals("")) { // Only trigger help for certain commands
+      try {
+        ParsedInput parsed = parser.parse(userInput);
+
+        if (isInvalidId(parsed)) {
+          description = Constants.ADD_INVALID_ID;
+        }
+
+        handleTimeSlot(parsed);
+
+      } catch (FailedToParseException e) {
+        if (isInvalidDate(e)) {
+          description = Constants.ADD_INVALID_DATE;
+        }
+      }
+      eventbus.post(new SetGuideEvent(commandFormat, description));
+    }
+  }
+
+  /**
    * Populate help bar with information relevant to command and user input
    * @param command         
    * @param userInput       
    */
   void handleHelpForCommand(String command, String userInput) {
+    /*Creates enum object from userInput*/
     Constants.Command inputCommand = Constants.Command.valueOf(command.toUpperCase());
     String commandFormat = "";
     String description = "";
@@ -438,29 +465,6 @@ public class AutoComplete {
         break;
 
     }
-
-    if (!commandFormat.equals("")) { // Only trigger help for certain commands
-      try {
-        ParsedInput parsed = parser.parse(userInput);
-
-        if (isInvalidId(parsed)) {
-          description = Constants.ADD_INVALID_ID;
-        }
-
-        handleTimeSlot(parsed);
-
-      } catch (FailedToParseException e) {
-        if (isInvalidDate(e)) {
-          description = Constants.ADD_INVALID_DATE;
-        }
-      }
-      eventbus.post(new SetGuideEvent(commandFormat, description));
-    }
-
+    activateGuideBar(userInput, commandFormat, description);
   }
-
-
-
-
-
 }
