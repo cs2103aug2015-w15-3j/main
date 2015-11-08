@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import raijin.common.datatypes.Task;
+import raijin.common.utils.IDManager;
 import raijin.helper.TestProperties;
 import raijin.helper.TestUtils;
 import raijin.logic.api.Logic;
@@ -38,6 +39,7 @@ public class RaijinIT {
     logic = new Logic();
     TasksManager.getManager().setCompletedTasks(new HashMap<Integer, Task>());
     TasksManager.getManager().setPendingTasks(new HashMap<Integer, Task>());
+    IDManager.getIdManager().flushIdPool();
   }
 
   /**
