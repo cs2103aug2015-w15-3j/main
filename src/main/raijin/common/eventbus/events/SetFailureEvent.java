@@ -1,3 +1,5 @@
+//@@author A0129650E
+
 package raijin.common.eventbus.events;
 
 public class SetFailureEvent {
