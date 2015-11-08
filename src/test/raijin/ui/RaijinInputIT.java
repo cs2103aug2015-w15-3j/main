@@ -180,23 +180,4 @@ public class RaijinInputIT {
 	assertTrue(result.isVisible());
   }
 
-  @Test
-  @Ignore
-  //@@author A0129650E
-  public void testHide() throws InterruptedException {
-	raijin.push(KeyCode.CONTROL, KeyCode.SPACE);
-	assertTrue(Raijin.isVisible);  
-	raijin.push(KeyCode.CONTROL, KeyCode.SPACE);
-  }
-  
-  @Test
-  @Ignore
-  //@@author A0129650E
-  public void testHideAndAppear() throws InterruptedException {
-	raijin.push(KeyCode.CONTROL, KeyCode.SPACE);
-	raijin.push(KeyCode.CONTROL, KeyCode.SPACE);
-	assertTrue(Raijin.isVisible);  
-  }
-  
-  
 }
