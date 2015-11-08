@@ -89,7 +89,7 @@ public class TaskPane extends StackPane {
                 + task.getDateTime().getEndTime().toString();
 
         startValue = new Label(startDate + startTime);
-        startValue.setPrefWidth(225);
+        startValue.setPrefWidth(230);
         startValue.setPadding(new Insets(0, 50, 0, 0));
         endValue = new Label(endDate + endTime);
 
@@ -100,7 +100,7 @@ public class TaskPane extends StackPane {
       String endDate = task.getDateTime().getEndDate().format(dateFormat);
 
       startValue = new Label(endDate);
-      startValue.setPrefWidth(220);
+      startValue.setPrefWidth(222);
       startValue.setPadding(new Insets(0, 50, 0, 0));
       Label timeValue = new Label(task.getDateTime().getEndTime().toString());
       endValue = new Label("");
@@ -223,7 +223,7 @@ public class TaskPane extends StackPane {
     String endTime = dateTime.getEndTime().toString();
 
     Label eventDate = new Label(endDate);
-    eventDate.setPrefWidth(220);
+    eventDate.setPrefWidth(222);
     eventDate.setPadding(new Insets(0, 50, 0, 0));
     Label startTimeLabel = new Label(startTime);
     startTimeLabel.setPadding(new Insets(0, 10, 0, 0));
