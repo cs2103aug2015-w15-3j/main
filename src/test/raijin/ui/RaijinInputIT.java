@@ -175,4 +175,52 @@ public class RaijinInputIT {
 	assertTrue(result.isVisible());
   }
 
+  @Test
+  //@@author A0112213E
+  public void testDeleteGuide() throws InterruptedException {
+    raijin.type("delete 1");
+    TextFlow result = (TextFlow) GuiTest.find("#helpBar");
+	assertTrue(result.isVisible());
+  }
+
+  @Test
+  //@@author A0112213E
+  public void testDoneGuide() throws InterruptedException {
+    raijin.type("done 1");
+    TextFlow result = (TextFlow) GuiTest.find("#helpBar");
+	assertTrue(result.isVisible());
+  }
+
+  @Test
+  //@@author A0112213E
+  public void testSearchGuide() throws InterruptedException {
+    raijin.type("search mario");
+    TextFlow result = (TextFlow) GuiTest.find("#helpBar");
+	assertTrue(result.isVisible());
+  }
+
+  @Test
+  //@@author A0112213E
+  public void testRedoGuide() throws InterruptedException {
+    raijin.type("redo ");
+    TextFlow result = (TextFlow) GuiTest.find("#helpBar");
+	assertTrue(result.isVisible());
+  }
+
+  @Test
+  //@@author A0112213E
+  public void testAddBatchGuide() throws InterruptedException {
+    raijin.type("add one ; two ; three");
+    TextFlow result = (TextFlow) GuiTest.find("#helpBar");
+	assertTrue(result.isVisible());
+  }
+
+  @Test
+  //@@author A0112213E
+  public void testAddEventGuide() throws InterruptedException {
+    raijin.type("add meet snoopy from ");
+    TextFlow result = (TextFlow) GuiTest.find("#helpBar");
+	assertTrue(result.isVisible());
+  }
+
 }
