@@ -1,7 +1,6 @@
 language: java
-script: mvn install -DskipITs
-jdk:
-- oraclejdk8
+script: mvn clean install -DskipITs
+jdk: oraclejdk8
 
 branches:
     only:
