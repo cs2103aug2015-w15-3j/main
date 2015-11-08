@@ -59,6 +59,8 @@ public class AddParserTest {
     assertEquals("finish something", addCommand.getName());
     assertEquals("2015-12-27", addCommand.getDateTime().getStartDate().toString());
     assertEquals("2015-12-28", addCommand.getDateTime().getEndDate().toString());
+    assertEquals("08:00", addCommand.getDateTime().getStartTime().toString());
+    assertEquals("23:59", addCommand.getDateTime().getEndTime().toString());
     
     /* This is a boundary case for the ‘exact value’ partition */
     addCommand = parser.parse("add attend something from 27.dec 000 till 2359");
