@@ -135,5 +135,28 @@ public class DeleteCommandRunnerTest {
     deleteCommandRunner.redo();
     assertTrue(tasksManager.isEmptyPendingTasks());
   }
+  
+  @Test(expected = UnableToExecuteCommandException.class)
+  //@@author A0112213E
+  public void delete_WrongID() throws UnableToExecuteCommandException {
+    TreeSet<String> tags = new TreeSet<String>();
+    tags.add("cs21011");
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.DELETE)
+      .id(100).createParsedInput();
+
+    deleteCommandRunner.processCommand(input);
+  }
+
+  @Test
+  public void processCommand_OnlyTag() 
+      throws UnableToExecuteCommandException, NoSuchTaskException {
+    TreeSet<String> tags = new TreeSet<String>();
+    tags.add("cs21011");
+    ParsedInput input = new ParsedInput.ParsedInputBuilder(Constants.Command.DELETE)
+      .tag(tags).createParsedInput();
+    addCommandRunner.processCommand(input);
+    Status result = deleteCommandRunner.processCommand(input);
+    assertTrue(result.isSuccess());
+  }
 
 }
