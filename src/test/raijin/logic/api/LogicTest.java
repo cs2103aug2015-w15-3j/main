@@ -44,7 +44,7 @@ public class LogicTest {
 
   @Test
   public void executeCommand_DeleteInvalidId() {
-    Status result = logic.executeCommand("delete 10");
+    Status result = logic.executeCommand("delete 200");
     assertFalse(result.isSuccess());
   }
 

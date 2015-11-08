@@ -4,12 +4,16 @@ package raijin.integration;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import raijin.common.datatypes.Task;
 import raijin.helper.TestProperties;
 import raijin.helper.TestUtils;
 import raijin.logic.api.Logic;
+import raijin.storage.api.TasksManager;
 
 public class RaijinIT {
 
@@ -32,6 +36,8 @@ public class RaijinIT {
   @Before
   public void setUp() throws Exception {
     logic = new Logic();
+    TasksManager.getManager().setCompletedTasks(new HashMap<Integer, Task>());
+    TasksManager.getManager().setPendingTasks(new HashMap<Integer, Task>());
   }
 
   /**

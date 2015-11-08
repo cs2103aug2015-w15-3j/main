@@ -28,7 +28,7 @@ public class DisplayController extends BorderPane {
   private RaijinEventBus eventbus = RaijinEventBus.getInstance();
 
   private static final String DISPLAY_CONTROLLER_FXML = "resource/layout/DisplayController.fxml";
-  private static int scrollIndex = 0; // Determines position of scrollbar
+  static int scrollIndex = 0; // Determines position of scrollbar
 
   @FXML
   private Label headMessage;

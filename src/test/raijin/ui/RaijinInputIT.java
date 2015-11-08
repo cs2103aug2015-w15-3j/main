@@ -85,8 +85,9 @@ public class RaijinInputIT {
         Raijin.getStage().setMaximized(false);
       }
     });
+    Thread.sleep(500);
     raijin.push(KeyCode.ALT, KeyCode.M);
-    Thread.sleep(1000);
+    Thread.sleep(2000);
     assertTrue(Raijin.getStage().isMaximized());
   }
 
