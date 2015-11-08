@@ -16,6 +16,7 @@ import org.loadui.testfx.utils.FXTestUtils;
 import raijin.common.datatypes.Constants;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.SetFeedbackEvent;
+import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -64,7 +65,15 @@ public class RaijinInputIT {
 
   @Test
   public void testMaximiseShortcut() throws InterruptedException {
+    Platform.runLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        Raijin.getStage().setMaximized(false);
+      }
+    });
     raijin.push(KeyCode.ALT, KeyCode.M);
+    Thread.sleep(1000);
     assertTrue(Raijin.getStage().isMaximized());
   }
 
