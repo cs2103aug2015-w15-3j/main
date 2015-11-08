@@ -21,7 +21,6 @@ public class AddParser {
   private ParsedInput.ParsedInputBuilder builder;
   private TreeSet<String> tags;
   private TreeSet<String> names;
-  private String currentTime;
   private String currentDate;
   private int parseType; // 0 for add, 1 for edit, 2 for display.
   
@@ -57,7 +56,6 @@ public class AddParser {
     containsEndTime = false;
     
     parseType = type;
-    currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HHmm"));
     currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     
     name = ""; 
@@ -441,7 +439,7 @@ public class AddParser {
       checkEndDate(startDate, dateTime);
     } else if (containsStartDate && containsEndDate) {
       compareStartEndDate();
-      dateTime = new DateTime(startDate, currentTime, endDate, "2359");
+      dateTime = new DateTime(startDate, "0800", endDate, "2359");
       checkStartEndDate(startDate, endDate, dateTime);
     } else if (containsStartDate) {
       dateTime = new DateTime(startDate);
