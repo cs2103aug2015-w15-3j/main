@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.util.converter.LocalDateStringConverter;
 
 import org.junit.Before;
@@ -33,6 +34,7 @@ import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
 import raijin.common.eventbus.RaijinEventBus;
 import raijin.common.eventbus.events.ChangeViewEvent;
+import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.events.TasksChangedEvent;
 import raijin.common.utils.TaskUtils;
 import raijin.helper.TestUtils;
@@ -87,10 +89,10 @@ public class DisplayControllerIT {
     testUtils = new TestUtils();
     pendingTasks = new HashMap<Integer, Task>();
     
-    DateTime overdueDate = new DateTime(overdue, null, overdue, LocalTime.NOON);
-    DateTime todayDate = new DateTime(today, null, today, LocalTime.NOON);
-    DateTime tomorrowDate = new DateTime(tomorrow, null, tomorrow, LocalTime.NOON);
-    DateTime futureDate = new DateTime(future, null, future, LocalTime.NOON);
+    DateTime overdueDate = new DateTime(overdue, null, overdue, LocalTime.MAX);
+    DateTime todayDate = new DateTime(today, null, today, LocalTime.MAX);
+    DateTime tomorrowDate = new DateTime(tomorrow, null, tomorrow, LocalTime.MAX);
+    DateTime futureDate = new DateTime(future, null, future, LocalTime.MAX);
 
     /*Adding floating tasks*/
     pendingTasks.put(1, new Task("test 1", 1));
@@ -173,6 +175,14 @@ public class DisplayControllerIT {
     logic.executeCommand("display " + dateInput);
     List<Task> displayedTasks = eventbus.getDisplayedTasks();
     assertEquals(2, displayedTasks.size());
+  }
+
+  @Test
+  public void scrollUpDown_IndexReturnToOriginal() throws InterruptedException {
+    raijin.push(KeyCode.PAGE_DOWN);
+    raijin.push(KeyCode.PAGE_UP);
+    int scrollIndex = DisplayController.scrollIndex;
+    assertEquals(0, scrollIndex);
   }
 
 }
