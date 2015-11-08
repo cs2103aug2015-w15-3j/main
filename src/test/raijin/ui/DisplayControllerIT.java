@@ -105,9 +105,9 @@ public class DisplayControllerIT {
 
     /*Adding specific task*/
     pendingTasks.put(6, testUtils.createTask("meet thompson", new DateTime(
-        specific, "1000", "1200")));
-    pendingTasks.put(13, testUtils.createTask("meet upper thompson", new DateTime(
-        specific2, "1000", "1200")));
+        LocalDate.of(2100, 9, 19), LocalDate.of(2100, 9, 19))));
+    pendingTasks.put(13, testUtils.createTask("meet bomb", new DateTime(
+        LocalDate.of(2100, 9, 21), LocalDate.of(2100, 9, 21))));
     /*Today's tasks*/
     pendingTasks.put(7, testUtils.createTask("meet owl", todayDate));
     pendingTasks.put(8, testUtils.createTask("meet hoot", todayDate));
@@ -126,7 +126,7 @@ public class DisplayControllerIT {
 
     displayController = new DisplayController();
   }
-  
+
   @Test
   public void displayFloating_ReturnThreeTasks() {
     logic.executeCommand("display f");
