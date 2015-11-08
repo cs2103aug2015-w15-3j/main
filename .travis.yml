@@ -24,4 +24,4 @@ before_install:
  - sh -e /etc/init.d/xvfb start
 
 after_success:
- - mvn clean test jacoco:report coveralls:report
+ - mvn clean install jacoco:report coveralls:report
