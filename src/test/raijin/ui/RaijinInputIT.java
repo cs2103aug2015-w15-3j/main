@@ -52,11 +52,6 @@ public class RaijinInputIT {
     eventbus = RaijinEventBus.getInstance();
   }
 
-  @AfterClass
-  public static void tearDownClass() {
-    raijin.closeCurrentWindow();
-  }
-
   @Before
   public void setUp() {
     TasksManager.getManager().setPendingTasks(new HashMap<Integer, Task>());

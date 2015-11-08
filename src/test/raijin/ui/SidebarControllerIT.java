@@ -46,6 +46,17 @@ public class SidebarControllerIT {
   @Rule
   public TemporaryFolder tmpFolder = new TemporaryFolder();
 
+  @Before
+  public void setUp() {
+    Platform.runLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        Raijin.getStage().setMaximized(true);
+      }
+    });
+  }
+
   @BeforeClass
   public static void setUpClass() throws InterruptedException, FileNotFoundException {
     //================
@@ -63,14 +74,6 @@ public class SidebarControllerIT {
 
     };
 
-
-    Platform.runLater(new Runnable() {
-      
-      @Override
-      public void run() {
-        Raijin.getStage().setMaximized(true);
-      }
-    });
 
     //====================
     // Init domain objects
