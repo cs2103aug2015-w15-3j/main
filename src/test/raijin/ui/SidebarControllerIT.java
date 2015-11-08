@@ -47,7 +47,7 @@ public class SidebarControllerIT {
   public TemporaryFolder tmpFolder = new TemporaryFolder();
 
   @Before
-  public void setUp() {
+  public void setUp() throws InterruptedException {
     Platform.runLater(new Runnable() {
       
       @Override
@@ -55,6 +55,7 @@ public class SidebarControllerIT {
         Raijin.getStage().setMaximized(true);
       }
     });
+    Thread.sleep(1000);
   }
 
   @BeforeClass
@@ -135,7 +136,7 @@ public class SidebarControllerIT {
   }
 
   @Test
-  public void clickToday_FocusOnNextWeekButton() {
+  public void clickFuture_FocusOnNextWeekButton() {
     Button future = (Button) GuiTest.find("#future");
     raijin.move(future).click(future);
     Button focusButton = sidebarController.currentFocusedButton;
