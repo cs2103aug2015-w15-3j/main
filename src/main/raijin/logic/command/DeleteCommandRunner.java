@@ -35,10 +35,6 @@ public class DeleteCommandRunner extends CommandRunner implements  UndoableRedoa
       idsToDelete = getIdsFromTags(input.getTags());
     }
 
-    if (idsToDelete.isEmpty()) {
-      return new Status(Constants.FEEDBACK_DELETE_FAILURE, false);
-    }
-
     while(!idsToDelete.isEmpty()) {
       int id = idsToDelete.pollFirst();
       try {
