@@ -45,7 +45,7 @@ public class Session {
 
   String userConfigPath;
   String dataPath;
-  String tempPath;
+  String tempPath;                                 
   public String programDirectory;
   public String storageDirectory;
   public String baseConfigPath;
