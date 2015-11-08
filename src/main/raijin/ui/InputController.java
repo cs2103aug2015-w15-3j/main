@@ -97,10 +97,6 @@ public class InputController extends BorderPane {
     return inputCommandBar;
   }
 
-  public HBox getTimeSlot() {
-    return timeSlot;
-  }
-
   public void clear() {
     inputCommandBar.clear();
   }
@@ -325,7 +321,7 @@ public class InputController extends BorderPane {
       getClipboardContent();
       event.consume();
     } else if (Constants.KEY_CUT.match(event)) {
-
+      copyToClipboard(true);
     }
   }
 

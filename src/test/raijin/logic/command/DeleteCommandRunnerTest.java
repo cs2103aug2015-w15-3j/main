@@ -135,4 +135,5 @@ public class DeleteCommandRunnerTest {
     deleteCommandRunner.redo();
     assertTrue(tasksManager.isEmptyPendingTasks());
   }
+
 }
