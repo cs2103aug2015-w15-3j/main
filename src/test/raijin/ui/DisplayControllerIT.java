@@ -178,6 +178,7 @@ public class DisplayControllerIT {
   }
 
   @Test
+  @Ignore
   public void scrollUpDown_IndexReturnToOriginal() throws InterruptedException {
     raijin.push(KeyCode.PAGE_DOWN);
     raijin.push(KeyCode.PAGE_UP);
