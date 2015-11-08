@@ -15,7 +15,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
-import javafx.util.converter.LocalDateStringConverter;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -27,7 +26,6 @@ import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.utils.FXTestUtils;
 import org.mockito.Mockito;
 
-import com.sun.javafx.robot.FXRobot;
 
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
