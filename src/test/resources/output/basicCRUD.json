@@ -1,7 +1,7 @@
 {
   "pendingTasks": {
-    "3": {
-      "id": 3,
+    "2": {
+      "id": 2,
       "name": "prepare lab report",
       "dateTime": {
         "startDate": {
@@ -31,8 +31,8 @@
       ],
       "type": "SPECIFIC"
     },
-    "4": {
-      "id": 4,
+    "3": {
+      "id": 3,
       "name": "experiment with mockito",
       "priority": "m",
       "tags": [
@@ -46,8 +46,8 @@
       ],
       "type": "FLOATING"
     },
-    "5": {
-      "id": 5,
+    "4": {
+      "id": 4,
       "name": "read tao of winnie",
       "priority": "m",
       "tags": [],
@@ -60,8 +60,8 @@
       ],
       "type": "FLOATING"
     },
-    "6": {
-      "id": 6,
+    "5": {
+      "id": 5,
       "name": "sweep floor",
       "priority": "m",
       "tags": [],
@@ -74,8 +74,8 @@
     }
   },
   "completedTasks": {
-    "2": {
-      "id": 2,
+    "1": {
+      "id": 1,
       "name": "OP2 rehearsal",
       "dateTime": {
         "startDate": {
@@ -106,8 +106,8 @@
       ],
       "type": "SPECIFIC"
     },
-    "7": {
-      "id": 7,
+    "6": {
+      "id": 6,
       "name": "do peer review 3",
       "dateTime": {
         "startDate": {
