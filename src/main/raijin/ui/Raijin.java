@@ -232,7 +232,10 @@ private Stage helpStage;
       System.exit(0);
     } else if (response.equals(Constants.FEEDBACK_HELP_COMMAND) && !isHelpOn) {
       isHelpOn = true;
-      bringUpHelpSection();	
+      helpStage.show();	
+  	} else if (response.equals(Constants.FEEDBACK_HELP_COMMAND)) {
+  		isHelpOn = false;
+  		helpStage.hide();
   	} else if (!isSuccessful) {
       eventbus.post(new SetFailureEvent(response));
     } else {
