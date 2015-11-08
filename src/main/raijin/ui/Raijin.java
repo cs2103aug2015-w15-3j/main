@@ -126,6 +126,7 @@ private Stage helpStage;
     initLogic();
     setUpVariables();
     decideScene();
+    bringUpHelpSection(); //set up help
     makeTray(stage); // listen out for any ctrl-h events
     Platform.setImplicitExit(false);
 
@@ -275,7 +276,6 @@ private Stage helpStage;
 	  helpBase.getChildren().add(helpContain);
       
 	  helpStage.setScene(dialogScene);
-	  helpStage.show();
   }
 
   private void initiateHelpBase(StackPane helpBase) {
@@ -456,7 +456,7 @@ private Stage helpStage;
 	    	Platform.runLater(new Runnable() {
 	            @Override
 	            public void run() {
-	            	bringUpHelpSection();
+	            	helpStage.show();
 	            }
 	          });
 	    } else if(isCtrlHPressed && isHelpOn) { // for help feature: to hide the help menu
