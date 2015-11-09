@@ -130,7 +130,7 @@ public class TaskPane extends StackPane {
     tagsBox.getChildren().addAll(tagsValue);
 
     VBox centre = new VBox();
-    centre.setPrefWidth(CENTRE_WIDTH);
+    centre.setPrefWidth(550);
     centre.setPadding(new Insets(0, 20, 0, 0));
     centre.getChildren().addAll(taskNameBox, datesBox, tagsBox);
 
