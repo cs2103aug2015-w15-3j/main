@@ -72,7 +72,6 @@ public class TaskPane extends StackPane {
     isOverdue.setEffect(innerShadow);
 
     HBox datesBox = new HBox();
-    datesBox.setPrefWidth(CENTRE_WIDTH);
     taskType = task.getType();
 
     if (taskType.equals(Constants.TYPE_TASK.EVENT)) {
@@ -127,7 +126,6 @@ public class TaskPane extends StackPane {
     taskNameBox.getChildren().addAll(taskName);
 
     HBox tagsBox = new HBox();
-    tagsBox.setPrefWidth(CENTRE_WIDTH);
     tagsBox.setPadding(new Insets(3, 0, 5, 0));
     tagsBox.getChildren().addAll(tagsValue);
 
@@ -183,9 +181,9 @@ public class TaskPane extends StackPane {
 
   public double calculateCentreWidth() {
     Stage stage = Raijin.getStage();
-    double width = Raijin.getStage().getWidth() - ID_WIDTH - OVERDUE_WIDTH - 40;
+    double width = Raijin.getStage().getWidth() - ID_WIDTH - OVERDUE_WIDTH - 30;
     if (stage.isMaximized()) {
-      width -= 220;
+      width -= 200;
     }
     return width;
   }
