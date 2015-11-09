@@ -202,10 +202,10 @@ public class AutoComplete {
     String[] tokens = getTokens(input);
     String prefix = getLastWord(tokens);
 
-    if (isCommand(tokens)) { // Get suggestions from commandList
+    if (isCommand(tokens)) {                      //Get suggestions from commandList
       suggestions = commandList.getSuggestions(prefix);
       eventbus.post(new SetGuideEvent(false));
-    } else if (isTag(tokens)) { // Get suggestions from tagList
+    } else if (isTag(tokens)) {                   //Get suggestions from tagList
       updateTagSuggestion(input);
     } else { // Get suggestions from task
       updateTaskSuggestion(input);
@@ -244,21 +244,19 @@ public class AutoComplete {
   }
 
   /**
-   * Real time update of display view with suggestions to current pending tasks
+   * Rotate through different types of view
+   * @param event   KeyEvent will be triggered every time a key is pressed
    */
   void updateDisplayView(KeyEvent event) {
-    int next = 0;
     if (Constants.KEY_VIEW_DOWN.match(event)) {
-      next = Math.floorMod((++viewCount), Constants.View.values().length);
-      Constants.View view = Constants.View.values()[next];
-      eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(tasksManager.getPendingTasks()),
-          view));
+      viewCount++;
     } else if (Constants.KEY_VIEW_UP.match(event)) {
-      next = Math.floorMod((--viewCount), Constants.View.values().length);
-      Constants.View view = Constants.View.values()[next];
-      eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(tasksManager.getPendingTasks()),
-          view));
+      viewCount--;
     }
+      int next = Math.floorMod((viewCount), Constants.View.values().length);
+      Constants.View view = Constants.View.values()[next];
+      eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(
+          tasksManager.getPendingTasks()), view));
   }
 
   //===========================================================================
@@ -315,30 +313,6 @@ public class AutoComplete {
     };
   }
 
-  /*Handles different variations of add command format*/
-  String[] handleAddHelpCommand(String userInput) {
-    String[] result = new String[2];
-    result[0] = Constants.ADD_SPECIFIC;
-    result[1] = Constants.ADD_SPECIFIC_DESC;
-    if (userInput.contains(";")) {
-      result[0] = Constants.ADD_BATCH;
-      result[1] = Constants.ADD_BATCH_DESC;
-    }
-
-    if (userInput.contains("from")) {
-      result[0] = Constants.ADD_EVENT_DIFFERENT_DATE;
-      result[1] = Constants.ADD_EVENT_DIFFERENT_DATE_DESC;
-    }
-
-    if (userInput.contains("to")) {
-      result[0] = Constants.ADD_EVENT_SAME_DATE;
-      result[1] = Constants.ADD_EVENT_SAME_DATE_DESC;
-    }
-
-
-    return result;
-  }
-
   /*Checks for date error so feedback can provided to user at realtime*/
   boolean isInvalidDate(FailedToParseException e) {
     return e.getCause() instanceof IllegalCommandArgumentException
@@ -348,7 +322,7 @@ public class AutoComplete {
 
   /*Checks for id error so feedback can provided to user at realtime*/
   boolean isInvalidId(ParsedInput input) {
-    if (input.getId() != 0) {
+    if (input.getId() != 0) {                         //Checks if id is entered
 
       for (int displayedId : input.getIds()) {
 
@@ -357,10 +331,14 @@ public class AutoComplete {
         } catch (IndexOutOfBoundsException e) {
           return true;
         }
-
       }
     }
     return false;
+  }
+
+  /*Checks parsed input for existence of date*/
+  public boolean isDateEntered(ParsedInput parsed) {
+    return parsed.getDateTime() != null && parsed.getDateTime().getEndDate() != null;
   }
 
   /**
@@ -368,7 +346,7 @@ public class AutoComplete {
    * @param parsed
    */
   public void handleTimeSlot(ParsedInput parsed) {
-    if (parsed.getDateTime() != null && parsed.getDateTime().getEndDate() != null) {
+    if (isDateEntered(parsed)) {
       TimeSlot slots = new TimeSlot(parsed.getDateTime()
           .getEndDate(), TaskUtils.getTasksList(tasksManager.getPendingTasks()));
       eventbus.post(new SetTimeSlotEvent(slots.getOccupiedSlots()));
@@ -384,27 +362,50 @@ public class AutoComplete {
    * @param description
    */
   public void activateGuideBar(String userInput, String commandFormat, String description) {
-    if (!commandFormat.equals("")) { // Only trigger help for certain commands
-      try {
-        ParsedInput parsed = parser.parse(userInput);
+    try {
+      ParsedInput parsed = parser.parse(userInput);
 
-        if (isInvalidId(parsed)) {
-          description = Constants.ADD_INVALID_ID;
-        }
-
-        handleTimeSlot(parsed);
-
-      } catch (FailedToParseException e) {
-        if (isInvalidDate(e)) {
-          description = Constants.ADD_INVALID_DATE;
-        }
+      if (isInvalidId(parsed)) {
+        description = Constants.ADD_INVALID_ID;
       }
-      eventbus.post(new SetGuideEvent(commandFormat, description));
+
+      handleTimeSlot(parsed);
+
+    } catch (FailedToParseException e) {
+      if (isInvalidDate(e)) {
+        description = Constants.ADD_INVALID_DATE;
+      }
     }
+    eventbus.post(new SetGuideEvent(commandFormat, description));
+  }
+
+  /*Handles different variations of add command format*/
+  String[] handleAddHelpCommand(String userInput) {
+    String[] result = new String[2];
+    /*By default shows format and descripton of adding specific task*/
+    result[0] = Constants.ADD_SPECIFIC;
+    result[1] = Constants.ADD_SPECIFIC_DESC;
+
+    if (userInput.contains(";")) {
+      result[0] = Constants.ADD_BATCH;
+      result[1] = Constants.ADD_BATCH_DESC;
+    }
+
+    if (userInput.contains("from")) {
+      result[0] = Constants.ADD_EVENT_DIFFERENT_DATE;
+      result[1] = Constants.ADD_EVENT_DIFFERENT_DATE_DESC;
+    }
+
+    if (userInput.contains("to")) {
+      result[0] = Constants.ADD_EVENT_SAME_DATE;
+      result[1] = Constants.ADD_EVENT_SAME_DATE_DESC;
+    }
+
+    return result;
   }
 
   /**
-   * Populate help bar with information relevant to command and user input
+   * Determines format and description that will be populated in guide bar
    * @param command         
    * @param userInput       
    */
