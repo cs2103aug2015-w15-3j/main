@@ -315,8 +315,8 @@ public class Constants {
   public static final String KEY_VIEW_UP_HELP_DESC = "Keyboard shortcut for to "
 	  		+ "toggle up between all, today, tomorrow and future pending tasks";
    
-  public static final String KEY_MINMAX_HELP = "Alt + Esc";
-  public static final String KEY_MINMAX_HELP_DESC = "To minimise or maximise the window";
+  public static final String KEY_MINMAX_HELP = "Alt + M";
+  public static final String KEY_MINMAX_HELP_DESC = "To switch between simple and advanced mode";
  
   public static final String SCROLL_UP_HELP = "Pg Up";
   public static final String SCROLL_UP_HELP_DESC = "To scroll up the display panel";
