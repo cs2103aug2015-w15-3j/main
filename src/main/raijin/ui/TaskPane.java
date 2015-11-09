@@ -185,7 +185,7 @@ public class TaskPane extends StackPane {
     Stage stage = Raijin.getStage();
     double stageWidth = stage.getWidth();
     if (Double.isNaN(stageWidth)) {
-      stageWidth = 800;
+      stageWidth = 750;
     }
     double width = stageWidth - ID_WIDTH - OVERDUE_WIDTH - 35;
     if (stage.isMaximized()) {
