@@ -85,7 +85,7 @@ public class TimeSlot {
     if (compareEndWithEnd < 0) {
       endTime = target.getEndTime();
     }
-    return new DateTime(startTime, endTime);
+    return new DateTime(source.getStartDate(), startTime, source.getEndDate(), endTime);
   }
 
   /*Check if there is any overlap between two events*/
@@ -112,8 +112,10 @@ public class TimeSlot {
       occupiedSlots.set(occupiedSlots.indexOf(target), null);
       return source;
     } else {
+      DateTime merged = handleOverlapEvents(compareStartWithStart, compareEndWithEnd, source, target);
       occupiedSlots.set(occupiedSlots.indexOf(target), null);
-      return handleOverlapEvents(compareStartWithStart, compareEndWithEnd, source, target);
+      System.out.println(merged.getStartTime());
+      return merged;
     }
   }
 
@@ -139,6 +141,8 @@ public class TimeSlot {
       for (DateTime source : occupiedSlots) {
         if (source != null && occupiedSlots.indexOf(source) != occupiedSlots.size() - 1) {
           filtered.add(consolidateTimeSlots(source));
+        } else if (source != null) {
+          filtered.add(source);
         }
       }
       return filtered;
