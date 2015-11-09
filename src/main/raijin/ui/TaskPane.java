@@ -121,7 +121,7 @@ public class TaskPane extends StackPane {
     idBox.getChildren().addAll(id);
 
     HBox taskNameBox = new HBox();
-    taskNameBox.setMinWidth(Raijin.getStage().getMinWidth());
+    taskNameBox.setMinWidth(Raijin.getStage().getMinWidth() - 130);
     taskNameBox.setPrefWidth(CENTRE_WIDTH);
     taskNameBox.setPadding(new Insets(3, 0, 3, 0));
     taskNameBox.getChildren().addAll(taskName);
@@ -141,7 +141,7 @@ public class TaskPane extends StackPane {
 
     Label overdueReminder = GlyphsDude.createIconLabel(FontAwesomeIcon.EXCLAMATION_CIRCLE, 
         "", "25px", "10px", ContentDisplay.CENTER);
-    overdueReminder.setPadding(new Insets(20, 0, 0, 0));
+    overdueReminder.setPadding(new Insets(20, 10, 0, 0));
 
     HBox pane = new HBox();
     pane.getChildren().addAll(idBox, centre);
@@ -182,7 +182,7 @@ public class TaskPane extends StackPane {
 
   public double calculateCentreWidth() {
     Stage stage = Raijin.getStage();
-    double width = Raijin.getStage().getWidth() - ID_WIDTH - OVERDUE_WIDTH - 30;
+    double width = Raijin.getStage().getWidth() - ID_WIDTH - OVERDUE_WIDTH - 35;
     if (stage.isMaximized()) {
       width -= 200;
     }
