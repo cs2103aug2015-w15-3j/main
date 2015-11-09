@@ -131,7 +131,7 @@ public class TaskPane extends StackPane {
 
     VBox centre = new VBox();
     centre.setPrefWidth(CENTRE_WIDTH);
-    centre.setPadding(new Insets(0, 40, 0, 0));
+    centre.setPadding(new Insets(0, 20, 0, 0));
     centre.getChildren().addAll(taskNameBox, datesBox, tagsBox);
 
     HBox overdueBox = new HBox();
