@@ -120,9 +120,6 @@ public class TaskPane extends StackPane {
     idBox.getChildren().addAll(id);
 
     HBox taskNameBox = new HBox();
-    CENTRE_WIDTH = calculateCentreWidth();
-    taskNameBox.setMinWidth(Raijin.getStage().getMinWidth() - 130);
-    taskNameBox.setPrefWidth(CENTRE_WIDTH);
     taskNameBox.setPadding(new Insets(3, 0, 3, 0));
     taskNameBox.getChildren().addAll(taskName);
 
@@ -131,6 +128,10 @@ public class TaskPane extends StackPane {
     tagsBox.getChildren().addAll(tagsValue);
 
     VBox centre = new VBox();
+    CENTRE_WIDTH = calculateCentreWidth();
+    centre.setMinWidth(Raijin.getStage().getMinWidth() - 130);
+    centre.setPrefWidth(CENTRE_WIDTH);
+    System.out.println(CENTRE_WIDTH);
     centre.setPadding(new Insets(0, 10, 0, 0));
     centre.getChildren().addAll(taskNameBox, datesBox, tagsBox);
 
