@@ -215,6 +215,7 @@ public class AutoComplete {
 
   /*Update display view with implicit search result for certain commands*/
   void updateDisplayWithTasks(String userInput) {
+    System.out.println("called " + userInput);
     String command = userInput.trim().split(" ")[0];
     String prefix = getArguments(userInput);
     List<Task> filtered =
@@ -248,15 +249,15 @@ public class AutoComplete {
    * @param event   KeyEvent will be triggered every time a key is pressed
    */
   void updateDisplayView(KeyEvent event) {
-    if (Constants.KEY_VIEW_DOWN.match(event)) {
-      viewCount++;
-    } else if (Constants.KEY_VIEW_UP.match(event)) {
-      viewCount--;
-    }
+    if (Constants.KEY_VIEW_DOWN.match(event) || Constants.KEY_VIEW_UP.match(event)) {
+      viewCount = Constants.KEY_VIEW_DOWN.match(event) ? viewCount++ : viewCount--;
+      /*Get next view index*/
       int next = Math.floorMod((viewCount), Constants.View.values().length);
+      /*Get view associated with the index*/
       Constants.View view = Constants.View.values()[next];
       eventbus.post(new ChangeViewEvent(TaskUtils.getTasksList(
           tasksManager.getPendingTasks()), view));
+    } 
   }
 
   //===========================================================================
