@@ -34,12 +34,11 @@ public class TaskPane extends StackPane {
   private String lowPriorityTimeSlot = "#202020";   // dark grey
 
   private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
-  private final int TASK_DISPLAY_NAME_LIMIT = 69;
   private final float MAX_EVENT_DURATION = 1440; // Set 24 hour as the upper bound for event duration
   private final float MAX_TIMESLOT_WIDTH = 150; // Maximum width of a time slot label
   private static final double ID_WIDTH = 80;
   private static final double OVERDUE_WIDTH = 40;
-  private double TASK_BOX_WIDTH;
+  private double CENTRE_WIDTH;
 
   private Label id;
   private Label taskName;
@@ -61,7 +60,7 @@ public class TaskPane extends StackPane {
 
   /* Constructor for Tasks */
   public TaskPane(int displayedNum, Task task) {
-    TASK_BOX_WIDTH = calculateTaskBoxWidth();
+    CENTRE_WIDTH = calculateCentreWidth();
     id = new Label(Integer.toString(displayedNum));
     taskName = new Label((task.getName()));
     tagsValue = new Label(retrieveTags(task));
@@ -122,7 +121,6 @@ public class TaskPane extends StackPane {
     idBox.getChildren().addAll(id);
 
     HBox taskNameBox = new HBox();
-    taskNameBox.setPrefWidth(TASK_BOX_WIDTH);
     taskNameBox.setPadding(new Insets(3, 0, 3, 0));
     taskNameBox.getChildren().addAll(taskName);
 
@@ -132,8 +130,8 @@ public class TaskPane extends StackPane {
     tagsBox.getChildren().addAll(tagsValue);
 
     VBox centre = new VBox();
-    //centre.setPrefWidth(550);
-    centre.setPadding(new Insets(0, 10, 0, 0));
+    centre.setPrefWidth(CENTRE_WIDTH);
+    centre.setPadding(new Insets(0, 40, 0, 0));
     centre.getChildren().addAll(taskNameBox, datesBox, tagsBox);
 
     HBox overdueBox = new HBox();
@@ -182,7 +180,7 @@ public class TaskPane extends StackPane {
 
   }
 
-  public double calculateTaskBoxWidth() {
+  public double calculateCentreWidth() {
     Stage stage = Raijin.getStage();
     double width = Raijin.getStage().getWidth() - ID_WIDTH - OVERDUE_WIDTH - 40;
     if (stage.isMaximized()) {
