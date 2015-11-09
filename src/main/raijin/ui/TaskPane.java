@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.DateTime;
 import raijin.common.datatypes.Task;
@@ -36,6 +37,9 @@ public class TaskPane extends StackPane {
   private final int TASK_DISPLAY_NAME_LIMIT = 69;
   private final float MAX_EVENT_DURATION = 1440; // Set 24 hour as the upper bound for event duration
   private final float MAX_TIMESLOT_WIDTH = 150; // Maximum width of a time slot label
+  private static final double ID_WIDTH = 80;
+  private static final double OVERDUE_WIDTH = 40;
+  private double TASK_BOX_WIDTH;
 
   private Label id;
   private Label taskName;
@@ -57,6 +61,7 @@ public class TaskPane extends StackPane {
 
   /* Constructor for Tasks */
   public TaskPane(int displayedNum, Task task) {
+    TASK_BOX_WIDTH = calculateTaskBoxWidth();
     id = new Label(Integer.toString(displayedNum));
     taskName =
         new Label((task.getName().length() > TASK_DISPLAY_NAME_LIMIT ? task.getName().substring(0,
@@ -116,10 +121,11 @@ public class TaskPane extends StackPane {
     datesBox.setPrefHeight(10);
 
     HBox idBox = new HBox();
-    idBox.setPrefWidth(80);
+    idBox.setPrefWidth(ID_WIDTH);
     idBox.getChildren().addAll(id);
 
     HBox taskNameBox = new HBox();
+    taskNameBox.setPrefWidth(TASK_BOX_WIDTH);
     taskNameBox.setPadding(new Insets(3, 0, 3, 0));
     taskNameBox.getChildren().addAll(taskName);
 
@@ -129,12 +135,12 @@ public class TaskPane extends StackPane {
     tagsBox.getChildren().addAll(tagsValue);
 
     VBox centre = new VBox();
-    centre.setPrefWidth(550);
+    //centre.setPrefWidth(550);
     centre.setPadding(new Insets(0, 10, 0, 0));
     centre.getChildren().addAll(taskNameBox, datesBox, tagsBox);
 
     HBox overdueBox = new HBox();
-    overdueBox.setPrefWidth(60);
+    overdueBox.setPrefWidth(OVERDUE_WIDTH);
     overdueBox.getChildren().addAll(isOverdue);
     overdueBox.setPadding(new Insets(25, 0, 0, 0));
 
@@ -177,6 +183,15 @@ public class TaskPane extends StackPane {
     tagsValue.setId("tagsValue");
     isOverdue.setId("isOverdue");
 
+  }
+
+  public double calculateTaskBoxWidth() {
+    Stage stage = Raijin.getStage();
+    double width = Raijin.getStage().getWidth() - ID_WIDTH - OVERDUE_WIDTH - 30;
+    if (stage.isMaximized()) {
+      width -= 220;
+    }
+    return width;
   }
 
   /* Constructor for non-tasks */

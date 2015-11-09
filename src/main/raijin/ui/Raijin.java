@@ -46,6 +46,7 @@ import javafx.stage.WindowEvent;
 import raijin.common.datatypes.Constants;
 import raijin.common.datatypes.Status;
 import raijin.common.eventbus.RaijinEventBus;
+import raijin.common.eventbus.events.SetCurrentDisplayEvent;
 import raijin.common.eventbus.events.SetFailureEvent;
 import raijin.common.eventbus.events.SetFeedbackEvent;
 import raijin.logic.api.Logic;
@@ -144,7 +145,8 @@ private Stage helpStage;
      * (!newValue) { changeToMinimisedView(); } else { changeToMaximisedView(); } });
      */
 
-    handleMaximized(); // Handle simple & advanced mode
+    handleMaximized();                      // Handle simple & advanced mode
+    handleWindowResize();                   // Handle window resize
     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
       public void handle(WindowEvent we) {
         logic.executeCommand("exit");
@@ -221,6 +223,17 @@ private Stage helpStage;
     } else if (key == KeyCode.ESCAPE) {
       logic.loadCustomData(inputController.inputCommandBar.getText().trim());
     }
+  }
+
+  public void handleWindowResize() {
+    stage.widthProperty().addListener(new ChangeListener<Number>() {
+
+      @Override
+      public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+          Number newValue) {
+        eventbus.post(new SetCurrentDisplayEvent(eventbus.getDisplayedTasks()));
+        
+      }});
   }
 
   private void handleEnterPress(InputController inputController, String userInput) {
