@@ -220,9 +220,10 @@ public class Session {
   }
 
   //===========================================================================
-  // Testing
+  // Methodss used by developers 
   //===========================================================================
 
+  /*Quickly load your own json file*/
   public void loadCustomJSON(String dataPath) {
     TasksManager retrievedData = getDataFromJson(dataPath);
     if (retrievedData != null) {
