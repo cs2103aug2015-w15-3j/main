@@ -47,7 +47,7 @@ public class TaskPane extends StackPane {
   private Label startValue = new Label();
   private Label endValue = new Label();
   private Label tagsValue;
-  private Label isOverdue = new Label("Overdue!");
+  private Label overdueReminder;
 
   private Constants.TYPE_TASK taskType;
 
@@ -63,12 +63,6 @@ public class TaskPane extends StackPane {
     id = new Label(Integer.toString(displayedNum));
     taskName = new Label((task.getName()));
     tagsValue = new Label(retrieveTags(task));
-
-    InnerShadow innerShadow = new InnerShadow();
-    innerShadow.setOffsetX(3);
-    innerShadow.setOffsetY(0);
-    innerShadow.setColor(Color.web("#FF8566"));
-    isOverdue.setEffect(innerShadow);
 
     HBox datesBox = new HBox();
     taskType = task.getType();
@@ -135,12 +129,7 @@ public class TaskPane extends StackPane {
     centre.setPadding(new Insets(0, 10, 0, 0));
     centre.getChildren().addAll(taskNameBox, datesBox, tagsBox);
 
-    HBox overdueBox = new HBox();
-    overdueBox.setPrefWidth(OVERDUE_WIDTH);
-    overdueBox.getChildren().addAll(isOverdue);
-    overdueBox.setPadding(new Insets(25, 0, 0, 0));
-
-    Label overdueReminder = GlyphsDude.createIconLabel(FontAwesomeIcon.EXCLAMATION_CIRCLE, 
+    overdueReminder = GlyphsDude.createIconLabel(FontAwesomeIcon.EXCLAMATION_CIRCLE, 
         "", "25px", "10px", ContentDisplay.CENTER);
     overdueReminder.setPadding(new Insets(20, 10, 0, 0));
 
@@ -177,10 +166,56 @@ public class TaskPane extends StackPane {
     startValue.setId("startValue");
     endValue.setId("endValue");
     tagsValue.setId("tagsValue");
-    isOverdue.setId("isOverdue");
 
   }
+  
+  /* Constructor for non-tasks */
+  public TaskPane(String message) {
+	    Label msg = new Label(message);
+	    DropShadow dropShadow = new DropShadow();
+	    dropShadow.setRadius(3.0);
+	    dropShadow.setOffsetX(2.0);
+	    dropShadow.setOffsetY(2.0);
+	    dropShadow.setColor(Color.color(0.4, 0.5, 0.5, 0.3));
 
+	    if (!message.equals("No pending tasks!")) {
+	      msg.setStyle("-fx-font-size: 17px; -fx-padding: 7px;");
+	      msg.setEffect(dropShadow);
+	    } else {
+	      msg.setStyle("-fx-font-size: 15px; -fx-padding: 5px;");
+	    }
+
+	    this.getChildren().addAll(msg);
+	    this.setStyle("-fx-background-color: white;");
+  }
+  
+  /**
+   * This method is to get all the tags of the task into a single String object, separated by
+   * commas.
+   * 
+   * @param task
+   * @return tagString
+   */
+  public String retrieveTags(Task task) {
+    TreeSet<String> tagsTree = new TreeSet<String>(task.getTags());
+
+    String tagString = "";
+    boolean hasTags = false;
+
+    while (!tagsTree.isEmpty()) {
+      hasTags = true;
+      tagString += tagsTree.pollFirst();
+      tagString += ", ";
+    }
+
+    if (hasTags) {
+      tagString = tagString.substring(0, tagString.length() - 2);
+    }
+
+    return tagString;
+  }
+
+ //@@author A0112213E
   public double calculateCentreWidth() {
     Stage stage = Raijin.getStage();
     double stageWidth = stage.getWidth();
@@ -194,25 +229,7 @@ public class TaskPane extends StackPane {
     return width;
   }
 
-  /* Constructor for non-tasks */
-  public TaskPane(String message) {
-    Label msg = new Label(message);
-    DropShadow dropShadow = new DropShadow();
-    dropShadow.setRadius(3.0);
-    dropShadow.setOffsetX(2.0);
-    dropShadow.setOffsetY(2.0);
-    dropShadow.setColor(Color.color(0.4, 0.5, 0.5, 0.3));
-
-    if (!message.equals("No pending tasks!")) {
-      msg.setStyle("-fx-font-size: 17px; -fx-padding: 7px;");
-      msg.setEffect(dropShadow);
-    } else {
-      msg.setStyle("-fx-font-size: 15px; -fx-padding: 5px;");
-    }
-
-    this.getChildren().addAll(msg);
-    this.setStyle("-fx-background-color: white;");
-  }
+  
 
   float getWidthOfTimeSlot(DateTime dateTime) {
     long duration = dateTime.getStartTime().until(dateTime.getEndTime(), ChronoUnit.MINUTES);
@@ -253,32 +270,6 @@ public class TaskPane extends StackPane {
     endTimeLabel.setPadding(new Insets(0, 0, 0, 10));
     datesBox.getChildren().addAll(startByOn, eventDate, startTimeLabel,
                                   timeSlot, endTimeLabel);
-  }
-
-  /**
-   * This method is to get all the tags of the task into a single String object, separated by
-   * commas.
-   * 
-   * @param task
-   * @return tagString
-   */
-  public String retrieveTags(Task task) {
-    TreeSet<String> tagsTree = new TreeSet<String>(task.getTags());
-
-    String tagString = "";
-    boolean hasTags = false;
-
-    while (!tagsTree.isEmpty()) {
-      hasTags = true;
-      tagString += tagsTree.pollFirst();
-      tagString += ", ";
-    }
-
-    if (hasTags) {
-      tagString = tagString.substring(0, tagString.length() - 2);
-    }
-
-    return tagString;
   }
 
 }
