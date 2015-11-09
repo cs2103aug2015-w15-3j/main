@@ -114,7 +114,6 @@ public class TimeSlot {
     } else {
       DateTime merged = handleOverlapEvents(compareStartWithStart, compareEndWithEnd, source, target);
       occupiedSlots.set(occupiedSlots.indexOf(target), null);
-      System.out.println(merged.getStartTime());
       return merged;
     }
   }
