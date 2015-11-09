@@ -1,5 +1,5 @@
 # A0124745Eunused
-###### src\raijin\common\datatypes\Constants.java
+###### src\main\raijin\common\datatypes\Constants.java
 ``` java
   // Currently using images instead of string feedback messages.
   public static final String HELP_MESSAGE = "\n<----==== Raijin to the Rescue! ====---->"
@@ -34,7 +34,8 @@
       + "\nTAB: Autocomplete names, or changes names to ID for EDIT/DELETE/DONE."
       + "\nUP/DOWN: Cycles through previously executed commands.\n";
 
-  //============
-  // Add command
-  //============
+
+  //================
+  // keyboard shortcuts for help
+  //================
 ```
