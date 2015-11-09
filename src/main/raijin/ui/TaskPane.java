@@ -183,11 +183,14 @@ public class TaskPane extends StackPane {
 
   public double calculateCentreWidth() {
     Stage stage = Raijin.getStage();
-    double width = Raijin.getStage().getWidth() - ID_WIDTH - OVERDUE_WIDTH - 35;
+    double stageWidth = stage.getWidth();
+    if (Double.isNaN(stageWidth)) {
+      stageWidth = 800;
+    }
+    double width = stageWidth - ID_WIDTH - OVERDUE_WIDTH - 35;
     if (stage.isMaximized()) {
       width -= 200;
     }
-    width = width < 300 ? Raijin.getStage().getMinWidth() : width;
     return width;
   }
 
