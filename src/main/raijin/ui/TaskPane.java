@@ -184,7 +184,7 @@ public class TaskPane extends StackPane {
 
   public double calculateTaskBoxWidth() {
     Stage stage = Raijin.getStage();
-    double width = Raijin.getStage().getWidth() - ID_WIDTH - OVERDUE_WIDTH - 30;
+    double width = Raijin.getStage().getWidth() - ID_WIDTH - OVERDUE_WIDTH - 40;
     if (stage.isMaximized()) {
       width -= 220;
     }
