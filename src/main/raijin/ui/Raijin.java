@@ -84,7 +84,7 @@ public class Raijin extends Application implements NativeKeyListener {
 		  "resource/styles/keyboardShort.jpg"};	
   */
   
-  private static final double MIN_WIDTH = 550.0; // width values for stage
+  private static final double MIN_WIDTH = 600.0; // width values for stage
   private static final double MIN_HEIGTH = 650.0; // height values for stage
   private double dragX = 0; // values for dragging of help pane
   private double dragY = 0;
