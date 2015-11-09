@@ -40,7 +40,7 @@ public class SimpleParser implements ParserInterface {
         builder = new DoneParser(wordsOfInput).process();
       } else if (isFirstWord("display|show")) {
         builder = new DisplayParser(wordsOfInput).process();
-      } else if (isFirstWord("help")) {
+      } else if (isFirstWord("help|damith")) {  // Easter-egg lol
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.HELP);
       } else if (isFirstWord("undo")) {
         builder = new ParsedInput.ParsedInputBuilder(Constants.Command.UNDO);
