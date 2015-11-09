@@ -65,7 +65,8 @@ public class RaijinInputIT {
   }
 
   @Test
-  public void testAddCommandAutoComplete() throws InterruptedException {
+  /*Testing autocomplete of add command*/
+  public void testAddCommandAutoComplete() {
     raijin.type(KeyCode.A).push(KeyCode.TAB);
     TextField result = (TextField) GuiTest.find("#inputCommandBar");
     assertEquals("add", result.getText());
