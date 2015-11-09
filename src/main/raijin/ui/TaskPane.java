@@ -124,7 +124,6 @@ public class TaskPane extends StackPane {
     CENTRE_WIDTH = calculateCentreWidth();
     centre.setMinWidth(Raijin.getStage().getMinWidth() - 130);
     centre.setPrefWidth(CENTRE_WIDTH);
-    System.out.println(CENTRE_WIDTH);
     centre.setPadding(new Insets(0, 10, 0, 0));
     centre.getChildren().addAll(taskNameBox, datesBox, tagsBox);
 
