@@ -127,7 +127,6 @@ public class TaskPane extends StackPane {
 
     HBox tagsBox = new HBox();
     tagsBox.setPadding(new Insets(3, 0, 5, 0));
-    tagsBox.setPrefWidth(500);
     tagsBox.getChildren().addAll(tagsValue);
 
     VBox centre = new VBox();
@@ -140,7 +139,7 @@ public class TaskPane extends StackPane {
     overdueBox.setPadding(new Insets(25, 0, 0, 0));
 
     Label overdueReminder = GlyphsDude.createIconLabel(FontAwesomeIcon.EXCLAMATION_CIRCLE, 
-        "", "25px", "10px", ContentDisplay.RIGHT);
+        "", "25px", "10px", ContentDisplay.CENTER);
     overdueReminder.setPadding(new Insets(20, 0, 0, 0));
 
     HBox pane = new HBox();
