@@ -56,15 +56,16 @@ public class AutoComplete {
   public List<Task> selectedTasks;
 
   public AutoComplete(TasksManager tasksManager) {
+    this.tasksManager = tasksManager;
+    this.eventbus = RaijinEventBus.getInstance();
+    this.logger = RaijinLogger.getLogger();
+    this.parser = new SimpleParser();
+
     commandList = new SetTrie();
     tagList = new SetTrie();
     taskList = new SetTrie();
     tags = new TreeSet<String>();
     taskNames = new TreeSet<String>();
-    this.tasksManager = tasksManager;
-    this.eventbus = RaijinEventBus.getInstance();
-    this.logger = RaijinLogger.getLogger();
-    this.parser = new SimpleParser();
     suggestions = new ArrayList<String>();
     selectedTasks = new ArrayList<Task>();
 
@@ -96,7 +97,7 @@ public class AutoComplete {
 
 
   //===========================================================================
-  // Updates
+  // Initialization
   //===========================================================================
 
   /* Update to latest pending task names */
@@ -410,61 +411,15 @@ public class AutoComplete {
   void handleHelpForCommand(String command, String userInput) {
     /*Creates enum object from userInput*/
     Constants.Command inputCommand = Constants.Command.valueOf(command.toUpperCase());
-    String commandFormat = "";
-    String description = "";
 
-    switch (inputCommand) {
+    String commandFormat = inputCommand.cmdFormat;
+    String description = inputCommand.cmdDescription;
 
-      case ADD:
-        String[] result = handleAddHelpCommand(userInput);
-        commandFormat = result[0];
-        description = result[1];
-        break;
-
-      case DELETE:
-        commandFormat = Constants.DELETE;
-        description = Constants.DELETE_DESC;
-        break;
-
-      case DISPLAY:
-        commandFormat = Constants.DISPLAY;
-        description = Constants.DISPLAY_DESC;
-        break;
-
-      case DONE:
-        commandFormat = Constants.DONE;
-        description = Constants.DONE_DESC;
-        break;
-
-      case EDIT:
-        commandFormat = Constants.EDIT_TASK;
-        description = Constants.EDIT_TASK_DESC;
-        break;
-
-      case REDO:
-        commandFormat = Constants.REDO;
-        description = Constants.REDO_DESC;
-        break;
-
-      case SEARCH:
-        commandFormat = Constants.SEARCH;
-        description = Constants.SEARCH_DESC;
-        break;
-
-      case SET:
-        commandFormat = Constants.SET;
-        description = Constants.SET_DESC;
-        break;
-
-      case UNDO:
-        commandFormat = Constants.UNDO;
-        description = Constants.UNDO_DESC;
-        break;
-
-      default:
-        break;
-
-    }
+    if (inputCommand == Constants.Command.ADD) {
+      String[] result = handleAddHelpCommand(userInput);
+      commandFormat = result[0];
+      description = result[1];
+    } 
     activateGuideBar(userInput, commandFormat, description);
   }
 }
