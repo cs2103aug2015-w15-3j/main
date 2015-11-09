@@ -219,6 +219,7 @@ public class TaskPane extends StackPane {
   public double calculateCentreWidth() {
     Stage stage = Raijin.getStage();
     double stageWidth = stage.getWidth();
+    /*Handles NaN upon launch*/
     if (Double.isNaN(stageWidth)) {
       stageWidth = 750;
     }
