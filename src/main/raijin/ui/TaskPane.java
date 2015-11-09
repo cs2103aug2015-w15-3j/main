@@ -63,10 +63,7 @@ public class TaskPane extends StackPane {
   public TaskPane(int displayedNum, Task task) {
     TASK_BOX_WIDTH = calculateTaskBoxWidth();
     id = new Label(Integer.toString(displayedNum));
-    taskName =
-        new Label((task.getName().length() > TASK_DISPLAY_NAME_LIMIT ? task.getName().substring(0,
-            TASK_DISPLAY_NAME_LIMIT)
-            + "..." : task.getName()));
+    taskName = new Label((task.getName()));
     tagsValue = new Label(retrieveTags(task));
 
     InnerShadow innerShadow = new InnerShadow();
