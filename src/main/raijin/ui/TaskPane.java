@@ -60,7 +60,6 @@ public class TaskPane extends StackPane {
 
   /* Constructor for Tasks */
   public TaskPane(int displayedNum, Task task) {
-    CENTRE_WIDTH = calculateCentreWidth();
     id = new Label(Integer.toString(displayedNum));
     taskName = new Label((task.getName()));
     tagsValue = new Label(retrieveTags(task));
@@ -121,7 +120,8 @@ public class TaskPane extends StackPane {
     idBox.getChildren().addAll(id);
 
     HBox taskNameBox = new HBox();
-    //taskNameBox.setMinWidth(Raijin.getStage().getMinWidth() - 130);
+    CENTRE_WIDTH = calculateCentreWidth();
+    taskNameBox.setMinWidth(Raijin.getStage().getMinWidth() - 130);
     taskNameBox.setPrefWidth(CENTRE_WIDTH);
     taskNameBox.setPadding(new Insets(3, 0, 3, 0));
     taskNameBox.getChildren().addAll(taskName);
