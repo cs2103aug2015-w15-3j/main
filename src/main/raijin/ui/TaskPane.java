@@ -121,7 +121,7 @@ public class TaskPane extends StackPane {
     idBox.getChildren().addAll(id);
 
     HBox taskNameBox = new HBox();
-    taskNameBox.setMinWidth(Raijin.getStage().getMinWidth() - 130);
+    //taskNameBox.setMinWidth(Raijin.getStage().getMinWidth() - 130);
     taskNameBox.setPrefWidth(CENTRE_WIDTH);
     taskNameBox.setPadding(new Insets(3, 0, 3, 0));
     taskNameBox.getChildren().addAll(taskName);
@@ -186,6 +186,7 @@ public class TaskPane extends StackPane {
     if (stage.isMaximized()) {
       width -= 200;
     }
+    width = width < 300 ? Raijin.getStage().getMinWidth() : width;
     return width;
   }
 
