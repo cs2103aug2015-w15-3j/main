@@ -140,9 +140,111 @@ public class Constants {
    ID, NAME, DATETIME, PRIORITY, HELPEROPTION, SUBTASKOF
   }
 
+  //===================
+  // Add command format
+  //===================
+  //@@author A0112213E
+  
+  public static final String ADD_FLOATING = "add ?[my_task] #tag !priority";
+  public static final String ADD_FLOATING_DESC = "Adds a task without deadline";
+  public static final String ADD_SPECIFIC = "add ?[my_task] by/on ?[end_date] ?[end_time] "
+      + "#tag !priority";
+  public static final String ADD_SPECIFIC_DESC = "Adds a task with a deadline. "
+      + "If no time is given, it will be set to 11.59 pm";
+  public static final String ADD_EVENT_SAME_DATE = "add ?[my_task] by/on ?[end_date] "
+      + "?[start_time] to ?[end_time] #tag !priority";
+  public static final String ADD_EVENT_SAME_DATE_DESC = "Adds an event for that "
+      + "period of time";
+  public static final String ADD_EVENT_DIFFERENT_DATE = "add ?[my_task] from ?[start_date] "
+      + "?[start_time] to ?[end_date] ?[end_time] #tag !priority";
+  public static final String ADD_EVENT_DIFFERENT_DATE_DESC = "Adds an event that "
+      + "spans more than 1 day";
+
+  public static final String ADD_BATCH = "add ?[task_1] ; ?[task_2] ; ?[task_3] ...";
+  public static final String ADD_BATCH_DESC = "Adds multiple tasks followed "
+      + "by details of the tasks";
+
+  public static final String ADD_INVALID_DATE = "?Please enter a valid time format";
+  public static final String ADD_INVALID_ID = "?Invalid task id(s) found. Please "
+      + "enter only task id that appears on the screen";
+
+  //====================
+  // Edit command format
+  //====================
+
+  public static final String EDIT_FORMAT = "edit ?[task_id] ?[changes]";
+  public static final String EDIT_DESC = "Edit any task given its task id";
+  
+  //=======================
+  // Display command format
+  //=======================
+
+  public static final String DISPLAY_FORMAT = "display all | completed | overdue | floating";
+  public static final String DISPLAY_DESC = "Show tasks based on different criteria";
+
+  //====================
+  // Done command format
+  //====================
+
+  public static final String DONE_FORMAT = "done ?[task_id] ?[task_id] ... #tag";
+  public static final String DONE_DESC = "marks a task as done given the task id or tag";
+
+  //======================
+  // Delete command format
+  //======================
+
+  public static final String DELETE_FORMAT = "delete ?[task_id] ?[task_id] .... #tag";
+  public static final String DELETE_DESC = "deletes a task that no longer needed to be "
+      + "completed";
+
+  //=============================
+  // Undo and redo command format
+  //=============================
+
+  public static final String UNDO_FORMAT = "undo";
+  public static final String UNDO_DESC = "Undo previous command. You can also use "
+      + "Ctrl + Z to undo";
+  public static final String REDO_FORMAT = "redo";
+  public static final String REDO_DESC = "Redo previous command. You can also use "
+      + "Ctrl + Y to undo";
+
+  //======================
+  // Search command format
+  //======================
+
+  public static final String SEARCH_FORMAT = "search ?[keyword] ?[keyword] ... #tag !priority";
+  public static final String SEARCH_DESC = "searches all pending tasks that "
+      + "matches given keywords";
+  
+  
+  //===================
+  // Set command format
+  //===================
+
+  public static final String SET_FORMAT = "set ?[directory_to_store_data]";
+  public static final String SET_DESC = "Specifies directory to store your data";
+
   public static enum Command { 
-    ADD, EDIT, DISPLAY, SEARCH, DELETE, DONE, EXIT, UNDO, REDO, HELP,
-    SET
+    ADD(Constants.ADD_SPECIFIC, Constants.ADD_SPECIFIC_DESC), 
+    EDIT(Constants.EDIT_FORMAT, Constants.EDIT_DESC), 
+    DISPLAY(Constants.DISPLAY_FORMAT, Constants.DISPLAY_DESC), 
+    SEARCH(Constants.SEARCH_FORMAT, Constants.SEARCH_DESC), 
+    DELETE(Constants.DELETE_FORMAT, Constants.DELETE_DESC), 
+    DONE(Constants.DONE_FORMAT, Constants.DONE_DESC), 
+    UNDO(Constants.UNDO_FORMAT, Constants.UNDO_DESC), 
+    REDO(Constants.REDO_FORMAT, Constants.REDO_DESC), 
+    SET(Constants.SET_FORMAT, Constants.SET_DESC), HELP, EXIT;
+    
+    public String cmdFormat;                    //format when using the command
+    public String cmdDescription;               //description of the command
+    
+    private Command() {}
+
+    private Command(String cmdFormat, String cmdDescription) {
+      this.cmdFormat = cmdFormat;
+      this.cmdDescription = cmdDescription;
+    }
+
   }
   
   //@@author A0124745E-unused
@@ -179,89 +281,6 @@ public class Constants {
       + "\nTAB: Autocomplete names, or changes names to ID for EDIT/DELETE/DONE."
       + "\nUP/DOWN: Cycles through previously executed commands.\n";
 
-  //============
-  // Add command
-  //============
-  //@@author A0112213E
-  
-  public static final String ADD_FLOATING = "add ?[my_task] #tag !priority";
-  public static final String ADD_FLOATING_DESC = "Adds a task without deadline";
-  public static final String ADD_SPECIFIC = "add ?[my_task] by/on ?[end_date] ?[end_time] "
-      + "#tag !priority";
-  public static final String ADD_SPECIFIC_DESC = "Adds a task with a deadline. "
-      + "If no time is given, it will be set to 11.59 pm";
-  public static final String ADD_EVENT_SAME_DATE = "add ?[my_task] by/on ?[end_date] "
-      + "?[start_time] to ?[end_time] #tag !priority";
-  public static final String ADD_EVENT_SAME_DATE_DESC = "Adds an event for that "
-      + "period of time";
-  public static final String ADD_EVENT_DIFFERENT_DATE = "add ?[my_task] from ?[start_date] "
-      + "?[start_time] to ?[end_date] ?[end_time] #tag !priority";
-  public static final String ADD_EVENT_DIFFERENT_DATE_DESC = "Adds an event that "
-      + "spans more than 1 day";
-
-  public static final String ADD_BATCH = "add ?[task_1] ; ?[task_2] ; ?[task_3] ...";
-  public static final String ADD_BATCH_DESC = "Adds multiple tasks followed "
-      + "by details of the tasks";
-
-  public static final String ADD_INVALID_DATE = "?Please enter a valid time format";
-  public static final String ADD_INVALID_ID = "?Invalid task id(s) found. Please "
-      + "enter only task id that appears on the screen";
-
-  //=============
-  // Edit command
-  //=============
-
-  public static final String EDIT_TASK = "edit ?[task_id] ?[changes]";
-  public static final String EDIT_TASK_DESC = "Edit any task given its task id";
-  
-  //================
-  // Display command
-  //================
-
-  public static final String DISPLAY = "display all | completed | overdue | floating";
-  public static final String DISPLAY_DESC = "Show tasks based on different criteria";
-
-  //================
-  // Done command
-  //================
-
-  public static final String DONE = "done ?[task_id] ?[task_id] ... #tag";
-  public static final String DONE_DESC = "marks a task as done given the task id or tag";
-
-  //================
-  // Delete command
-  //================
-
-  public static final String DELETE = "delete ?[task_id] ?[task_id] .... #tag";
-  public static final String DELETE_DESC = "deletes a task that no longer needed to be "
-      + "completed";
-
-  //================
-  // Undo and redo command
-  //================
-
-  public static final String UNDO = "undo";
-  public static final String REDO = "redo";
-  public static final String UNDO_DESC = "Undo previous command. You can also use "
-      + "Ctrl + Z to undo";
-  public static final String REDO_DESC = "Redo previous command. You can also use "
-      + "Ctrl + Y to undo";
-
-  //================
-  // search command
-  //================
-
-  public static final String SEARCH = "search ?[keyword] ?[keyword] ... #tag !priority";
-  public static final String SEARCH_DESC = "searches all pending tasks that "
-      + "matches given keywords";
-  
-  
-  //================
-  // set command
-  //================
-
-  public static final String SET = "set ?[directory_to_store_data]";
-  public static final String SET_DESC = "Specifies directory to store your data";
 
   //================
   // keyboard shortcuts for help
