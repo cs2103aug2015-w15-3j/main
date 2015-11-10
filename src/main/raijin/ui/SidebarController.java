@@ -235,7 +235,7 @@ public class SidebarController extends BorderPane {
 
   @FXML
   protected void handleTodayButtonAction(ActionEvent event) {
-    triggerViewChange(Constants.View.TODAY);
+    logic.executeCommand("display");
     setNewFocus(today);
   }
 
