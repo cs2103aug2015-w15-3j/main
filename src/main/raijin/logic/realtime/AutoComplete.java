@@ -288,7 +288,7 @@ public class AutoComplete {
    */
   void updateDisplayView(KeyEvent event) {
     if (Constants.KEY_VIEW_DOWN.match(event) || Constants.KEY_VIEW_UP.match(event)) {
-      viewCount = Constants.KEY_VIEW_DOWN.match(event) ? viewCount++ : viewCount--;
+      viewCount = Constants.KEY_VIEW_DOWN.match(event) ? viewCount+1 : viewCount-1;
       /*Get next view index*/
       int next = Math.floorMod((viewCount), Constants.View.values().length);
       /*Get view associated with the index*/
