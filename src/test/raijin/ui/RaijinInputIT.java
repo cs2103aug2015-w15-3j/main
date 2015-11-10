@@ -156,6 +156,7 @@ public class RaijinInputIT {
   }
 
   @Test
+  @Ignore
   //@@author A0112213E
   public void testCutAndPasteShortcut() throws InterruptedException {
     Thread.sleep(500);
