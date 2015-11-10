@@ -81,6 +81,12 @@ public class DisplayController extends BorderPane {
     }
   }
 
+  /*Reset scroll bar when the view is updated*/
+  private void resetScrollBar() {
+    scrollIndex = 0;
+    tasksPane.scrollTo(scrollIndex);
+  }
+
   void handleSetCurrentDisplayEvent() {
     MainSubscriber<SetCurrentDisplayEvent> setCurrentHandler =
         new MainSubscriber<SetCurrentDisplayEvent>(eventbus.getEventBus()) {
@@ -89,6 +95,7 @@ public class DisplayController extends BorderPane {
           @Override
           public void handleEvent(SetCurrentDisplayEvent event) {
             List<TaskPane> currentTask;
+            resetScrollBar();
             if (event.bodyMessage != null) {
               currentTask = TaskUtils.displayMessage(event.bodyMessage);
             } else {
@@ -111,6 +118,7 @@ public class DisplayController extends BorderPane {
           @Subscribe
           @Override
           public void handleEvent(ChangeViewEvent event) {
+            resetScrollBar();
             List<TaskPane> currentTask = TaskUtils.convertToTaskPane(event.focusView);
             tasksPane.setItems(FXCollections.observableArrayList(currentTask));
             setHeadMessage(event.viewMessage);
